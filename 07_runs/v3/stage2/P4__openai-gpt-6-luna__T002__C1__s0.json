@@ -1,0 +1,114 @@
+{
+ "scenario_id": "T002",
+ "condition": "C1",
+ "variant": "P4",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Repeated failed network logons for svc-claimsync are visible on FILE-HD-01 from 13:31 through at least 13:46 UTC. The failures recur at approximately one-minute intervals and report an incorrect-password status.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T002-00001\",\n        \"T002-00003\",\n        \"T002-00006\",\n        \"T002-00007\",\n        \"T002-00009\",\n        \"T002-00011\",\n        \"T002-00013\",\n        \"T002-00015\",\n        \"T002-00017\",\n        \"T002-00020\",\n        \"T002-00023\",\n        \"T002-00025\",\n        \"T002-00028\",\n        \"T002-00030\",\n        \"T002-00032\",\n        \"T002-00034\"\n      ]\n    },\n    {\n      \"claim\": \"Domain-controller authentication failures for svc-claimsync occur alongside the FILE-HD-01 failures; the Kerberos pre-authentication records report status 0x18, and NTLM validation records report 0xc000006a.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T002-00002\",\n        \"T002-00004\",\n        \"T002-00005\",\n        \"T002-00008\",\n        \"T002-00010\",\n        \"T002-00012\",\n        \"T002-00014\",\n        \"T002-00016\",\n        \"T002-00018\",\n        \"T002-00021\",\n        \"T002-00022\",\n        \"T002-00024\",\n        \"T002-00026\",\n        \"T002-00027\",\n        \"T002-00029\",\n        \"T002-00031\",\n        \"T002-00033\",\n        \"T002-00035\"\n      ]\n    },\n    {\n      \"claim\": \"The failure cadence and FILE-HD-01 origin are consistent with the documented svc-claimsync job, which re-authenticates every minute, and the scheduled 13:30 UTC password rotation. This makes a stale job credential a plausible legitimate explanation, but the logs do not establish that this is the cause.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T002-00001\",\n        \"T002-00003\",\n        \"T002-00007\",\n        \"T002-00011\",\n        \"T002-00015\",\n        \"T002-00017\",\n        \"T002-00020\",\n        \"T002-00023\",\n        \"T002-00028\",\n        \"T002-00032\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied authentication records end at 13:46 UTC, so they do not cover the full requested 13:20\u201314:20 UTC window.\",\n    \"The FILE-HD-01 failures identify lsass.exe as the process, not the ClaimSync job executable or task; the records therefore do not directly attribute the attempts to that job.\",\n    \"The supplied records do not show whether the scheduled password rotation occurred, whether the job was updated, or whether any authentication succeeded.\",\n    \"The records do not establish whether the source address 10.30.20.20 belongs to FILE-HD-01.\"\n  ],\n  \"claims_not_established\": [\n    \"That the password rotation was completed at 13:30 UTC or that the repeated failures were caused by the job retaining an old password.\",\n    \"That the failed attempts were initiated by an attacker rather than the scheduled ClaimSync job.\",\n    \"Whether svc-claimsync had successful or other authentication activity elsewhere in the full alert window.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Obtain authentication and account-change telemetry for the complete 13:20\u201314:20 UTC window, including successful logons and relevant source-host details.\",\n    \"Verify the password-rotation event and its timestamp, and confirm when the ClaimSync job's stored credential was updated.\",\n    \"Collect FILE-HD-01 task/service and application logs for ClaimSync around the alert window to attribute the repeated attempts to the job or another process.\",\n    \"Confirm the owner of source address 10.30.20.20.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:39:31 UTC, WS-LPARK-01 recorded a 4648 explicit-credentials event for svc-claimsync targeting PROXY-HD-01, attributed to C:\\\\Program Files\\\\Commvault\\\\ContentStore\\\\Base\\\\GxCVD.exe. This is separate from the repeated FILE-HD-01 failures; its purpose and authorization are not established by the available record and it should be reviewed separately. (T002-00019)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 6511,
+    "output": 2217
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "Repeated failed network logons for svc-claimsync are visible on FILE-HD-01 from 13:31 through at least 13:46 UTC. The failures recur at approximately one-minute intervals and report an incorrect-password status.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T002-00001",
+     "T002-00003",
+     "T002-00006",
+     "T002-00007",
+     "T002-00009",
+     "T002-00011",
+     "T002-00013",
+     "T002-00015",
+     "T002-00017",
+     "T002-00020",
+     "T002-00023",
+     "T002-00025",
+     "T002-00028",
+     "T002-00030",
+     "T002-00032",
+     "T002-00034"
+    ]
+   },
+   {
+    "claim": "Domain-controller authentication failures for svc-claimsync occur alongside the FILE-HD-01 failures; the Kerberos pre-authentication records report status 0x18, and NTLM validation records report 0xc000006a.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T002-00002",
+     "T002-00004",
+     "T002-00005",
+     "T002-00008",
+     "T002-00010",
+     "T002-00012",
+     "T002-00014",
+     "T002-00016",
+     "T002-00018",
+     "T002-00021",
+     "T002-00022",
+     "T002-00024",
+     "T002-00026",
+     "T002-00027",
+     "T002-00029",
+     "T002-00031",
+     "T002-00033",
+     "T002-00035"
+    ]
+   },
+   {
+    "claim": "The failure cadence and FILE-HD-01 origin are consistent with the documented svc-claimsync job, which re-authenticates every minute, and the scheduled 13:30 UTC password rotation. This makes a stale job credential a plausible legitimate explanation, but the logs do not establish that this is the cause.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T002-00001",
+     "T002-00003",
+     "T002-00007",
+     "T002-00011",
+     "T002-00015",
+     "T002-00017",
+     "T002-00020",
+     "T002-00023",
+     "T002-00028",
+     "T002-00032"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied authentication records end at 13:46 UTC, so they do not cover the full requested 13:20\u201314:20 UTC window.",
+   "The FILE-HD-01 failures identify lsass.exe as the process, not the ClaimSync job executable or task; the records therefore do not directly attribute the attempts to that job.",
+   "The supplied records do not show whether the scheduled password rotation occurred, whether the job was updated, or whether any authentication succeeded.",
+   "The records do not establish whether the source address 10.30.20.20 belongs to FILE-HD-01."
+  ],
+  "claims_not_established": [
+   "That the password rotation was completed at 13:30 UTC or that the repeated failures were caused by the job retaining an old password.",
+   "That the failed attempts were initiated by an attacker rather than the scheduled ClaimSync job.",
+   "Whether svc-claimsync had successful or other authentication activity elsewhere in the full alert window."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Obtain authentication and account-change telemetry for the complete 13:20\u201314:20 UTC window, including successful logons and relevant source-host details.",
+   "Verify the password-rotation event and its timestamp, and confirm when the ClaimSync job's stored credential was updated.",
+   "Collect FILE-HD-01 task/service and application logs for ClaimSync around the alert window to attribute the repeated attempts to the job or another process.",
+   "Confirm the owner of source address 10.30.20.20."
+  ],
+  "unrelated_findings": [
+   "At 13:39:31 UTC, WS-LPARK-01 recorded a 4648 explicit-credentials event for svc-claimsync targeting PROXY-HD-01, attributed to C:\\Program Files\\Commvault\\ContentStore\\Base\\GxCVD.exe. This is separate from the repeated FILE-HD-01 failures; its purpose and authorization are not established by the available record and it should be reviewed separately. (T002-00019)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 44,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 19.2
+}

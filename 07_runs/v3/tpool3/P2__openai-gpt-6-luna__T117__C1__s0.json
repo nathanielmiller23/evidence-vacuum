@@ -1,0 +1,90 @@
+{
+ "scenario_id": "T117",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted account was created on DC-COP-01 at 13:46:40 UTC, later than the alert\u2019s approximate 13:42 time. The 4720 event names paul.becker as the actor and backupadmin as the new account.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T117-00103\"]\n    },\n    {\n      \"claim\": \"About two seconds after creation, backupadmin was added to the Administrators group. This conflicts with the stated practice that temporary accounts are added only to Contractors and never receive administrator rights.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T117-00104\"]\n    },\n    {\n      \"claim\": \"Shortly before the account change, paul.becker logged on to WS-KNGUYEN-01 via RDP from 192.0.2.88. The supplied environment says remote administration is only done from WS-PBECKER-01 and there is no VPN.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T117-00087\", \"T117-00088\", \"T117-00089\"]\n    },\n    {\n      \"claim\": \"A few seconds after backupadmin was added to Administrators, a task attributed to paul.becker was registered on WS-KNGUYEN-01 to run hidden, encoded PowerShell that invokes a script from http://192.0.2.88/a.ps1. This is strongly suspicious context, although the available records do not prove it caused the account change.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T117-00104\", \"T117-00105\"]\n    },\n    {\n      \"claim\": \"The DC account-change event has SubjectLogonId 0x354e0fe, whereas the paul.becker RDP session on WS-KNGUYEN-01 has LogonId 0x9146699; the records therefore do not establish that the account change came from that specific RDP session.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T117-00089\", \"T117-00103\", \"T117-00105\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The account-creation and group-membership records identify paul.becker and a logon ID but do not show the originating host, source IP, or process for those changes (T117-00103, T117-00104).\",\n    \"The available records do not link the DC account-change logon ID to the paul.becker RDP session on WS-KNGUYEN-01; those IDs differ (T117-00089, T117-00103).\",\n    \"The task-registration record shows its configured command, but the supplied evidence does not show whether the task ran or what the downloaded script contained (T117-00105).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether backupadmin creation and administrator-group membership had an approved change or business justification.\",\n    \"Which host and process initiated the account creation and group-membership changes.\",\n    \"Whether the scheduled task executed or whether its remote script was successfully retrieved.\",\n    \"Whether the RDP source address represents the actual origin or an address altered by log normalization.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Verify the change calendar, approval records, and administrator authorization for creating backupadmin and adding it to Administrators.\",\n    \"Collect DC-COP-01 logon/session and endpoint process telemetry around T117-00103 and T117-00104 to identify the source host and initiating process.\",\n    \"Investigate the RDP connection to WS-KNGUYEN-01, including the true source, authentication details, and whether it originated from WS-PBECKER-01.\",\n    \"Collect the task\u2019s execution history, any retrieved payload, and relevant network/DNS/proxy records for 192.0.2.88.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 29938,
+    "output": 2264
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "The alerted account was created on DC-COP-01 at 13:46:40 UTC, later than the alert\u2019s approximate 13:42 time. The 4720 event names paul.becker as the actor and backupadmin as the new account.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T117-00103"
+    ]
+   },
+   {
+    "claim": "About two seconds after creation, backupadmin was added to the Administrators group. This conflicts with the stated practice that temporary accounts are added only to Contractors and never receive administrator rights.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T117-00104"
+    ]
+   },
+   {
+    "claim": "Shortly before the account change, paul.becker logged on to WS-KNGUYEN-01 via RDP from 192.0.2.88. The supplied environment says remote administration is only done from WS-PBECKER-01 and there is no VPN.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T117-00087",
+     "T117-00088",
+     "T117-00089"
+    ]
+   },
+   {
+    "claim": "A few seconds after backupadmin was added to Administrators, a task attributed to paul.becker was registered on WS-KNGUYEN-01 to run hidden, encoded PowerShell that invokes a script from http://192.0.2.88/a.ps1. This is strongly suspicious context, although the available records do not prove it caused the account change.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T117-00104",
+     "T117-00105"
+    ]
+   },
+   {
+    "claim": "The DC account-change event has SubjectLogonId 0x354e0fe, whereas the paul.becker RDP session on WS-KNGUYEN-01 has LogonId 0x9146699; the records therefore do not establish that the account change came from that specific RDP session.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T117-00089",
+     "T117-00103",
+     "T117-00105"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The account-creation and group-membership records identify paul.becker and a logon ID but do not show the originating host, source IP, or process for those changes (T117-00103, T117-00104).",
+   "The available records do not link the DC account-change logon ID to the paul.becker RDP session on WS-KNGUYEN-01; those IDs differ (T117-00089, T117-00103).",
+   "The task-registration record shows its configured command, but the supplied evidence does not show whether the task ran or what the downloaded script contained (T117-00105)."
+  ],
+  "claims_not_established": [
+   "Whether backupadmin creation and administrator-group membership had an approved change or business justification.",
+   "Which host and process initiated the account creation and group-membership changes.",
+   "Whether the scheduled task executed or whether its remote script was successfully retrieved.",
+   "Whether the RDP source address represents the actual origin or an address altered by log normalization."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Verify the change calendar, approval records, and administrator authorization for creating backupadmin and adding it to Administrators.",
+   "Collect DC-COP-01 logon/session and endpoint process telemetry around T117-00103 and T117-00104 to identify the source host and initiating process.",
+   "Investigate the RDP connection to WS-KNGUYEN-01, including the true source, authentication details, and whether it originated from WS-PBECKER-01.",
+   "Collect the task\u2019s execution history, any retrieved payload, and relevant network/DNS/proxy records for 192.0.2.88."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 25.1
+}

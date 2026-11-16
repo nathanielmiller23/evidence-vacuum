@@ -1,0 +1,86 @@
+{
+ "scenario_id": "T187",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded creation of the alerted account svc_update at 13:44:34 UTC, with ken.ito as the subject.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T187-00187\"\n      ]\n    },\n    {\n      \"claim\": \"About one second later, ken.ito added svc_update to the domain Administrators group. This is inconsistent with the stated help-desk practice that temporary accounts are Seasonal-only and never administrators.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T187-00188\"\n      ]\n    },\n    {\n      \"claim\": \"Just before the account events, WS-EBROOKS-01 logged a Type 10 remote interactive session for ken.ito from 203.0.113.133. The inventory says remote administration is only from WS-KITO-01 and there is no VPN; this is a significant contextual mismatch, though the available records do not tie that session directly to the account-creation logon.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T187-00165\",\n        \"T187-00166\",\n        \"T187-00167\",\n        \"T187-00187\"\n      ]\n    },\n    {\n      \"claim\": \"Two seconds after the account creation, WS-EBROOKS-01 recorded ken.ito creating a hidden PowerShell scheduled task whose encoded arguments contain a web request to 203.0.113.133/a.ps1. This is suspicious activity on the same host and near the alerted account activity, but the task record uses a different logon ID from the account-creation record.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T187-00187\",\n        \"T187-00189\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The account creation record's SubjectLogonId is 0xbff67aa, while the recorded ken.ito remote session on WS-EBROOKS-01 has LogonId 0xf04b2c1; the provided evidence does not establish how those sessions relate.\",\n    \"The supplied records do not show the process or command that created svc_update, or the authentication/session details corresponding to the account event's SubjectLogonId.\",\n    \"The records establish account creation and administrator-group addition, but do not show whether the account was subsequently used or what access it exercised.\"\n  ],\n  \"claims_not_established\": [\n    \"That the person ken.ito personally performed the account creation or administrator-group change; the logs identify the account as the subject but do not establish who controlled the session.\",\n    \"That the remote session from 203.0.113.133 caused the account creation or scheduled-task creation.\",\n    \"That svc_update was created as part of the scheduled svc-inventory password rotation; the calendar names svc-inventory, not svc_update, and the supplied records do not document the rotation workflow.\",\n    \"Whether the account or scheduled task was used successfully after creation.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate DC-BLU-01 logon and privileged-account audit records for ken.ito, including the session associated with SubjectLogonId 0xbff67aa.\",\n    \"Collect process, PowerShell, and command-line telemetry on DC-BLU-01 and WS-EBROOKS-01 around 13:40\u201313:45 UTC to identify the account-creation and group-change mechanism.\",\n    \"Verify the provenance and ownership of the 203.0.113.133 connection and scheduled-task payload, and determine whether the task executed.\",\n    \"Check change approvals and the svc-inventory rotation/update records to confirm whether any approved activity accounts for svc_update.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox was launched and accessed from WS-EBROOKS-01, although Dropbox is not among the listed approved services; this is separate from the account-management alert. Records: T187-00060, T187-00064, T187-00065.\",\n    \"WS-EBROOKS-01 accessed a Google Docs document, while the inventory lists Microsoft 365 / OneDrive as approved cloud services; investigate separately if policy requires. Records: T187-00320, T187-00321.\",\n    \"Cisco AnyConnect's vpnagent.exe ran on WS-EBROOKS-01 despite the stated no-VPN environment; this observation alone does not establish a VPN connection and is separate from the alerted account activity. Records: T187-00251, T187-00252.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 56284,
+    "output": 2198
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded creation of the alerted account svc_update at 13:44:34 UTC, with ken.ito as the subject.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T187-00187"
+    ]
+   },
+   {
+    "claim": "About one second later, ken.ito added svc_update to the domain Administrators group. This is inconsistent with the stated help-desk practice that temporary accounts are Seasonal-only and never administrators.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T187-00188"
+    ]
+   },
+   {
+    "claim": "Just before the account events, WS-EBROOKS-01 logged a Type 10 remote interactive session for ken.ito from 203.0.113.133. The inventory says remote administration is only from WS-KITO-01 and there is no VPN; this is a significant contextual mismatch, though the available records do not tie that session directly to the account-creation logon.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T187-00165",
+     "T187-00166",
+     "T187-00167",
+     "T187-00187"
+    ]
+   },
+   {
+    "claim": "Two seconds after the account creation, WS-EBROOKS-01 recorded ken.ito creating a hidden PowerShell scheduled task whose encoded arguments contain a web request to 203.0.113.133/a.ps1. This is suspicious activity on the same host and near the alerted account activity, but the task record uses a different logon ID from the account-creation record.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T187-00187",
+     "T187-00189"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The account creation record's SubjectLogonId is 0xbff67aa, while the recorded ken.ito remote session on WS-EBROOKS-01 has LogonId 0xf04b2c1; the provided evidence does not establish how those sessions relate.",
+   "The supplied records do not show the process or command that created svc_update, or the authentication/session details corresponding to the account event's SubjectLogonId.",
+   "The records establish account creation and administrator-group addition, but do not show whether the account was subsequently used or what access it exercised."
+  ],
+  "claims_not_established": [
+   "That the person ken.ito personally performed the account creation or administrator-group change; the logs identify the account as the subject but do not establish who controlled the session.",
+   "That the remote session from 203.0.113.133 caused the account creation or scheduled-task creation.",
+   "That svc_update was created as part of the scheduled svc-inventory password rotation; the calendar names svc-inventory, not svc_update, and the supplied records do not document the rotation workflow.",
+   "Whether the account or scheduled task was used successfully after creation."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate DC-BLU-01 logon and privileged-account audit records for ken.ito, including the session associated with SubjectLogonId 0xbff67aa.",
+   "Collect process, PowerShell, and command-line telemetry on DC-BLU-01 and WS-EBROOKS-01 around 13:40\u201313:45 UTC to identify the account-creation and group-change mechanism.",
+   "Verify the provenance and ownership of the 203.0.113.133 connection and scheduled-task payload, and determine whether the task executed.",
+   "Check change approvals and the svc-inventory rotation/update records to confirm whether any approved activity accounts for svc_update."
+  ],
+  "unrelated_findings": [
+   "Dropbox was launched and accessed from WS-EBROOKS-01, although Dropbox is not among the listed approved services; this is separate from the account-management alert. Records: T187-00060, T187-00064, T187-00065.",
+   "WS-EBROOKS-01 accessed a Google Docs document, while the inventory lists Microsoft 365 / OneDrive as approved cloud services; investigate separately if policy requires. Records: T187-00320, T187-00321.",
+   "Cisco AnyConnect's vpnagent.exe ran on WS-EBROOKS-01 despite the stated no-VPN environment; this observation alone does not establish a VPN connection and is separate from the alerted account activity. Records: T187-00251, T187-00252."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 8,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.6
+}

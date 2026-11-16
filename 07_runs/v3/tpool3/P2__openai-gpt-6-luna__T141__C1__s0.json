@@ -1,0 +1,78 @@
+{
+ "scenario_id": "T141",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.78,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded two failed NTLM network logons for MAPLEHILL\\\\noah.kim from 198.51.100.201, first at 13:40:14 and again at 13:46:40 UTC; both failures report an incorrect password.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T141-00016\", \"T141-00017\"]\n    },\n    {\n      \"claim\": \"At 13:48:10 UTC, the domain controller recorded a successful Kerberos network logon for the same account from the same IP address, following the two failures.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T141-00016\", \"T141-00017\", \"T141-00018\"]\n    },\n    {\n      \"claim\": \"The source is not identified as an organizational host in the supplied inventory, and the inventory says there is no VPN and remote administration is only performed from WS-AHASSAN-01. The failed-then-successful network logon pattern is therefore suspicious and supports escalation as potentially malicious.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T141-00016\", \"T141-00017\", \"T141-00018\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show network logons (LogonType 3), but do not identify the network service or resource accessed.\",\n    \"The records do not identify who controlled the source address, and the supplied evidence does not establish whether the logged address is the original address or a substituted value.\",\n    \"The available logs show authentication outcomes, not what activity occurred in the successful session.\"\n  ],\n  \"claims_not_established\": [\n    \"That the successful logon was performed by an attacker rather than Noah or an authorized process.\",\n    \"That credentials were compromised or deliberately guessed.\",\n    \"That the successful session accessed data, changed systems, or persisted.\",\n    \"That the source address represents a particular person, device, or physical location.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate domain-controller authentication and Kerberos records with file-server, workstation, firewall, and network logs to identify the service and activity associated with the successful logon.\",\n    \"Determine whether 198.51.100.201 is an original source address or a substituted value, and map it to a host or owner if possible.\",\n    \"Confirm with Noah and IT whether this network logon was expected; review account activity and consider protective credential actions under incident-response procedures.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:27 UTC, a hidden PowerShell process running as noah.kim queried the Security event log and exported up to 50 events to C:\\\\Reports\\\\incident.csv. This is outside the alerted authentication sequence and should be reviewed separately; the records do not establish its purpose. (T141-00007, T141-00008)\",\n    \"A network logoff for noah.kim was recorded on WS-GLUND-01 at 14:19 UTC, but the available record does not show the corresponding logon or establish a connection to the alerted source. Review separately if warranted. (T141-00030)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 5698,
+    "output": 2264
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.78,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded two failed NTLM network logons for MAPLEHILL\\noah.kim from 198.51.100.201, first at 13:40:14 and again at 13:46:40 UTC; both failures report an incorrect password.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T141-00016",
+     "T141-00017"
+    ]
+   },
+   {
+    "claim": "At 13:48:10 UTC, the domain controller recorded a successful Kerberos network logon for the same account from the same IP address, following the two failures.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T141-00016",
+     "T141-00017",
+     "T141-00018"
+    ]
+   },
+   {
+    "claim": "The source is not identified as an organizational host in the supplied inventory, and the inventory says there is no VPN and remote administration is only performed from WS-AHASSAN-01. The failed-then-successful network logon pattern is therefore suspicious and supports escalation as potentially malicious.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T141-00016",
+     "T141-00017",
+     "T141-00018"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show network logons (LogonType 3), but do not identify the network service or resource accessed.",
+   "The records do not identify who controlled the source address, and the supplied evidence does not establish whether the logged address is the original address or a substituted value.",
+   "The available logs show authentication outcomes, not what activity occurred in the successful session."
+  ],
+  "claims_not_established": [
+   "That the successful logon was performed by an attacker rather than Noah or an authorized process.",
+   "That credentials were compromised or deliberately guessed.",
+   "That the successful session accessed data, changed systems, or persisted.",
+   "That the source address represents a particular person, device, or physical location."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate domain-controller authentication and Kerberos records with file-server, workstation, firewall, and network logs to identify the service and activity associated with the successful logon.",
+   "Determine whether 198.51.100.201 is an original source address or a substituted value, and map it to a host or owner if possible.",
+   "Confirm with Noah and IT whether this network logon was expected; review account activity and consider protective credential actions under incident-response procedures."
+  ],
+  "unrelated_findings": [
+   "At 13:27 UTC, a hidden PowerShell process running as noah.kim queried the Security event log and exported up to 50 events to C:\\Reports\\incident.csv. This is outside the alerted authentication sequence and should be reviewed separately; the records do not establish its purpose. (T141-00007, T141-00008)",
+   "A network logoff for noah.kim was recorded on WS-GLUND-01 at 14:19 UTC, but the available record does not show the corresponding logon or establish a connection to the alerted source. Review separately if warranted. (T141-00030)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 8,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 26.6
+}

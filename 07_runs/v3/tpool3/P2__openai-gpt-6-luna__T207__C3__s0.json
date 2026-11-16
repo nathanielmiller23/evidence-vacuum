@@ -1,0 +1,93 @@
+{
+ "scenario_id": "T207",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"DC-BLU-01 recorded creation of svc_update by BLUEFIN\\\\ken.ito at 13:47:06 UTC, within the review window.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T207-00099\"]\n    },\n    {\n      \"claim\": \"Less than a minute after creation, svc_update was added to the BLUEFIN Administrators group by ken.ito. This conflicts with the supplied account-management practices, which say temporary accounts do not receive administrator rights, and svc_update is not among the listed service accounts.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T207-00099\", \"T207-00103\"]\n    },\n    {\n      \"claim\": \"WS-EBROOKS-01 accepted an RDP logon for ken.ito from 203.0.113.133 at 13:42:44 UTC. The supplied environment context says remote administration is only done from WS-KITO-01 and there is no VPN.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T207-00077\", \"T207-00078\", \"T207-00080\"]\n    },\n    {\n      \"claim\": \"At 13:47:20 UTC, a task named Microsoft\\\\Windows\\\\HealthCheck was registered on WS-EBROOKS-01 under ken.ito. Its command runs hidden PowerShell with an encoded argument that decodes to a web request for http://203.0.113.133/a.ps1 followed by execution of the response.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T207-00104\"]\n    },\n    {\n      \"claim\": \"The sequence of an unexpected-source RDP logon, creation of a service-style account, elevation of that account to Administrators, and registration of a hidden PowerShell download-and-execute task strongly supports malicious activity in the alerted activity window.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T207-00077\", \"T207-00080\", \"T207-00099\", \"T207-00103\", \"T207-00104\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy logs for 2026-09-29 13:30\u201314:20 UTC were not collected because of a collection outage, so proxy-side evidence of any related requests is unavailable.\",\n    \"The task-creation record shows the configured action, but the supplied records do not show whether the task ran or what the fetched script contained.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish who was physically operating the RDP session or whether ken.ito's credentials were compromised.\",\n    \"The records do not directly establish that the RDP session, the account creation, the administrator-group change, and task creation were performed by the same operator.\",\n    \"The evidence does not establish whether svc_update was subsequently used, or whether the scheduled task executed successfully.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Investigate the RDP source and authentication path, and verify whether the session was authorized with ken.ito and the owner of WS-EBROOKS-01.\",\n    \"Preserve and inspect WS-EBROOKS-01 for task execution, downloaded content, and related process, file, and network artifacts.\",\n    \"Review DC-BLU-01 audit and authentication records around the account creation and group change to determine the originating client and session.\",\n    \"Recover proxy, firewall, or other network logs for the outage window to check for connections to 203.0.113.133.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox Update ran on WS-EBROOKS-01, although Dropbox is not listed among the approved services. Treat as a separate investigation; it does not determine this alert. (T207-00004, T207-00005, T207-00042, T207-00043, T207-00073, T207-00074)\",\n    \"FILE-BLU-01 recorded an ANONYMOUS LOGON over SMB from WS-EBROOKS-01 at 14:18:45 UTC. Investigate separately; it does not determine this alert. (T207-00176, T207-00177, T207-00178)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 27348,
+    "output": 2079
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "DC-BLU-01 recorded creation of svc_update by BLUEFIN\\ken.ito at 13:47:06 UTC, within the review window.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T207-00099"
+    ]
+   },
+   {
+    "claim": "Less than a minute after creation, svc_update was added to the BLUEFIN Administrators group by ken.ito. This conflicts with the supplied account-management practices, which say temporary accounts do not receive administrator rights, and svc_update is not among the listed service accounts.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T207-00099",
+     "T207-00103"
+    ]
+   },
+   {
+    "claim": "WS-EBROOKS-01 accepted an RDP logon for ken.ito from 203.0.113.133 at 13:42:44 UTC. The supplied environment context says remote administration is only done from WS-KITO-01 and there is no VPN.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T207-00077",
+     "T207-00078",
+     "T207-00080"
+    ]
+   },
+   {
+    "claim": "At 13:47:20 UTC, a task named Microsoft\\Windows\\HealthCheck was registered on WS-EBROOKS-01 under ken.ito. Its command runs hidden PowerShell with an encoded argument that decodes to a web request for http://203.0.113.133/a.ps1 followed by execution of the response.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T207-00104"
+    ]
+   },
+   {
+    "claim": "The sequence of an unexpected-source RDP logon, creation of a service-style account, elevation of that account to Administrators, and registration of a hidden PowerShell download-and-execute task strongly supports malicious activity in the alerted activity window.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T207-00077",
+     "T207-00080",
+     "T207-00099",
+     "T207-00103",
+     "T207-00104"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy logs for 2026-09-29 13:30\u201314:20 UTC were not collected because of a collection outage, so proxy-side evidence of any related requests is unavailable.",
+   "The task-creation record shows the configured action, but the supplied records do not show whether the task ran or what the fetched script contained."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish who was physically operating the RDP session or whether ken.ito's credentials were compromised.",
+   "The records do not directly establish that the RDP session, the account creation, the administrator-group change, and task creation were performed by the same operator.",
+   "The evidence does not establish whether svc_update was subsequently used, or whether the scheduled task executed successfully."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Investigate the RDP source and authentication path, and verify whether the session was authorized with ken.ito and the owner of WS-EBROOKS-01.",
+   "Preserve and inspect WS-EBROOKS-01 for task execution, downloaded content, and related process, file, and network artifacts.",
+   "Review DC-BLU-01 audit and authentication records around the account creation and group change to determine the originating client and session.",
+   "Recover proxy, firewall, or other network logs for the outage window to check for connections to 203.0.113.133."
+  ],
+  "unrelated_findings": [
+   "Dropbox Update ran on WS-EBROOKS-01, although Dropbox is not listed among the approved services. Treat as a separate investigation; it does not determine this alert. (T207-00004, T207-00005, T207-00042, T207-00043, T207-00073, T207-00074)",
+   "FILE-BLU-01 recorded an ANONYMOUS LOGON over SMB from WS-EBROOKS-01 at 14:18:45 UTC. Investigate separately; it does not determine this alert. (T207-00176, T207-00177, T207-00178)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.2
+}

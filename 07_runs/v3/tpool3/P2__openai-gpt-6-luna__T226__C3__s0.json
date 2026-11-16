@@ -1,0 +1,82 @@
+{
+ "scenario_id": "T226",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"During the alerted period, WS-MFISCHER-01 repeatedly established HTTP connections to the organization's explicit proxy at 10.55.20.30:8080. The records show connections at 13:51:03, 13:56:17, 14:01:08, and 14:06:20 UTC, roughly five minutes apart.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T226-00221\", \"T226-00230\", \"T226-00234\", \"T226-00239\"]\n    },\n    {\n      \"claim\": \"Those four proxy connections have similar response sizes, around 18 KB, but the available Zeek connection records do not identify the HTTPS destinations or the process responsible.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T226-00221\", \"T226-00230\", \"T226-00234\", \"T226-00239\"]\n    },\n    {\n      \"claim\": \"The observed cadence is consistent with the alert, but the evidence available for the alerted interval does not establish whether the traffic was an approved updater or malicious activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T226-00221\", \"T226-00230\", \"T226-00234\", \"T226-00239\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy, winsec, and Sysmon collection for WS-MFISCHER-01 were unavailable from 13:30 through 14:15 UTC due to a collection outage, covering the alerted activity.\",\n    \"Zeek connection and DNS sensors were available, but the supplied Zeek connection records identify the explicit proxy as the destination, not the external HTTPS host or URL.\",\n    \"The available records do not link the periodic proxy connections to a process, command line, or user activity during the alert window.\"\n  ],\n  \"claims_not_established\": [\n    \"Which external destinations or URLs the periodic connections reached.\",\n    \"Which process initiated the connections and whether it was an approved updater.\",\n    \"What data, if any, was sent to or received from the external destination.\",\n    \"Whether the activity was connected to the scheduled svc-ledger password rotation or workstation patching.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover or obtain proxy logs for 13:30\u201314:15 UTC, including CONNECT destinations, URLs where available, user attribution, and tunnel byte counts.\",\n    \"Obtain endpoint process, network, and authentication telemetry for WS-MFISCHER-01 covering the same interval.\",\n    \"Check the workstation for the approved LedgerLink updater and correlate its execution and network activity with the observed connection times.\",\n    \"Review change execution records for the svc-ledger password rotation and any patching activity relevant to this host and time window.\"\n  ],\n  \"unrelated_findings\": [\n    \"After the alerted interval, max.fischer's Firefox accessed drive.google.com, including a shared-with-me page. Google Drive is not an approved cloud-storage service in the supplied environment context; handle this separately and do not use it to decide the alert. Records: T226-00395, T226-00396, T226-00400, T226-00402.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 39212,
+    "output": 2272
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "During the alerted period, WS-MFISCHER-01 repeatedly established HTTP connections to the organization's explicit proxy at 10.55.20.30:8080. The records show connections at 13:51:03, 13:56:17, 14:01:08, and 14:06:20 UTC, roughly five minutes apart.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T226-00221",
+     "T226-00230",
+     "T226-00234",
+     "T226-00239"
+    ]
+   },
+   {
+    "claim": "Those four proxy connections have similar response sizes, around 18 KB, but the available Zeek connection records do not identify the HTTPS destinations or the process responsible.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T226-00221",
+     "T226-00230",
+     "T226-00234",
+     "T226-00239"
+    ]
+   },
+   {
+    "claim": "The observed cadence is consistent with the alert, but the evidence available for the alerted interval does not establish whether the traffic was an approved updater or malicious activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T226-00221",
+     "T226-00230",
+     "T226-00234",
+     "T226-00239"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy, winsec, and Sysmon collection for WS-MFISCHER-01 were unavailable from 13:30 through 14:15 UTC due to a collection outage, covering the alerted activity.",
+   "Zeek connection and DNS sensors were available, but the supplied Zeek connection records identify the explicit proxy as the destination, not the external HTTPS host or URL.",
+   "The available records do not link the periodic proxy connections to a process, command line, or user activity during the alert window."
+  ],
+  "claims_not_established": [
+   "Which external destinations or URLs the periodic connections reached.",
+   "Which process initiated the connections and whether it was an approved updater.",
+   "What data, if any, was sent to or received from the external destination.",
+   "Whether the activity was connected to the scheduled svc-ledger password rotation or workstation patching."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover or obtain proxy logs for 13:30\u201314:15 UTC, including CONNECT destinations, URLs where available, user attribution, and tunnel byte counts.",
+   "Obtain endpoint process, network, and authentication telemetry for WS-MFISCHER-01 covering the same interval.",
+   "Check the workstation for the approved LedgerLink updater and correlate its execution and network activity with the observed connection times.",
+   "Review change execution records for the svc-ledger password rotation and any patching activity relevant to this host and time window."
+  ],
+  "unrelated_findings": [
+   "After the alerted interval, max.fischer's Firefox accessed drive.google.com, including a shared-with-me page. Google Drive is not an approved cloud-storage service in the supplied environment context; handle this separately and do not use it to decide the alert. Records: T226-00395, T226-00396, T226-00400, T226-00402."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.0
+}

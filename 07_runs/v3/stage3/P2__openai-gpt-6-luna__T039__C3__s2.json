@@ -1,0 +1,79 @@
+{
+ "scenario_id": "T039",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 2,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45:58 UTC, WS-ICHEN-01 had a 9-second HTTP connection to the explicit proxy with 51,000,389 originator bytes and 9,017 responder bytes, consistent with the alerted large outbound transfer to the proxy.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T039-00140\"]\n    },\n    {\n      \"claim\": \"The available flow record identifies the proxy as the connection destination but does not identify the ultimate remote destination, application-layer request, or transferred content.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T039-00140\"]\n    },\n    {\n      \"claim\": \"At 14:12\u201314:13 UTC, proxy records show ivy.chen's Chrome browser accessing aws.amazon.com and AWS static resources, including the AWS console. These later records do not establish that the 13:45 transfer went to AWS or was associated with this browsing.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T039-00266\", \"T039-00267\", \"T039-00271\", \"T039-00272\", \"T039-00276\", \"T039-00277\", \"T039-00286\", \"T039-00293\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy logs for PROXY-NWD-01 were not collected from 13:30 to 14:10 UTC, covering the alerted transfer time; this prevents identifying the proxy request's remote destination and request details.\",\n    \"Winsec and Sysmon logs for WS-ICHEN-01 were not collected from 13:30 to 14:10 UTC, so process and user attribution for the transfer cannot be established from those sensors.\",\n    \"Zeek connection telemetry is available, but the transfer record contains only connection-level byte counts and endpoints, not the ultimate destination or content.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the large transfer reached an external destination or was only sent to the internal proxy.\",\n    \"Which process initiated the transfer and whether it was authorized.\",\n    \"What data was transferred, whether it was sensitive, and whether the transfer was intentional or malicious.\",\n    \"Whether the subsequent AWS console browsing was related to the transfer.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover proxy access, CONNECT, and TLS inspection logs for 13:45:58 UTC, including requested host, URL or CONNECT target, user, action, and byte counts.\",\n    \"Obtain endpoint EDR or process/network telemetry, browser history, and relevant file-access or upload records for WS-ICHEN-01 around 13:45:58 UTC.\",\n    \"Determine from proxy or network records whether the connection was forwarded externally and identify the destination and transferred content, if retained.\"\n  ],\n  \"unrelated_findings\": [\n    \"A Zscaler ZSATunnel.exe process started on WS-ICHEN-01 at 14:12:33 UTC. Its purpose and authorization are not established by these records; review separately, without treating it as evidence about the 13:45 transfer. (T039-00264, T039-00265)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 32353,
+    "output": 2039
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45:58 UTC, WS-ICHEN-01 had a 9-second HTTP connection to the explicit proxy with 51,000,389 originator bytes and 9,017 responder bytes, consistent with the alerted large outbound transfer to the proxy.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T039-00140"
+    ]
+   },
+   {
+    "claim": "The available flow record identifies the proxy as the connection destination but does not identify the ultimate remote destination, application-layer request, or transferred content.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T039-00140"
+    ]
+   },
+   {
+    "claim": "At 14:12\u201314:13 UTC, proxy records show ivy.chen's Chrome browser accessing aws.amazon.com and AWS static resources, including the AWS console. These later records do not establish that the 13:45 transfer went to AWS or was associated with this browsing.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T039-00266",
+     "T039-00267",
+     "T039-00271",
+     "T039-00272",
+     "T039-00276",
+     "T039-00277",
+     "T039-00286",
+     "T039-00293"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy logs for PROXY-NWD-01 were not collected from 13:30 to 14:10 UTC, covering the alerted transfer time; this prevents identifying the proxy request's remote destination and request details.",
+   "Winsec and Sysmon logs for WS-ICHEN-01 were not collected from 13:30 to 14:10 UTC, so process and user attribution for the transfer cannot be established from those sensors.",
+   "Zeek connection telemetry is available, but the transfer record contains only connection-level byte counts and endpoints, not the ultimate destination or content."
+  ],
+  "claims_not_established": [
+   "Whether the large transfer reached an external destination or was only sent to the internal proxy.",
+   "Which process initiated the transfer and whether it was authorized.",
+   "What data was transferred, whether it was sensitive, and whether the transfer was intentional or malicious.",
+   "Whether the subsequent AWS console browsing was related to the transfer."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover proxy access, CONNECT, and TLS inspection logs for 13:45:58 UTC, including requested host, URL or CONNECT target, user, action, and byte counts.",
+   "Obtain endpoint EDR or process/network telemetry, browser history, and relevant file-access or upload records for WS-ICHEN-01 around 13:45:58 UTC.",
+   "Determine from proxy or network records whether the connection was forwarded externally and identify the destination and transferred content, if retained."
+  ],
+  "unrelated_findings": [
+   "A Zscaler ZSATunnel.exe process started on WS-ICHEN-01 at 14:12:33 UTC. Its purpose and authorization are not established by these records; review separately, without treating it as evidence about the 13:45 transfer. (T039-00264, T039-00265)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.0
+}

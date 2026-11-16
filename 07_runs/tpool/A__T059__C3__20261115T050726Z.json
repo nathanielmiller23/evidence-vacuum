@@ -1,0 +1,80 @@
+{
+ "run_id": "A__T059__C3__20261115T050726Z",
+ "config": "A",
+ "scenario_id": "T059",
+ "condition": "C3",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 270,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 112198,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.93,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:50:49 UTC, WS-ICHEN-01 sent 51,000,389 bytes to the explicit proxy at 10.40.20.30:8080 in a connection lasting about 2.11 seconds; the connection record shows 8,922 bytes in the reverse direction.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T059-00174\"]\n    },\n    {\n      \"claim\": \"At 14:10 UTC, Chrome on WS-ICHEN-01 made proxy requests to Microsoft Outlook services, including outlook.office365.com and the OWA page. This later activity does not establish the destination or purpose of the earlier large transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T059-00281\", \"T059-00282\", \"T059-00283\"]\n    },\n    {\n      \"claim\": \"At 14:01 UTC, DC-NWD-01 issued a Kerberos ticket for ivy.chen to WS-NBLAKE-01, followed by a successful network logon for ivy.chen on that host from 10.40.20.20. The records do not link this activity to the large transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T059-00248\", \"T059-00249\", \"T059-00250\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied sensor-coverage metadata reports a collection outage from 13:30 to 14:10 UTC for WS-ICHEN-01 winsec and sysmon, and for PROXY-NWD-01 proxy logs. The metadata provides no record_id.\",\n    \"Zeek connection telemetry is available, but the large connection record identifies only the internal proxy as its destination; the unavailable proxy logs prevent identifying the external destination for that transfer.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the large transfer reached an external service, and if so which service or account received it.\",\n    \"Which process initiated the large transfer, what data it contained, or whether the transfer was an upload of files.\",\n    \"Whether the transfer was authorized, related to an approved Microsoft 365 or OneDrive activity, or malicious.\",\n    \"Whether the 14:01 ivy.chen logon on WS-NBLAKE-01 was related to the transfer.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover or obtain proxy logs for 13:30\u201314:10 UTC, especially the transaction corresponding to the 13:50:49 connection, including destination, URL or CONNECT host, authenticated user, and byte counts.\",\n    \"Recover endpoint process, file, browser, and cloud-sync telemetry for WS-ICHEN-01 during the outage; correlate any upload or file access with the 13:50:49 connection.\",\n    \"Review Microsoft 365 and OneDrive audit records for uploads or other activity by ivy.chen during the window.\",\n    \"Determine the source and purpose of the 14:01 logon to WS-NBLAKE-01 and whether it has any relationship to activity on WS-ICHEN-01.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 41840,
+    "output": 2604,
+    "reasoning": 1867
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.93,
+  "supporting_observations": [
+   {
+    "claim": "At 13:50:49 UTC, WS-ICHEN-01 sent 51,000,389 bytes to the explicit proxy at 10.40.20.30:8080 in a connection lasting about 2.11 seconds; the connection record shows 8,922 bytes in the reverse direction.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00174"
+    ]
+   },
+   {
+    "claim": "At 14:10 UTC, Chrome on WS-ICHEN-01 made proxy requests to Microsoft Outlook services, including outlook.office365.com and the OWA page. This later activity does not establish the destination or purpose of the earlier large transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00281",
+     "T059-00282",
+     "T059-00283"
+    ]
+   },
+   {
+    "claim": "At 14:01 UTC, DC-NWD-01 issued a Kerberos ticket for ivy.chen to WS-NBLAKE-01, followed by a successful network logon for ivy.chen on that host from 10.40.20.20. The records do not link this activity to the large transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00248",
+     "T059-00249",
+     "T059-00250"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied sensor-coverage metadata reports a collection outage from 13:30 to 14:10 UTC for WS-ICHEN-01 winsec and sysmon, and for PROXY-NWD-01 proxy logs. The metadata provides no record_id.",
+   "Zeek connection telemetry is available, but the large connection record identifies only the internal proxy as its destination; the unavailable proxy logs prevent identifying the external destination for that transfer."
+  ],
+  "claims_not_established": [
+   "Whether the large transfer reached an external service, and if so which service or account received it.",
+   "Which process initiated the large transfer, what data it contained, or whether the transfer was an upload of files.",
+   "Whether the transfer was authorized, related to an approved Microsoft 365 or OneDrive activity, or malicious.",
+   "Whether the 14:01 ivy.chen logon on WS-NBLAKE-01 was related to the transfer."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover or obtain proxy logs for 13:30\u201314:10 UTC, especially the transaction corresponding to the 13:50:49 connection, including destination, URL or CONNECT host, authenticated user, and byte counts.",
+   "Recover endpoint process, file, browser, and cloud-sync telemetry for WS-ICHEN-01 during the outage; correlate any upload or file access with the 13:50:49 connection.",
+   "Review Microsoft 365 and OneDrive audit records for uploads or other activity by ivy.chen during the window.",
+   "Determine the source and purpose of the 14:01 logon to WS-NBLAKE-01 and whether it has any relationship to activity on WS-ICHEN-01."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 7,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 26.6
+}

@@ -1,0 +1,96 @@
+{
+ "run_id": "A__T030__C1__20261115T044838Z",
+ "config": "A",
+ "scenario_id": "T030",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 541,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 214066,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.83,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded a Kerberos service-ticket request for svc-bkp from 45.79.19.196, an external IP address; shortly afterward, FILE-HD-01 recorded a successful svc-bkp service logon. The inventory says there is no VPN and remote administration is restricted to WS-OHADDAD-01, making this authentication pattern inconsistent with the stated environment.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T030-00269\",\n        \"T030-00270\"\n      ]\n    },\n    {\n      \"claim\": \"FILE-HD-01 subsequently launched the approved CobaltVault agent as svc-bkp with the Nightly job and an ingest.cobaltvault.net target. This is consistent with an authorized backup workflow, but it does not explain why the preceding svc-bkp ticket request came from an external IP.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T030-00283\",\n        \"T030-00284\",\n        \"T030-00285\",\n        \"T030-00287\",\n        \"T030-00290\",\n        \"T030-00293\"\n      ]\n    },\n    {\n      \"claim\": \"The available proxy records for the CobaltVault connection show reported tunnel byte counts of 1,099 client-to-server and 48,593 server-to-client bytes; they do not document a transfer of hundreds of MB.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T030-00285\",\n        \"T030-00286\",\n        \"T030-00287\",\n        \"T030-00292\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:46, FILE-HD-01 made an SMB connection to DC-HD-01 that coincided with an ANONYMOUS LOGON network logon. The recorded connection was small, and these records alone do not show what SMB resource or data was accessed.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T030-00238\",\n        \"T030-00239\",\n        \"T030-00241\",\n        \"T030-00242\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not include network-flow or packet-level byte counts for the alert's reported transfer.\",\n    \"The proxy records provide limited connection-level details and do not establish which files, if any, were uploaded.\",\n    \"The supplied records do not identify who or what initiated the external-IP authentication or establish how the ticket request was made.\"\n  ],\n  \"claims_not_established\": [\n    \"That hundreds of MB were actually transferred during the review window, or that any transferred data left the organization.\",\n    \"That the external-IP svc-bkp ticket request was authorized, or that svc-bkp credentials were compromised.\",\n    \"That the SMB connection accessed sensitive files or was related to the reported transfer.\",\n    \"That the CobaltVault agent was misused; its recorded execution and destination are consistent with the approved backup workflow.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate DC authentication records and network telemetry for 45.79.19.196, including the source connection, authentication details, and any related svc-bkp activity.\",\n    \"Obtain firewall, proxy, and network-flow records with complete byte counts and destinations for FILE-HD-01 around 13:20\u201314:20 UTC.\",\n    \"Review CobaltVault job and audit logs to verify whether a backup ran, what data it handled, and whether the observed session was expected.\",\n    \"Review FILE-HD-01 service-account logon history, svc-bkp credential changes, and relevant service or scheduled-task configuration.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 78958,
+    "output": 2822,
+    "reasoning": 1966
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.83,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded a Kerberos service-ticket request for svc-bkp from 45.79.19.196, an external IP address; shortly afterward, FILE-HD-01 recorded a successful svc-bkp service logon. The inventory says there is no VPN and remote administration is restricted to WS-OHADDAD-01, making this authentication pattern inconsistent with the stated environment.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T030-00269",
+     "T030-00270"
+    ]
+   },
+   {
+    "claim": "FILE-HD-01 subsequently launched the approved CobaltVault agent as svc-bkp with the Nightly job and an ingest.cobaltvault.net target. This is consistent with an authorized backup workflow, but it does not explain why the preceding svc-bkp ticket request came from an external IP.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T030-00283",
+     "T030-00284",
+     "T030-00285",
+     "T030-00287",
+     "T030-00290",
+     "T030-00293"
+    ]
+   },
+   {
+    "claim": "The available proxy records for the CobaltVault connection show reported tunnel byte counts of 1,099 client-to-server and 48,593 server-to-client bytes; they do not document a transfer of hundreds of MB.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T030-00285",
+     "T030-00286",
+     "T030-00287",
+     "T030-00292"
+    ]
+   },
+   {
+    "claim": "At 13:46, FILE-HD-01 made an SMB connection to DC-HD-01 that coincided with an ANONYMOUS LOGON network logon. The recorded connection was small, and these records alone do not show what SMB resource or data was accessed.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T030-00238",
+     "T030-00239",
+     "T030-00241",
+     "T030-00242"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not include network-flow or packet-level byte counts for the alert's reported transfer.",
+   "The proxy records provide limited connection-level details and do not establish which files, if any, were uploaded.",
+   "The supplied records do not identify who or what initiated the external-IP authentication or establish how the ticket request was made."
+  ],
+  "claims_not_established": [
+   "That hundreds of MB were actually transferred during the review window, or that any transferred data left the organization.",
+   "That the external-IP svc-bkp ticket request was authorized, or that svc-bkp credentials were compromised.",
+   "That the SMB connection accessed sensitive files or was related to the reported transfer.",
+   "That the CobaltVault agent was misused; its recorded execution and destination are consistent with the approved backup workflow."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate DC authentication records and network telemetry for 45.79.19.196, including the source connection, authentication details, and any related svc-bkp activity.",
+   "Obtain firewall, proxy, and network-flow records with complete byte counts and destinations for FILE-HD-01 around 13:20\u201314:20 UTC.",
+   "Review CobaltVault job and audit logs to verify whether a backup ran, what data it handled, and whether the observed session was expected.",
+   "Review FILE-HD-01 service-account logon history, svc-bkp credential changes, and relevant service or scheduled-task configuration."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 16,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 28.3
+}

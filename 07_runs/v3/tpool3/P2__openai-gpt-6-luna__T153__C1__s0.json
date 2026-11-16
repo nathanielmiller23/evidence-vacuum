@@ -1,0 +1,97 @@
+{
+ "scenario_id": "T153",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:44:30 UTC, Julia Frost opened Statement.docm from her Downloads folder in WINWORD.EXE.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T153-00152\", \"T153-00155\"]\n    },\n    {\n      \"claim\": \"Within seconds, WINWORD.EXE spawned PowerShell with a hidden-window flag and an encoded command. Decoding the command shows it uses IEX and .NET WebClient DownloadString to retrieve a script from raw.githubusercontent.com/maplehill-it/tools/main/u.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T153-00156\", \"T153-00157\"]\n    },\n    {\n      \"claim\": \"Proxy telemetry records a successful GET for that exact u.ps1 URL, and network telemetry attributes connections to the proxy to the spawned PowerShell process.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T153-00160\", \"T153-00161\", \"T153-00162\", \"T153-00163\", \"T153-00164\", \"T153-00165\", \"T153-00166\"]\n    },\n    {\n      \"claim\": \"The PowerShell process then launched rundll32.exe with an entry point in C:\\\\Users\\\\julia.frost\\\\AppData\\\\Roaming\\\\svchelper.dll.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T153-00167\", \"T153-00168\"]\n    },\n    {\n      \"claim\": \"The document-to-hidden-PowerShell-to-script-download-to-rundll32 sequence supports a malicious-activity finding on the alerted workstation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T153-00152\", \"T153-00156\", \"T153-00160\", \"T153-00167\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The reported window appearance was around 13:40 UTC, while the documented Word and PowerShell sequence begins at 13:44:30 UTC; the records do not establish that this sequence is exactly what the user saw.\",\n    \"The command line and proxy logs show a script download, but the available records do not include the downloaded script's contents or hash (T153-00156, T153-00160).\",\n    \"The records show rundll32 launched with the svchelper.dll path, but do not provide the DLL's contents, hash, or a module-load record (T153-00167, T153-00168).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether Julia intentionally opened the document or knew it would launch the PowerShell command.\",\n    \"What actions the downloaded script or DLL performed, or whether they established persistence or caused data loss.\",\n    \"Whether the user-reported brief PowerShell window corresponds to the hidden PowerShell process recorded at 13:44:30 UTC.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze Statement.docm, the downloaded u.ps1, and svchelper.dll; preserve hashes and relevant file metadata.\",\n    \"Collect endpoint security and forensic telemetry for the document, PowerShell, DLL, and any subsequent child processes or persistence changes.\",\n    \"Confirm with Julia whether she opened Statement.docm and whether the reported window appeared closer to 13:40 or 13:44 UTC.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:29:40 UTC, a SYSTEM scheduled-task PowerShell process ran C:\\\\Scripts\\\\backup-check.ps1; at 13:30:31 UTC, that process was associated with an explicit-credentials event targeting svc-docsync and a proxy connection to gateway.zscaler.net. This is separate from the alerted 13:44 document-launched sequence and merits a separate review against the scheduled password rotation and job-update process (T153-00060, T153-00061, T153-00062, T153-00063, T153-00064).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 43158,
+    "output": 2197
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:44:30 UTC, Julia Frost opened Statement.docm from her Downloads folder in WINWORD.EXE.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T153-00152",
+     "T153-00155"
+    ]
+   },
+   {
+    "claim": "Within seconds, WINWORD.EXE spawned PowerShell with a hidden-window flag and an encoded command. Decoding the command shows it uses IEX and .NET WebClient DownloadString to retrieve a script from raw.githubusercontent.com/maplehill-it/tools/main/u.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T153-00156",
+     "T153-00157"
+    ]
+   },
+   {
+    "claim": "Proxy telemetry records a successful GET for that exact u.ps1 URL, and network telemetry attributes connections to the proxy to the spawned PowerShell process.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T153-00160",
+     "T153-00161",
+     "T153-00162",
+     "T153-00163",
+     "T153-00164",
+     "T153-00165",
+     "T153-00166"
+    ]
+   },
+   {
+    "claim": "The PowerShell process then launched rundll32.exe with an entry point in C:\\Users\\julia.frost\\AppData\\Roaming\\svchelper.dll.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T153-00167",
+     "T153-00168"
+    ]
+   },
+   {
+    "claim": "The document-to-hidden-PowerShell-to-script-download-to-rundll32 sequence supports a malicious-activity finding on the alerted workstation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T153-00152",
+     "T153-00156",
+     "T153-00160",
+     "T153-00167"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The reported window appearance was around 13:40 UTC, while the documented Word and PowerShell sequence begins at 13:44:30 UTC; the records do not establish that this sequence is exactly what the user saw.",
+   "The command line and proxy logs show a script download, but the available records do not include the downloaded script's contents or hash (T153-00156, T153-00160).",
+   "The records show rundll32 launched with the svchelper.dll path, but do not provide the DLL's contents, hash, or a module-load record (T153-00167, T153-00168)."
+  ],
+  "claims_not_established": [
+   "Whether Julia intentionally opened the document or knew it would launch the PowerShell command.",
+   "What actions the downloaded script or DLL performed, or whether they established persistence or caused data loss.",
+   "Whether the user-reported brief PowerShell window corresponds to the hidden PowerShell process recorded at 13:44:30 UTC."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze Statement.docm, the downloaded u.ps1, and svchelper.dll; preserve hashes and relevant file metadata.",
+   "Collect endpoint security and forensic telemetry for the document, PowerShell, DLL, and any subsequent child processes or persistence changes.",
+   "Confirm with Julia whether she opened Statement.docm and whether the reported window appeared closer to 13:40 or 13:44 UTC."
+  ],
+  "unrelated_findings": [
+   "At 13:29:40 UTC, a SYSTEM scheduled-task PowerShell process ran C:\\Scripts\\backup-check.ps1; at 13:30:31 UTC, that process was associated with an explicit-credentials event targeting svc-docsync and a proxy connection to gateway.zscaler.net. This is separate from the alerted 13:44 document-launched sequence and merits a separate review against the scheduled password rotation and job-update process (T153-00060, T153-00061, T153-00062, T153-00063, T153-00064)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 17,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 27.9
+}

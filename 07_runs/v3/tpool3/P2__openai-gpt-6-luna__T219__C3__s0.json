@@ -1,0 +1,93 @@
+{
+ "scenario_id": "T219",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.93,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:50:42 UTC, WS-MSANTOS-01 made an outbound HTTPS proxy tunnel to bigsend-drop.net with 51,000,000 client-to-server bytes; Zeek independently recorded 51,000,388 originating bytes for the same connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T219-00182\", \"T219-00184\"]\n    },\n    {\n      \"claim\": \"The large transfer was initiated by Firefox running as BLUEFIN\\\\mia.santos and used the organization's explicit proxy.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T219-00183\", \"T219-00185\"]\n    },\n    {\n      \"claim\": \"About six minutes before the transfer, mia.santos ran PowerShell to compress FILE-BLU-01's Shared\\\\Clients directory into a local c.zip archive, which was then created.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T219-00127\", \"T219-00129\"]\n    },\n    {\n      \"claim\": \"The sequence of archiving client-share data followed by a large transfer to a file-drop domain not listed among approved services is strongly consistent with data exfiltration.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T219-00127\", \"T219-00129\", \"T219-00182\", \"T219-00184\"]\n    },\n    {\n      \"claim\": \"The matching large transfer in the evidence is logged at 13:50:42 UTC, rather than around 13:46 UTC as described in the alert.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T219-00182\", \"T219-00184\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and Zeek records establish the transfer volume and destination, but do not establish the uploaded content.\",\n    \"Windows Security logs for DC-BLU-01 were not collected from 13:30 to 14:20 UTC because of a log collection outage; other listed sensors were reported as available.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not prove that c.zip, or any particular file from Shared\\\\Clients, was the content uploaded.\",\n    \"The evidence does not establish whether mia.santos had authorization for the archive creation or transfer.\",\n    \"The alert's approximate 13:46 UTC time is not corroborated by the provided transfer records; the large transfer is recorded at 13:50:42 UTC.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and review the proxy's full transaction and TLS inspection records for the bigsend-drop.net connection, including any available request path, upload metadata, or destination reputation data.\",\n    \"Acquire endpoint artifacts for c.zip, including its hash, size, contents, creation and access history, and any evidence linking it to the Firefox upload.\",\n    \"Review FILE-BLU-01 file-share access auditing for access to Shared\\\\Clients around 13:44 UTC.\",\n    \"Confirm with mia.santos and relevant data owners whether the archive and external transfer were authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox.exe launched at startup under mia.santos; Dropbox is not among the approved file-sharing or cloud-storage services in the provided environment context. Review separately. (T219-00073, T219-00074)\",\n    \"GoogleDriveFS.exe launched at startup under mia.santos; Google Drive is not among the approved services listed in the provided environment context. Review separately. (T219-00082, T219-00084)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 48226,
+    "output": 2182
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.93,
+  "supporting_observations": [
+   {
+    "claim": "At 13:50:42 UTC, WS-MSANTOS-01 made an outbound HTTPS proxy tunnel to bigsend-drop.net with 51,000,000 client-to-server bytes; Zeek independently recorded 51,000,388 originating bytes for the same connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T219-00182",
+     "T219-00184"
+    ]
+   },
+   {
+    "claim": "The large transfer was initiated by Firefox running as BLUEFIN\\mia.santos and used the organization's explicit proxy.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T219-00183",
+     "T219-00185"
+    ]
+   },
+   {
+    "claim": "About six minutes before the transfer, mia.santos ran PowerShell to compress FILE-BLU-01's Shared\\Clients directory into a local c.zip archive, which was then created.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T219-00127",
+     "T219-00129"
+    ]
+   },
+   {
+    "claim": "The sequence of archiving client-share data followed by a large transfer to a file-drop domain not listed among approved services is strongly consistent with data exfiltration.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T219-00127",
+     "T219-00129",
+     "T219-00182",
+     "T219-00184"
+    ]
+   },
+   {
+    "claim": "The matching large transfer in the evidence is logged at 13:50:42 UTC, rather than around 13:46 UTC as described in the alert.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T219-00182",
+     "T219-00184"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and Zeek records establish the transfer volume and destination, but do not establish the uploaded content.",
+   "Windows Security logs for DC-BLU-01 were not collected from 13:30 to 14:20 UTC because of a log collection outage; other listed sensors were reported as available."
+  ],
+  "claims_not_established": [
+   "The evidence does not prove that c.zip, or any particular file from Shared\\Clients, was the content uploaded.",
+   "The evidence does not establish whether mia.santos had authorization for the archive creation or transfer.",
+   "The alert's approximate 13:46 UTC time is not corroborated by the provided transfer records; the large transfer is recorded at 13:50:42 UTC."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and review the proxy's full transaction and TLS inspection records for the bigsend-drop.net connection, including any available request path, upload metadata, or destination reputation data.",
+   "Acquire endpoint artifacts for c.zip, including its hash, size, contents, creation and access history, and any evidence linking it to the Firefox upload.",
+   "Review FILE-BLU-01 file-share access auditing for access to Shared\\Clients around 13:44 UTC.",
+   "Confirm with mia.santos and relevant data owners whether the archive and external transfer were authorized."
+  ],
+  "unrelated_findings": [
+   "Dropbox.exe launched at startup under mia.santos; Dropbox is not among the approved file-sharing or cloud-storage services in the provided environment context. Review separately. (T219-00073, T219-00074)",
+   "GoogleDriveFS.exe launched at startup under mia.santos; Google Drive is not among the approved services listed in the provided environment context. Review separately. (T219-00082, T219-00084)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 24.5
+}

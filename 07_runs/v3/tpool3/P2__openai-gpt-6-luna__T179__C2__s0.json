@@ -1,0 +1,87 @@
+{
+ "scenario_id": "T179",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"PowerShell run as julia.frost compressed \\\\\\\\FILE-MAP-01\\\\Shared\\\\Clients into C:\\\\Users\\\\julia.frost\\\\AppData\\\\Local\\\\Temp\\\\c.zip, and a file-creation event confirms c.zip was created.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T179-00131\",\n        \"T179-00132\",\n        \"T179-00133\"\n      ]\n    },\n    {\n      \"claim\": \"Seconds before the large transfer, Chrome was launched by julia.frost to open sharefast-files.com, an unapproved file-sharing service.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T179-00179\",\n        \"T179-00180\"\n      ]\n    },\n    {\n      \"claim\": \"The proxy recorded 51,000,000 client-to-server bytes in a TLS tunnel from WS-JFROST-01 to sharefast-files.com, lasting about 25 seconds; Zeek independently recorded approximately 51 MB of originating bytes for the same proxy connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T179-00184\",\n        \"T179-00185\"\n      ]\n    },\n    {\n      \"claim\": \"The sequence of archiving the Clients share, opening an unapproved file-sharing site, and sending about 51 MB outbound strongly supports unauthorized exfiltration of client data, although the logs do not prove that c.zip was the payload.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T179-00131\",\n        \"T179-00133\",\n        \"T179-00179\",\n        \"T179-00184\",\n        \"T179-00185\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records a TLS tunnel and byte counts, not the encrypted application payload or the file names transferred.\",\n    \"The available records do not establish whether the archived c.zip was the specific data sent in the tunnel.\"\n  ],\n  \"claims_not_established\": [\n    \"The exact contents of the outbound transfer and whether they included c.zip.\",\n    \"Whether the transfer completed successfully at the application layer or what the destination did with any received data.\",\n    \"The user's intent or whether another person or process directed the activity.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and inspect c.zip, including its hash, size, creation/access metadata, and contents, if still available.\",\n    \"Obtain proxy, endpoint, and network records with TLS inspection or other payload metadata, if available, to identify the transferred object and confirm destination-side responses.\",\n    \"Review browser history, downloads, and relevant user/session records to establish the context for the sharefast-files.com activity.\",\n    \"Interview julia.frost and verify whether there was an authorized business purpose for archiving and transferring the Clients data.\"\n  ],\n  \"unrelated_findings\": [\n    \"A Commvault service process ran on WS-JFROST-01 and that process attempted explicit authentication to FILE-MAP-01 as svc-docsync; this is separate from the alerted transfer and warrants review against the service-account and host inventory. Records: T179-00203, T179-00204, T179-00212.\",\n    \"PROXY-MAP-01 made an inbound RDP connection to WS-JFROST-01, followed by an unsuccessful SMB connection attempt; this is separate from the alerted outbound transfer and warrants review against the stated remote-administration practice. Records: T179-00259, T179-00260, T179-00261, T179-00262.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 31245,
+    "output": 1705
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "PowerShell run as julia.frost compressed \\\\FILE-MAP-01\\Shared\\Clients into C:\\Users\\julia.frost\\AppData\\Local\\Temp\\c.zip, and a file-creation event confirms c.zip was created.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T179-00131",
+     "T179-00132",
+     "T179-00133"
+    ]
+   },
+   {
+    "claim": "Seconds before the large transfer, Chrome was launched by julia.frost to open sharefast-files.com, an unapproved file-sharing service.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T179-00179",
+     "T179-00180"
+    ]
+   },
+   {
+    "claim": "The proxy recorded 51,000,000 client-to-server bytes in a TLS tunnel from WS-JFROST-01 to sharefast-files.com, lasting about 25 seconds; Zeek independently recorded approximately 51 MB of originating bytes for the same proxy connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T179-00184",
+     "T179-00185"
+    ]
+   },
+   {
+    "claim": "The sequence of archiving the Clients share, opening an unapproved file-sharing site, and sending about 51 MB outbound strongly supports unauthorized exfiltration of client data, although the logs do not prove that c.zip was the payload.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T179-00131",
+     "T179-00133",
+     "T179-00179",
+     "T179-00184",
+     "T179-00185"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records a TLS tunnel and byte counts, not the encrypted application payload or the file names transferred.",
+   "The available records do not establish whether the archived c.zip was the specific data sent in the tunnel."
+  ],
+  "claims_not_established": [
+   "The exact contents of the outbound transfer and whether they included c.zip.",
+   "Whether the transfer completed successfully at the application layer or what the destination did with any received data.",
+   "The user's intent or whether another person or process directed the activity."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and inspect c.zip, including its hash, size, creation/access metadata, and contents, if still available.",
+   "Obtain proxy, endpoint, and network records with TLS inspection or other payload metadata, if available, to identify the transferred object and confirm destination-side responses.",
+   "Review browser history, downloads, and relevant user/session records to establish the context for the sharefast-files.com activity.",
+   "Interview julia.frost and verify whether there was an authorized business purpose for archiving and transferring the Clients data."
+  ],
+  "unrelated_findings": [
+   "A Commvault service process ran on WS-JFROST-01 and that process attempted explicit authentication to FILE-MAP-01 as svc-docsync; this is separate from the alerted transfer and warrants review against the service-account and host inventory. Records: T179-00203, T179-00204, T179-00212.",
+   "PROXY-MAP-01 made an inbound RDP connection to WS-JFROST-01, followed by an unsuccessful SMB connection attempt; this is separate from the alerted outbound transfer and warrants review against the stated remote-administration practice. Records: T179-00259, T179-00260, T179-00261, T179-00262."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 17.0
+}

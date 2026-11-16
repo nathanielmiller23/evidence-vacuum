@@ -1,0 +1,85 @@
+{
+ "scenario_id": "T067",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded creation of it_support at 13:46:16 UTC, with raj.patel named as the subject; the account was added to the Administrators group about two seconds later, also under raj.patel. This conflicts with the stated practice that temporary help-desk accounts are named tmp.<name> and never receive administrator rights.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T067-00097\",\n        \"T067-00099\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:41:40 UTC, WS-TWEBER-01 accepted a successful RemoteInteractive (LogonType 10) login for raj.patel from 203.0.113.17. The associated network records show an inbound connection from that address to RDP port 3389; the organization states it has no VPN and remote administration is only from WS-RPATEL-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T067-00082\",\n        \"T067-00083\",\n        \"T067-00084\"\n      ]\n    },\n    {\n      \"claim\": \"A scheduled task created on WS-TWEBER-01 under raj.patel's logon ID contains a hidden, encoded PowerShell command that decodes to downloading and invoking a script from http://203.0.113.17/a.ps1. This is strongly suspicious and shares the source address seen in the inbound RDP connection.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T067-00102\",\n        \"T067-00082\",\n        \"T067-00084\"\n      ]\n    },\n    {\n      \"claim\": \"The alerted account creation is logged at 13:46:16 UTC, rather than around 13:42 UTC as described in the alert.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T067-00097\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The account creation and Administrators-group addition records name raj.patel, but the account-creation/group-change logon ID (0x868facc) differs from the RDP session logon ID (0xdcf69f6); the records do not establish that these actions came from the same session. (T067-00084, T067-00097, T067-00099)\",\n    \"The logs show the scheduled task definition, but do not establish whether its downloaded script was retrieved or executed. (T067-00102)\",\n    \"The available records do not establish whether the named raj.patel was the human actor or whether the account or credentials were misused.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the account creation or administrator grant had an approved change authorization.\",\n    \"Whether the scheduled task's script ran, what it contained, or whether it caused further compromise.\",\n    \"Whether raj.patel's credentials or endpoint were compromised, or who controlled the RDP connection.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Validate with the IT administrator and change records whether creating it_support and granting it Administrators membership were authorized.\",\n    \"Correlate domain-controller authentication and audit logs for logon ID 0x868facc with the RDP session and determine the source and authentication path for the connection from 203.0.113.17.\",\n    \"Collect the scheduled task's subsequent execution history, PowerShell logs, proxy/network records, and the contents of the referenced script.\",\n    \"Review the account's current status, group memberships, authentication history, and any actions taken after creation; preserve relevant host and domain-controller evidence.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-TWEBER-01 ran Google Drive File Stream, an unapproved cloud-storage service according to the supplied inventory. Track separately; it does not determine the it_support alert. (T067-00160)\",\n    \"tom.weber ran Get-ADUser enumeration, inventoried C:\\\\Shares, and launched PostgreSQL clients; these activities may warrant separate review but are not the alerted account-management event. (T067-00157, T067-00158, T067-00166, T067-00167, T067-00120, T067-00121, T067-00201, T067-00203)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 44708,
+    "output": 2523
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded creation of it_support at 13:46:16 UTC, with raj.patel named as the subject; the account was added to the Administrators group about two seconds later, also under raj.patel. This conflicts with the stated practice that temporary help-desk accounts are named tmp.<name> and never receive administrator rights.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T067-00097",
+     "T067-00099"
+    ]
+   },
+   {
+    "claim": "At 13:41:40 UTC, WS-TWEBER-01 accepted a successful RemoteInteractive (LogonType 10) login for raj.patel from 203.0.113.17. The associated network records show an inbound connection from that address to RDP port 3389; the organization states it has no VPN and remote administration is only from WS-RPATEL-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T067-00082",
+     "T067-00083",
+     "T067-00084"
+    ]
+   },
+   {
+    "claim": "A scheduled task created on WS-TWEBER-01 under raj.patel's logon ID contains a hidden, encoded PowerShell command that decodes to downloading and invoking a script from http://203.0.113.17/a.ps1. This is strongly suspicious and shares the source address seen in the inbound RDP connection.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T067-00102",
+     "T067-00082",
+     "T067-00084"
+    ]
+   },
+   {
+    "claim": "The alerted account creation is logged at 13:46:16 UTC, rather than around 13:42 UTC as described in the alert.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T067-00097"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The account creation and Administrators-group addition records name raj.patel, but the account-creation/group-change logon ID (0x868facc) differs from the RDP session logon ID (0xdcf69f6); the records do not establish that these actions came from the same session. (T067-00084, T067-00097, T067-00099)",
+   "The logs show the scheduled task definition, but do not establish whether its downloaded script was retrieved or executed. (T067-00102)",
+   "The available records do not establish whether the named raj.patel was the human actor or whether the account or credentials were misused."
+  ],
+  "claims_not_established": [
+   "Whether the account creation or administrator grant had an approved change authorization.",
+   "Whether the scheduled task's script ran, what it contained, or whether it caused further compromise.",
+   "Whether raj.patel's credentials or endpoint were compromised, or who controlled the RDP connection."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Validate with the IT administrator and change records whether creating it_support and granting it Administrators membership were authorized.",
+   "Correlate domain-controller authentication and audit logs for logon ID 0x868facc with the RDP session and determine the source and authentication path for the connection from 203.0.113.17.",
+   "Collect the scheduled task's subsequent execution history, PowerShell logs, proxy/network records, and the contents of the referenced script.",
+   "Review the account's current status, group memberships, authentication history, and any actions taken after creation; preserve relevant host and domain-controller evidence."
+  ],
+  "unrelated_findings": [
+   "WS-TWEBER-01 ran Google Drive File Stream, an unapproved cloud-storage service according to the supplied inventory. Track separately; it does not determine the it_support alert. (T067-00160)",
+   "tom.weber ran Get-ADUser enumeration, inventoried C:\\Shares, and launched PostgreSQL clients; these activities may warrant separate review but are not the alerted account-management event. (T067-00157, T067-00158, T067-00166, T067-00167, T067-00120, T067-00121, T067-00201, T067-00203)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 9,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 26.9
+}

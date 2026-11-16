@@ -1,0 +1,115 @@
+{
+ "scenario_id": "T123",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:44:54 UTC, dan.reyes opened C:\\\\Users\\\\dan.reyes\\\\Downloads\\\\Statement.docm in WINWORD.EXE.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T123-00214\", \"T123-00217\"]\n    },\n    {\n      \"claim\": \"Within about one second, WINWORD.EXE launched PowerShell with -nop, -w hidden, and an encoded command. Decoding the command indicates it uses Net.WebClient DownloadString to retrieve a script from raw.githubusercontent.com/copperline-it/tools/main/u.ps1 and execute it with IEX.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T123-00218\", \"T123-00219\"]\n    },\n    {\n      \"claim\": \"Immediately afterward, the proxy recorded a successful GET for that script URL, and network events associate connections to the proxy with the PowerShell process.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T123-00220\", \"T123-00222\", \"T123-00224\", \"T123-00225\", \"T123-00226\", \"T123-00227\", \"T123-00228\"]\n    },\n    {\n      \"claim\": \"The PowerShell process created a temporary file and launched rundll32.exe to run C:\\\\Users\\\\dan.reyes\\\\AppData\\\\Roaming\\\\svchelper.dll,Init; the rundll32 and PowerShell processes then exited.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T123-00231\", \"T123-00232\", \"T123-00233\", \"T123-00236\", \"T123-00237\", \"T123-00238\", \"T123-00239\"]\n    },\n    {\n      \"claim\": \"The process chain\u2014Word launching hidden, encoded PowerShell to retrieve and execute a remote script, followed by rundll32 loading a DLL from the user's Roaming AppData\u2014is strongly indicative of malicious execution and is consistent with a briefly visible PowerShell window.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T123-00214\", \"T123-00218\", \"T123-00222\", \"T123-00232\"]\n    },\n    {\n      \"claim\": \"The observed PowerShell chain began at 13:44:55 UTC, several minutes later than the reported approximate time of 13:40 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T123-00218\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available records show the script URL and a successful HTTP response but do not include the retrieved script contents.\",\n    \"The records do not provide the contents, hash, signature, or subsequent behavior of svchelper.dll or the temporary file.\",\n    \"The supplied process records show process creation and termination, but do not establish what the DLL did while running.\",\n    \"The reported time is approximate; the observed PowerShell process started at 13:44:55 UTC, and the supplied records do not establish whether the user saw another PowerShell window at 13:40 UTC.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether Statement.docm was malicious or how it arrived on the workstation.\",\n    \"Whether the retrieved script or DLL was authorized, what their exact contents were, or what actions they performed.\",\n    \"Whether the activity established persistence, accessed credentials or data, or affected other systems.\",\n    \"Whether the observed 13:44:55 PowerShell process was the exact window the user reported seeing around 13:40 UTC.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine Statement.docm, including its origin, metadata, and macro contents.\",\n    \"Collect the retrieved script and svchelper.dll, plus hashes, signatures, and available endpoint or proxy content records; compare them with an independently verified authorized source if one exists.\",\n    \"Collect PowerShell Script Block Logging, AMSI, EDR, and memory or forensic evidence for the execution chain.\",\n    \"Check for persistence, additional processes, credential access, and related activity on WS-DREYES-01 and systems contacted by it.\",\n    \"Confirm the reported time and circumstances with the user and correlate with any additional endpoint telemetry.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:36, WS-DREYES-01 requested Kerberos tickets for kim.nguyen and WS-KNGUYEN-01$, followed by a network logon for kim.nguyen to WS-KNGUYEN-01 from WS-DREYES-01. Investigate separately; the inventory says remote administration is only performed from WS-PBECKER-01. (T123-00171, T123-00172, T123-00175)\",\n    \"Cisco AnyConnect vpnui.exe was launched on WS-DREYES-01, although the inventory says the organization has no VPN. The records provided do not show a VPN connection; investigate the client separately. (T123-00180, T123-00181, T123-00182)\",\n    \"A separate PowerShell process at 14:05 ran Invoke-WebRequest against packages.nuget.org, with Explorer as its parent; it is distinct from the alerted Word-launched chain. (T123-00372, T123-00373)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 65468,
+    "output": 2634
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "At 13:44:54 UTC, dan.reyes opened C:\\Users\\dan.reyes\\Downloads\\Statement.docm in WINWORD.EXE.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T123-00214",
+     "T123-00217"
+    ]
+   },
+   {
+    "claim": "Within about one second, WINWORD.EXE launched PowerShell with -nop, -w hidden, and an encoded command. Decoding the command indicates it uses Net.WebClient DownloadString to retrieve a script from raw.githubusercontent.com/copperline-it/tools/main/u.ps1 and execute it with IEX.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T123-00218",
+     "T123-00219"
+    ]
+   },
+   {
+    "claim": "Immediately afterward, the proxy recorded a successful GET for that script URL, and network events associate connections to the proxy with the PowerShell process.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T123-00220",
+     "T123-00222",
+     "T123-00224",
+     "T123-00225",
+     "T123-00226",
+     "T123-00227",
+     "T123-00228"
+    ]
+   },
+   {
+    "claim": "The PowerShell process created a temporary file and launched rundll32.exe to run C:\\Users\\dan.reyes\\AppData\\Roaming\\svchelper.dll,Init; the rundll32 and PowerShell processes then exited.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T123-00231",
+     "T123-00232",
+     "T123-00233",
+     "T123-00236",
+     "T123-00237",
+     "T123-00238",
+     "T123-00239"
+    ]
+   },
+   {
+    "claim": "The process chain\u2014Word launching hidden, encoded PowerShell to retrieve and execute a remote script, followed by rundll32 loading a DLL from the user's Roaming AppData\u2014is strongly indicative of malicious execution and is consistent with a briefly visible PowerShell window.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T123-00214",
+     "T123-00218",
+     "T123-00222",
+     "T123-00232"
+    ]
+   },
+   {
+    "claim": "The observed PowerShell chain began at 13:44:55 UTC, several minutes later than the reported approximate time of 13:40 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T123-00218"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available records show the script URL and a successful HTTP response but do not include the retrieved script contents.",
+   "The records do not provide the contents, hash, signature, or subsequent behavior of svchelper.dll or the temporary file.",
+   "The supplied process records show process creation and termination, but do not establish what the DLL did while running.",
+   "The reported time is approximate; the observed PowerShell process started at 13:44:55 UTC, and the supplied records do not establish whether the user saw another PowerShell window at 13:40 UTC."
+  ],
+  "claims_not_established": [
+   "Whether Statement.docm was malicious or how it arrived on the workstation.",
+   "Whether the retrieved script or DLL was authorized, what their exact contents were, or what actions they performed.",
+   "Whether the activity established persistence, accessed credentials or data, or affected other systems.",
+   "Whether the observed 13:44:55 PowerShell process was the exact window the user reported seeing around 13:40 UTC."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine Statement.docm, including its origin, metadata, and macro contents.",
+   "Collect the retrieved script and svchelper.dll, plus hashes, signatures, and available endpoint or proxy content records; compare them with an independently verified authorized source if one exists.",
+   "Collect PowerShell Script Block Logging, AMSI, EDR, and memory or forensic evidence for the execution chain.",
+   "Check for persistence, additional processes, credential access, and related activity on WS-DREYES-01 and systems contacted by it.",
+   "Confirm the reported time and circumstances with the user and correlate with any additional endpoint telemetry."
+  ],
+  "unrelated_findings": [
+   "At 13:36, WS-DREYES-01 requested Kerberos tickets for kim.nguyen and WS-KNGUYEN-01$, followed by a network logon for kim.nguyen to WS-KNGUYEN-01 from WS-DREYES-01. Investigate separately; the inventory says remote administration is only performed from WS-PBECKER-01. (T123-00171, T123-00172, T123-00175)",
+   "Cisco AnyConnect vpnui.exe was launched on WS-DREYES-01, although the inventory says the organization has no VPN. The records provided do not show a VPN connection; investigate the client separately. (T123-00180, T123-00181, T123-00182)",
+   "A separate PowerShell process at 14:05 ran Invoke-WebRequest against packages.nuget.org, with Explorer as its parent; it is distinct from the alerted Word-launched chain. (T123-00372, T123-00373)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 23,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 30.7
+}

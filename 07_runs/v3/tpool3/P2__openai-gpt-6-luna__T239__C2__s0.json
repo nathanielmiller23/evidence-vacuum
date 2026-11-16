@@ -1,0 +1,74 @@
+{
+ "scenario_id": "T239",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45:33 UTC, WS-ZADAMS-01 sent 51,000,423 bytes to the explicit proxy at 10.55.20.30 over a TCP connection lasting about 29.65 seconds; the connection record reports 8,927 bytes in the reverse direction.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T239-00112\"\n      ]\n    },\n    {\n      \"claim\": \"The observed large transfer is consistent in timing and volume with the alerted activity, but the available connection record identifies only the proxy as the destination, not the ultimate external service or recipient.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T239-00112\"\n      ]\n    },\n    {\n      \"claim\": \"The available endpoint process record shows Edge opening public.tableau.com at 13:20 UTC, but it does not establish which process generated the much larger proxy connection over 25 minutes later.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T239-00001\",\n        \"T239-00009\",\n        \"T239-00112\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The provided records include a Zeek connection summary for the large transfer but no matching proxy request record that identifies the requested destination or URL (T239-00112; the available proxy record is for a separate, small Tableau connection at T239-00009).\",\n    \"No provided endpoint event attributes the large connection to a process, user action, or file (T239-00112).\",\n    \"The connection summary does not reveal the transferred content or establish whether the bytes were ultimately delivered to an external recipient (T239-00112).\"\n  ],\n  \"claims_not_established\": [\n    \"The ultimate destination or service receiving the data.\",\n    \"The identity of the process that initiated the transfer.\",\n    \"What data was transferred, whether it contained sensitive information, or whether the transfer was authorized.\",\n    \"Whether the large client-to-proxy flow resulted in a successful upload beyond the proxy.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Retrieve PROXY-SUN-01 access/request logs for the connection around 13:45:33 UTC, including destination host, URL, authenticated user, and transfer result.\",\n    \"Correlate endpoint network telemetry with the source tuple and time of the large flow to identify the initiating process and user session.\",\n    \"If available, review proxy TLS inspection or destination-side records and endpoint file-access evidence to determine the transferred content and whether the transfer was authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"A Sysmon event records svchost.exe accessing the LSASS process on WS-ZADAMS-01 at 13:24:07; this is not shown to be related to the alerted transfer and should be reviewed separately if warranted (T239-00017).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 19047,
+    "output": 1705
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45:33 UTC, WS-ZADAMS-01 sent 51,000,423 bytes to the explicit proxy at 10.55.20.30 over a TCP connection lasting about 29.65 seconds; the connection record reports 8,927 bytes in the reverse direction.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T239-00112"
+    ]
+   },
+   {
+    "claim": "The observed large transfer is consistent in timing and volume with the alerted activity, but the available connection record identifies only the proxy as the destination, not the ultimate external service or recipient.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T239-00112"
+    ]
+   },
+   {
+    "claim": "The available endpoint process record shows Edge opening public.tableau.com at 13:20 UTC, but it does not establish which process generated the much larger proxy connection over 25 minutes later.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T239-00001",
+     "T239-00009",
+     "T239-00112"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The provided records include a Zeek connection summary for the large transfer but no matching proxy request record that identifies the requested destination or URL (T239-00112; the available proxy record is for a separate, small Tableau connection at T239-00009).",
+   "No provided endpoint event attributes the large connection to a process, user action, or file (T239-00112).",
+   "The connection summary does not reveal the transferred content or establish whether the bytes were ultimately delivered to an external recipient (T239-00112)."
+  ],
+  "claims_not_established": [
+   "The ultimate destination or service receiving the data.",
+   "The identity of the process that initiated the transfer.",
+   "What data was transferred, whether it contained sensitive information, or whether the transfer was authorized.",
+   "Whether the large client-to-proxy flow resulted in a successful upload beyond the proxy."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Retrieve PROXY-SUN-01 access/request logs for the connection around 13:45:33 UTC, including destination host, URL, authenticated user, and transfer result.",
+   "Correlate endpoint network telemetry with the source tuple and time of the large flow to identify the initiating process and user session.",
+   "If available, review proxy TLS inspection or destination-side records and endpoint file-access evidence to determine the transferred content and whether the transfer was authorized."
+  ],
+  "unrelated_findings": [
+   "A Sysmon event records svchost.exe accessing the LSASS process on WS-ZADAMS-01 at 13:24:07; this is not shown to be related to the alerted transfer and should be reviewed separately if warranted (T239-00017)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 5,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.1
+}

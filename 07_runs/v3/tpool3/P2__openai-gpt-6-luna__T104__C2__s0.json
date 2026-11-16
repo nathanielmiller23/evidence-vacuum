@@ -1,0 +1,75 @@
+{
+ "scenario_id": "T104",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:38 UTC, the domain controller issued a service ticket for paul.becker to the WS-DREYES-01$ service from client IP 10.52.10.23. This is close in time to the reported PowerShell window, but the record does not establish a successful interactive or remote PowerShell session.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T104-00175\"]\n    },\n    {\n      \"claim\": \"At 13:40:48 UTC, WS-DREYES-01 made a proxy request to download.windowsupdate.com using the Windows Update Agent; the proxy returned status 502. This is compatible with, but does not prove, the scheduled workstation patching activity.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T104-00190\", \"T104-00191\"]\n    },\n    {\n      \"claim\": \"At 13:42 UTC, WS-DREYES-01 requested Kerberos tickets for FILE-COP-01$ using its machine account. The records do not show what resource or process used those tickets.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T104-00207\", \"T104-00212\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not include a process-creation event identifying PowerShell, its parent process, command line, or user at the reported time.\",\n    \"The supplied records do not show whether the patch script was read from FILE-COP-01 or whether a remote PowerShell session was established.\",\n    \"The administrator service-ticket record does not by itself establish that paul.becker successfully logged on to WS-DREYES-01 or performed the reported activity.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the reported PowerShell window was caused by authorized workstation patching or by another activity.\",\n    \"Whether the 13:38 service ticket and the 13:40 report are part of the same activity.\",\n    \"What commands, if any, ran in the reported PowerShell window, and whether they caused changes or network activity.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Collect endpoint process and PowerShell logs for WS-DREYES-01 around 13:40 UTC, including process creation, parent process, command line, script-block logging, and user context.\",\n    \"Review remote logon and PowerShell remoting evidence on WS-DREYES-01 and WS-PBECKER-01, including successful logons and session details.\",\n    \"Check FILE-COP-01 file-access or share-audit logs for access to \\\\\\\\FILE-COP-01\\\\IT\\\\Patch-Workstations.ps1 and correlate it with the administrator activity.\",\n    \"Confirm with IT whether paul.becker initiated patching on WS-DREYES-01 at that time and whether the activity matches the approved procedure.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox.exe was launched on WS-DREYES-01 under dan.reyes; Dropbox is a file-sharing service not listed as approved. Route this for separate review; it does not establish anything about the reported PowerShell window. (T104-00071, T104-00072, T104-00073)\",\n    \"GlobalProtect PanGPA.exe was launched on WS-DREYES-01. The inventory says there is no VPN; these records show the client process but do not establish a VPN connection. Review separately, without using it to decide this alert. (T104-00014, T104-00015, T104-00016)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 42537,
+    "output": 2146
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "At 13:38 UTC, the domain controller issued a service ticket for paul.becker to the WS-DREYES-01$ service from client IP 10.52.10.23. This is close in time to the reported PowerShell window, but the record does not establish a successful interactive or remote PowerShell session.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T104-00175"
+    ]
+   },
+   {
+    "claim": "At 13:40:48 UTC, WS-DREYES-01 made a proxy request to download.windowsupdate.com using the Windows Update Agent; the proxy returned status 502. This is compatible with, but does not prove, the scheduled workstation patching activity.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T104-00190",
+     "T104-00191"
+    ]
+   },
+   {
+    "claim": "At 13:42 UTC, WS-DREYES-01 requested Kerberos tickets for FILE-COP-01$ using its machine account. The records do not show what resource or process used those tickets.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T104-00207",
+     "T104-00212"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not include a process-creation event identifying PowerShell, its parent process, command line, or user at the reported time.",
+   "The supplied records do not show whether the patch script was read from FILE-COP-01 or whether a remote PowerShell session was established.",
+   "The administrator service-ticket record does not by itself establish that paul.becker successfully logged on to WS-DREYES-01 or performed the reported activity."
+  ],
+  "claims_not_established": [
+   "Whether the reported PowerShell window was caused by authorized workstation patching or by another activity.",
+   "Whether the 13:38 service ticket and the 13:40 report are part of the same activity.",
+   "What commands, if any, ran in the reported PowerShell window, and whether they caused changes or network activity."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Collect endpoint process and PowerShell logs for WS-DREYES-01 around 13:40 UTC, including process creation, parent process, command line, script-block logging, and user context.",
+   "Review remote logon and PowerShell remoting evidence on WS-DREYES-01 and WS-PBECKER-01, including successful logons and session details.",
+   "Check FILE-COP-01 file-access or share-audit logs for access to \\\\FILE-COP-01\\IT\\Patch-Workstations.ps1 and correlate it with the administrator activity.",
+   "Confirm with IT whether paul.becker initiated patching on WS-DREYES-01 at that time and whether the activity matches the approved procedure."
+  ],
+  "unrelated_findings": [
+   "Dropbox.exe was launched on WS-DREYES-01 under dan.reyes; Dropbox is a file-sharing service not listed as approved. Route this for separate review; it does not establish anything about the reported PowerShell window. (T104-00071, T104-00072, T104-00073)",
+   "GlobalProtect PanGPA.exe was launched on WS-DREYES-01. The inventory says there is no VPN; these records show the client process but do not establish a VPN connection. Review separately, without using it to decide this alert. (T104-00014, T104-00015, T104-00016)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 5,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.9
+}

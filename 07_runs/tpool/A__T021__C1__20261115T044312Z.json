@@ -1,0 +1,99 @@
+{
+ "run_id": "A__T021__C1__20261115T044312Z",
+ "config": "A",
+ "scenario_id": "T021",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 27,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 15668,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.9,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Two network logon attempts for ben.carter failed at 13:45:20 and 13:46:34 UTC; both report source IP 192.0.2.45 and substatus 0xc000006a.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T021-00002\", \"T021-00003\"]\n    },\n    {\n      \"claim\": \"At 13:48:08 UTC, a network logon for ben.carter succeeded from the same reported IP, 192.0.2.45. The event reports Kerberos authentication and WorkstationName=DC-HD-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T021-00004\"]\n    },\n    {\n      \"claim\": \"The failed attempts followed by a successful network logon from an IP not attributed to a host in the supplied inventory merit investigation, but the records do not identify who or what controlled that source.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T021-00002\", \"T021-00003\", \"T021-00004\"]\n    },\n    {\n      \"claim\": \"Ben.carter later had a successful type 2 logon on WS-BCARTER-01, followed by userinit.exe and explorer.exe startup. This is a separate local-interactive logon and does not establish the origin or legitimacy of the earlier network logon.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T021-00005\", \"T021-00006\", \"T021-00008\"]\n    },\n    {\n      \"claim\": \"After the local session began, PowerShell ran an Invoke-RestMethod request to an internal API; Firefox opened graph.microsoft.com, and the proxy recorded a successful tunnel to that Microsoft endpoint. These events do not resolve the earlier authentication source.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T021-00012\", \"T021-00025\", \"T021-00026\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not map 192.0.2.45 to a device, user, or network location.\",\n    \"The DC records show authentication outcomes and source fields, but no evidence here identifies the process or person that initiated the attempts.\",\n    \"The later workstation logon has a different logon type and logon ID from the successful network logon, so these records do not establish that they were part of the same session.\",\n    \"The provided evidence is limited to selected events in the requested time window and does not show a complete authentication or endpoint timeline.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the failed attempts were caused by benign stale credentials or deliberate password guessing.\",\n    \"Whether the successful network logon from 192.0.2.45 was authorized or performed by ben.carter.\",\n    \"Whether the source IP belongs to an organization-managed host, an external system, or a sanitized address.\",\n    \"Whether the successful network logon led to any further access or activity.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Map 192.0.2.45 to a device and network location using DHCP, IPAM, endpoint inventory, and relevant network records.\",\n    \"Review surrounding domain-controller authentication events, including related Kerberos and NTLM validation events, for the same account and source.\",\n    \"Collect network access and endpoint telemetry for the source device around 13:45\u201313:48 UTC.\",\n    \"Check for other authentication attempts or successful logons for ben.carter from the same source, and compare with the account's expected activity.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 5150,
+    "output": 2029,
+    "reasoning": 1186
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.9,
+  "supporting_observations": [
+   {
+    "claim": "Two network logon attempts for ben.carter failed at 13:45:20 and 13:46:34 UTC; both report source IP 192.0.2.45 and substatus 0xc000006a.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T021-00002",
+     "T021-00003"
+    ]
+   },
+   {
+    "claim": "At 13:48:08 UTC, a network logon for ben.carter succeeded from the same reported IP, 192.0.2.45. The event reports Kerberos authentication and WorkstationName=DC-HD-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T021-00004"
+    ]
+   },
+   {
+    "claim": "The failed attempts followed by a successful network logon from an IP not attributed to a host in the supplied inventory merit investigation, but the records do not identify who or what controlled that source.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T021-00002",
+     "T021-00003",
+     "T021-00004"
+    ]
+   },
+   {
+    "claim": "Ben.carter later had a successful type 2 logon on WS-BCARTER-01, followed by userinit.exe and explorer.exe startup. This is a separate local-interactive logon and does not establish the origin or legitimacy of the earlier network logon.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T021-00005",
+     "T021-00006",
+     "T021-00008"
+    ]
+   },
+   {
+    "claim": "After the local session began, PowerShell ran an Invoke-RestMethod request to an internal API; Firefox opened graph.microsoft.com, and the proxy recorded a successful tunnel to that Microsoft endpoint. These events do not resolve the earlier authentication source.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T021-00012",
+     "T021-00025",
+     "T021-00026"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not map 192.0.2.45 to a device, user, or network location.",
+   "The DC records show authentication outcomes and source fields, but no evidence here identifies the process or person that initiated the attempts.",
+   "The later workstation logon has a different logon type and logon ID from the successful network logon, so these records do not establish that they were part of the same session.",
+   "The provided evidence is limited to selected events in the requested time window and does not show a complete authentication or endpoint timeline."
+  ],
+  "claims_not_established": [
+   "Whether the failed attempts were caused by benign stale credentials or deliberate password guessing.",
+   "Whether the successful network logon from 192.0.2.45 was authorized or performed by ben.carter.",
+   "Whether the source IP belongs to an organization-managed host, an external system, or a sanitized address.",
+   "Whether the successful network logon led to any further access or activity."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Map 192.0.2.45 to a device and network location using DHCP, IPAM, endpoint inventory, and relevant network records.",
+   "Review surrounding domain-controller authentication events, including related Kerberos and NTLM validation events, for the same account and source.",
+   "Collect network access and endpoint telemetry for the source device around 13:45\u201313:48 UTC.",
+   "Check for other authentication attempts or successful logons for ben.carter from the same source, and compare with the account's expected activity."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.1
+}

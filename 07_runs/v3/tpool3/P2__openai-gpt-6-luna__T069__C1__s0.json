@@ -1,0 +1,85 @@
+{
+ "scenario_id": "T069",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Ana Ruiz ran PowerShell to compress \\\\\\\\FILE-PIN-01\\\\Shared\\\\Clients into C:\\\\Users\\\\ana.ruiz\\\\AppData\\\\Local\\\\Temp\\\\c.zip; Sysmon recorded creation of that archive.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T069-00142\", \"T069-00144\"]\n    },\n    {\n      \"claim\": \"Ana Ruiz then launched Chrome with https://dropzone-transfer.net/ as its argument.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T069-00163\", \"T069-00164\"]\n    },\n    {\n      \"claim\": \"The proxy recorded Ana Ruiz connecting to dropzone-transfer.net over a tunnel and sending 51,000,000 client-to-server bytes, with only 8,800 server-to-client bytes; Zeek records a matching large connection to the explicit proxy.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T069-00194\", \"T069-00196\", \"T069-00197\"]\n    },\n    {\n      \"claim\": \"The sequence of archiving the Clients share, opening an unapproved transfer site, and sending tens of megabytes supports a malicious exfiltration finding for the alerted activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T069-00142\", \"T069-00144\", \"T069-00163\", \"T069-00194\", \"T069-00196\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records a CONNECT tunnel and byte counts, not the encrypted tunnel's contents, so the transferred payload cannot be identified from these records. (T069-00194, T069-00196)\"\n  ],\n  \"claims_not_established\": [\n    \"The records do not establish that c.zip was the specific file uploaded, or that the 51,000,000 bytes contained the Clients archive. (T069-00142, T069-00144, T069-00194, T069-00196)\",\n    \"The records do not establish the archive's contents, the recipient's identity, or Ana Ruiz's intent. (T069-00142, T069-00144, T069-00194)\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve WS-ARUIZ-01 and collect c.zip metadata, hash, and contents, plus file-share access records for the Clients directory.\",\n    \"Obtain browser history and relevant browser/cache artifacts to determine what was selected or uploaded to dropzone-transfer.net.\",\n    \"Review proxy, DNS, and available TLS inspection or destination intelligence for the transfer and domain.\",\n    \"Interview Ana Ruiz and verify whether the transfer had an authorized business purpose.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox updater execution was observed on WS-ARUIZ-01 despite the inventory listing no other approved file-sharing or cloud-storage services. The records show updater execution, not a Dropbox transfer; investigate separately. (T069-00006, T069-00008, T069-00112, T069-00133)\",\n    \"Palo Alto GlobalProtect PanGPS.exe started on WS-ARUIZ-01, while the inventory says there is no VPN; these records do not show it participating in the alerted transfer. Investigate separately. (T069-00028, T069-00029)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 46393,
+    "output": 1674
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "Ana Ruiz ran PowerShell to compress \\\\FILE-PIN-01\\Shared\\Clients into C:\\Users\\ana.ruiz\\AppData\\Local\\Temp\\c.zip; Sysmon recorded creation of that archive.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T069-00142",
+     "T069-00144"
+    ]
+   },
+   {
+    "claim": "Ana Ruiz then launched Chrome with https://dropzone-transfer.net/ as its argument.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T069-00163",
+     "T069-00164"
+    ]
+   },
+   {
+    "claim": "The proxy recorded Ana Ruiz connecting to dropzone-transfer.net over a tunnel and sending 51,000,000 client-to-server bytes, with only 8,800 server-to-client bytes; Zeek records a matching large connection to the explicit proxy.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T069-00194",
+     "T069-00196",
+     "T069-00197"
+    ]
+   },
+   {
+    "claim": "The sequence of archiving the Clients share, opening an unapproved transfer site, and sending tens of megabytes supports a malicious exfiltration finding for the alerted activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T069-00142",
+     "T069-00144",
+     "T069-00163",
+     "T069-00194",
+     "T069-00196"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records a CONNECT tunnel and byte counts, not the encrypted tunnel's contents, so the transferred payload cannot be identified from these records. (T069-00194, T069-00196)"
+  ],
+  "claims_not_established": [
+   "The records do not establish that c.zip was the specific file uploaded, or that the 51,000,000 bytes contained the Clients archive. (T069-00142, T069-00144, T069-00194, T069-00196)",
+   "The records do not establish the archive's contents, the recipient's identity, or Ana Ruiz's intent. (T069-00142, T069-00144, T069-00194)"
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve WS-ARUIZ-01 and collect c.zip metadata, hash, and contents, plus file-share access records for the Clients directory.",
+   "Obtain browser history and relevant browser/cache artifacts to determine what was selected or uploaded to dropzone-transfer.net.",
+   "Review proxy, DNS, and available TLS inspection or destination intelligence for the transfer and domain.",
+   "Interview Ana Ruiz and verify whether the transfer had an authorized business purpose."
+  ],
+  "unrelated_findings": [
+   "Dropbox updater execution was observed on WS-ARUIZ-01 despite the inventory listing no other approved file-sharing or cloud-storage services. The records show updater execution, not a Dropbox transfer; investigate separately. (T069-00006, T069-00008, T069-00112, T069-00133)",
+   "Palo Alto GlobalProtect PanGPS.exe started on WS-ARUIZ-01, while the inventory says there is no VPN; these records do not show it participating in the alerted transfer. Investigate separately. (T069-00028, T069-00029)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 17.1
+}

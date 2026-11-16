@@ -1,0 +1,191 @@
+version: '1.0'
+name: ev-T265
+description: Evidence Vacuum TRAINING scenario T265 (orchard, beacon, va).
+environment:
+  description: Orchard Street Schools
+  domain: orchard.local
+  timezone:
+    default: UTC
+  proxy:
+    mode: explicit
+    listener_port: 8080
+  users:
+  - username: amy.cole
+    full_name: Amy Cole
+    email: amy.cole@orchardschools.org
+    persona: analyst
+    primary_system: WS-ACOLE-01
+    groups:
+    - staff
+    enabled: true
+    browsing_intensity: normal
+  - username: raul.diaz
+    full_name: Raul Diaz
+    email: raul.diaz@orchardschools.org
+    persona: hr
+    primary_system: WS-RDIAZ-01
+    groups:
+    - staff
+    enabled: true
+    browsing_intensity: light
+  - username: sean.byrne
+    full_name: Sean Byrne
+    email: sean.byrne@orchardschools.org
+    persona: sysadmin
+    primary_system: WS-SBYRNE-01
+    groups:
+    - it-admins
+    - domain-admins
+    enabled: true
+    browsing_intensity: light
+  - username: tess.hart
+    full_name: Tess Hart
+    email: tess.hart@orchardschools.org
+    persona: help_desk
+    primary_system: WS-THART-01
+    groups:
+    - staff
+    enabled: true
+    browsing_intensity: light
+  service_accounts:
+  - svc-safe
+  - svc-grades
+  systems:
+  - hostname: WS-ACOLE-01
+    ip: 10.56.10.21
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: amy.cole
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-RDIAZ-01
+    ip: 10.56.10.22
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: raul.diaz
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-SBYRNE-01
+    ip: 10.56.10.23
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: sean.byrne
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-THART-01
+    ip: 10.56.10.24
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: tess.hart
+    services:
+    - dns-client
+    - termservice
+  - hostname: DC-ORC-01
+    ip: 10.56.20.10
+    os: Windows Server 2022
+    type: domain_controller
+    services:
+    - kerberos
+    - ldap
+    - dns
+    roles:
+    - domain_controller
+    - dns_server
+  - hostname: FILE-ORC-01
+    ip: 10.56.20.20
+    os: Windows Server 2022
+    type: server
+    services:
+    - smb
+    - dns-client
+    roles:
+    - file_server
+  - hostname: PROXY-ORC-01
+    ip: 10.56.20.30
+    os: Ubuntu 22.04 LTS
+    type: server
+    services:
+    - squid
+    - dns-client
+    roles:
+    - forward_proxy
+  network:
+    public_cidrs:
+    - 203.0.113.176/28
+    segments:
+    - name: workstations
+      cidr: 10.56.10.0/24
+      exposure: internal
+      systems:
+      - WS-ACOLE-01
+      - WS-RDIAZ-01
+      - WS-SBYRNE-01
+      - WS-THART-01
+    - name: servers
+      cidr: 10.56.20.0/24
+      exposure: internal
+      systems:
+      - DC-ORC-01
+      - FILE-ORC-01
+      - PROXY-ORC-01
+    sensors:
+    - type: network
+      name: core-span
+      hostname: ZEEK-CORE
+      monitoring_segments:
+      - workstations
+      - servers
+      direction: bidirectional
+      placement: span
+      log_formats:
+      - zeek
+time_window:
+  start: '2026-10-13T13:00:00Z'
+  duration: 2h
+  warmup: 1h
+generation_seed: 8265
+baseline_activity:
+  description: Quiet afternoon
+  intensity: medium
+  variation: low
+  suspicious_noise: low
+observation_profile: complete
+storyline:
+- id: logon
+  time: +30m
+  actor: raul.diaz
+  system: WS-RDIAZ-01
+  activity: Interactive logon
+  events:
+  - type: logon
+    logon_type: 2
+- id: implant
+  time: +41m
+  actor: raul.diaz
+  system: WS-RDIAZ-01
+  activity: Masquerading updater beacons to typosquat
+  events:
+  - type: process
+    process_name: C:\Users\raul.diaz\AppData\Local\GradeBookPro\gradebookproupd.exe
+    command_line: '"C:\Users\raul.diaz\AppData\Local\GradeBookPro\gradebookproupd.exe" --background'
+  - type: beacon
+    dst_ip: 203.0.113.211
+    dst_port: 443
+    hostname: update.gradebookpro.co
+    service: ssl
+    interval: 5m
+    duration: 30m
+    jitter: 0.1
+output:
+  logs:
+  - format: windows_event_security
+  - format: windows_event_sysmon
+  - format: zeek_conn
+  - format: zeek_dns
+  - format: zeek_ssl
+  - format: proxy_access
+  destination: out/T265
+  compression: false

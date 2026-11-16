@@ -1,0 +1,92 @@
+{
+ "scenario_id": "T293",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:42:39 UTC, amy.cole opened C:\\\\Users\\\\amy.cole\\\\Downloads\\\\Statement.docm in Word, which spawned PowerShell with -nop, a hidden window, and an encoded command. This occurred near the time reported in the alert.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T293-00160\", \"T293-00161\", \"T293-00164\", \"T293-00165\"]\n    },\n    {\n      \"claim\": \"The encoded PowerShell command decodes to an expression that downloads and invokes a script from raw.githubusercontent.com/orchard-it/tools/main/u.ps1.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T293-00164\", \"T293-00165\"]\n    },\n    {\n      \"claim\": \"The PowerShell process made two connections through the organization's proxy, consistent in timing and process identity with the download command.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T293-00167\", \"T293-00168\", \"T293-00171\", \"T293-00172\", \"T293-00173\", \"T293-00174\"]\n    },\n    {\n      \"claim\": \"PowerShell then launched rundll32 against C:\\\\Users\\\\amy.cole\\\\AppData\\\\Roaming\\\\svchelper.dll, and PowerShell created a temporary file shortly afterward.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T293-00175\", \"T293-00176\", \"T293-00177\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available proxy and connection records do not show the downloaded script's response body or establish that the requested URL returned that script.\",\n    \"The records show rundll32 invoked with a DLL path, but do not establish that the DLL was successfully loaded or what it did.\",\n    \"The evidence provided does not include file hashes, a copy of the document or downloaded files, or endpoint detection results for this activity.\"\n  ],\n  \"claims_not_established\": [\n    \"The contents or behavior of u.ps1 and svchelper.dll, beyond the command line and process invocation recorded.\",\n    \"Whether the activity achieved persistence, credential theft, data access, or other impact.\",\n    \"Whether amy.cole intentionally opened the document or knew it would launch the recorded commands.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze Statement.docm, u.ps1, svchelper.dll, and the temporary file associated with this execution; preserve hashes and timestamps.\",\n    \"Collect proxy request details and response content for the PowerShell connections at 13:42:40\u201313:42:41 UTC.\",\n    \"Review endpoint protection, file-system, and persistence telemetry on WS-ACOLE-01 for follow-on activity and assess whether containment is warranted.\",\n    \"Establish how Statement.docm arrived on the workstation and whether related copies or activity exist elsewhere.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate review: earlier activity on WS-ACOLE-01 included an interactive PowerShell window, a command prompt, an SSH attempt to 10.56.20.30, and a psql invocation using the postgres account; the records do not establish their purpose or outcome. These precede the alerted execution and do not determine this assessment. (T293-00022, T293-00028, T293-00049, T293-00056, T293-00057, T293-00077, T293-00078)\",\n    \"Separate review: WS-ACOLE-01 accessed the AWS console. This is not established as part of the alerted execution. (T293-00015, T293-00030)\",\n    \"Separate review: WS-ACOLE-01 made an SMB connection to FILE-ORC-01 that was associated with an ANONYMOUS LOGON network logon; the provided records do not establish the purpose or share accessed. (T293-00152, T293-00156)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 50248,
+    "output": 1942
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:42:39 UTC, amy.cole opened C:\\Users\\amy.cole\\Downloads\\Statement.docm in Word, which spawned PowerShell with -nop, a hidden window, and an encoded command. This occurred near the time reported in the alert.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T293-00160",
+     "T293-00161",
+     "T293-00164",
+     "T293-00165"
+    ]
+   },
+   {
+    "claim": "The encoded PowerShell command decodes to an expression that downloads and invokes a script from raw.githubusercontent.com/orchard-it/tools/main/u.ps1.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T293-00164",
+     "T293-00165"
+    ]
+   },
+   {
+    "claim": "The PowerShell process made two connections through the organization's proxy, consistent in timing and process identity with the download command.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T293-00167",
+     "T293-00168",
+     "T293-00171",
+     "T293-00172",
+     "T293-00173",
+     "T293-00174"
+    ]
+   },
+   {
+    "claim": "PowerShell then launched rundll32 against C:\\Users\\amy.cole\\AppData\\Roaming\\svchelper.dll, and PowerShell created a temporary file shortly afterward.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T293-00175",
+     "T293-00176",
+     "T293-00177"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available proxy and connection records do not show the downloaded script's response body or establish that the requested URL returned that script.",
+   "The records show rundll32 invoked with a DLL path, but do not establish that the DLL was successfully loaded or what it did.",
+   "The evidence provided does not include file hashes, a copy of the document or downloaded files, or endpoint detection results for this activity."
+  ],
+  "claims_not_established": [
+   "The contents or behavior of u.ps1 and svchelper.dll, beyond the command line and process invocation recorded.",
+   "Whether the activity achieved persistence, credential theft, data access, or other impact.",
+   "Whether amy.cole intentionally opened the document or knew it would launch the recorded commands."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze Statement.docm, u.ps1, svchelper.dll, and the temporary file associated with this execution; preserve hashes and timestamps.",
+   "Collect proxy request details and response content for the PowerShell connections at 13:42:40\u201313:42:41 UTC.",
+   "Review endpoint protection, file-system, and persistence telemetry on WS-ACOLE-01 for follow-on activity and assess whether containment is warranted.",
+   "Establish how Statement.docm arrived on the workstation and whether related copies or activity exist elsewhere."
+  ],
+  "unrelated_findings": [
+   "Separate review: earlier activity on WS-ACOLE-01 included an interactive PowerShell window, a command prompt, an SSH attempt to 10.56.20.30, and a psql invocation using the postgres account; the records do not establish their purpose or outcome. These precede the alerted execution and do not determine this assessment. (T293-00022, T293-00028, T293-00049, T293-00056, T293-00057, T293-00077, T293-00078)",
+   "Separate review: WS-ACOLE-01 accessed the AWS console. This is not established as part of the alerted execution. (T293-00015, T293-00030)",
+   "Separate review: WS-ACOLE-01 made an SMB connection to FILE-ORC-01 that was associated with an ANONYMOUS LOGON network logon; the provided records do not establish the purpose or share accessed. (T293-00152, T293-00156)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 19.8
+}

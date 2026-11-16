@@ -1,0 +1,91 @@
+{
+ "scenario_id": "T217",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted account svc_update was created on the domain controller by ken.ito at 13:47:22 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T217-00108\"]\n    },\n    {\n      \"claim\": \"About one second later, svc_update was added to the BLUEFIN Administrators group.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T217-00109\"]\n    },\n    {\n      \"claim\": \"Minutes before the account creation, ken.ito logged on to WS-EBROOKS-01 over RDP from 203.0.113.133; the inventory says remote administration is only performed from WS-KITO-01 and there is no VPN.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T217-00071\", \"T217-00074\", \"T217-00076\"]\n    },\n    {\n      \"claim\": \"During that WS-EBROOKS-01 session, ken.ito created a scheduled task named HealthCheck that runs hidden PowerShell with an encoded command. The command decodes to a download-and-execute expression referencing http://203.0.113.133/a.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T217-00110\"]\n    },\n    {\n      \"claim\": \"The account's service-like name, immediate Administrators-group membership, and suspicious activity in the same investigation window support treating its creation as malicious rather than an authorized service-account change.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T217-00108\", \"T217-00109\", \"T217-00110\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show account creation and group membership changes, but do not show the account's subsequent authentication or use.\",\n    \"The task record shows task registration and its command, but these records do not establish whether the task ran or whether the referenced content was successfully retrieved.\",\n    \"The logs identify ken.ito as the account actor, but do not establish who controlled the RDP session.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether ken.ito personally initiated or authorized the RDP session and account changes.\",\n    \"Whether svc_update was used after creation, or what credentials or access were assigned to it.\",\n    \"Whether the HealthCheck task executed and whether its remote command succeeded.\",\n    \"Whether the account creation and scheduled-task activity were performed by the same person or process.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Review DC-BLU-01 account and group-change auditing, including any available originating workstation, authentication, and directory-change details for svc_update.\",\n    \"Collect WS-EBROOKS-01 scheduled-task execution history, PowerShell logs, process telemetry, and network/proxy records for the task's referenced URL.\",\n    \"Validate the RDP source and session with ken.ito and investigate whether credentials or the workstation were compromised.\",\n    \"Check for svc_update logons, privilege use, and other changes made after account creation; preserve the account and task evidence before containment.\"\n  ],\n  \"unrelated_findings\": [\n    \"eli.brooks launched msi_update.exe from the user Temp directory; its purpose and provenance are not established here. Investigate separately; it does not decide the svc_update alert. (T217-00130, T217-00144)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 36919,
+    "output": 2072
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "The alerted account svc_update was created on the domain controller by ken.ito at 13:47:22 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T217-00108"
+    ]
+   },
+   {
+    "claim": "About one second later, svc_update was added to the BLUEFIN Administrators group.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T217-00109"
+    ]
+   },
+   {
+    "claim": "Minutes before the account creation, ken.ito logged on to WS-EBROOKS-01 over RDP from 203.0.113.133; the inventory says remote administration is only performed from WS-KITO-01 and there is no VPN.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T217-00071",
+     "T217-00074",
+     "T217-00076"
+    ]
+   },
+   {
+    "claim": "During that WS-EBROOKS-01 session, ken.ito created a scheduled task named HealthCheck that runs hidden PowerShell with an encoded command. The command decodes to a download-and-execute expression referencing http://203.0.113.133/a.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T217-00110"
+    ]
+   },
+   {
+    "claim": "The account's service-like name, immediate Administrators-group membership, and suspicious activity in the same investigation window support treating its creation as malicious rather than an authorized service-account change.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T217-00108",
+     "T217-00109",
+     "T217-00110"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show account creation and group membership changes, but do not show the account's subsequent authentication or use.",
+   "The task record shows task registration and its command, but these records do not establish whether the task ran or whether the referenced content was successfully retrieved.",
+   "The logs identify ken.ito as the account actor, but do not establish who controlled the RDP session."
+  ],
+  "claims_not_established": [
+   "Whether ken.ito personally initiated or authorized the RDP session and account changes.",
+   "Whether svc_update was used after creation, or what credentials or access were assigned to it.",
+   "Whether the HealthCheck task executed and whether its remote command succeeded.",
+   "Whether the account creation and scheduled-task activity were performed by the same person or process."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Review DC-BLU-01 account and group-change auditing, including any available originating workstation, authentication, and directory-change details for svc_update.",
+   "Collect WS-EBROOKS-01 scheduled-task execution history, PowerShell logs, process telemetry, and network/proxy records for the task's referenced URL.",
+   "Validate the RDP source and session with ken.ito and investigate whether credentials or the workstation were compromised.",
+   "Check for svc_update logons, privilege use, and other changes made after account creation; preserve the account and task evidence before containment."
+  ],
+  "unrelated_findings": [
+   "eli.brooks launched msi_update.exe from the user Temp directory; its purpose and provenance are not established here. Investigate separately; it does not decide the svc_update alert. (T217-00130, T217-00144)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 9,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.8
+}

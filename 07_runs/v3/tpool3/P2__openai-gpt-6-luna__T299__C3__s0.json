@@ -1,0 +1,80 @@
+{
+ "scenario_id": "T299",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"PowerShell running as amy.cole created C:\\\\Users\\\\amy.cole\\\\AppData\\\\Local\\\\Temp\\\\c.zip by compressing \\\\\\\\FILE-ORC-01\\\\Shared\\\\Clients shortly before the large outbound transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T299-00158\", \"T299-00159\", \"T299-00160\"]\n    },\n    {\n      \"claim\": \"Chrome, running as ORCHARD\\\\amy.cole, connected through the proxy to megadrop-files.com; the proxy recorded 51,000,000 client-to-server bytes over the tunnel, corroborated by 51,000,222 originating bytes in the connection record.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T299-00193\", \"T299-00194\", \"T299-00195\", \"T299-00196\"]\n    },\n    {\n      \"claim\": \"The archive creation and subsequent large upload to a file-sharing service not listed as approved strongly support an attempted or completed unauthorized transfer of files from the Clients share. The records do not prove that c.zip was the exact payload uploaded.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T299-00158\", \"T299-00160\", \"T299-00193\", \"T299-00195\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Winsec collection from DC-ORC-01 was unavailable from 13:30 to 14:20 UTC, so domain-controller Windows security events for the alert window are missing.\",\n    \"The available proxy and connection records show the large outbound transfer, but do not expose the encrypted tunnel contents or identify the exact file sent.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish the contents or sensitivity of the files in the Clients share or in c.zip.\",\n    \"The evidence does not establish whether amy.cole was authorized to access or transfer those files, or her intent.\",\n    \"The evidence does not establish that c.zip itself was the file uploaded, or whether the remote service retained or made the data available.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve WS-ACOLE-01 and acquire c.zip, its hash, and relevant browser history/download or upload artifacts to determine what was sent.\",\n    \"Review FILE-ORC-01 share-access and file-audit records for amy.cole's access to the Clients directory and the files involved.\",\n    \"Obtain proxy-side session details and any available TLS inspection, destination reputation, or service account records for the megadrop-files.com transfer.\",\n    \"Interview amy.cole and verify whether the transfer was authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"GlobalProtect PanGPS.exe was launched on WS-ACOLE-01, although inventory states the organization has no VPN; the process launch alone does not establish that a VPN connection occurred. Review separately. (T299-00262, T299-00263)\",\n    \"At 14:04, taskhostw.exe on WS-ACOLE-01 used explicit credentials for svc-grades while targeting PROXY-ORC-01. This is separate from the alerted upload and should be checked against the scheduled GradeSync job and password-rotation work. (T299-00266)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 39288,
+    "output": 1784
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "PowerShell running as amy.cole created C:\\Users\\amy.cole\\AppData\\Local\\Temp\\c.zip by compressing \\\\FILE-ORC-01\\Shared\\Clients shortly before the large outbound transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T299-00158",
+     "T299-00159",
+     "T299-00160"
+    ]
+   },
+   {
+    "claim": "Chrome, running as ORCHARD\\amy.cole, connected through the proxy to megadrop-files.com; the proxy recorded 51,000,000 client-to-server bytes over the tunnel, corroborated by 51,000,222 originating bytes in the connection record.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T299-00193",
+     "T299-00194",
+     "T299-00195",
+     "T299-00196"
+    ]
+   },
+   {
+    "claim": "The archive creation and subsequent large upload to a file-sharing service not listed as approved strongly support an attempted or completed unauthorized transfer of files from the Clients share. The records do not prove that c.zip was the exact payload uploaded.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T299-00158",
+     "T299-00160",
+     "T299-00193",
+     "T299-00195"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Winsec collection from DC-ORC-01 was unavailable from 13:30 to 14:20 UTC, so domain-controller Windows security events for the alert window are missing.",
+   "The available proxy and connection records show the large outbound transfer, but do not expose the encrypted tunnel contents or identify the exact file sent."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish the contents or sensitivity of the files in the Clients share or in c.zip.",
+   "The evidence does not establish whether amy.cole was authorized to access or transfer those files, or her intent.",
+   "The evidence does not establish that c.zip itself was the file uploaded, or whether the remote service retained or made the data available."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve WS-ACOLE-01 and acquire c.zip, its hash, and relevant browser history/download or upload artifacts to determine what was sent.",
+   "Review FILE-ORC-01 share-access and file-audit records for amy.cole's access to the Clients directory and the files involved.",
+   "Obtain proxy-side session details and any available TLS inspection, destination reputation, or service account records for the megadrop-files.com transfer.",
+   "Interview amy.cole and verify whether the transfer was authorized."
+  ],
+  "unrelated_findings": [
+   "GlobalProtect PanGPS.exe was launched on WS-ACOLE-01, although inventory states the organization has no VPN; the process launch alone does not establish that a VPN connection occurred. Review separately. (T299-00262, T299-00263)",
+   "At 14:04, taskhostw.exe on WS-ACOLE-01 used explicit credentials for svc-grades while targeting PROXY-ORC-01. This is separate from the alerted upload and should be checked against the scheduled GradeSync job and password-rotation work. (T299-00266)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.9
+}

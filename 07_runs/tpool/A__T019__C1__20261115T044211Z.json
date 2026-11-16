@@ -1,0 +1,92 @@
+{
+ "run_id": "A__T019__C1__20261115T044211Z",
+ "config": "A",
+ "scenario_id": "T019",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 311,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 132183,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:41:56 UTC, maria.lopez launched PowerShell from Explorer to compress \\\\\\\\FILE-HD-01\\\\Shared\\\\Clients into C:\\\\Users\\\\maria.lopez\\\\AppData\\\\Local\\\\Temp\\\\c.zip; the file was created at 13:42:00 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T019-00117\",\n        \"T019-00118\",\n        \"T019-00119\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:45:24 UTC, maria.lopez launched Chrome to https://sendbox-files.io/ from Explorer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T019-00150\",\n        \"T019-00154\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:48 UTC, Chrome process 4896 sent approximately 51,000,000 client-to-server bytes through the proxy to sendbox-files.io; the proxy attributed the connection to maria.lopez.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T019-00170\",\n        \"T019-00171\",\n        \"T019-00172\",\n        \"T019-00173\"\n      ]\n    },\n    {\n      \"claim\": \"The sequence of archiving a client share, opening an unapproved file-sharing service, and sending tens of megabytes to it strongly supports suspected exfiltration of organizational data.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T019-00117\",\n        \"T019-00119\",\n        \"T019-00150\",\n        \"T019-00170\",\n        \"T019-00171\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The transfer records identify a 443 CONNECT tunnel and byte counts, but do not expose the uploaded payload or filename; the logs therefore do not directly establish that c.zip was the transferred object. (T019-00170, T019-00171)\",\n    \"The available records do not show the contents or size of c.zip, or file-server auditing that would confirm which client files were accessed.\"\n  ],\n  \"claims_not_established\": [\n    \"That the 51,000,000 bytes transferred were specifically c.zip or contained all or any particular client records.\",\n    \"Whether maria.lopez had an authorized business purpose for accessing or transferring the client data.\",\n    \"Who controlled or received the files at sendbox-files.io, or whether the transfer completed into a persistent account.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine c.zip, including its size, hash, and contents, and collect relevant endpoint browser upload/history artifacts.\",\n    \"Obtain detailed proxy or destination-side records to determine the uploaded object, recipient/account, and transfer outcome.\",\n    \"Collect FILE-HD-01 SMB/file access auditing for the relevant period to identify the files accessed during archive creation.\",\n    \"Confirm with the data owner and maria.lopez whether this transfer was authorized; preserve WS-MLOPEZ-01 evidence while investigating.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 48624,
+    "output": 1543,
+    "reasoning": 817
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "At 13:41:56 UTC, maria.lopez launched PowerShell from Explorer to compress \\\\FILE-HD-01\\Shared\\Clients into C:\\Users\\maria.lopez\\AppData\\Local\\Temp\\c.zip; the file was created at 13:42:00 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00117",
+     "T019-00118",
+     "T019-00119"
+    ]
+   },
+   {
+    "claim": "At 13:45:24 UTC, maria.lopez launched Chrome to https://sendbox-files.io/ from Explorer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00150",
+     "T019-00154"
+    ]
+   },
+   {
+    "claim": "At 13:48 UTC, Chrome process 4896 sent approximately 51,000,000 client-to-server bytes through the proxy to sendbox-files.io; the proxy attributed the connection to maria.lopez.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00170",
+     "T019-00171",
+     "T019-00172",
+     "T019-00173"
+    ]
+   },
+   {
+    "claim": "The sequence of archiving a client share, opening an unapproved file-sharing service, and sending tens of megabytes to it strongly supports suspected exfiltration of organizational data.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T019-00117",
+     "T019-00119",
+     "T019-00150",
+     "T019-00170",
+     "T019-00171"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The transfer records identify a 443 CONNECT tunnel and byte counts, but do not expose the uploaded payload or filename; the logs therefore do not directly establish that c.zip was the transferred object. (T019-00170, T019-00171)",
+   "The available records do not show the contents or size of c.zip, or file-server auditing that would confirm which client files were accessed."
+  ],
+  "claims_not_established": [
+   "That the 51,000,000 bytes transferred were specifically c.zip or contained all or any particular client records.",
+   "Whether maria.lopez had an authorized business purpose for accessing or transferring the client data.",
+   "Who controlled or received the files at sendbox-files.io, or whether the transfer completed into a persistent account."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine c.zip, including its size, hash, and contents, and collect relevant endpoint browser upload/history artifacts.",
+   "Obtain detailed proxy or destination-side records to determine the uploaded object, recipient/account, and transfer outcome.",
+   "Collect FILE-HD-01 SMB/file access auditing for the relevant period to identify the files accessed during archive creation.",
+   "Confirm with the data owner and maria.lopez whether this transfer was authorized; preserve WS-MLOPEZ-01 evidence while investigating."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 14,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 15.0
+}

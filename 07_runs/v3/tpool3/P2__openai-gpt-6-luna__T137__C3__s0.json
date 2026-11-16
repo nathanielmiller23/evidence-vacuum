@@ -1,0 +1,93 @@
+{
+ "scenario_id": "T137",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The account was created at 13:44:23 UTC, later than the alert's approximate 13:42 time. The DC event identifies paul.becker as the creator of backupadmin.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T137-00104\"\n      ]\n    },\n    {\n      \"claim\": \"About one second after creation, backupadmin was added to the group logged as Administrators; the target SID ends in -512, a privileged domain group identifier.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T137-00105\"\n      ]\n    },\n    {\n      \"claim\": \"Just before the account changes, paul.becker authenticated to WS-KNGUYEN-01 through a remote-interactive (Logon Type 10) session from 192.0.2.88. The inventory says remote administration is only performed from WS-PBECKER-01, and the evidence places this session on a different workstation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T137-00052\",\n        \"T137-00055\",\n        \"T137-00057\"\n      ]\n    },\n    {\n      \"claim\": \"Two seconds after the account was added to the privileged group, a task authored by paul.becker was registered on WS-KNGUYEN-01. Its PowerShell action uses a hidden window and an encoded command that decodes to a request to execute a script fetched from 192.0.2.88.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T137-00105\",\n        \"T137-00106\"\n      ]\n    },\n    {\n      \"claim\": \"The privileged account creation, the unexpected remote session, and the near-simultaneous script-fetching task together support a malicious-activity finding rather than a routine temporary-account workflow.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T137-00104\",\n        \"T137-00105\",\n        \"T137-00057\",\n        \"T137-00106\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy logs for the proxy host were not collected from 13:20 to 14:10 UTC because of an outage; this includes the time of the account activity.\",\n    \"The supplied records show the task being registered, but do not show whether it ran or whether its script was successfully retrieved.\"\n  ],\n  \"claims_not_established\": [\n    \"The records do not establish whether paul.becker personally performed these actions or whether the account or session was used by someone else.\",\n    \"The account-management events do not identify the originating computer for the account creation and group change.\",\n    \"The records do not establish whether backupadmin was subsequently used, whether the scheduled task executed, or what any retrieved script did.\",\n    \"The evidence does not establish whether an authorized exception or change approval existed outside the supplied inventory and calendar.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Verify the account creation and group-change activity with paul.becker and check for any approved change record.\",\n    \"Collect DC authentication and directory audit details that identify the source of the account and group changes, and review the new account's current state and subsequent sign-ins.\",\n    \"Obtain task execution history and endpoint/process/network evidence for the task action and any access to 192.0.2.88.\",\n    \"Investigate the 192.0.2.88 remote session and determine whether the session and the account-management actions were authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"A Dropbox client process launched on WS-KNGUYEN-01; Dropbox is not among the approved file-sharing or cloud-storage services. Route this for a separate review, not as evidence deciding the account alert. (T137-00216, T137-00217)\",\n    \"Cisco AnyConnect VPN UI launched on WS-KNGUYEN-01, despite the inventory stating there is no VPN. Route this for a separate review, not as evidence deciding the account alert. (T137-00146, T137-00148)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 34139,
+    "output": 2940
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "The account was created at 13:44:23 UTC, later than the alert's approximate 13:42 time. The DC event identifies paul.becker as the creator of backupadmin.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T137-00104"
+    ]
+   },
+   {
+    "claim": "About one second after creation, backupadmin was added to the group logged as Administrators; the target SID ends in -512, a privileged domain group identifier.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T137-00105"
+    ]
+   },
+   {
+    "claim": "Just before the account changes, paul.becker authenticated to WS-KNGUYEN-01 through a remote-interactive (Logon Type 10) session from 192.0.2.88. The inventory says remote administration is only performed from WS-PBECKER-01, and the evidence places this session on a different workstation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T137-00052",
+     "T137-00055",
+     "T137-00057"
+    ]
+   },
+   {
+    "claim": "Two seconds after the account was added to the privileged group, a task authored by paul.becker was registered on WS-KNGUYEN-01. Its PowerShell action uses a hidden window and an encoded command that decodes to a request to execute a script fetched from 192.0.2.88.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T137-00105",
+     "T137-00106"
+    ]
+   },
+   {
+    "claim": "The privileged account creation, the unexpected remote session, and the near-simultaneous script-fetching task together support a malicious-activity finding rather than a routine temporary-account workflow.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T137-00104",
+     "T137-00105",
+     "T137-00057",
+     "T137-00106"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy logs for the proxy host were not collected from 13:20 to 14:10 UTC because of an outage; this includes the time of the account activity.",
+   "The supplied records show the task being registered, but do not show whether it ran or whether its script was successfully retrieved."
+  ],
+  "claims_not_established": [
+   "The records do not establish whether paul.becker personally performed these actions or whether the account or session was used by someone else.",
+   "The account-management events do not identify the originating computer for the account creation and group change.",
+   "The records do not establish whether backupadmin was subsequently used, whether the scheduled task executed, or what any retrieved script did.",
+   "The evidence does not establish whether an authorized exception or change approval existed outside the supplied inventory and calendar."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Verify the account creation and group-change activity with paul.becker and check for any approved change record.",
+   "Collect DC authentication and directory audit details that identify the source of the account and group changes, and review the new account's current state and subsequent sign-ins.",
+   "Obtain task execution history and endpoint/process/network evidence for the task action and any access to 192.0.2.88.",
+   "Investigate the 192.0.2.88 remote session and determine whether the session and the account-management actions were authorized."
+  ],
+  "unrelated_findings": [
+   "A Dropbox client process launched on WS-KNGUYEN-01; Dropbox is not among the approved file-sharing or cloud-storage services. Route this for a separate review, not as evidence deciding the account alert. (T137-00216, T137-00217)",
+   "Cisco AnyConnect VPN UI launched on WS-KNGUYEN-01, despite the inventory stating there is no VPN. Route this for a separate review, not as evidence deciding the account alert. (T137-00146, T137-00148)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 28.9
+}

@@ -1,0 +1,93 @@
+{
+ "scenario_id": "T097",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded creation of the account it_support, attributing the action to raj.patel.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T097-00140\"]\n    },\n    {\n      \"claim\": \"Seconds later, the domain controller recorded it_support being added to a group named Administrators. The event's target SID ends in RID 512, so the group name and SID should be reconciled.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T097-00141\"]\n    },\n    {\n      \"claim\": \"The account name and reported Administrators membership are inconsistent with the stated practice that help-desk temporary accounts use tmp.<name> and are not given administrator rights. The inventory and change calendar provide no stated reason for this account creation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T097-00140\", \"T097-00141\"]\n    },\n    {\n      \"claim\": \"Shortly before the account actions, raj.patel logged on to WS-TWEBER-01 by RDP from 203.0.113.17. The inventory says there is no VPN and remote administration is only done from WS-RPATEL-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T097-00117\", \"T097-00120\", \"T097-00122\"]\n    },\n    {\n      \"claim\": \"In raj.patel's WS-TWEBER-01 session, a scheduled task was created to run hidden PowerShell with an encoded command that decodes to an apparent download-and-execute of a script from http://203.0.113.17/a.ps1. This is strongly suspicious activity in the same time window and host context as the alerted account actions.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T097-00122\", \"T097-00142\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The logs attribute the account and task actions to raj.patel but cannot establish who controlled the credentials or session.\",\n    \"The available records do not directly correlate the domain-controller account-management event to the WS-TWEBER-01 RDP session.\",\n    \"The Administrators group name and target SID ending in RID 512 are inconsistent in the event and require clarification.\",\n    \"The evidence does not show the new account's subsequent use, intended owner, approved purpose, or whether it was later disabled.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether an authorized change request existed for creating it_support or adding it to the reported group.\",\n    \"Whether raj.patel personally initiated the RDP session or account-management actions.\",\n    \"Whether the scheduled task's downloaded script executed successfully or was directly involved in creating the account.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Verify with the organization whether the it_support account and its group membership were authorized; retrieve the associated change or help-desk ticket.\",\n    \"Confirm the exact group corresponding to the SID in T097-00141 and collect current account attributes, group memberships, and subsequent authentication/use.\",\n    \"Investigate the RDP source and raj.patel credentials, including authentication and endpoint records for WS-RPATEL-01 and WS-TWEBER-01.\",\n    \"Collect the scheduled task's execution history and script contents or network retrieval evidence for 203.0.113.17/a.ps1.\"\n  ],\n  \"unrelated_findings\": [\n    \"Tom Weber's browser accessed console.aws.amazon.com through the proxy; AWS is not listed among approved services. Review separately; this does not determine the account alert. (T097-00166, T097-00167)\",\n    \"A Slack shortcut is recorded in Tom Weber's UserAssist data; Slack is not listed among approved software or services. Review separately. (T097-00049)\",\n    \"Tom Weber's Zoom process ran on WS-TWEBER-01; Zoom is not listed among approved software or services. Review separately. (T097-00163, T097-00164)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 34435,
+    "output": 3176
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded creation of the account it_support, attributing the action to raj.patel.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T097-00140"
+    ]
+   },
+   {
+    "claim": "Seconds later, the domain controller recorded it_support being added to a group named Administrators. The event's target SID ends in RID 512, so the group name and SID should be reconciled.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T097-00141"
+    ]
+   },
+   {
+    "claim": "The account name and reported Administrators membership are inconsistent with the stated practice that help-desk temporary accounts use tmp.<name> and are not given administrator rights. The inventory and change calendar provide no stated reason for this account creation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T097-00140",
+     "T097-00141"
+    ]
+   },
+   {
+    "claim": "Shortly before the account actions, raj.patel logged on to WS-TWEBER-01 by RDP from 203.0.113.17. The inventory says there is no VPN and remote administration is only done from WS-RPATEL-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T097-00117",
+     "T097-00120",
+     "T097-00122"
+    ]
+   },
+   {
+    "claim": "In raj.patel's WS-TWEBER-01 session, a scheduled task was created to run hidden PowerShell with an encoded command that decodes to an apparent download-and-execute of a script from http://203.0.113.17/a.ps1. This is strongly suspicious activity in the same time window and host context as the alerted account actions.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T097-00122",
+     "T097-00142"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The logs attribute the account and task actions to raj.patel but cannot establish who controlled the credentials or session.",
+   "The available records do not directly correlate the domain-controller account-management event to the WS-TWEBER-01 RDP session.",
+   "The Administrators group name and target SID ending in RID 512 are inconsistent in the event and require clarification.",
+   "The evidence does not show the new account's subsequent use, intended owner, approved purpose, or whether it was later disabled."
+  ],
+  "claims_not_established": [
+   "Whether an authorized change request existed for creating it_support or adding it to the reported group.",
+   "Whether raj.patel personally initiated the RDP session or account-management actions.",
+   "Whether the scheduled task's downloaded script executed successfully or was directly involved in creating the account."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Verify with the organization whether the it_support account and its group membership were authorized; retrieve the associated change or help-desk ticket.",
+   "Confirm the exact group corresponding to the SID in T097-00141 and collect current account attributes, group memberships, and subsequent authentication/use.",
+   "Investigate the RDP source and raj.patel credentials, including authentication and endpoint records for WS-RPATEL-01 and WS-TWEBER-01.",
+   "Collect the scheduled task's execution history and script contents or network retrieval evidence for 203.0.113.17/a.ps1."
+  ],
+  "unrelated_findings": [
+   "Tom Weber's browser accessed console.aws.amazon.com through the proxy; AWS is not listed among approved services. Review separately; this does not determine the account alert. (T097-00166, T097-00167)",
+   "A Slack shortcut is recorded in Tom Weber's UserAssist data; Slack is not listed among approved software or services. Review separately. (T097-00049)",
+   "Tom Weber's Zoom process ran on WS-TWEBER-01; Zoom is not listed among approved software or services. Review separately. (T097-00163, T097-00164)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 9,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 32.7
+}

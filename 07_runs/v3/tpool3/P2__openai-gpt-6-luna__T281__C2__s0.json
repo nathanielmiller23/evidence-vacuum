@@ -1,0 +1,89 @@
+{
+ "scenario_id": "T281",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted account had two failed network logons from 198.51.100.77: a failure at 13:41:26 and another at 13:42:44 UTC. Both logs identify raul.diaz and show a bad-password substatus.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T281-00073\", \"T281-00074\"]\n    },\n    {\n      \"claim\": \"At 13:44:22 UTC, the domain controller recorded a successful network logon for raul.diaz from the same 198.51.100.77 address that had produced the failures.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T281-00075\"]\n    },\n    {\n      \"claim\": \"The failures followed by a success from the same non-private address, combined with the stated absence of VPN and the lack of an authorized remote-access path in the inventory, support treating this as likely unauthorized authentication.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T281-00073\", \"T281-00074\", \"T281-00075\"]\n    },\n    {\n      \"claim\": \"Other authentication around 13:40 includes a Kerberos success sourced from 10.56.10.23 and an NTLM success from FILE-ORC-01; these are distinct from the later failures and success sourced from 198.51.100.77.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T281-00045\", \"T281-00046\", \"T281-00047\", \"T281-00050\", \"T281-00051\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show the source address logged by the domain controller, but do not identify the device or person behind it.\",\n    \"198.51.100.77 is a documentation-range address; the evidence does not establish that it represents a real, directly internet-routable source, or whether addresses were sanitized.\",\n    \"The logs establish authentication outcomes but do not show what the successful session accessed or did.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the successful logon from 198.51.100.77 was authorized or resulted from compromised credentials.\",\n    \"The identity, location, or control of the source behind 198.51.100.77.\",\n    \"Whether any data was accessed, changed, or exfiltrated through the successful logon.\",\n    \"Whether the internal FILE-ORC-01 authentication as raul.diaz was expected; the inventory describes GradeSync as using svc-grades, but the logs do not identify the process that initiated that authentication.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Confirm whether 198.51.100.77 is an anonymized address, approved NAT, or otherwise expected source; obtain corresponding network, firewall, and domain-controller connection records.\",\n    \"Determine the source device and authentication method behind the failures and success, including relevant Kerberos and NTLM details.\",\n    \"Review the successful session and account activity after 13:44:22 UTC, including access to systems and resources, and check for related authentication from the same source.\",\n    \"Verify with the account owner and IT whether the logons were expected; if not, follow incident response procedures for account containment and credential reset.\"\n  ],\n  \"unrelated_findings\": [\n    \"Webex launched with a Gmail URL, although Webex and Gmail are not among the listed approved services (T281-00012, T281-00014). This does not establish malicious activity.\",\n    \"A GlobalProtect client process ran on WS-RDIAZ-01 despite the inventory stating there is no VPN (T281-00034, T281-00037); this is separate from the alerted authentication.\",\n    \"Chrome opened a Slack files URL, and proxy records show requests or tunnels to Cloudflare, jsDelivr, SignalWire, Pingdom, and Zoom domains, which are not listed as approved services (T281-00094, T281-00103, T281-00105, T281-00106, T281-00108, T281-00110, T281-00113). These records alone do not establish file sharing, data transfer, or malicious intent.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 13948,
+    "output": 2753
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "The alerted account had two failed network logons from 198.51.100.77: a failure at 13:41:26 and another at 13:42:44 UTC. Both logs identify raul.diaz and show a bad-password substatus.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T281-00073",
+     "T281-00074"
+    ]
+   },
+   {
+    "claim": "At 13:44:22 UTC, the domain controller recorded a successful network logon for raul.diaz from the same 198.51.100.77 address that had produced the failures.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T281-00075"
+    ]
+   },
+   {
+    "claim": "The failures followed by a success from the same non-private address, combined with the stated absence of VPN and the lack of an authorized remote-access path in the inventory, support treating this as likely unauthorized authentication.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T281-00073",
+     "T281-00074",
+     "T281-00075"
+    ]
+   },
+   {
+    "claim": "Other authentication around 13:40 includes a Kerberos success sourced from 10.56.10.23 and an NTLM success from FILE-ORC-01; these are distinct from the later failures and success sourced from 198.51.100.77.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T281-00045",
+     "T281-00046",
+     "T281-00047",
+     "T281-00050",
+     "T281-00051"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show the source address logged by the domain controller, but do not identify the device or person behind it.",
+   "198.51.100.77 is a documentation-range address; the evidence does not establish that it represents a real, directly internet-routable source, or whether addresses were sanitized.",
+   "The logs establish authentication outcomes but do not show what the successful session accessed or did."
+  ],
+  "claims_not_established": [
+   "Whether the successful logon from 198.51.100.77 was authorized or resulted from compromised credentials.",
+   "The identity, location, or control of the source behind 198.51.100.77.",
+   "Whether any data was accessed, changed, or exfiltrated through the successful logon.",
+   "Whether the internal FILE-ORC-01 authentication as raul.diaz was expected; the inventory describes GradeSync as using svc-grades, but the logs do not identify the process that initiated that authentication."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Confirm whether 198.51.100.77 is an anonymized address, approved NAT, or otherwise expected source; obtain corresponding network, firewall, and domain-controller connection records.",
+   "Determine the source device and authentication method behind the failures and success, including relevant Kerberos and NTLM details.",
+   "Review the successful session and account activity after 13:44:22 UTC, including access to systems and resources, and check for related authentication from the same source.",
+   "Verify with the account owner and IT whether the logons were expected; if not, follow incident response procedures for account containment and credential reset."
+  ],
+  "unrelated_findings": [
+   "Webex launched with a Gmail URL, although Webex and Gmail are not among the listed approved services (T281-00012, T281-00014). This does not establish malicious activity.",
+   "A GlobalProtect client process ran on WS-RDIAZ-01 despite the inventory stating there is no VPN (T281-00034, T281-00037); this is separate from the alerted authentication.",
+   "Chrome opened a Slack files URL, and proxy records show requests or tunnels to Cloudflare, jsDelivr, SignalWire, Pingdom, and Zoom domains, which are not listed as approved services (T281-00094, T281-00103, T281-00105, T281-00106, T281-00108, T281-00110, T281-00113). These records alone do not establish file sharing, data transfer, or malicious intent."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 28.5
+}

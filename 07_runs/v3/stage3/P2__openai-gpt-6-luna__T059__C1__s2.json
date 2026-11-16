@@ -1,0 +1,97 @@
+{
+ "scenario_id": "T059",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 2,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.95,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45:20, ivy.chen's PowerShell process ran Compress-Archive on \\\\\\\\FILE-NWD-01\\\\Shared\\\\Clients, targeting C:\\\\Users\\\\ivy.chen\\\\AppData\\\\Local\\\\Temp\\\\c.zip; a file-creation event for c.zip followed at 13:45:24.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T059-00102\",\n        \"T059-00103\",\n        \"T059-00104\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:50:50, the explicit proxy recorded about 51 MB sent from WS-ICHEN-01 by NWD\\\\ivy.chen to quickshare-drop.net; Zeek recorded 51,000,389 outbound bytes for the corresponding connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T059-00174\",\n        \"T059-00175\"\n      ]\n    },\n    {\n      \"claim\": \"Endpoint network telemetry associates the proxy connection with Chrome running as ivy.chen and connecting to the proxy at the time of the large transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T059-00176\",\n        \"T059-00177\"\n      ]\n    },\n    {\n      \"claim\": \"The short interval between archiving the Clients share and sending tens of MB to an unapproved file-sharing service strongly supports attempted data exfiltration. The records do not directly establish that c.zip was the uploaded content.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T059-00102\",\n        \"T059-00104\",\n        \"T059-00174\",\n        \"T059-00175\"\n      ]\n    },\n    {\n      \"claim\": \"The supplied records place the 51 MB transfer at 13:50:50, rather than around 13:46; the records around 13:46 show Kerberos activity, not a large proxy transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T059-00113\",\n        \"T059-00116\",\n        \"T059-00118\",\n        \"T059-00121\",\n        \"T059-00174\",\n        \"T059-00175\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records identify the destination and transfer byte counts, but the supplied records do not expose the uploaded payload or URL path.\",\n    \"The evidence does not directly link the c.zip file to the 51 MB transfer or establish what data the archive contained.\"\n  ],\n  \"claims_not_established\": [\n    \"That c.zip was the file uploaded to quickshare-drop.net.\",\n    \"The exact contents or sensitivity of the archived Clients data.\",\n    \"Whether ivy.chen personally initiated or authorized the activity, or whether there was a legitimate business purpose.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Collect c.zip metadata, hash, and contents if available, and correlate them with file-access or DLP records for the Clients share.\",\n    \"Obtain detailed proxy or endpoint browser telemetry that can identify the upload path, request, and file, if retained.\",\n    \"Confirm with the user and business owner whether the archive and transfer were authorized, and preserve relevant endpoint and proxy evidence.\"\n  ],\n  \"unrelated_findings\": [\n    \"Chrome accessed the AWS console and its EC2 page during the review window; AWS is not listed among approved services. This is separate from the alerted quickshare-drop.net transfer.\",\n    \"A Kerberos authentication for ivy.chen from WS-NBLAKE-01 and a network logon on that host appear in the records; this is separate from the alerted transfer.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 60299,
+    "output": 1916
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.95,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45:20, ivy.chen's PowerShell process ran Compress-Archive on \\\\FILE-NWD-01\\Shared\\Clients, targeting C:\\Users\\ivy.chen\\AppData\\Local\\Temp\\c.zip; a file-creation event for c.zip followed at 13:45:24.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00102",
+     "T059-00103",
+     "T059-00104"
+    ]
+   },
+   {
+    "claim": "At 13:50:50, the explicit proxy recorded about 51 MB sent from WS-ICHEN-01 by NWD\\ivy.chen to quickshare-drop.net; Zeek recorded 51,000,389 outbound bytes for the corresponding connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00174",
+     "T059-00175"
+    ]
+   },
+   {
+    "claim": "Endpoint network telemetry associates the proxy connection with Chrome running as ivy.chen and connecting to the proxy at the time of the large transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00176",
+     "T059-00177"
+    ]
+   },
+   {
+    "claim": "The short interval between archiving the Clients share and sending tens of MB to an unapproved file-sharing service strongly supports attempted data exfiltration. The records do not directly establish that c.zip was the uploaded content.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T059-00102",
+     "T059-00104",
+     "T059-00174",
+     "T059-00175"
+    ]
+   },
+   {
+    "claim": "The supplied records place the 51 MB transfer at 13:50:50, rather than around 13:46; the records around 13:46 show Kerberos activity, not a large proxy transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00113",
+     "T059-00116",
+     "T059-00118",
+     "T059-00121",
+     "T059-00174",
+     "T059-00175"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records identify the destination and transfer byte counts, but the supplied records do not expose the uploaded payload or URL path.",
+   "The evidence does not directly link the c.zip file to the 51 MB transfer or establish what data the archive contained."
+  ],
+  "claims_not_established": [
+   "That c.zip was the file uploaded to quickshare-drop.net.",
+   "The exact contents or sensitivity of the archived Clients data.",
+   "Whether ivy.chen personally initiated or authorized the activity, or whether there was a legitimate business purpose."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Collect c.zip metadata, hash, and contents if available, and correlate them with file-access or DLP records for the Clients share.",
+   "Obtain detailed proxy or endpoint browser telemetry that can identify the upload path, request, and file, if retained.",
+   "Confirm with the user and business owner whether the archive and transfer were authorized, and preserve relevant endpoint and proxy evidence."
+  ],
+  "unrelated_findings": [
+   "Chrome accessed the AWS console and its EC2 page during the review window; AWS is not listed among approved services. This is separate from the alerted quickshare-drop.net transfer.",
+   "A Kerberos authentication for ivy.chen from WS-NBLAKE-01 and a network logon on that host appear in the records; this is separate from the alerted transfer."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 17,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 19.8
+}

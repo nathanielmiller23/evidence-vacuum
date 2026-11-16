@@ -1,0 +1,84 @@
+{
+ "run_id": "A__T021__C2__20261115T044336Z",
+ "config": "A",
+ "scenario_id": "T021",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 24,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 14235,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The supplied records show a successful interactive logon for ben.carter on WS-BCARTER-01 at 13:59:49 UTC, followed by userinit.exe and explorer.exe starting under that user's logon session.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T021-00005\", \"T021-00006\", \"T021-00007\", \"T021-00008\", \"T021-00009\"]\n    },\n    {\n      \"claim\": \"That session launched PowerShell to call an internal Harbor Dental API endpoint; the records show the command and process ancestry but do not show the request's result.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T021-00012\", \"T021-00013\"]\n    },\n    {\n      \"claim\": \"The session later launched Firefox to graph.microsoft.com, and the proxy recorded a successful tunnel to that host; Outlook also launched in the same user session.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T021-00016\", \"T021-00017\", \"T021-00021\", \"T021-00024\", \"T021-00025\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not include the alleged repeated failed logons around 13:40 UTC. They include a WS-BCARTER-01 event at 13:22:58 and then resume at 13:59:49; there is no supplied record for the intervening period.\",\n    \"No domain-controller authentication records are supplied, so the failure status, source host or address, and authentication method for the alert cannot be verified.\",\n    \"The available workstation records after 13:59 show process starts and network-related activity, but do not establish who initiated the earlier failed attempts or why they occurred.\"\n  ],\n  \"claims_not_established\": [\n    \"That ben.carter, rather than another host, process, or actor, caused the reported failed logons.\",\n    \"That the failed attempts were malicious, or that they were caused by a benign mistake such as stale credentials.\",\n    \"Whether the successful 13:59 interactive logon was related to the reported failures.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Domain-controller Security logs for 13:20\u201314:20 UTC on 2026-10-20, especially failed and successful authentication events for ben.carter, including source workstation/address and logon type.\",\n    \"Account lockout, password-change, and authentication-provider records for ben.carter covering the same interval.\",\n    \"WS-BCARTER-01 authentication and endpoint telemetry covering the missing 13:23\u201313:59 interval, plus corresponding logs from any identified source host.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 4628,
+    "output": 1196,
+    "reasoning": 552
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "The supplied records show a successful interactive logon for ben.carter on WS-BCARTER-01 at 13:59:49 UTC, followed by userinit.exe and explorer.exe starting under that user's logon session.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T021-00005",
+     "T021-00006",
+     "T021-00007",
+     "T021-00008",
+     "T021-00009"
+    ]
+   },
+   {
+    "claim": "That session launched PowerShell to call an internal Harbor Dental API endpoint; the records show the command and process ancestry but do not show the request's result.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T021-00012",
+     "T021-00013"
+    ]
+   },
+   {
+    "claim": "The session later launched Firefox to graph.microsoft.com, and the proxy recorded a successful tunnel to that host; Outlook also launched in the same user session.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T021-00016",
+     "T021-00017",
+     "T021-00021",
+     "T021-00024",
+     "T021-00025"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not include the alleged repeated failed logons around 13:40 UTC. They include a WS-BCARTER-01 event at 13:22:58 and then resume at 13:59:49; there is no supplied record for the intervening period.",
+   "No domain-controller authentication records are supplied, so the failure status, source host or address, and authentication method for the alert cannot be verified.",
+   "The available workstation records after 13:59 show process starts and network-related activity, but do not establish who initiated the earlier failed attempts or why they occurred."
+  ],
+  "claims_not_established": [
+   "That ben.carter, rather than another host, process, or actor, caused the reported failed logons.",
+   "That the failed attempts were malicious, or that they were caused by a benign mistake such as stale credentials.",
+   "Whether the successful 13:59 interactive logon was related to the reported failures."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Domain-controller Security logs for 13:20\u201314:20 UTC on 2026-10-20, especially failed and successful authentication events for ben.carter, including source workstation/address and logon type.",
+   "Account lockout, password-change, and authentication-provider records for ben.carter covering the same interval.",
+   "WS-BCARTER-01 authentication and endpoint telemetry covering the missing 13:23\u201313:59 interval, plus corresponding logs from any identified source host."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 13.2
+}

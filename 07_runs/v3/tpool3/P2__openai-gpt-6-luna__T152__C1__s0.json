@@ -1,0 +1,91 @@
+{
+ "scenario_id": "T152",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The repeated failed logons target svc-docsync and originate from FILE-MAP-01 at 10.53.20.20, using the same LSASS process and LogonType 3. The failures recur at roughly one-minute intervals from 13:35 through 13:50 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T152-00001\",\n        \"T152-00003\",\n        \"T152-00005\",\n        \"T152-00007\",\n        \"T152-00009\",\n        \"T152-00011\",\n        \"T152-00013\",\n        \"T152-00016\",\n        \"T152-00018\",\n        \"T152-00021\",\n        \"T152-00024\",\n        \"T152-00026\",\n        \"T152-00028\",\n        \"T152-00030\",\n        \"T152-00033\",\n        \"T152-00035\"\n      ]\n    },\n    {\n      \"claim\": \"The domain-controller records report bad-password status for svc-docsync during this sequence, including 4776 status 0xc000006a and 4771 status 0x18.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T152-00002\",\n        \"T152-00006\",\n        \"T152-00012\",\n        \"T152-00015\",\n        \"T152-00023\",\n        \"T152-00036\"\n      ]\n    },\n    {\n      \"claim\": \"The source host, target service account, and approximately one-minute retry cadence are consistent with the inventory's DocSync job on FILE-MAP-01, which runs every minute and re-authenticates, and with the scheduled svc-docsync password rotation at 13:30 UTC. This makes stale credentials in the job after rotation the most likely explanation for the alerted failures.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T152-00001\",\n        \"T152-00011\",\n        \"T152-00016\",\n        \"T152-00021\",\n        \"T152-00026\",\n        \"T152-00030\",\n        \"T152-00035\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records show authentication failures but do not include the password-rotation execution, DocSync configuration update, or job/application logs that would confirm the operational cause.\",\n    \"The supplied records cover only the provided events; they do not establish whether successful svc-docsync authentications occurred elsewhere in the review window.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not prove that the scheduled password rotation completed at 13:30 UTC or that the DocSync job retained the old password.\",\n    \"The evidence does not establish whether any successful authentication or other activity involving svc-docsync occurred outside the supplied records.\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [],\n  \"unrelated_findings\": [\n    \"Separate review recommended: at 14:18 UTC, WS-GLUND-01 recorded a SYSTEM-context PowerShell process using explicit credentials targeting svc-docsync on DC-MAP-01. This is distinct from the earlier repeated failures sourced from FILE-MAP-01; the record alone does not establish whether this use was authorized or connected. Record: T152-00037.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 6429,
+    "output": 1824
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "The repeated failed logons target svc-docsync and originate from FILE-MAP-01 at 10.53.20.20, using the same LSASS process and LogonType 3. The failures recur at roughly one-minute intervals from 13:35 through 13:50 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T152-00001",
+     "T152-00003",
+     "T152-00005",
+     "T152-00007",
+     "T152-00009",
+     "T152-00011",
+     "T152-00013",
+     "T152-00016",
+     "T152-00018",
+     "T152-00021",
+     "T152-00024",
+     "T152-00026",
+     "T152-00028",
+     "T152-00030",
+     "T152-00033",
+     "T152-00035"
+    ]
+   },
+   {
+    "claim": "The domain-controller records report bad-password status for svc-docsync during this sequence, including 4776 status 0xc000006a and 4771 status 0x18.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T152-00002",
+     "T152-00006",
+     "T152-00012",
+     "T152-00015",
+     "T152-00023",
+     "T152-00036"
+    ]
+   },
+   {
+    "claim": "The source host, target service account, and approximately one-minute retry cadence are consistent with the inventory's DocSync job on FILE-MAP-01, which runs every minute and re-authenticates, and with the scheduled svc-docsync password rotation at 13:30 UTC. This makes stale credentials in the job after rotation the most likely explanation for the alerted failures.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T152-00001",
+     "T152-00011",
+     "T152-00016",
+     "T152-00021",
+     "T152-00026",
+     "T152-00030",
+     "T152-00035"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records show authentication failures but do not include the password-rotation execution, DocSync configuration update, or job/application logs that would confirm the operational cause.",
+   "The supplied records cover only the provided events; they do not establish whether successful svc-docsync authentications occurred elsewhere in the review window."
+  ],
+  "claims_not_established": [
+   "The evidence does not prove that the scheduled password rotation completed at 13:30 UTC or that the DocSync job retained the old password.",
+   "The evidence does not establish whether any successful authentication or other activity involving svc-docsync occurred outside the supplied records."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [],
+  "unrelated_findings": [
+   "Separate review recommended: at 14:18 UTC, WS-GLUND-01 recorded a SYSTEM-context PowerShell process using explicit credentials targeting svc-docsync on DC-MAP-01. This is distinct from the earlier repeated failures sourced from FILE-MAP-01; the record alone does not establish whether this use was authorized or connected. Record: T152-00037."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 29,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.6
+}

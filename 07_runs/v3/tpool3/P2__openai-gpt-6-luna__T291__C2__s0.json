@@ -1,0 +1,78 @@
+{
+ "scenario_id": "T291",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded two failed network logons for raul.diaz from 198.51.100.77, with both failures reporting an incorrect password.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T291-00010\",\n        \"T291-00020\"\n      ]\n    },\n    {\n      \"claim\": \"About one minute after the second failure, the domain controller recorded a successful network logon for raul.diaz from the same source address.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T291-00020\",\n        \"T291-00021\"\n      ]\n    },\n    {\n      \"claim\": \"The successful logon from that source is not explained by the supplied access context: the organization has no VPN, and remote administration is only done from WS-SBYRNE-01. This pattern supports treating the alerted authentication activity as unauthorized unless verified otherwise.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T291-00010\",\n        \"T291-00020\",\n        \"T291-00021\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available records do not identify the device or person using source address 198.51.100.77.\",\n    \"The records show authentication outcomes, but not what resources, if any, were accessed after the successful logon.\",\n    \"The supplied evidence is limited to selected records in the requested time window; it does not establish whether the source address was an intermediary or how it mapped to a physical or organizational location.\"\n  ],\n  \"claims_not_established\": [\n    \"That the failed and successful logons were performed by the same person or device.\",\n    \"That raul.diaz's credentials were stolen or that the successful logon was used to access domain resources.\",\n    \"That the source address belongs to an attacker rather than an unrecorded intermediary or configuration.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Investigate the source address and determine whether it maps to any authorized gateway, intermediary, or known organization-controlled system.\",\n    \"Review domain-controller authentication and ticketing records, plus access events following the successful logon, to identify the session's activity and scope.\",\n    \"Confirm with raul.diaz whether the successful logon was expected and check for any authorized exception to the stated remote-access practices.\",\n    \"Correlate the authentication timestamps with network, firewall, and endpoint telemetry that could identify the originating device.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox was launched under raul.diaz's account; Dropbox is not among the listed approved services. Handle separately and do not use it to decide this authentication alert. (T291-00017, T291-00018, T291-00019)\",\n    \"GlobalProtect and Cisco AnyConnect client processes were launched on WS-RDIAZ-01, although the supplied context says the organization has no VPN. These process starts do not establish that either client caused the alerted logons; investigate separately. (T291-00011, T291-00012, T291-00014, T291-00015)\",\n    \"Proxy records show raul.diaz accessing Slack, which is not listed among approved services. Handle separately and do not use it to decide this authentication alert. (T291-00050, T291-00051)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 7974,
+    "output": 1956
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded two failed network logons for raul.diaz from 198.51.100.77, with both failures reporting an incorrect password.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T291-00010",
+     "T291-00020"
+    ]
+   },
+   {
+    "claim": "About one minute after the second failure, the domain controller recorded a successful network logon for raul.diaz from the same source address.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T291-00020",
+     "T291-00021"
+    ]
+   },
+   {
+    "claim": "The successful logon from that source is not explained by the supplied access context: the organization has no VPN, and remote administration is only done from WS-SBYRNE-01. This pattern supports treating the alerted authentication activity as unauthorized unless verified otherwise.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T291-00010",
+     "T291-00020",
+     "T291-00021"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available records do not identify the device or person using source address 198.51.100.77.",
+   "The records show authentication outcomes, but not what resources, if any, were accessed after the successful logon.",
+   "The supplied evidence is limited to selected records in the requested time window; it does not establish whether the source address was an intermediary or how it mapped to a physical or organizational location."
+  ],
+  "claims_not_established": [
+   "That the failed and successful logons were performed by the same person or device.",
+   "That raul.diaz's credentials were stolen or that the successful logon was used to access domain resources.",
+   "That the source address belongs to an attacker rather than an unrecorded intermediary or configuration."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Investigate the source address and determine whether it maps to any authorized gateway, intermediary, or known organization-controlled system.",
+   "Review domain-controller authentication and ticketing records, plus access events following the successful logon, to identify the session's activity and scope.",
+   "Confirm with raul.diaz whether the successful logon was expected and check for any authorized exception to the stated remote-access practices.",
+   "Correlate the authentication timestamps with network, firewall, and endpoint telemetry that could identify the originating device."
+  ],
+  "unrelated_findings": [
+   "Dropbox was launched under raul.diaz's account; Dropbox is not among the listed approved services. Handle separately and do not use it to decide this authentication alert. (T291-00017, T291-00018, T291-00019)",
+   "GlobalProtect and Cisco AnyConnect client processes were launched on WS-RDIAZ-01, although the supplied context says the organization has no VPN. These process starts do not establish that either client caused the alerted logons; investigate separately. (T291-00011, T291-00012, T291-00014, T291-00015)",
+   "Proxy records show raul.diaz accessing Slack, which is not listed among approved services. Handle separately and do not use it to decide this authentication alert. (T291-00050, T291-00051)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 7,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.0
+}

@@ -1,0 +1,101 @@
+{
+ "scenario_id": "T213",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"On the alerted workstation, WINWORD.EXE opened C:\\\\Users\\\\mia.santos\\\\Downloads\\\\Statement.docm at 13:45:08 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T213-00140\", \"T213-00143\"]\n    },\n    {\n      \"claim\": \"About one second later, that Word process launched PowerShell with -nop, -w hidden, and an encoded command. Decoding the command gives an IEX expression that downloads a script from raw.githubusercontent.com/bluefin-it/tools/main/u.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T213-00144\", \"T213-00145\"]\n    },\n    {\n      \"claim\": \"The PowerShell process connected through the explicit proxy shortly after launch; the connection records show 51,669 response bytes on one connection and 12,320 on another.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T213-00147\", \"T213-00148\", \"T213-00151\", \"T213-00152\", \"T213-00153\", \"T213-00154\"]\n    },\n    {\n      \"claim\": \"PowerShell then launched rundll32 to execute C:\\\\Users\\\\mia.santos\\\\AppData\\\\Roaming\\\\svchelper.dll,Init. This sequence is strong evidence of malicious activity on the alerted workstation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T213-00155\", \"T213-00156\"]\n    },\n    {\n      \"claim\": \"The reported approximate time and the observed PowerShell execution do not exactly match: the supplied 13:40 records show a Defender scan, while the recorded PowerShell launch occurs at 13:45:09 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T213-00110\", \"T213-00111\", \"T213-00144\", \"T213-00145\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records establish the encoded command and process/network sequence, but do not include the contents of the downloaded script or the DLL.\",\n    \"The supplied records do not establish what the user saw on screen or whether the PowerShell window Mia reported was this 13:45 execution.\",\n    \"The proxy connection records identify the proxy endpoint and byte counts, but do not provide the HTTP request and response contents for the PowerShell connections.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the brief window reported around 13:40 was the PowerShell execution recorded at 13:45:09 UTC.\",\n    \"Whether the GitHub repository or downloaded script was controlled by Bluefin or authorized; the command line identifies the URL, but the available records do not establish its ownership or contents (T213-00144).\",\n    \"Whether svchelper.dll was successfully written, loaded, or persisted; the records show rundll32 invoked with that path, not the file contents or a successful module load (T213-00155, T213-00156).\",\n    \"Whether the activity resulted in credential theft, data access, exfiltration, or further compromise.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze Statement.docm, the downloaded u.ps1, and svchelper.dll, including hashes, provenance, and relevant file-system timestamps.\",\n    \"Retrieve proxy request/response details for the PowerShell connections and determine whether the requested GitHub content is authorized.\",\n    \"Review endpoint protection detections and scan history, PowerShell script-block/module logs, and Office macro/security telemetry around 13:40\u201313:46 UTC.\",\n    \"Confirm with Mia the time and appearance of the reported window and how Statement.docm arrived on the workstation.\",\n    \"Check for subsequent persistence, execution, credential-access, or outbound activity attributable to the downloaded script or DLL.\"\n  ],\n  \"unrelated_findings\": [\n    \"Google Drive File Stream was started in Mia's session; Google Drive is not among the approved services listed in the environment context. Handle in a separate ticket; this does not determine the alerted activity (T213-00401, T213-00402, T213-00403).\",\n    \"Dropbox was started in Mia's session; Dropbox is not among the approved services listed in the environment context. Handle in a separate ticket; this does not determine the alerted activity (T213-00421, T213-00422, T213-00423).\",\n    \"Cisco AnyConnect's VPN UI was started in Mia's session, while the environment context states there is no VPN. These records show the UI launch, not a VPN connection; investigate separately (T213-00406, T213-00407, T213-00408).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 65454,
+    "output": 2691
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "On the alerted workstation, WINWORD.EXE opened C:\\Users\\mia.santos\\Downloads\\Statement.docm at 13:45:08 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T213-00140",
+     "T213-00143"
+    ]
+   },
+   {
+    "claim": "About one second later, that Word process launched PowerShell with -nop, -w hidden, and an encoded command. Decoding the command gives an IEX expression that downloads a script from raw.githubusercontent.com/bluefin-it/tools/main/u.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T213-00144",
+     "T213-00145"
+    ]
+   },
+   {
+    "claim": "The PowerShell process connected through the explicit proxy shortly after launch; the connection records show 51,669 response bytes on one connection and 12,320 on another.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T213-00147",
+     "T213-00148",
+     "T213-00151",
+     "T213-00152",
+     "T213-00153",
+     "T213-00154"
+    ]
+   },
+   {
+    "claim": "PowerShell then launched rundll32 to execute C:\\Users\\mia.santos\\AppData\\Roaming\\svchelper.dll,Init. This sequence is strong evidence of malicious activity on the alerted workstation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T213-00155",
+     "T213-00156"
+    ]
+   },
+   {
+    "claim": "The reported approximate time and the observed PowerShell execution do not exactly match: the supplied 13:40 records show a Defender scan, while the recorded PowerShell launch occurs at 13:45:09 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T213-00110",
+     "T213-00111",
+     "T213-00144",
+     "T213-00145"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records establish the encoded command and process/network sequence, but do not include the contents of the downloaded script or the DLL.",
+   "The supplied records do not establish what the user saw on screen or whether the PowerShell window Mia reported was this 13:45 execution.",
+   "The proxy connection records identify the proxy endpoint and byte counts, but do not provide the HTTP request and response contents for the PowerShell connections."
+  ],
+  "claims_not_established": [
+   "Whether the brief window reported around 13:40 was the PowerShell execution recorded at 13:45:09 UTC.",
+   "Whether the GitHub repository or downloaded script was controlled by Bluefin or authorized; the command line identifies the URL, but the available records do not establish its ownership or contents (T213-00144).",
+   "Whether svchelper.dll was successfully written, loaded, or persisted; the records show rundll32 invoked with that path, not the file contents or a successful module load (T213-00155, T213-00156).",
+   "Whether the activity resulted in credential theft, data access, exfiltration, or further compromise."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze Statement.docm, the downloaded u.ps1, and svchelper.dll, including hashes, provenance, and relevant file-system timestamps.",
+   "Retrieve proxy request/response details for the PowerShell connections and determine whether the requested GitHub content is authorized.",
+   "Review endpoint protection detections and scan history, PowerShell script-block/module logs, and Office macro/security telemetry around 13:40\u201313:46 UTC.",
+   "Confirm with Mia the time and appearance of the reported window and how Statement.docm arrived on the workstation.",
+   "Check for subsequent persistence, execution, credential-access, or outbound activity attributable to the downloaded script or DLL."
+  ],
+  "unrelated_findings": [
+   "Google Drive File Stream was started in Mia's session; Google Drive is not among the approved services listed in the environment context. Handle in a separate ticket; this does not determine the alerted activity (T213-00401, T213-00402, T213-00403).",
+   "Dropbox was started in Mia's session; Dropbox is not among the approved services listed in the environment context. Handle in a separate ticket; this does not determine the alerted activity (T213-00421, T213-00422, T213-00423).",
+   "Cisco AnyConnect's VPN UI was started in Mia's session, while the environment context states there is no VPN. These records show the UI launch, not a VPN connection; investigate separately (T213-00406, T213-00407, T213-00408)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 16,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 30.8
+}

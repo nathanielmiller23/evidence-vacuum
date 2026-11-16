@@ -1,0 +1,91 @@
+{
+ "scenario_id": "S26",
+ "condition": "C2",
+ "variant": "P1",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:23 UTC, cole.price ran WMIC from cmd.exe to list running services on WS-CPRICE-01; the process was at medium integrity.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S26-00027\", \"S26-00028\"]\n    },\n    {\n      \"claim\": \"A running-service inventory can be used for reconnaissance, but this command alone does not establish malicious intent or unauthorized administration.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S26-00027\", \"S26-00028\"]\n    },\n    {\n      \"claim\": \"The workstation made domain-related Kerberos and LDAP connections to DC-RB-01; the associated endpoint firewall records identify LSASS as the process for the cited connections.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S26-00001\", \"S26-00002\", \"S26-00006\", \"S26-00007\", \"S26-00008\", \"S26-00009\"]\n    },\n    {\n      \"claim\": \"DC-RB-01 issued Kerberos service tickets for the WS-CPRICE-01 computer account to FILE-RB-01 at 13:41 and 13:42 UTC; these records do not show what resource, if any, was accessed on the file server.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S26-00171\", \"S26-00183\"]\n    },\n    {\n      \"claim\": \"The provided records do not identify a dump-producing process, a .dmp file write, or access to another process's memory around the alert time.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": []\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records include no direct process, file-creation, or endpoint-alert detail confirming the reported .dmp write.\",\n    \"The available network records do not reveal the contents or purpose of the LDAP, Kerberos, or SMB activity.\",\n    \"The supplied records are selective and contain gaps in record IDs, so unlisted activity cannot be treated as absent.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the reported dump was created by the approved VetChart vendor tool vcdump.exe or by another process.\",\n    \"Whether the dump was collected under the open VetChart-hang ticket, and whether it contained sensitive process memory.\",\n    \"Whether the WMIC service query or the file-server service tickets were part of authorized troubleshooting or unrelated activity.\",\n    \"Whether any data was accessed, staged, or exfiltrated.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"The original endpoint alert details and EDR process/file telemetry for the .dmp creation, including file path, timestamp, process ID, parent process, and target process.\",\n    \"Endpoint evidence showing whether vcdump.exe ran, including its signature, hash, command line, and lineage.\",\n    \"The VetChart-hang ticket and change or support records relevant to the dump.\",\n    \"FILE-RB-01 SMB/share audit logs and endpoint file-access evidence for the 13:41\u201313:44 UTC period.\",\n    \"Cole.price's account activity and confirmation of whether the WMIC query and related activity were expected.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 35567,
+    "output": 1977
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "At 13:23 UTC, cole.price ran WMIC from cmd.exe to list running services on WS-CPRICE-01; the process was at medium integrity.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S26-00027",
+     "S26-00028"
+    ]
+   },
+   {
+    "claim": "A running-service inventory can be used for reconnaissance, but this command alone does not establish malicious intent or unauthorized administration.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S26-00027",
+     "S26-00028"
+    ]
+   },
+   {
+    "claim": "The workstation made domain-related Kerberos and LDAP connections to DC-RB-01; the associated endpoint firewall records identify LSASS as the process for the cited connections.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S26-00001",
+     "S26-00002",
+     "S26-00006",
+     "S26-00007",
+     "S26-00008",
+     "S26-00009"
+    ]
+   },
+   {
+    "claim": "DC-RB-01 issued Kerberos service tickets for the WS-CPRICE-01 computer account to FILE-RB-01 at 13:41 and 13:42 UTC; these records do not show what resource, if any, was accessed on the file server.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S26-00171",
+     "S26-00183"
+    ]
+   },
+   {
+    "claim": "The provided records do not identify a dump-producing process, a .dmp file write, or access to another process's memory around the alert time.",
+    "claim_type": "observed_fact",
+    "record_ids": []
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records include no direct process, file-creation, or endpoint-alert detail confirming the reported .dmp write.",
+   "The available network records do not reveal the contents or purpose of the LDAP, Kerberos, or SMB activity.",
+   "The supplied records are selective and contain gaps in record IDs, so unlisted activity cannot be treated as absent."
+  ],
+  "claims_not_established": [
+   "Whether the reported dump was created by the approved VetChart vendor tool vcdump.exe or by another process.",
+   "Whether the dump was collected under the open VetChart-hang ticket, and whether it contained sensitive process memory.",
+   "Whether the WMIC service query or the file-server service tickets were part of authorized troubleshooting or unrelated activity.",
+   "Whether any data was accessed, staged, or exfiltrated."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "The original endpoint alert details and EDR process/file telemetry for the .dmp creation, including file path, timestamp, process ID, parent process, and target process.",
+   "Endpoint evidence showing whether vcdump.exe ran, including its signature, hash, command line, and lineage.",
+   "The VetChart-hang ticket and change or support records relevant to the dump.",
+   "FILE-RB-01 SMB/share audit logs and endpoint file-access evidence for the 13:41\u201313:44 UTC period.",
+   "Cole.price's account activity and confirmation of whether the WMIC query and related activity were expected."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.5
+}

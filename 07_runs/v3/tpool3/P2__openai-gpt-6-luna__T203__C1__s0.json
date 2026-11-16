@@ -1,0 +1,101 @@
+{
+ "scenario_id": "T203",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:44:59 UTC, Word opened C:\\\\Users\\\\mia.santos\\\\Downloads\\\\Statement.docm. At 13:45:01, Word spawned PowerShell with -nop, -w hidden, and an encoded command.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T203-00204\", \"T203-00205\", \"T203-00208\", \"T203-00209\"]\n    },\n    {\n      \"claim\": \"The encoded PowerShell command decodes to an expression that downloads and executes a script from raw.githubusercontent.com/bluefin-it/tools/main/u.ps1. The proxy records a successful GET for that script at 13:45:02.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T203-00208\", \"T203-00209\", \"T203-00212\"]\n    },\n    {\n      \"claim\": \"At 13:45:04, PowerShell spawned rundll32 to invoke Init in C:\\\\Users\\\\mia.santos\\\\AppData\\\\Roaming\\\\svchelper.dll.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T203-00219\", \"T203-00222\"]\n    },\n    {\n      \"claim\": \"The document-to-hidden-PowerShell-to-downloaded-script-to-rundll32 chain is strongly indicative of malicious execution, even though the URL contains the organization's name.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T203-00204\", \"T203-00208\", \"T203-00212\", \"T203-00219\"]\n    },\n    {\n      \"claim\": \"The observed execution is at 13:44:59\u201313:45:04 UTC, about five minutes later than the reported approximate time of 13:40, but within the requested review window.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T203-00204\", \"T203-00208\", \"T203-00219\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show the script request and rundll32 command line, but do not provide the downloaded script contents, DLL contents, or hashes.\",\n    \"The evidence does not establish whether the DLL loaded successfully or what it did after invocation.\",\n    \"The reported time is approximate; the observed process chain begins around 13:45 UTC.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the GitHub repository or script is controlled or approved by Bluefin.\",\n    \"Whether the user intentionally opened the document or knew what it contained.\",\n    \"Whether the downloaded script executed successfully, whether the DLL loaded, or whether persistence, credential theft, or other follow-on activity occurred.\",\n    \"Whether the separate msi_update.exe process observed at 13:47 is related to this PowerShell activity.\",\n    \"Whether the reported PowerShell window at approximately 13:40 is the same execution chain observed at 13:45.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire Statement.docm, u.ps1, and svchelper.dll; preserve hashes and analyze their contents and provenance.\",\n    \"Collect endpoint EDR or forensic telemetry around 13:44\u201313:50, including PowerShell script-block or AMSI logs, file creation, DLL load, and persistence evidence.\",\n    \"Check GitHub repository ownership, commit history, and whether the referenced script is authorized.\",\n    \"Investigate the 13:47 msi_update.exe process and determine whether it is connected to the alerted execution.\",\n    \"Confirm the user's recollection and the workstation's clock/time synchronization.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:32 and 13:36, DC-BLU-01 records Kerberos activity for ken.ito originating from WS-MSANTOS-01's address, and WS-KITO-01 records network logons for ken.ito from that address. This is anomalous against the stated remote-administration practice and merits a separate ticket; it does not establish a link to the 13:45 alerted process chain. (T203-00070, T203-00071, T203-00073, T203-00139, T203-00140, T203-00142)\",\n    \"At 14:11, Chrome on WS-MSANTOS-01 connected to www.dropbox.com, an unapproved file-sharing service. The records establish a connection, not an upload or data transfer. Investigate separately; it does not decide this alert. (T203-00315, T203-00316, T203-00317, T203-00318)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 68205,
+    "output": 2491
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:44:59 UTC, Word opened C:\\Users\\mia.santos\\Downloads\\Statement.docm. At 13:45:01, Word spawned PowerShell with -nop, -w hidden, and an encoded command.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T203-00204",
+     "T203-00205",
+     "T203-00208",
+     "T203-00209"
+    ]
+   },
+   {
+    "claim": "The encoded PowerShell command decodes to an expression that downloads and executes a script from raw.githubusercontent.com/bluefin-it/tools/main/u.ps1. The proxy records a successful GET for that script at 13:45:02.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T203-00208",
+     "T203-00209",
+     "T203-00212"
+    ]
+   },
+   {
+    "claim": "At 13:45:04, PowerShell spawned rundll32 to invoke Init in C:\\Users\\mia.santos\\AppData\\Roaming\\svchelper.dll.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T203-00219",
+     "T203-00222"
+    ]
+   },
+   {
+    "claim": "The document-to-hidden-PowerShell-to-downloaded-script-to-rundll32 chain is strongly indicative of malicious execution, even though the URL contains the organization's name.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T203-00204",
+     "T203-00208",
+     "T203-00212",
+     "T203-00219"
+    ]
+   },
+   {
+    "claim": "The observed execution is at 13:44:59\u201313:45:04 UTC, about five minutes later than the reported approximate time of 13:40, but within the requested review window.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T203-00204",
+     "T203-00208",
+     "T203-00219"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show the script request and rundll32 command line, but do not provide the downloaded script contents, DLL contents, or hashes.",
+   "The evidence does not establish whether the DLL loaded successfully or what it did after invocation.",
+   "The reported time is approximate; the observed process chain begins around 13:45 UTC."
+  ],
+  "claims_not_established": [
+   "Whether the GitHub repository or script is controlled or approved by Bluefin.",
+   "Whether the user intentionally opened the document or knew what it contained.",
+   "Whether the downloaded script executed successfully, whether the DLL loaded, or whether persistence, credential theft, or other follow-on activity occurred.",
+   "Whether the separate msi_update.exe process observed at 13:47 is related to this PowerShell activity.",
+   "Whether the reported PowerShell window at approximately 13:40 is the same execution chain observed at 13:45."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire Statement.docm, u.ps1, and svchelper.dll; preserve hashes and analyze their contents and provenance.",
+   "Collect endpoint EDR or forensic telemetry around 13:44\u201313:50, including PowerShell script-block or AMSI logs, file creation, DLL load, and persistence evidence.",
+   "Check GitHub repository ownership, commit history, and whether the referenced script is authorized.",
+   "Investigate the 13:47 msi_update.exe process and determine whether it is connected to the alerted execution.",
+   "Confirm the user's recollection and the workstation's clock/time synchronization."
+  ],
+  "unrelated_findings": [
+   "At 13:32 and 13:36, DC-BLU-01 records Kerberos activity for ken.ito originating from WS-MSANTOS-01's address, and WS-KITO-01 records network logons for ken.ito from that address. This is anomalous against the stated remote-administration practice and merits a separate ticket; it does not establish a link to the 13:45 alerted process chain. (T203-00070, T203-00071, T203-00073, T203-00139, T203-00140, T203-00142)",
+   "At 14:11, Chrome on WS-MSANTOS-01 connected to www.dropbox.com, an unapproved file-sharing service. The records establish a connection, not an upload or data transfer. Investigate separately; it does not decide this alert. (T203-00315, T203-00316, T203-00317, T203-00318)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 16,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 25.2
+}

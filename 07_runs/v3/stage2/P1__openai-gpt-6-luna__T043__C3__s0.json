@@ -1,0 +1,92 @@
+{
+ "scenario_id": "T043",
+ "condition": "C3",
+ "variant": "P1",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:41:50 UTC, ivy.chen's medium-integrity Word process opened C:\\\\Users\\\\ivy.chen\\\\Downloads\\\\Statement.docm.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T043-00124\",\n        \"T043-00125\"\n      ]\n    },\n    {\n      \"claim\": \"Two seconds later, Word spawned PowerShell with no-profile, hidden-window, and encoded-command options. The encoded command requests a script from raw.githubusercontent.com/nwd-it/tools/main/u.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T043-00128\",\n        \"T043-00129\"\n      ]\n    },\n    {\n      \"claim\": \"The proxy recorded a successful GET for that exact u.ps1 URL, and the PowerShell process connected through the configured proxy during the same activity.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T043-00132\",\n        \"T043-00133\",\n        \"T043-00134\",\n        \"T043-00135\"\n      ]\n    },\n    {\n      \"claim\": \"PowerShell then launched rundll32 to call Init in C:\\\\Users\\\\ivy.chen\\\\AppData\\\\Roaming\\\\svchelper.dll. The logs establish the process launch, but not that the DLL loaded or its code executed successfully.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T043-00139\",\n        \"T043-00140\"\n      ]\n    },\n    {\n      \"claim\": \"The sequence of a document launching hidden encoded PowerShell, fetching a script, and launching a DLL from the user's roaming profile strongly supports malicious document-driven execution rather than an ordinary update or the documented IT patching practice.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T043-00124\",\n        \"T043-00128\",\n        \"T043-00132\",\n        \"T043-00139\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied coverage metadata reports that winsec and Sysmon collection was unavailable on WS-NBLAKE-01 from 13:30 to 14:10 UTC; activity on that host during that interval cannot be assessed from those sources.\",\n    \"The records show the requested script URL and rundll32 command, but do not include the downloaded script or DLL contents, file-creation evidence, or a direct record of successful DLL loading.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the document was malicious, how it arrived, or whether the user knowingly opened it.\",\n    \"What code the downloaded script contained or whether the DLL's Init routine ran successfully.\",\n    \"Whether the activity established persistence, stole data, or moved to other hosts.\",\n    \"Whether the observed activity caused or was related to the reported brief PowerShell window.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire Statement.docm, svchelper.dll, and the exact downloaded u.ps1 content; preserve hashes and analyze them in a controlled environment.\",\n    \"Collect endpoint file-system, antivirus, and execution telemetry around the event to determine whether the DLL was written, loaded, or detected.\",\n    \"Review the user's email, browser, and download history to identify the document's source and whether it was expected.\",\n    \"Hunt across other hosts for the document, script URL, svchelper.dll, and related process or network activity.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 41657,
+    "output": 1524
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:41:50 UTC, ivy.chen's medium-integrity Word process opened C:\\Users\\ivy.chen\\Downloads\\Statement.docm.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T043-00124",
+     "T043-00125"
+    ]
+   },
+   {
+    "claim": "Two seconds later, Word spawned PowerShell with no-profile, hidden-window, and encoded-command options. The encoded command requests a script from raw.githubusercontent.com/nwd-it/tools/main/u.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T043-00128",
+     "T043-00129"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a successful GET for that exact u.ps1 URL, and the PowerShell process connected through the configured proxy during the same activity.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T043-00132",
+     "T043-00133",
+     "T043-00134",
+     "T043-00135"
+    ]
+   },
+   {
+    "claim": "PowerShell then launched rundll32 to call Init in C:\\Users\\ivy.chen\\AppData\\Roaming\\svchelper.dll. The logs establish the process launch, but not that the DLL loaded or its code executed successfully.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T043-00139",
+     "T043-00140"
+    ]
+   },
+   {
+    "claim": "The sequence of a document launching hidden encoded PowerShell, fetching a script, and launching a DLL from the user's roaming profile strongly supports malicious document-driven execution rather than an ordinary update or the documented IT patching practice.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T043-00124",
+     "T043-00128",
+     "T043-00132",
+     "T043-00139"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied coverage metadata reports that winsec and Sysmon collection was unavailable on WS-NBLAKE-01 from 13:30 to 14:10 UTC; activity on that host during that interval cannot be assessed from those sources.",
+   "The records show the requested script URL and rundll32 command, but do not include the downloaded script or DLL contents, file-creation evidence, or a direct record of successful DLL loading."
+  ],
+  "claims_not_established": [
+   "Whether the document was malicious, how it arrived, or whether the user knowingly opened it.",
+   "What code the downloaded script contained or whether the DLL's Init routine ran successfully.",
+   "Whether the activity established persistence, stole data, or moved to other hosts.",
+   "Whether the observed activity caused or was related to the reported brief PowerShell window."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire Statement.docm, svchelper.dll, and the exact downloaded u.ps1 content; preserve hashes and analyze them in a controlled environment.",
+   "Collect endpoint file-system, antivirus, and execution telemetry around the event to determine whether the DLL was written, loaded, or detected.",
+   "Review the user's email, browser, and download history to identify the document's source and whether it was expected.",
+   "Hunt across other hosts for the document, script URL, svchelper.dll, and related process or network activity."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 14,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 15.4
+}

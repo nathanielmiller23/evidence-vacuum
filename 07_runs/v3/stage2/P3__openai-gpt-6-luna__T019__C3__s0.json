@@ -1,0 +1,87 @@
+{
+ "scenario_id": "T019",
+ "condition": "C3",
+ "variant": "P3",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"maria.lopez ran PowerShell to compress \\\\\\\\FILE-HD-01\\\\Shared\\\\Clients into C:\\\\Users\\\\maria.lopez\\\\AppData\\\\Local\\\\Temp\\\\c.zip; Sysmon recorded creation of that archive shortly afterward.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T019-00117\", \"T019-00118\", \"T019-00119\"]\n    },\n    {\n      \"claim\": \"The same user launched Chrome to sendbox-files.io, a service not listed among the organization's approved file-sharing or cloud-storage services.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T019-00150\", \"T019-00154\"]\n    },\n    {\n      \"claim\": \"The proxy and Zeek recorded approximately 51 MB of client-to-server traffic from WS-MLOPEZ-01 to sendbox-files.io, consistent in timing and direction with an upload.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T019-00170\", \"T019-00171\"]\n    },\n    {\n      \"claim\": \"The archive of client-share data was created shortly before the browser session to an unapproved file-sharing service and the large outbound transfer. Taken together, this strongly supports unauthorized data exfiltration as the alerted activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T019-00117\", \"T019-00119\", \"T019-00150\", \"T019-00170\", \"T019-00171\", \"T019-00172\", \"T019-00173\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The sendbox connection is recorded as a CONNECT tunnel; the available records show the destination and byte counts but not the uploaded payload or the remote filename.\",\n    \"The evidence does not directly establish the contents or size of c.zip, or prove that the archive itself accounts for all transferred bytes.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the upload completed successfully or what exact data the destination received.\",\n    \"Whether maria.lopez acted intentionally, under instruction, or through a compromised session.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine c.zip and relevant source files or file-access records to establish the archive's contents.\",\n    \"Obtain sendbox-files.io account, upload, and file-receipt records, if available, and correlate them with the proxy tunnel.\",\n    \"Confirm with maria.lopez and the relevant business owner whether this transfer had any authorization.\"\n  ],\n  \"unrelated_findings\": [\n    \"A dotnet-sdk-installer.exe ran from maria.lopez's Temp directory with quiet-install arguments; assess separately and do not use it to decide this alert. (T019-00181, T019-00182, T019-00210, T019-00211)\",\n    \"Chrome accessed Tableau Online and Tableau CDN endpoints later in the window; assess separately against software/service policy. (T019-00257, T019-00258, T019-00263, T019-00264, T019-00272)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 49229,
+    "output": 1426
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "maria.lopez ran PowerShell to compress \\\\FILE-HD-01\\Shared\\Clients into C:\\Users\\maria.lopez\\AppData\\Local\\Temp\\c.zip; Sysmon recorded creation of that archive shortly afterward.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00117",
+     "T019-00118",
+     "T019-00119"
+    ]
+   },
+   {
+    "claim": "The same user launched Chrome to sendbox-files.io, a service not listed among the organization's approved file-sharing or cloud-storage services.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00150",
+     "T019-00154"
+    ]
+   },
+   {
+    "claim": "The proxy and Zeek recorded approximately 51 MB of client-to-server traffic from WS-MLOPEZ-01 to sendbox-files.io, consistent in timing and direction with an upload.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00170",
+     "T019-00171"
+    ]
+   },
+   {
+    "claim": "The archive of client-share data was created shortly before the browser session to an unapproved file-sharing service and the large outbound transfer. Taken together, this strongly supports unauthorized data exfiltration as the alerted activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T019-00117",
+     "T019-00119",
+     "T019-00150",
+     "T019-00170",
+     "T019-00171",
+     "T019-00172",
+     "T019-00173"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The sendbox connection is recorded as a CONNECT tunnel; the available records show the destination and byte counts but not the uploaded payload or the remote filename.",
+   "The evidence does not directly establish the contents or size of c.zip, or prove that the archive itself accounts for all transferred bytes."
+  ],
+  "claims_not_established": [
+   "Whether the upload completed successfully or what exact data the destination received.",
+   "Whether maria.lopez acted intentionally, under instruction, or through a compromised session."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine c.zip and relevant source files or file-access records to establish the archive's contents.",
+   "Obtain sendbox-files.io account, upload, and file-receipt records, if available, and correlate them with the proxy tunnel.",
+   "Confirm with maria.lopez and the relevant business owner whether this transfer had any authorization."
+  ],
+  "unrelated_findings": [
+   "A dotnet-sdk-installer.exe ran from maria.lopez's Temp directory with quiet-install arguments; assess separately and do not use it to decide this alert. (T019-00181, T019-00182, T019-00210, T019-00211)",
+   "Chrome accessed Tableau Online and Tableau CDN endpoints later in the window; assess separately against software/service policy. (T019-00257, T019-00258, T019-00263, T019-00264, T019-00272)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 14,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 14.4
+}

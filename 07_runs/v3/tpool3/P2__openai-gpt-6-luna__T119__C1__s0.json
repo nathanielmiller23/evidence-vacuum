@@ -1,0 +1,86 @@
+{
+ "scenario_id": "T119",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45:03, dan.reyes ran PowerShell to compress \\\\\\\\FILE-COP-01\\\\Shared\\\\Clients into C:\\\\Users\\\\dan.reyes\\\\AppData\\\\Local\\\\Temp\\\\c.zip; Sysmon recorded creation of that archive four seconds later.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T119-00305\",\n        \"T119-00306\",\n        \"T119-00307\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:50:31, the proxy recorded a connection from WS-DREYES-01 to fastfile-share.io with 51,000,000 client-to-server bytes; Zeek recorded 51,000,368 originating bytes for the corresponding connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T119-00414\",\n        \"T119-00416\"\n      ]\n    },\n    {\n      \"claim\": \"The large transfer used Chrome (PID 3972) under dan.reyes's account, and the corresponding workstation connection went through the explicit proxy.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T119-00415\",\n        \"T119-00417\"\n      ]\n    },\n    {\n      \"claim\": \"The archive creation followed shortly by a roughly 51 MB outbound connection to an unapproved file-sharing destination strongly supports suspected data staging and exfiltration. The supplied records place the transfer at 13:50:31, rather than 13:46.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T119-00305\",\n        \"T119-00307\",\n        \"T119-00414\",\n        \"T119-00416\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records the destination and byte counts, but the supplied records do not show the HTTP upload request, uploaded object name, or destination account.\",\n    \"The supplied evidence does not include the contents, size, or hash of c.zip, or a file-level link between that archive and the outbound transfer.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish that c.zip itself was the object transmitted, or exactly what data the archive contained (T119-00305, T119-00307, T119-00414, T119-00416).\",\n    \"The evidence does not establish who controlled the destination account, whether the transfer had authorization, or dan.reyes's intent (T119-00414, T119-00416).\",\n    \"The supplied connection record timestamps the large transfer at 13:50:31; it does not establish a transfer at 13:46 (T119-00414, T119-00416).\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine c.zip, including its contents, size, hash, creation/access metadata, and the source files included.\",\n    \"Obtain detailed proxy or network transaction records for the fastfile-share.io connection to identify the upload request, object metadata, account, and destination.\",\n    \"Review endpoint artifacts and browser history for the fastfile-share.io session, including uploads, authentication, and actions immediately before and after the transfer.\",\n    \"Confirm with the data owner and dan.reyes whether access to the Clients share and any transfer to this destination were authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"Google Drive File Stream launched under dan.reyes's account; the inventory approves OneDrive but not Google Drive. Track this separately, without using it to decide this alert (T119-00161, T119-00163).\",\n    \"GlobalProtect user and service processes were launched on WS-DREYES-01 despite the inventory stating there is no VPN. These records show process starts, not that a VPN tunnel was established; investigate separately (T119-00218, T119-00262, T119-00263).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 85210,
+    "output": 2021
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45:03, dan.reyes ran PowerShell to compress \\\\FILE-COP-01\\Shared\\Clients into C:\\Users\\dan.reyes\\AppData\\Local\\Temp\\c.zip; Sysmon recorded creation of that archive four seconds later.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T119-00305",
+     "T119-00306",
+     "T119-00307"
+    ]
+   },
+   {
+    "claim": "At 13:50:31, the proxy recorded a connection from WS-DREYES-01 to fastfile-share.io with 51,000,000 client-to-server bytes; Zeek recorded 51,000,368 originating bytes for the corresponding connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T119-00414",
+     "T119-00416"
+    ]
+   },
+   {
+    "claim": "The large transfer used Chrome (PID 3972) under dan.reyes's account, and the corresponding workstation connection went through the explicit proxy.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T119-00415",
+     "T119-00417"
+    ]
+   },
+   {
+    "claim": "The archive creation followed shortly by a roughly 51 MB outbound connection to an unapproved file-sharing destination strongly supports suspected data staging and exfiltration. The supplied records place the transfer at 13:50:31, rather than 13:46.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T119-00305",
+     "T119-00307",
+     "T119-00414",
+     "T119-00416"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records the destination and byte counts, but the supplied records do not show the HTTP upload request, uploaded object name, or destination account.",
+   "The supplied evidence does not include the contents, size, or hash of c.zip, or a file-level link between that archive and the outbound transfer."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish that c.zip itself was the object transmitted, or exactly what data the archive contained (T119-00305, T119-00307, T119-00414, T119-00416).",
+   "The evidence does not establish who controlled the destination account, whether the transfer had authorization, or dan.reyes's intent (T119-00414, T119-00416).",
+   "The supplied connection record timestamps the large transfer at 13:50:31; it does not establish a transfer at 13:46 (T119-00414, T119-00416)."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine c.zip, including its contents, size, hash, creation/access metadata, and the source files included.",
+   "Obtain detailed proxy or network transaction records for the fastfile-share.io connection to identify the upload request, object metadata, account, and destination.",
+   "Review endpoint artifacts and browser history for the fastfile-share.io session, including uploads, authentication, and actions immediately before and after the transfer.",
+   "Confirm with the data owner and dan.reyes whether access to the Clients share and any transfer to this destination were authorized."
+  ],
+  "unrelated_findings": [
+   "Google Drive File Stream launched under dan.reyes's account; the inventory approves OneDrive but not Google Drive. Track this separately, without using it to decide this alert (T119-00161, T119-00163).",
+   "GlobalProtect user and service processes were launched on WS-DREYES-01 despite the inventory stating there is no VPN. These records show process starts, not that a VPN tunnel was established; investigate separately (T119-00218, T119-00262, T119-00263)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.3
+}

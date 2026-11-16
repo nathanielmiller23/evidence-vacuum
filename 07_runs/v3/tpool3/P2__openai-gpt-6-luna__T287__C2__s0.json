@@ -1,0 +1,73 @@
+{
+ "scenario_id": "T287",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded creation of the ORCHARD account sysops, with sean.byrne listed as the subject.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T287-00148\"]\n    },\n    {\n      \"claim\": \"Seconds later, sysops was added to the Administrators group by sean.byrne; the target group SID ends in 512.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T287-00149\"]\n    },\n    {\n      \"claim\": \"Creating a sysops account and granting it administrator membership is inconsistent with the supplied context: sean.byrne is the only IT administrator, and help-desk temporary accounts use guest.<name> and do not receive administrator rights. The alerted changes therefore support a malicious-activity finding.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T287-00148\", \"T287-00149\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not identify the host or process that initiated the domain account creation and group change.\",\n    \"The account-change records identify a subject logon ID, but the supplied evidence does not map that ID to a particular interactive session or source host.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish who actually controlled the credentials used for the account changes.\",\n    \"The evidence does not establish whether there was an approved exception or authorization for creating sysops and granting it administrator membership.\",\n    \"The evidence does not establish whether sysops was subsequently used to log in or perform actions.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate DC logon and authentication records for subject logon ID 0x9090575 to identify the source host, session, and authentication method for the account changes.\",\n    \"Review change approvals and interview or verify with sean.byrne whether the sysops account and administrator-group addition were authorized.\",\n    \"Collect the account's subsequent authentication, group-membership, and activity history, and preserve relevant DC and endpoint logs.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-RDIAZ-01 accepted an RDP logon for sean.byrne from 198.51.100.77, despite the supplied context stating there is no VPN and remote administration is only done from WS-SBYRNE-01. The available records do not establish that this session initiated the alerted domain changes. Records: T287-00136, T287-00138.\",\n    \"A task named Microsoft\\\\\\\\Windows\\\\\\\\HealthCheck on WS-RDIAZ-01 was registered under sean.byrne to run hidden, encoded PowerShell that decodes to an Invoke-WebRequest for http://198.51.100.77/a.ps1 and IEX. The evidence does not link this task's logon session to the domain account changes. Record: T287-00150.\",\n    \"Palo Alto GlobalProtect processes were observed on WS-RDIAZ-01; this is an unrelated service anomaly given the supplied context that there is no VPN. Records: T287-00058, T287-00059.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 36644,
+    "output": 1965
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded creation of the ORCHARD account sysops, with sean.byrne listed as the subject.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T287-00148"
+    ]
+   },
+   {
+    "claim": "Seconds later, sysops was added to the Administrators group by sean.byrne; the target group SID ends in 512.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T287-00149"
+    ]
+   },
+   {
+    "claim": "Creating a sysops account and granting it administrator membership is inconsistent with the supplied context: sean.byrne is the only IT administrator, and help-desk temporary accounts use guest.<name> and do not receive administrator rights. The alerted changes therefore support a malicious-activity finding.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T287-00148",
+     "T287-00149"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not identify the host or process that initiated the domain account creation and group change.",
+   "The account-change records identify a subject logon ID, but the supplied evidence does not map that ID to a particular interactive session or source host."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish who actually controlled the credentials used for the account changes.",
+   "The evidence does not establish whether there was an approved exception or authorization for creating sysops and granting it administrator membership.",
+   "The evidence does not establish whether sysops was subsequently used to log in or perform actions."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate DC logon and authentication records for subject logon ID 0x9090575 to identify the source host, session, and authentication method for the account changes.",
+   "Review change approvals and interview or verify with sean.byrne whether the sysops account and administrator-group addition were authorized.",
+   "Collect the account's subsequent authentication, group-membership, and activity history, and preserve relevant DC and endpoint logs."
+  ],
+  "unrelated_findings": [
+   "WS-RDIAZ-01 accepted an RDP logon for sean.byrne from 198.51.100.77, despite the supplied context stating there is no VPN and remote administration is only done from WS-SBYRNE-01. The available records do not establish that this session initiated the alerted domain changes. Records: T287-00136, T287-00138.",
+   "A task named Microsoft\\\\Windows\\\\HealthCheck on WS-RDIAZ-01 was registered under sean.byrne to run hidden, encoded PowerShell that decodes to an Invoke-WebRequest for http://198.51.100.77/a.ps1 and IEX. The evidence does not link this task's logon session to the domain account changes. Record: T287-00150.",
+   "Palo Alto GlobalProtect processes were observed on WS-RDIAZ-01; this is an unrelated service anomaly given the supplied context that there is no VPN. Records: T287-00058, T287-00059."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 4,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.5
+}

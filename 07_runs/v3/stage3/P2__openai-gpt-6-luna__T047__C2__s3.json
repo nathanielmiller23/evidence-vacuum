@@ -1,0 +1,90 @@
+{
+ "scenario_id": "T047",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 3,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:43:55 UTC, the domain account sysmaint was created by sam.okafor; the record shows primary group ID 513.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T047-00081\"]\n    },\n    {\n      \"claim\": \"About one second later, sysmaint was added to the NWD Administrators group by sam.okafor. This is inconsistent with the supplied account-management practices, which describe temporary accounts as ext.<name> accounts without administrator rights.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T047-00082\"]\n    },\n    {\n      \"claim\": \"Just before the account was created, WS-LMARTINS-01 accepted an RDP connection from 203.0.113.250 and logged sam.okafor on interactively. The supplied inventory says there is no VPN and remote administration is only done from WS-SOKAFOR-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T047-00063\", \"T047-00064\", \"T047-00065\"]\n    },\n    {\n      \"claim\": \"On WS-LMARTINS-01, a scheduled task created under sam.okafor's interactive logon launched hidden PowerShell with an encoded command. The encoded argument decodes to a command that fetches and invokes a script from http://203.0.113.250/a.ps1; this is suspicious activity near the alerted account creation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T047-00083\"]\n    },\n    {\n      \"claim\": \"The account-creation and group-addition events use subject logon ID 0xcb3d075, while the observed sam.okafor interactive session on WS-LMARTINS-01 uses 0x34cf8fb. The available records therefore do not directly establish that the RDP session or scheduled task performed the domain account changes.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T047-00081\", \"T047-00082\", \"T047-00065\", \"T047-00083\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show the account changes and a suspicious task, but do not provide a direct process or network trace tying those domain changes to the RDP session or task.\",\n    \"The supplied network records do not show the contents or outcome of the script download, or whether the task executed.\",\n    \"The evidence does not include the relevant account-creation approval or change record.\"\n  ],\n  \"claims_not_established\": [\n    \"Who controlled or used the sam.okafor credentials during the observed activity.\",\n    \"Whether sysmaint was later used to log on or perform actions.\",\n    \"Whether the PowerShell command executed successfully or what the fetched script contained.\",\n    \"Whether an authorized exception or change approval existed for the account creation and administrator-group membership.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate DC-NWD-01 logon ID 0xcb3d075 with authentication and process records to identify the source session and system that made the account changes.\",\n    \"Collect PowerShell, Task Scheduler, and process-execution telemetry for the task, including any network request to 203.0.113.250 and the downloaded script.\",\n    \"Check subsequent logons and activity for sysmaint, and preserve the account and relevant endpoint evidence.\",\n    \"Verify the activity with sam.okafor and review change approvals, while investigating the unexpected RDP source and the WS-LMARTINS-01 host.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 27903,
+    "output": 1788
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "At 13:43:55 UTC, the domain account sysmaint was created by sam.okafor; the record shows primary group ID 513.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00081"
+    ]
+   },
+   {
+    "claim": "About one second later, sysmaint was added to the NWD Administrators group by sam.okafor. This is inconsistent with the supplied account-management practices, which describe temporary accounts as ext.<name> accounts without administrator rights.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00082"
+    ]
+   },
+   {
+    "claim": "Just before the account was created, WS-LMARTINS-01 accepted an RDP connection from 203.0.113.250 and logged sam.okafor on interactively. The supplied inventory says there is no VPN and remote administration is only done from WS-SOKAFOR-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00063",
+     "T047-00064",
+     "T047-00065"
+    ]
+   },
+   {
+    "claim": "On WS-LMARTINS-01, a scheduled task created under sam.okafor's interactive logon launched hidden PowerShell with an encoded command. The encoded argument decodes to a command that fetches and invokes a script from http://203.0.113.250/a.ps1; this is suspicious activity near the alerted account creation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T047-00083"
+    ]
+   },
+   {
+    "claim": "The account-creation and group-addition events use subject logon ID 0xcb3d075, while the observed sam.okafor interactive session on WS-LMARTINS-01 uses 0x34cf8fb. The available records therefore do not directly establish that the RDP session or scheduled task performed the domain account changes.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00081",
+     "T047-00082",
+     "T047-00065",
+     "T047-00083"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show the account changes and a suspicious task, but do not provide a direct process or network trace tying those domain changes to the RDP session or task.",
+   "The supplied network records do not show the contents or outcome of the script download, or whether the task executed.",
+   "The evidence does not include the relevant account-creation approval or change record."
+  ],
+  "claims_not_established": [
+   "Who controlled or used the sam.okafor credentials during the observed activity.",
+   "Whether sysmaint was later used to log on or perform actions.",
+   "Whether the PowerShell command executed successfully or what the fetched script contained.",
+   "Whether an authorized exception or change approval existed for the account creation and administrator-group membership."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate DC-NWD-01 logon ID 0xcb3d075 with authentication and process records to identify the source session and system that made the account changes.",
+   "Collect PowerShell, Task Scheduler, and process-execution telemetry for the task, including any network request to 203.0.113.250 and the downloaded script.",
+   "Check subsequent logons and activity for sysmaint, and preserve the account and relevant endpoint evidence.",
+   "Verify the activity with sam.okafor and review change approvals, while investigating the unexpected RDP source and the WS-LMARTINS-01 host."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.2
+}

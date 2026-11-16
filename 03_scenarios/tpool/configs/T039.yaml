@@ -1,0 +1,196 @@
+version: '1.0'
+name: ev-T039
+description: Evidence Vacuum TRAINING scenario T039 (northwind, exfil, v1).
+environment:
+  description: Northwind Design Studio
+  domain: nwd.local
+  timezone:
+    default: UTC
+  proxy:
+    mode: explicit
+    listener_port: 8080
+  users:
+  - username: ivy.chen
+    full_name: Ivy Chen
+    email: ivy.chen@northwinddesign.com
+    persona: marketing
+    primary_system: WS-ICHEN-01
+    groups:
+    - staff
+    enabled: true
+    browsing_intensity: normal
+  - username: leo.martins
+    full_name: Leo Martins
+    email: leo.martins@northwinddesign.com
+    persona: developer
+    primary_system: WS-LMARTINS-01
+    groups:
+    - staff
+    enabled: true
+    browsing_intensity: light
+  - username: sam.okafor
+    full_name: Sam Okafor
+    email: sam.okafor@northwinddesign.com
+    persona: sysadmin
+    primary_system: WS-SOKAFOR-01
+    groups:
+    - it-admins
+    - domain-admins
+    enabled: true
+    browsing_intensity: light
+  - username: nora.blake
+    full_name: Nora Blake
+    email: nora.blake@northwinddesign.com
+    persona: help_desk
+    primary_system: WS-NBLAKE-01
+    groups:
+    - staff
+    enabled: true
+    browsing_intensity: light
+  service_accounts:
+  - svc-archive
+  - svc-render
+  systems:
+  - hostname: WS-ICHEN-01
+    ip: 10.40.10.21
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: ivy.chen
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-LMARTINS-01
+    ip: 10.40.10.22
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: leo.martins
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-SOKAFOR-01
+    ip: 10.40.10.23
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: sam.okafor
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-NBLAKE-01
+    ip: 10.40.10.24
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: nora.blake
+    services:
+    - dns-client
+    - termservice
+  - hostname: DC-NWD-01
+    ip: 10.40.20.10
+    os: Windows Server 2022
+    type: domain_controller
+    services:
+    - kerberos
+    - ldap
+    - dns
+    roles:
+    - domain_controller
+    - dns_server
+  - hostname: FILE-NWD-01
+    ip: 10.40.20.20
+    os: Windows Server 2022
+    type: server
+    services:
+    - smb
+    - dns-client
+    roles:
+    - file_server
+  - hostname: PROXY-NWD-01
+    ip: 10.40.20.30
+    os: Ubuntu 22.04 LTS
+    type: server
+    services:
+    - squid
+    - dns-client
+    roles:
+    - forward_proxy
+  network:
+    public_cidrs:
+    - 198.18.0.0/28
+    segments:
+    - name: workstations
+      cidr: 10.40.10.0/24
+      exposure: internal
+      systems:
+      - WS-ICHEN-01
+      - WS-LMARTINS-01
+      - WS-SOKAFOR-01
+      - WS-NBLAKE-01
+    - name: servers
+      cidr: 10.40.20.0/24
+      exposure: internal
+      systems:
+      - DC-NWD-01
+      - FILE-NWD-01
+      - PROXY-NWD-01
+    sensors:
+    - type: network
+      name: core-span
+      hostname: ZEEK-CORE
+      monitoring_segments:
+      - workstations
+      - servers
+      direction: bidirectional
+      placement: span
+      log_formats:
+      - zeek
+time_window:
+  start: '2026-10-27T13:00:00Z'
+  duration: 2h
+  warmup: 1h
+generation_seed: 7039
+baseline_activity:
+  description: Quiet afternoon
+  intensity: low
+  variation: low
+  suspicious_noise: low
+observation_profile: complete
+storyline:
+- id: logon
+  time: +35m
+  actor: ivy.chen
+  system: WS-ICHEN-01
+  activity: Interactive logon
+  events:
+  - type: logon
+    logon_type: 2
+- id: stage
+  time: +40m
+  actor: ivy.chen
+  system: WS-ICHEN-01
+  activity: Stage archive of shared folder
+  events:
+  - type: process
+    process_name: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+    command_line: powershell.exe -NoProfile -Command Compress-Archive -Path \\FILE-NWD-01\Shared\Clients -DestinationPath C:\Users\ivy.chen\AppData\Local\Temp\c.zip -Force
+- id: exfil
+  time: +46m
+  actor: ivy.chen
+  system: WS-ICHEN-01
+  activity: Upload to unapproved file-sharing site
+  events:
+  - type: connection
+    dst_ip: 203.0.113.99
+    dst_port: 443
+    hostname: quickshare-drop.net
+    service: ssl
+    orig_bytes: 51000000
+    resp_bytes: 8800
+output:
+  logs:
+  - format: windows_event_security
+  - format: windows_event_sysmon
+  - format: zeek_conn
+  - format: zeek_dns
+  - format: zeek_ssl
+  - format: proxy_access
+  destination: out/T039
+  compression: false

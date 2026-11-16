@@ -1,0 +1,88 @@
+{
+ "scenario_id": "T079",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:40 UTC, ana.ruiz ran PowerShell to compress \\\\\\\\FILE-PIN-01\\\\Shared\\\\Clients into C:\\\\Users\\\\ana.ruiz\\\\AppData\\\\Local\\\\Temp\\\\c.zip; the archive was created shortly afterward.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T079-00143\", \"T079-00144\", \"T079-00145\"]\n    },\n    {\n      \"claim\": \"At 13:45:50 UTC, the proxy recorded a 51,000,000-byte client-to-server transfer from WS-ARUIZ-01 to dropzone-transfer.net:443 under ana.ruiz\u2019s identity.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T079-00174\", \"T079-00176\"]\n    },\n    {\n      \"claim\": \"The transfer was made by Chrome on WS-ARUIZ-01, corroborated by the endpoint network events for the same proxy connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T079-00175\", \"T079-00177\"]\n    },\n    {\n      \"claim\": \"The close sequence of compressing client-share data and sending a large outbound transfer to an unapproved file-transfer destination strongly supports suspected data exfiltration as the alerted activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T079-00143\", \"T079-00145\", \"T079-00174\", \"T079-00176\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records show the destination and transfer volume but do not expose the contents of the TLS tunnel or identify the uploaded object. (T079-00174, T079-00176)\",\n    \"The available records do not directly correlate c.zip with the outbound transfer or provide the archive\u2019s size. (T079-00143, T079-00145, T079-00174, T079-00176)\",\n    \"The proxy status and byte counts do not establish whether the remote service accepted or retained the transferred data. (T079-00174, T079-00176)\"\n  ],\n  \"claims_not_established\": [\n    \"That c.zip, or any particular file from the Clients share, was the payload of the transfer.\",\n    \"The contents or sensitivity of the transferred data.\",\n    \"Who controlled dropzone-transfer.net or whether the transfer had any specific external recipient.\",\n    \"Whether the transfer completed successfully at the application level or whether an authorization existed outside the provided inventory.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Proxy or TLS-inspection records identifying the HTTP request, upload object or filename, and application-level result for the dropzone-transfer.net session.\",\n    \"Endpoint file-access and archive metadata, including the size and contents or hash of c.zip and access to the source files under \\\\\\\\FILE-PIN-01\\\\Shared\\\\Clients.\",\n    \"User and business-owner confirmation of whether the transfer was authorized, plus available endpoint and proxy evidence tying the browser upload to the staged archive.\"\n  ],\n  \"unrelated_findings\": [\n    \"After the alerted transfer, ana.ruiz\u2019s Chrome session browsed Google Drive, an unapproved file-sharing service in the provided inventory. Treat this as a separate finding; these records do not show that data was uploaded there. (T079-00197, T079-00198, T079-00213, T079-00219)\",\n    \"A SYSTEM PowerShell process ran C:\\\\Scripts\\\\service-health.ps1 and explicitly used svc-billing credentials from WS-ARUIZ-01. This is outside the alerted transfer; the change calendar notes a svc-billing rotation at 13:30, but the supplied records do not establish the script\u2019s purpose or legitimacy. (T079-00178, T079-00180)\",\n    \"A taskhostw.exe process on WS-ARUIZ-01 explicitly used svc-bkp credentials. This is separate from the alerted transfer and warrants independent review. (T079-00414)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 67081,
+    "output": 2064
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "At 13:40 UTC, ana.ruiz ran PowerShell to compress \\\\FILE-PIN-01\\Shared\\Clients into C:\\Users\\ana.ruiz\\AppData\\Local\\Temp\\c.zip; the archive was created shortly afterward.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T079-00143",
+     "T079-00144",
+     "T079-00145"
+    ]
+   },
+   {
+    "claim": "At 13:45:50 UTC, the proxy recorded a 51,000,000-byte client-to-server transfer from WS-ARUIZ-01 to dropzone-transfer.net:443 under ana.ruiz\u2019s identity.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T079-00174",
+     "T079-00176"
+    ]
+   },
+   {
+    "claim": "The transfer was made by Chrome on WS-ARUIZ-01, corroborated by the endpoint network events for the same proxy connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T079-00175",
+     "T079-00177"
+    ]
+   },
+   {
+    "claim": "The close sequence of compressing client-share data and sending a large outbound transfer to an unapproved file-transfer destination strongly supports suspected data exfiltration as the alerted activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T079-00143",
+     "T079-00145",
+     "T079-00174",
+     "T079-00176"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records show the destination and transfer volume but do not expose the contents of the TLS tunnel or identify the uploaded object. (T079-00174, T079-00176)",
+   "The available records do not directly correlate c.zip with the outbound transfer or provide the archive\u2019s size. (T079-00143, T079-00145, T079-00174, T079-00176)",
+   "The proxy status and byte counts do not establish whether the remote service accepted or retained the transferred data. (T079-00174, T079-00176)"
+  ],
+  "claims_not_established": [
+   "That c.zip, or any particular file from the Clients share, was the payload of the transfer.",
+   "The contents or sensitivity of the transferred data.",
+   "Who controlled dropzone-transfer.net or whether the transfer had any specific external recipient.",
+   "Whether the transfer completed successfully at the application level or whether an authorization existed outside the provided inventory."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Proxy or TLS-inspection records identifying the HTTP request, upload object or filename, and application-level result for the dropzone-transfer.net session.",
+   "Endpoint file-access and archive metadata, including the size and contents or hash of c.zip and access to the source files under \\\\FILE-PIN-01\\Shared\\Clients.",
+   "User and business-owner confirmation of whether the transfer was authorized, plus available endpoint and proxy evidence tying the browser upload to the staged archive."
+  ],
+  "unrelated_findings": [
+   "After the alerted transfer, ana.ruiz\u2019s Chrome session browsed Google Drive, an unapproved file-sharing service in the provided inventory. Treat this as a separate finding; these records do not show that data was uploaded there. (T079-00197, T079-00198, T079-00213, T079-00219)",
+   "A SYSTEM PowerShell process ran C:\\Scripts\\service-health.ps1 and explicitly used svc-billing credentials from WS-ARUIZ-01. This is outside the alerted transfer; the change calendar notes a svc-billing rotation at 13:30, but the supplied records do not establish the script\u2019s purpose or legitimacy. (T079-00178, T079-00180)",
+   "A taskhostw.exe process on WS-ARUIZ-01 explicitly used svc-bkp credentials. This is separate from the alerted transfer and warrants independent review. (T079-00414)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.0
+}

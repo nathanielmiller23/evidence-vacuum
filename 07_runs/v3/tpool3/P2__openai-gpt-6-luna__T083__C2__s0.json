@@ -1,0 +1,101 @@
+{
+ "scenario_id": "T083",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"WINWORD.EXE opened C:\\\\Users\\\\ana.ruiz\\\\Downloads\\\\Statement.docm, then launched PowerShell under ana.ruiz shortly afterward. PowerShell was run with no profile, a hidden window, and an encoded command.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T083-00145\", \"T083-00149\", \"T083-00150\"]\n    },\n    {\n      \"claim\": \"The encoded PowerShell command decodes to an expression that downloads and executes a script using IEX and WebClient from https://raw.githubusercontent.com/pinecrest-it/tools/main/u.ps1.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T083-00149\", \"T083-00150\"]\n    },\n    {\n      \"claim\": \"The proxy recorded a successful request for that exact u.ps1 URL while the PowerShell process was active; host network records attribute the proxy connections to that PowerShell process.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T083-00151\", \"T083-00153\", \"T083-00154\", \"T083-00155\", \"T083-00156\", \"T083-00158\", \"T083-00159\"]\n    },\n    {\n      \"claim\": \"PowerShell launched rundll32.exe with C:\\\\Users\\\\ana.ruiz\\\\AppData\\\\Roaming\\\\svchelper.dll,Init as its command line. Explorer also changed the user's Hidden setting to DWORD 0x00000002 shortly afterward.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T083-00160\", \"T083-00161\", \"T083-00164\"]\n    },\n    {\n      \"claim\": \"The hidden PowerShell execution, script download-and-execute command, and subsequent rundll32 invocation are strong indicators that the alerted activity was malicious.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T083-00149\", \"T083-00153\", \"T083-00160\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied proxy records show the script URL and successful response, but do not include the downloaded script body or its contents (T083-00151, T083-00153).\",\n    \"The supplied records show the rundll32 command line and process lifetime, but do not show whether the DLL was written during this window, its contents or hash, or a DLL-load event (T083-00160, T083-00169, T083-00170).\",\n    \"The logs do not establish what the script or DLL did after launch, or whether any data was accessed or transferred.\"\n  ],\n  \"claims_not_established\": [\n    \"The contents, integrity, and behavior of u.ps1 at the time it was fetched.\",\n    \"Whether Statement.docm contained a macro or how it caused Word to launch PowerShell.\",\n    \"Whether svchelper.dll existed before this activity, was successfully loaded, or created persistence.\",\n    \"Whether the activity resulted in credential theft, data access or exfiltration, or additional compromise.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine Statement.docm, including its VBA/macros and provenance.\",\n    \"Obtain the exact u.ps1 content served at the recorded time, plus repository history and any available proxy response-body capture.\",\n    \"Collect svchelper.dll and relevant filesystem, process, and persistence artifacts from WS-ARUIZ-01; determine its hash and whether it was loaded.\",\n    \"Review endpoint telemetry and network activity for follow-on execution, credential access, persistence, or data transfer.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate investigation: WS-ARUIZ-01 made Kerberos requests for raj.patel and a successful network logon to WS-RPATEL-01 is recorded with WS-ARUIZ-01 as the workstation. Inventory says remote administration is only performed from WS-RPATEL-01; this is outside the alerted PowerShell chain and does not determine this alert. (T083-00102, T083-00103, T083-00105, T083-00110, T083-00117)\",\n    \"Separate ticket: Google Drive File Stream and Dropbox client processes were launched under ana.ruiz. These are cloud-sync services not listed as approved; their presence is separate from the alerted PowerShell execution. (T083-00402, T083-00403, T083-00427, T083-00428)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 77256,
+    "output": 2635
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "WINWORD.EXE opened C:\\Users\\ana.ruiz\\Downloads\\Statement.docm, then launched PowerShell under ana.ruiz shortly afterward. PowerShell was run with no profile, a hidden window, and an encoded command.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T083-00145",
+     "T083-00149",
+     "T083-00150"
+    ]
+   },
+   {
+    "claim": "The encoded PowerShell command decodes to an expression that downloads and executes a script using IEX and WebClient from https://raw.githubusercontent.com/pinecrest-it/tools/main/u.ps1.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T083-00149",
+     "T083-00150"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a successful request for that exact u.ps1 URL while the PowerShell process was active; host network records attribute the proxy connections to that PowerShell process.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T083-00151",
+     "T083-00153",
+     "T083-00154",
+     "T083-00155",
+     "T083-00156",
+     "T083-00158",
+     "T083-00159"
+    ]
+   },
+   {
+    "claim": "PowerShell launched rundll32.exe with C:\\Users\\ana.ruiz\\AppData\\Roaming\\svchelper.dll,Init as its command line. Explorer also changed the user's Hidden setting to DWORD 0x00000002 shortly afterward.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T083-00160",
+     "T083-00161",
+     "T083-00164"
+    ]
+   },
+   {
+    "claim": "The hidden PowerShell execution, script download-and-execute command, and subsequent rundll32 invocation are strong indicators that the alerted activity was malicious.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T083-00149",
+     "T083-00153",
+     "T083-00160"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied proxy records show the script URL and successful response, but do not include the downloaded script body or its contents (T083-00151, T083-00153).",
+   "The supplied records show the rundll32 command line and process lifetime, but do not show whether the DLL was written during this window, its contents or hash, or a DLL-load event (T083-00160, T083-00169, T083-00170).",
+   "The logs do not establish what the script or DLL did after launch, or whether any data was accessed or transferred."
+  ],
+  "claims_not_established": [
+   "The contents, integrity, and behavior of u.ps1 at the time it was fetched.",
+   "Whether Statement.docm contained a macro or how it caused Word to launch PowerShell.",
+   "Whether svchelper.dll existed before this activity, was successfully loaded, or created persistence.",
+   "Whether the activity resulted in credential theft, data access or exfiltration, or additional compromise."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine Statement.docm, including its VBA/macros and provenance.",
+   "Obtain the exact u.ps1 content served at the recorded time, plus repository history and any available proxy response-body capture.",
+   "Collect svchelper.dll and relevant filesystem, process, and persistence artifacts from WS-ARUIZ-01; determine its hash and whether it was loaded.",
+   "Review endpoint telemetry and network activity for follow-on execution, credential access, persistence, or data transfer."
+  ],
+  "unrelated_findings": [
+   "Separate investigation: WS-ARUIZ-01 made Kerberos requests for raj.patel and a successful network logon to WS-RPATEL-01 is recorded with WS-ARUIZ-01 as the workstation. Inventory says remote administration is only performed from WS-RPATEL-01; this is outside the alerted PowerShell chain and does not determine this alert. (T083-00102, T083-00103, T083-00105, T083-00110, T083-00117)",
+   "Separate ticket: Google Drive File Stream and Dropbox client processes were launched under ana.ruiz. These are cloud-sync services not listed as approved; their presence is separate from the alerted PowerShell execution. (T083-00402, T083-00403, T083-00427, T083-00428)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 18,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 29.3
+}

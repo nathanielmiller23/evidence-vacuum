@@ -1,0 +1,103 @@
+{
+ "scenario_id": "T293",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:42:39 UTC, amy.cole opened C:\\\\Users\\\\amy.cole\\\\Downloads\\\\Statement.docm in Word; a PowerShell process started immediately afterward with Word as its parent.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T293-00160\", \"T293-00164\", \"T293-00165\"]\n    },\n    {\n      \"claim\": \"The PowerShell command used -nop, -w hidden, and -enc. The encoded command decodes to an expression that downloads and executes a script from raw.githubusercontent.com/orchard-it/tools/main/u.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T293-00164\", \"T293-00165\"]\n    },\n    {\n      \"claim\": \"The PowerShell process made network connections through the explicit proxy shortly after launch; endpoint network records associate those connections with that PowerShell process.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T293-00167\", \"T293-00168\", \"T293-00171\", \"T293-00172\", \"T293-00173\", \"T293-00174\"]\n    },\n    {\n      \"claim\": \"At 13:42:43 UTC, the PowerShell process launched rundll32.exe with C:\\\\Users\\\\amy.cole\\\\AppData\\\\Roaming\\\\svchelper.dll,Init as its command line.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T293-00175\", \"T293-00176\"]\n    },\n    {\n      \"claim\": \"The document-launched, hidden PowerShell download-and-execution chain is strongly consistent with malicious activity and plausibly accounts for the reported PowerShell activity, although the recorded process start is at 13:42 rather than exactly 13:40.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T293-00160\", \"T293-00164\", \"T293-00165\", \"T293-00167\", \"T293-00171\", \"T293-00175\", \"T293-00176\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy log collection was unavailable from 13:30 to 14:00 UTC. Therefore, proxy records do not establish the full destination or request details for the PowerShell connections during this interval; the endpoint and Zeek records do show connections to the proxy. (T293-00167, T293-00168, T293-00171, T293-00172, T293-00173, T293-00174)\",\n    \"The command specifies a hidden PowerShell window, so the available process records do not establish that a PowerShell window was visibly displayed to the user. (T293-00164, T293-00165)\",\n    \"The records show the download command and a subsequent rundll32 invocation, but do not establish the downloaded script or DLL contents, whether the download completed successfully, or what effects followed.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether amy.cole intentionally opened the document or knew it would launch PowerShell.\",\n    \"Whether the remote script was successfully retrieved and executed, and what its contents or effects were.\",\n    \"Whether svchelper.dll was successfully loaded, what it contains, or whether it established persistence or caused further impact.\",\n    \"Whether the reported brief visible PowerShell window was this hidden process or a separate event.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine Statement.docm, including its source, metadata, macros, and any available email or download provenance.\",\n    \"Acquire and analyze C:\\\\Users\\\\amy.cole\\\\AppData\\\\Roaming\\\\svchelper.dll and relevant temporary files; record hashes and assess whether the DLL was loaded.\",\n    \"Collect complete proxy logs or upstream records for 13:30\u201314:00 UTC to determine destinations and request details associated with the PowerShell connections.\",\n    \"Review endpoint telemetry and triage WS-ACOLE-01 for persistence, follow-on execution, credential access, and other effects of the document-launched chain.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate earlier activity on WS-ACOLE-01 included PowerShell launched with ExecutionPolicy Bypass, PowerShell task enumeration, command prompt and SSH activity, and psql invoked as postgres; treat this as a separate investigation and not as evidence deciding the alerted 13:42 activity. (T293-00001, T293-00022, T293-00026, T293-00028, T293-00056, T293-00060, T293-00077)\",\n    \"A network logon to WS-ACOLE-01 for amy.cole from WS-THART-01 was recorded at 13:21; a separate logon from WS-SBYRNE-01 was recorded at 13:24. These precede the alerted process chain and should be assessed separately if needed. (T293-00012, T293-00013, T293-00032)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 50511,
+    "output": 2448
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:42:39 UTC, amy.cole opened C:\\Users\\amy.cole\\Downloads\\Statement.docm in Word; a PowerShell process started immediately afterward with Word as its parent.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T293-00160",
+     "T293-00164",
+     "T293-00165"
+    ]
+   },
+   {
+    "claim": "The PowerShell command used -nop, -w hidden, and -enc. The encoded command decodes to an expression that downloads and executes a script from raw.githubusercontent.com/orchard-it/tools/main/u.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T293-00164",
+     "T293-00165"
+    ]
+   },
+   {
+    "claim": "The PowerShell process made network connections through the explicit proxy shortly after launch; endpoint network records associate those connections with that PowerShell process.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T293-00167",
+     "T293-00168",
+     "T293-00171",
+     "T293-00172",
+     "T293-00173",
+     "T293-00174"
+    ]
+   },
+   {
+    "claim": "At 13:42:43 UTC, the PowerShell process launched rundll32.exe with C:\\Users\\amy.cole\\AppData\\Roaming\\svchelper.dll,Init as its command line.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T293-00175",
+     "T293-00176"
+    ]
+   },
+   {
+    "claim": "The document-launched, hidden PowerShell download-and-execution chain is strongly consistent with malicious activity and plausibly accounts for the reported PowerShell activity, although the recorded process start is at 13:42 rather than exactly 13:40.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T293-00160",
+     "T293-00164",
+     "T293-00165",
+     "T293-00167",
+     "T293-00171",
+     "T293-00175",
+     "T293-00176"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy log collection was unavailable from 13:30 to 14:00 UTC. Therefore, proxy records do not establish the full destination or request details for the PowerShell connections during this interval; the endpoint and Zeek records do show connections to the proxy. (T293-00167, T293-00168, T293-00171, T293-00172, T293-00173, T293-00174)",
+   "The command specifies a hidden PowerShell window, so the available process records do not establish that a PowerShell window was visibly displayed to the user. (T293-00164, T293-00165)",
+   "The records show the download command and a subsequent rundll32 invocation, but do not establish the downloaded script or DLL contents, whether the download completed successfully, or what effects followed."
+  ],
+  "claims_not_established": [
+   "Whether amy.cole intentionally opened the document or knew it would launch PowerShell.",
+   "Whether the remote script was successfully retrieved and executed, and what its contents or effects were.",
+   "Whether svchelper.dll was successfully loaded, what it contains, or whether it established persistence or caused further impact.",
+   "Whether the reported brief visible PowerShell window was this hidden process or a separate event."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine Statement.docm, including its source, metadata, macros, and any available email or download provenance.",
+   "Acquire and analyze C:\\Users\\amy.cole\\AppData\\Roaming\\svchelper.dll and relevant temporary files; record hashes and assess whether the DLL was loaded.",
+   "Collect complete proxy logs or upstream records for 13:30\u201314:00 UTC to determine destinations and request details associated with the PowerShell connections.",
+   "Review endpoint telemetry and triage WS-ACOLE-01 for persistence, follow-on execution, credential access, and other effects of the document-launched chain."
+  ],
+  "unrelated_findings": [
+   "Separate earlier activity on WS-ACOLE-01 included PowerShell launched with ExecutionPolicy Bypass, PowerShell task enumeration, command prompt and SSH activity, and psql invoked as postgres; treat this as a separate investigation and not as evidence deciding the alerted 13:42 activity. (T293-00001, T293-00022, T293-00026, T293-00028, T293-00056, T293-00060, T293-00077)",
+   "A network logon to WS-ACOLE-01 for amy.cole from WS-THART-01 was recorded at 13:21; a separate logon from WS-SBYRNE-01 was recorded at 13:24. These precede the alerted process chain and should be assessed separately if needed. (T293-00012, T293-00013, T293-00032)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 20,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.3
+}

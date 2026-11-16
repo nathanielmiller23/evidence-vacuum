@@ -1,0 +1,85 @@
+{
+ "scenario_id": "T169",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:46:26 UTC, Julia Frost ran PowerShell to compress \\\\\\\\FILE-MAP-01\\\\Shared\\\\Clients into C:\\\\Users\\\\julia.frost\\\\AppData\\\\Local\\\\Temp\\\\c.zip; the archive file was created about four seconds later, and the PowerShell process exited about twelve seconds after launch.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T169-00140\", \"T169-00141\", \"T169-00142\", \"T169-00143\", \"T169-00144\"]\n    },\n    {\n      \"claim\": \"The supplied records around the archive creation show Kerberos and SMB activity to DC-MAP-01, but do not show a corresponding external upload or the destination and size of any outbound transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T169-00145\", \"T169-00146\", \"T169-00148\", \"T169-00152\", \"T169-00153\", \"T169-00155\", \"T169-00156\"]\n    },\n    {\n      \"claim\": \"Creating an archive of the Clients share shortly before an alert for a large outbound transfer is concerning, but the available records do not establish that this archive was the transferred data or that any transfer succeeded.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T169-00140\", \"T169-00142\", \"T169-00143\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not include a direct network-flow or proxy record identifying a large outbound transfer from WS-JFROST-01 around 13:46 UTC; the archive command and creation are recorded, but not a transfer.\",\n    \"The available records do not show the archive's size or contents, or whether c.zip was subsequently accessed, synced, or uploaded.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the alerted tens-of-megabytes outbound transfer actually occurred, and its destination, timing, and byte count.\",\n    \"Whether c.zip was the source of the alerted transfer or contained client data.\",\n    \"Whether Julia Frost's archive creation or any transfer was authorized or malicious.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"The source alert's underlying flow or proxy records, including destination, timestamps, byte counts, and any process attribution.\",\n    \"Endpoint and file-server audit or EDR data showing c.zip size, contents or hash, access history, and any subsequent file reads or transfers.\",\n    \"Google Drive/OneDrive sync and proxy records around the alert time to determine whether data was uploaded and to which service.\",\n    \"Confirmation from Julia Frost or the relevant business owner about the purpose and authorization for archiving the Clients share.\"\n  ],\n  \"unrelated_findings\": [\n    \"Google Drive File Stream was running on WS-JFROST-01, and a proxy connection from that workstation used a GoogleDriveFS user agent. Google Drive is not listed as an approved storage service in the supplied environment context; investigate separately. These records do not establish that it carried the alerted transfer. (T169-00004, T169-00125, T169-00126)\",\n    \"At 13:52 UTC, Firefox on WS-JFROST-01 attempted to connect to sharefast-files.com, and the proxy denied the request. This occurred after the alerted time and does not establish a successful transfer or a link to the alert. (T169-00173, T169-00174, T169-00175, T169-00176)\",\n    \"Domain authentication records show Julia Frost authenticating from 10.53.10.24, identified in the inventory as WS-NKIM-01, while the associated workstation logon record names WS-GLUND-01. Investigate this identity/host discrepancy separately; it does not establish a connection to the alerted transfer. (T169-00170, T169-00171, T169-00172)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 46349,
+    "output": 2321
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "At 13:46:26 UTC, Julia Frost ran PowerShell to compress \\\\FILE-MAP-01\\Shared\\Clients into C:\\Users\\julia.frost\\AppData\\Local\\Temp\\c.zip; the archive file was created about four seconds later, and the PowerShell process exited about twelve seconds after launch.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T169-00140",
+     "T169-00141",
+     "T169-00142",
+     "T169-00143",
+     "T169-00144"
+    ]
+   },
+   {
+    "claim": "The supplied records around the archive creation show Kerberos and SMB activity to DC-MAP-01, but do not show a corresponding external upload or the destination and size of any outbound transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T169-00145",
+     "T169-00146",
+     "T169-00148",
+     "T169-00152",
+     "T169-00153",
+     "T169-00155",
+     "T169-00156"
+    ]
+   },
+   {
+    "claim": "Creating an archive of the Clients share shortly before an alert for a large outbound transfer is concerning, but the available records do not establish that this archive was the transferred data or that any transfer succeeded.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T169-00140",
+     "T169-00142",
+     "T169-00143"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not include a direct network-flow or proxy record identifying a large outbound transfer from WS-JFROST-01 around 13:46 UTC; the archive command and creation are recorded, but not a transfer.",
+   "The available records do not show the archive's size or contents, or whether c.zip was subsequently accessed, synced, or uploaded."
+  ],
+  "claims_not_established": [
+   "Whether the alerted tens-of-megabytes outbound transfer actually occurred, and its destination, timing, and byte count.",
+   "Whether c.zip was the source of the alerted transfer or contained client data.",
+   "Whether Julia Frost's archive creation or any transfer was authorized or malicious."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "The source alert's underlying flow or proxy records, including destination, timestamps, byte counts, and any process attribution.",
+   "Endpoint and file-server audit or EDR data showing c.zip size, contents or hash, access history, and any subsequent file reads or transfers.",
+   "Google Drive/OneDrive sync and proxy records around the alert time to determine whether data was uploaded and to which service.",
+   "Confirmation from Julia Frost or the relevant business owner about the purpose and authorization for archiving the Clients share."
+  ],
+  "unrelated_findings": [
+   "Google Drive File Stream was running on WS-JFROST-01, and a proxy connection from that workstation used a GoogleDriveFS user agent. Google Drive is not listed as an approved storage service in the supplied environment context; investigate separately. These records do not establish that it carried the alerted transfer. (T169-00004, T169-00125, T169-00126)",
+   "At 13:52 UTC, Firefox on WS-JFROST-01 attempted to connect to sharefast-files.com, and the proxy denied the request. This occurred after the alerted time and does not establish a successful transfer or a link to the alert. (T169-00173, T169-00174, T169-00175, T169-00176)",
+   "Domain authentication records show Julia Frost authenticating from 10.53.10.24, identified in the inventory as WS-NKIM-01, while the associated workstation logon record names WS-GLUND-01. Investigate this identity/host discrepancy separately; it does not establish a connection to the alerted transfer. (T169-00170, T169-00171, T169-00172)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 30.2
+}

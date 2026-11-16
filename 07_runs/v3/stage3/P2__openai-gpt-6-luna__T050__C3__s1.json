@@ -1,0 +1,84 @@
+{
+ "scenario_id": "T050",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 1,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.86,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:46 UTC, FILE-NWD-01 ran the approved StratoSafe executable from its expected path as svc-archive; its command line names the Nightly job and the approved StratoSafe ingest domain. The process connected through the proxy, which recorded a tunnel to ingest.stratosafe-backup.com and about 640 MB of client-to-server tunnel bytes.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T050-00237\", \"T050-00238\", \"T050-00239\", \"T050-00244\", \"T050-00245\", \"T050-00247\"]\n    },\n    {\n      \"claim\": \"Shortly before that execution, the domain controller recorded a successful service-ticket event for svc-archive requesting FILE-NWD-01$ from public IP 45.79.19.196. FILE-NWD-01 then recorded a svc-archive service logon, followed by the StratoSafe process running under that account. This is a concerning temporal association, but the records do not prove that the external-IP request caused the process execution or transfer.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T050-00223\", \"T050-00224\", \"T050-00237\"]\n    },\n    {\n      \"claim\": \"The transfer's executable, account, destination, and approximate volume are consistent with the approved backup agent and the inventory description. That consistency supports a benign explanation, but does not resolve the unusual svc-archive authentication immediately preceding the transfer.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T050-00223\", \"T050-00237\", \"T050-00244\", \"T050-00245\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Winsec and Sysmon collection was unavailable on WS-NBLAKE-01 from 13:30 to 14:10 UTC. This gap does not cover FILE-NWD-01, but limits visibility into activity on that workstation during the outage.\",\n    \"The proxy and connection records identify the destination and transfer volume, but do not establish the contents or business purpose of the transferred data.\",\n    \"The available records do not establish whether the public IP in the svc-archive ticket event is authorized or how that request relates to the local service logon and backup execution.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the 640 MB transfer contained only authorized backup data or included data selected for unauthorized exfiltration.\",\n    \"Whether 45.79.19.196 was an authorized source, a misattributed address, or an unauthorized client using svc-archive credentials.\",\n    \"Whether the Nightly backup job was scheduled or otherwise expected to run at this time.\",\n    \"Whether the external-IP ticket request caused or enabled the observed StratoSafe execution.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Validate the source and legitimacy of the 45.79.19.196 svc-archive ticket request using KDC, network, firewall, and asset ownership records; determine whether the address is authorized.\",\n    \"Review svc-archive credential use and service configuration, including service start history and any account changes around 13:45 UTC.\",\n    \"Obtain StratoSafe job schedules, local backup logs, file manifests, and provider-side receipt records for the transfer to confirm the job and its contents.\",\n    \"Preserve and review the proxy tunnel and TLS inspection details, including destination certificate and any available request or upload metadata.\"\n  ],\n  \"unrelated_findings\": [\n    \"FILE-NWD-01 ran C:\\\\ProgramData\\\\Meridian\\\\integration-worker.jar as SYSTEM, and its Java process connected through the proxy to receiver.citrix.com. This service is not listed among approved software or services; track separately and do not use it to decide this alert. Records: T050-00165, T050-00249, T050-00250, T050-00251.\",\n    \"Help-desk user nora.blake initiated an RDP session to FILE-NWD-01, although the stated practice limits remote administration to WS-SOKAFOR-01. This occurred after the alerted transfer; track separately and do not use it to decide this alert. Records: T050-00441, T050-00444, T050-00448, T050-00459.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 73275,
+    "output": 3834
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.86,
+  "supporting_observations": [
+   {
+    "claim": "At 13:46 UTC, FILE-NWD-01 ran the approved StratoSafe executable from its expected path as svc-archive; its command line names the Nightly job and the approved StratoSafe ingest domain. The process connected through the proxy, which recorded a tunnel to ingest.stratosafe-backup.com and about 640 MB of client-to-server tunnel bytes.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T050-00237",
+     "T050-00238",
+     "T050-00239",
+     "T050-00244",
+     "T050-00245",
+     "T050-00247"
+    ]
+   },
+   {
+    "claim": "Shortly before that execution, the domain controller recorded a successful service-ticket event for svc-archive requesting FILE-NWD-01$ from public IP 45.79.19.196. FILE-NWD-01 then recorded a svc-archive service logon, followed by the StratoSafe process running under that account. This is a concerning temporal association, but the records do not prove that the external-IP request caused the process execution or transfer.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T050-00223",
+     "T050-00224",
+     "T050-00237"
+    ]
+   },
+   {
+    "claim": "The transfer's executable, account, destination, and approximate volume are consistent with the approved backup agent and the inventory description. That consistency supports a benign explanation, but does not resolve the unusual svc-archive authentication immediately preceding the transfer.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T050-00223",
+     "T050-00237",
+     "T050-00244",
+     "T050-00245"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Winsec and Sysmon collection was unavailable on WS-NBLAKE-01 from 13:30 to 14:10 UTC. This gap does not cover FILE-NWD-01, but limits visibility into activity on that workstation during the outage.",
+   "The proxy and connection records identify the destination and transfer volume, but do not establish the contents or business purpose of the transferred data.",
+   "The available records do not establish whether the public IP in the svc-archive ticket event is authorized or how that request relates to the local service logon and backup execution."
+  ],
+  "claims_not_established": [
+   "Whether the 640 MB transfer contained only authorized backup data or included data selected for unauthorized exfiltration.",
+   "Whether 45.79.19.196 was an authorized source, a misattributed address, or an unauthorized client using svc-archive credentials.",
+   "Whether the Nightly backup job was scheduled or otherwise expected to run at this time.",
+   "Whether the external-IP ticket request caused or enabled the observed StratoSafe execution."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Validate the source and legitimacy of the 45.79.19.196 svc-archive ticket request using KDC, network, firewall, and asset ownership records; determine whether the address is authorized.",
+   "Review svc-archive credential use and service configuration, including service start history and any account changes around 13:45 UTC.",
+   "Obtain StratoSafe job schedules, local backup logs, file manifests, and provider-side receipt records for the transfer to confirm the job and its contents.",
+   "Preserve and review the proxy tunnel and TLS inspection details, including destination certificate and any available request or upload metadata."
+  ],
+  "unrelated_findings": [
+   "FILE-NWD-01 ran C:\\ProgramData\\Meridian\\integration-worker.jar as SYSTEM, and its Java process connected through the proxy to receiver.citrix.com. This service is not listed among approved software or services; track separately and do not use it to decide this alert. Records: T050-00165, T050-00249, T050-00250, T050-00251.",
+   "Help-desk user nora.blake initiated an RDP session to FILE-NWD-01, although the stated practice limits remote administration to WS-SOKAFOR-01. This occurred after the alerted transfer; track separately and do not use it to decide this alert. Records: T050-00441, T050-00444, T050-00448, T050-00459."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 40.9
+}

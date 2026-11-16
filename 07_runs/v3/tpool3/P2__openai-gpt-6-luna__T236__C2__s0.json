@@ -1,0 +1,75 @@
+{
+ "scenario_id": "T236",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.87,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"During the alert window, WS-MFISCHER-01 had multiple connections to the explicit proxy at 10.55.20.30:8080. Zeek records show HTTP service and recurring traffic volumes, including about 10 KB sent and 39 KB received in several connections.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T236-00150\",\n        \"T236-00243\",\n        \"T236-00268\",\n        \"T236-00328\",\n        \"T236-00334\"\n      ]\n    },\n    {\n      \"claim\": \"The available records for those connections show client-to-proxy traffic, but do not identify the HTTPS destination or the endpoint process responsible; they therefore do not establish whether the traffic was the approved LedgerLink updater or another application.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T236-00150\",\n        \"T236-00243\",\n        \"T236-00268\",\n        \"T236-00328\",\n        \"T236-00334\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records for the alert-period connections are Zeek connections to the proxy, not proxy CONNECT/GET records identifying the external destinations.\",\n    \"The supplied alert-period connection records do not include a process ID or executable attribution.\",\n    \"The listed connection records do not independently establish the alert's reported roughly five-minute cadence; the evidence may be incomplete for that interval.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the alerted connections reached update.ledgerlink.com or another destination.\",\n    \"Whether ledgerlinkupd.exe, another approved application, or an unapproved process generated the connections.\",\n    \"Whether the periodic connections carried malicious content or data.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Retrieve PROXY-SUN-01 CONNECT and, where available, inspected request records for WS-MFISCHER-01 from 13:20 to 14:20 UTC, including destination hostnames, tunnel IDs, byte counts, and timestamps.\",\n    \"Correlate each proxy connection with endpoint process/network telemetry and identify the executable path, signature, and hash.\",\n    \"Review endpoint DNS and TLS/SNI or certificate telemetry for the destinations contacted during the alert window.\",\n    \"Verify whether LedgerLink and its updater were installed and running on WS-MFISCHER-01 at the time.\"\n  ],\n  \"unrelated_findings\": [\n    \"Before the alert window, max.fischer launched an encoded PowerShell command that decodes to a query for stopped services; the same session also launched WMIC to list running services. Review separately; these records do not identify the process behind the alerted proxy connections. (T236-00131, T236-00132, T236-00020, T236-00024, T236-00029)\",\n    \"Before the alert window, max.fischer launched psql.exe with the postgres account against the metrics and appdata databases from cmd.exe. Review separately; these records do not establish a connection to the alerted activity. (T236-00071, T236-00073, T236-00074, T236-00079)\",\n    \"At 14:17 UTC, PROXY-SUN-01 connected to WS-MFISCHER-01 on TCP port 135, with endpoint records attributing the connection to svchost.exe running as SYSTEM. This is separate from the outbound proxy connections in the alert and merits separate review. (T236-00374, T236-00375, T236-00376, T236-00377)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 42501,
+    "output": 2583
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.87,
+  "supporting_observations": [
+   {
+    "claim": "During the alert window, WS-MFISCHER-01 had multiple connections to the explicit proxy at 10.55.20.30:8080. Zeek records show HTTP service and recurring traffic volumes, including about 10 KB sent and 39 KB received in several connections.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T236-00150",
+     "T236-00243",
+     "T236-00268",
+     "T236-00328",
+     "T236-00334"
+    ]
+   },
+   {
+    "claim": "The available records for those connections show client-to-proxy traffic, but do not identify the HTTPS destination or the endpoint process responsible; they therefore do not establish whether the traffic was the approved LedgerLink updater or another application.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T236-00150",
+     "T236-00243",
+     "T236-00268",
+     "T236-00328",
+     "T236-00334"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records for the alert-period connections are Zeek connections to the proxy, not proxy CONNECT/GET records identifying the external destinations.",
+   "The supplied alert-period connection records do not include a process ID or executable attribution.",
+   "The listed connection records do not independently establish the alert's reported roughly five-minute cadence; the evidence may be incomplete for that interval."
+  ],
+  "claims_not_established": [
+   "Whether the alerted connections reached update.ledgerlink.com or another destination.",
+   "Whether ledgerlinkupd.exe, another approved application, or an unapproved process generated the connections.",
+   "Whether the periodic connections carried malicious content or data."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Retrieve PROXY-SUN-01 CONNECT and, where available, inspected request records for WS-MFISCHER-01 from 13:20 to 14:20 UTC, including destination hostnames, tunnel IDs, byte counts, and timestamps.",
+   "Correlate each proxy connection with endpoint process/network telemetry and identify the executable path, signature, and hash.",
+   "Review endpoint DNS and TLS/SNI or certificate telemetry for the destinations contacted during the alert window.",
+   "Verify whether LedgerLink and its updater were installed and running on WS-MFISCHER-01 at the time."
+  ],
+  "unrelated_findings": [
+   "Before the alert window, max.fischer launched an encoded PowerShell command that decodes to a query for stopped services; the same session also launched WMIC to list running services. Review separately; these records do not identify the process behind the alerted proxy connections. (T236-00131, T236-00132, T236-00020, T236-00024, T236-00029)",
+   "Before the alert window, max.fischer launched psql.exe with the postgres account against the metrics and appdata databases from cmd.exe. Review separately; these records do not establish a connection to the alerted activity. (T236-00071, T236-00073, T236-00074, T236-00079)",
+   "At 14:17 UTC, PROXY-SUN-01 connected to WS-MFISCHER-01 on TCP port 135, with endpoint records attributing the connection to svchost.exe running as SYSTEM. This is separate from the outbound proxy connections in the alert and merits separate review. (T236-00374, T236-00375, T236-00376, T236-00377)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 26.7
+}

@@ -1,0 +1,108 @@
+{
+ "scenario_id": "T010",
+ "condition": "C1",
+ "variant": "P1",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.9,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The approved CobaltVault agent ran on FILE-HD-01 as HARBOR-DENTAL\\\\svc-bkp, using the inventoried executable and the expected CobaltVault destination.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T010-00320\", \"T010-00321\", \"T010-00322\"]\n    },\n    {\n      \"claim\": \"The observed CobaltVault proxy activity was brief and small: the connection logged 1,449 client-to-server bytes and 24,228 server-to-client bytes; a later attempt received proxy status 407. These records do not show the hundreds-of-megabytes transfer described in the alert.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T010-00322\", \"T010-00323\", \"T010-00325\", \"T010-00329\", \"T010-00331\"]\n    },\n    {\n      \"claim\": \"The CobaltVault process exited shortly after those proxy attempts, at 13:45:58 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T010-00336\", \"T010-00337\"]\n    },\n    {\n      \"claim\": \"At 14:04 UTC, FILE-HD-01 made a short proxy connection to downloads.cloud.com with a curl user agent. Cloud.com is not among the listed approved services, but the record shows only small byte counts and does not establish an upload or its contents.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T010-00515\", \"T010-00516\"]\n    },\n    {\n      \"claim\": \"At 14:05 UTC, FILE-HD-01 initiated a connection to WS-OHADDAD-01 on RPC endpoint-mapper port 135. This is in the direction opposite the stated practice that remote administration is performed from WS-OHADDAD-01; the connection alone does not establish that remote administration occurred.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T010-00525\", \"T010-00528\", \"T010-00529\", \"T010-00530\"]\n    },\n    {\n      \"claim\": \"WS-OHADDAD-01 requested Kerberos service tickets for FILE-HD-01 shortly before and after the alert time, which is consistent with access from the designated IT workstation but does not prove that the approved patching procedure ran.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T010-00281\", \"T010-00382\", \"T010-00383\", \"T010-00384\", \"T010-00385\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not include an egress flow or byte-count record identifying the reported hundreds-of-megabytes transfer or its destination. The nearby CobaltVault proxy records show only small transfers (T010-00322, T010-00325).\",\n    \"Proxy records identify the client host and user agent for the cloud.com connection, but do not attribute it to a process or show the transferred content (T010-00515, T010-00516).\",\n    \"The RPC connection to WS-OHADDAD-01 is recorded, but the supplied records do not show the RPC operation, its initiating process, or a resulting command execution (T010-00528, T010-00529, T010-00530).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the alert\u2019s large transfer actually occurred, and if so, its destination, initiating process, content, and authorization.\",\n    \"Whether the CobaltVault backup completed elsewhere or was blocked; the observed attempts alone do not establish either outcome (T010-00322, T010-00329, T010-00336).\",\n    \"Whether the downloads.cloud.com connection involved an upload, data staging, or benign activity (T010-00515, T010-00516).\",\n    \"Whether the FILE-HD-01-to-WS-OHADDAD-01 RPC connection executed remote administration or was otherwise authorized (T010-00528, T010-00529, T010-00530).\",\n    \"Whether the scheduled svc-claimsync password rotation and manual job update occurred as planned; the supplied records do not directly document those actions.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Retrieve firewall, NetFlow, proxy, or packet-level records for FILE-HD-01 covering the alert interval, including destination, direction, byte counts, and any direct-egress traffic.\",\n    \"Obtain FILE-HD-01 process/network telemetry and CobaltVault agent logs to determine whether a large transfer occurred and which process initiated it.\",\n    \"Inspect proxy and endpoint records for the downloads.cloud.com connection, including process attribution, request method, byte counts, and destination details.\",\n    \"Collect RPC/WMI and endpoint process-creation telemetry for the 14:05 connection between FILE-HD-01 and WS-OHADDAD-01, and verify against IT change or patching records.\",\n    \"Verify the svc-claimsync rotation and job-update records for the scheduled 13:30 UTC change.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 103669,
+    "output": 2735
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.9,
+  "supporting_observations": [
+   {
+    "claim": "The approved CobaltVault agent ran on FILE-HD-01 as HARBOR-DENTAL\\svc-bkp, using the inventoried executable and the expected CobaltVault destination.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T010-00320",
+     "T010-00321",
+     "T010-00322"
+    ]
+   },
+   {
+    "claim": "The observed CobaltVault proxy activity was brief and small: the connection logged 1,449 client-to-server bytes and 24,228 server-to-client bytes; a later attempt received proxy status 407. These records do not show the hundreds-of-megabytes transfer described in the alert.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T010-00322",
+     "T010-00323",
+     "T010-00325",
+     "T010-00329",
+     "T010-00331"
+    ]
+   },
+   {
+    "claim": "The CobaltVault process exited shortly after those proxy attempts, at 13:45:58 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T010-00336",
+     "T010-00337"
+    ]
+   },
+   {
+    "claim": "At 14:04 UTC, FILE-HD-01 made a short proxy connection to downloads.cloud.com with a curl user agent. Cloud.com is not among the listed approved services, but the record shows only small byte counts and does not establish an upload or its contents.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T010-00515",
+     "T010-00516"
+    ]
+   },
+   {
+    "claim": "At 14:05 UTC, FILE-HD-01 initiated a connection to WS-OHADDAD-01 on RPC endpoint-mapper port 135. This is in the direction opposite the stated practice that remote administration is performed from WS-OHADDAD-01; the connection alone does not establish that remote administration occurred.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T010-00525",
+     "T010-00528",
+     "T010-00529",
+     "T010-00530"
+    ]
+   },
+   {
+    "claim": "WS-OHADDAD-01 requested Kerberos service tickets for FILE-HD-01 shortly before and after the alert time, which is consistent with access from the designated IT workstation but does not prove that the approved patching procedure ran.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T010-00281",
+     "T010-00382",
+     "T010-00383",
+     "T010-00384",
+     "T010-00385"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not include an egress flow or byte-count record identifying the reported hundreds-of-megabytes transfer or its destination. The nearby CobaltVault proxy records show only small transfers (T010-00322, T010-00325).",
+   "Proxy records identify the client host and user agent for the cloud.com connection, but do not attribute it to a process or show the transferred content (T010-00515, T010-00516).",
+   "The RPC connection to WS-OHADDAD-01 is recorded, but the supplied records do not show the RPC operation, its initiating process, or a resulting command execution (T010-00528, T010-00529, T010-00530)."
+  ],
+  "claims_not_established": [
+   "Whether the alert\u2019s large transfer actually occurred, and if so, its destination, initiating process, content, and authorization.",
+   "Whether the CobaltVault backup completed elsewhere or was blocked; the observed attempts alone do not establish either outcome (T010-00322, T010-00329, T010-00336).",
+   "Whether the downloads.cloud.com connection involved an upload, data staging, or benign activity (T010-00515, T010-00516).",
+   "Whether the FILE-HD-01-to-WS-OHADDAD-01 RPC connection executed remote administration or was otherwise authorized (T010-00528, T010-00529, T010-00530).",
+   "Whether the scheduled svc-claimsync password rotation and manual job update occurred as planned; the supplied records do not directly document those actions."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Retrieve firewall, NetFlow, proxy, or packet-level records for FILE-HD-01 covering the alert interval, including destination, direction, byte counts, and any direct-egress traffic.",
+   "Obtain FILE-HD-01 process/network telemetry and CobaltVault agent logs to determine whether a large transfer occurred and which process initiated it.",
+   "Inspect proxy and endpoint records for the downloads.cloud.com connection, including process attribution, request method, byte counts, and destination details.",
+   "Collect RPC/WMI and endpoint process-creation telemetry for the 14:05 connection between FILE-HD-01 and WS-OHADDAD-01, and verify against IT change or patching records.",
+   "Verify the svc-claimsync rotation and job-update records for the scheduled 13:30 UTC change."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 21,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 25.6
+}

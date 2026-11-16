@@ -1,0 +1,74 @@
+{
+ "run_id": "A__T058__C3__20261115T050651Z",
+ "config": "A",
+ "scenario_id": "T058",
+ "condition": "C3",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 36,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 19063,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 14:00 UTC, nora.blake launched Remote Desktop to DC-NWD-01 from WS-NBLAKE-01; the workstation resolved the domain controller and initiated a TCP connection to port 3389.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T058-00032\",\n        \"T058-00033\",\n        \"T058-00034\",\n        \"T058-00035\"\n      ]\n    },\n    {\n      \"claim\": \"The observed RDP activity is inconsistent with the stated practice that remote administration is only done from WS-SOKAFOR-01, making the connection suspicious but not by itself proof of malicious activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T058-00032\",\n        \"T058-00033\",\n        \"T058-00035\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Both winsec and sysmon collection for DC-NWD-01 were unavailable from 13:30 through 14:10 UTC, covering the reported account-creation time and the observed RDP activity; therefore, domain-controller events in that interval cannot be assessed.\",\n    \"The supplied records contain no direct domain-controller account-creation or account-group-membership event for ext.rwong.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether ext.rwong was actually created, when it was created, and which account performed the creation.\",\n    \"Whether the RDP connection to DC-NWD-01 was accepted or resulted in an authenticated session.\",\n    \"Whether ext.rwong was added only to Freelancers or granted any other group membership or privileges.\",\n    \"Whether the RDP activity was authorized under an exception or related to the reported account creation.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover or obtain DC-NWD-01 Security and Sysmon events for 13:30\u201314:10 UTC, especially account creation and group-membership changes, including Windows Security events 4720 and 4728/4732 where available.\",\n    \"Check Active Directory audit data, replication metadata, or other authoritative records to verify ext.rwong's creation time, creator, enabled status, and group memberships.\",\n    \"Obtain DC-NWD-01 logon and RDP session evidence around 14:00 UTC to determine whether nora.blake's connection succeeded and what actions followed.\",\n    \"Check the relevant change request or help-desk ticket for authorization of the temporary account and the RDP activity.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 6537,
+    "output": 1147,
+    "reasoning": 550
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "At 14:00 UTC, nora.blake launched Remote Desktop to DC-NWD-01 from WS-NBLAKE-01; the workstation resolved the domain controller and initiated a TCP connection to port 3389.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T058-00032",
+     "T058-00033",
+     "T058-00034",
+     "T058-00035"
+    ]
+   },
+   {
+    "claim": "The observed RDP activity is inconsistent with the stated practice that remote administration is only done from WS-SOKAFOR-01, making the connection suspicious but not by itself proof of malicious activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T058-00032",
+     "T058-00033",
+     "T058-00035"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Both winsec and sysmon collection for DC-NWD-01 were unavailable from 13:30 through 14:10 UTC, covering the reported account-creation time and the observed RDP activity; therefore, domain-controller events in that interval cannot be assessed.",
+   "The supplied records contain no direct domain-controller account-creation or account-group-membership event for ext.rwong."
+  ],
+  "claims_not_established": [
+   "Whether ext.rwong was actually created, when it was created, and which account performed the creation.",
+   "Whether the RDP connection to DC-NWD-01 was accepted or resulted in an authenticated session.",
+   "Whether ext.rwong was added only to Freelancers or granted any other group membership or privileges.",
+   "Whether the RDP activity was authorized under an exception or related to the reported account creation."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover or obtain DC-NWD-01 Security and Sysmon events for 13:30\u201314:10 UTC, especially account creation and group-membership changes, including Windows Security events 4720 and 4728/4732 where available.",
+   "Check Active Directory audit data, replication metadata, or other authoritative records to verify ext.rwong's creation time, creator, enabled status, and group memberships.",
+   "Obtain DC-NWD-01 logon and RDP session evidence around 14:00 UTC to determine whether nora.blake's connection succeeded and what actions followed.",
+   "Check the relevant change request or help-desk ticket for authorization of the temporary account and the RDP activity."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 7,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 12.2
+}

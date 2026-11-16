@@ -1,0 +1,82 @@
+{
+ "scenario_id": "T114",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.93,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:44:52 UTC, PowerShell ran on WS-DREYES-01 as paul.becker with the command line `-NoProfile -ExecutionPolicy Bypass -File \\\\\\\\FILE-COP-01\\\\IT\\\\Patch-Workstations.ps1`. The Sysmon and Windows process-creation records agree on the command and account.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T114-00312\", \"T114-00313\"]\n    },\n    {\n      \"claim\": \"The PowerShell process used logon ID 0xadda457, matching a network logon for paul.becker to WS-DREYES-01 from 10.52.10.23 recorded shortly beforehand.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T114-00262\", \"T114-00266\", \"T114-00312\", \"T114-00313\"]\n    },\n    {\n      \"claim\": \"The PowerShell process launched wusa.exe to install a Windows update, and Windows Update traffic totaling about 38.8 MB was recorded at approximately the same time. This is consistent with the documented workstation-patching procedure and business-hours patch schedule.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T114-00314\", \"T114-00316\", \"T114-00318\", \"T114-00319\"]\n    },\n    {\n      \"claim\": \"The only PowerShell process creation shown in the reviewed interval is at 13:44:52 UTC, several minutes after the reported approximate time of 13:40 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T114-00312\", \"T114-00313\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The process-creation records show PowerShell execution and its command line, but do not establish whether a window was visible to Dan Reyes. (T114-00312, T114-00313)\",\n    \"The logged PowerShell start is at 13:44:52 UTC, not exactly 13:40 UTC, so the records do not conclusively tie that process to the precise moment Dan noticed a window. (T114-00312, T114-00313)\"\n  ],\n  \"claims_not_established\": [\n    \"The available records do not establish exactly what Dan saw or the precise time he saw it. (T114-00312, T114-00313)\",\n    \"The records show the patch script path but not the script contents or its integrity. (T114-00312, T114-00313)\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [],\n  \"unrelated_findings\": [\n    \"Separate review: Dan Reyes had network logons to WS-DREYES-01 from WS-KNGUYEN-01 at 13:40 and WS-SALI-01 at 13:45. These records are distinct from the PowerShell process and do not determine this alert. (T114-00140, T114-00142, T114-00333, T114-00334)\",\n    \"Separate review: Kerberos records show paul.becker authentication activity from WS-DREYES-01 (10.52.10.21) to WS-PBECKER-01 at 13:32. This is outside the alerted PowerShell activity; validate its context separately. (T114-00036, T114-00037, T114-00039)\",\n    \"Separate policy review: process-exit records show Dropbox, Cisco AnyConnect, and Google Drive File Stream processes on WS-DREYES-01. These are not part of the alerted PowerShell activity. (T114-00430, T114-00431, T114-00432, T114-00433, T114-00434, T114-00435)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 72472,
+    "output": 3162
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.93,
+  "supporting_observations": [
+   {
+    "claim": "At 13:44:52 UTC, PowerShell ran on WS-DREYES-01 as paul.becker with the command line `-NoProfile -ExecutionPolicy Bypass -File \\\\FILE-COP-01\\IT\\Patch-Workstations.ps1`. The Sysmon and Windows process-creation records agree on the command and account.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T114-00312",
+     "T114-00313"
+    ]
+   },
+   {
+    "claim": "The PowerShell process used logon ID 0xadda457, matching a network logon for paul.becker to WS-DREYES-01 from 10.52.10.23 recorded shortly beforehand.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T114-00262",
+     "T114-00266",
+     "T114-00312",
+     "T114-00313"
+    ]
+   },
+   {
+    "claim": "The PowerShell process launched wusa.exe to install a Windows update, and Windows Update traffic totaling about 38.8 MB was recorded at approximately the same time. This is consistent with the documented workstation-patching procedure and business-hours patch schedule.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T114-00314",
+     "T114-00316",
+     "T114-00318",
+     "T114-00319"
+    ]
+   },
+   {
+    "claim": "The only PowerShell process creation shown in the reviewed interval is at 13:44:52 UTC, several minutes after the reported approximate time of 13:40 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T114-00312",
+     "T114-00313"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The process-creation records show PowerShell execution and its command line, but do not establish whether a window was visible to Dan Reyes. (T114-00312, T114-00313)",
+   "The logged PowerShell start is at 13:44:52 UTC, not exactly 13:40 UTC, so the records do not conclusively tie that process to the precise moment Dan noticed a window. (T114-00312, T114-00313)"
+  ],
+  "claims_not_established": [
+   "The available records do not establish exactly what Dan saw or the precise time he saw it. (T114-00312, T114-00313)",
+   "The records show the patch script path but not the script contents or its integrity. (T114-00312, T114-00313)"
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [],
+  "unrelated_findings": [
+   "Separate review: Dan Reyes had network logons to WS-DREYES-01 from WS-KNGUYEN-01 at 13:40 and WS-SALI-01 at 13:45. These records are distinct from the PowerShell process and do not determine this alert. (T114-00140, T114-00142, T114-00333, T114-00334)",
+   "Separate review: Kerberos records show paul.becker authentication activity from WS-DREYES-01 (10.52.10.21) to WS-PBECKER-01 at 13:32. This is outside the alerted PowerShell activity; validate its context separately. (T114-00036, T114-00037, T114-00039)",
+   "Separate policy review: process-exit records show Dropbox, Cisco AnyConnect, and Google Drive File Stream processes on WS-DREYES-01. These are not part of the alerted PowerShell activity. (T114-00430, T114-00431, T114-00432, T114-00433, T114-00434, T114-00435)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 36.2
+}

@@ -1,0 +1,85 @@
+{
+ "scenario_id": "T184",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.82,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:41:04 UTC, the domain controller recorded a service-ticket request for ken.ito to WS-MSANTOS-01 from 10.54.10.23, which the inventory identifies as WS-KITO-01. This is consistent with possible IT activity near the reported time, but does not establish what action was performed.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T184-00220\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:42 UTC, WS-MSANTOS-01 used a Windows Update Agent connection to download about 38.8 MB from download.windowsupdate.com. This is consistent with patching activity but does not link that download to PowerShell or ken.ito.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T184-00242\",\n        \"T184-00243\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:39:42 UTC, WS-MSANTOS-01 made an SMB connection to DC-BLU-01, and the domain controller recorded a network logon for the workstation machine account. The records do not identify a share or file accessed.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T184-00209\",\n        \"T184-00213\"\n      ]\n    },\n    {\n      \"claim\": \"The supplied endpoint process records show conhost.exe starting at 14:16:15 under SYSTEM with csrss.exe as its parent, then exiting at 14:16:57. They do not establish that this was the PowerShell window reported around 13:40.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T184-00423\",\n        \"T184-00424\",\n        \"T184-00430\",\n        \"T184-00431\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not show a PowerShell process creation, command line, script content, or parent process for the reported time. The process events present for WS-MSANTOS-01 concern conhost.exe at 14:16, not the reported time (T184-00423, T184-00424, T184-00430, T184-00431).\",\n    \"The available network and authentication records do not show whether ken.ito executed a remote command or accessed the organization's patch script share.\"\n  ],\n  \"claims_not_established\": [\n    \"That a PowerShell process actually ran on WS-MSANTOS-01 around 13:40 UTC.\",\n    \"What command or script, if any, ran, and whether it was authorized workstation patching.\",\n    \"Whether the ken.ito service-ticket request and subsequent Windows Update download were part of the reported activity.\",\n    \"Whether the SMB connection to DC-BLU-01 involved any particular share or file.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Endpoint EDR or Windows process-creation records for WS-MSANTOS-01 around 13:40 UTC, including parent process and command line.\",\n    \"PowerShell operational or script-block logs, and available console history or forensic artifacts for the reported time.\",\n    \"SMB share-access auditing on FILE-BLU-01 to determine whether Patch-Workstations.ps1 was accessed, plus remote-execution telemetry from WS-KITO-01.\",\n    \"Confirmation from ken.ito and mia.santos about any patching or remote support performed at the time.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:52 UTC, DC-BLU-01 initiated connections toward WS-MSANTOS-01 on ports 8443, 135, 443, and 445; some attempts were reset, unanswered, or rejected. Triage separately; these records do not establish a link to the reported PowerShell activity (T184-00300, T184-00301, T184-00309, T184-00310, T184-00312, T184-00313).\",\n    \"At 13:29 UTC, WS-MSANTOS-01 accessed a Citrix StoreWeb portal at customer.cloud.com. The inventory does not list this service as approved; review separately, without treating it as evidence for this alert (T184-00100, T184-00104, T184-00121).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 38047,
+    "output": 2742
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.82,
+  "supporting_observations": [
+   {
+    "claim": "At 13:41:04 UTC, the domain controller recorded a service-ticket request for ken.ito to WS-MSANTOS-01 from 10.54.10.23, which the inventory identifies as WS-KITO-01. This is consistent with possible IT activity near the reported time, but does not establish what action was performed.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T184-00220"
+    ]
+   },
+   {
+    "claim": "At 13:42 UTC, WS-MSANTOS-01 used a Windows Update Agent connection to download about 38.8 MB from download.windowsupdate.com. This is consistent with patching activity but does not link that download to PowerShell or ken.ito.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T184-00242",
+     "T184-00243"
+    ]
+   },
+   {
+    "claim": "At 13:39:42 UTC, WS-MSANTOS-01 made an SMB connection to DC-BLU-01, and the domain controller recorded a network logon for the workstation machine account. The records do not identify a share or file accessed.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T184-00209",
+     "T184-00213"
+    ]
+   },
+   {
+    "claim": "The supplied endpoint process records show conhost.exe starting at 14:16:15 under SYSTEM with csrss.exe as its parent, then exiting at 14:16:57. They do not establish that this was the PowerShell window reported around 13:40.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T184-00423",
+     "T184-00424",
+     "T184-00430",
+     "T184-00431"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not show a PowerShell process creation, command line, script content, or parent process for the reported time. The process events present for WS-MSANTOS-01 concern conhost.exe at 14:16, not the reported time (T184-00423, T184-00424, T184-00430, T184-00431).",
+   "The available network and authentication records do not show whether ken.ito executed a remote command or accessed the organization's patch script share."
+  ],
+  "claims_not_established": [
+   "That a PowerShell process actually ran on WS-MSANTOS-01 around 13:40 UTC.",
+   "What command or script, if any, ran, and whether it was authorized workstation patching.",
+   "Whether the ken.ito service-ticket request and subsequent Windows Update download were part of the reported activity.",
+   "Whether the SMB connection to DC-BLU-01 involved any particular share or file."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Endpoint EDR or Windows process-creation records for WS-MSANTOS-01 around 13:40 UTC, including parent process and command line.",
+   "PowerShell operational or script-block logs, and available console history or forensic artifacts for the reported time.",
+   "SMB share-access auditing on FILE-BLU-01 to determine whether Patch-Workstations.ps1 was accessed, plus remote-execution telemetry from WS-KITO-01.",
+   "Confirmation from ken.ito and mia.santos about any patching or remote support performed at the time."
+  ],
+  "unrelated_findings": [
+   "At 13:52 UTC, DC-BLU-01 initiated connections toward WS-MSANTOS-01 on ports 8443, 135, 443, and 445; some attempts were reset, unanswered, or rejected. Triage separately; these records do not establish a link to the reported PowerShell activity (T184-00300, T184-00301, T184-00309, T184-00310, T184-00312, T184-00313).",
+   "At 13:29 UTC, WS-MSANTOS-01 accessed a Citrix StoreWeb portal at customer.cloud.com. The inventory does not list this service as approved; review separately, without treating it as evidence for this alert (T184-00100, T184-00104, T184-00121)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 9,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 25.9
+}

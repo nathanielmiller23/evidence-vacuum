@@ -1,0 +1,80 @@
+{
+ "scenario_id": "T107",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain account backupadmin was created at 13:42:55 with paul.becker recorded as the actor, then added to the Administrators group about one second later by the same recorded actor and DC logon ID. (T107-00101, T107-00105)\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T107-00101\", \"T107-00105\"]\n    },\n    {\n      \"claim\": \"The account name and administrator-group membership conflict with the stated help-desk practice: temporary accounts use ext.<name> and are added only to Contractors. No approved change for this new administrative account is provided.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T107-00101\", \"T107-00105\"]\n    },\n    {\n      \"claim\": \"Shortly before the account change, WS-KNGUYEN-01 recorded a remote interactive logon for paul.becker from 192.0.2.88, followed by a privileged-logon event. The supplied practice says remote administration is only done from WS-PBECKER-01 and there is no VPN, making this access path inconsistent with the stated practice. (T107-00078\u2013T107-00081)\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T107-00078\", \"T107-00079\", \"T107-00080\", \"T107-00081\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records establish the account creation and group addition, but do not show the command, process, or tool that performed those changes.\",\n    \"The account-change records use a DC logon ID, while the workstation RDP record uses a workstation logon ID; the records do not directly establish that these are the same session.\",\n    \"The source address and paul.becker account name do not establish who controlled the remote session or whether credentials were compromised.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether paul.becker personally initiated or authorized the account creation and elevation.\",\n    \"Whether a valid approval or exception existed outside the supplied change calendar and evidence.\",\n    \"Whether backupadmin was subsequently used, or what access it obtained.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Validate the account creation and elevation against change approvals and confirm with paul.becker through a trusted channel.\",\n    \"Review DC authentication and account-management telemetry around the event to correlate the actor session and identify the mechanism used.\",\n    \"Investigate the remote session from 192.0.2.88, including RDP gateway/firewall records and evidence from WS-KNGUYEN-01 and WS-PBECKER-01.\",\n    \"Pending validation, disable backupadmin or remove its Administrators membership and preserve relevant logs and endpoint evidence.\"\n  ],\n  \"unrelated_findings\": [\n    \"A scheduled task named Microsoft\\\\Windows\\\\HealthCheck was registered on WS-KNGUYEN-01 under paul.becker's workstation logon shortly after the account change. Its hidden PowerShell action contains an encoded command that retrieves a script from http://192.0.2.88/a.ps1. Investigate separately; this finding is not needed to establish the account-management concern. (T107-00106)\",\n    \"Firefox accessed a Google Docs document, a service not listed among approved services. The records show access but do not establish file upload or data transfer. Investigate separately. (T107-00127)\",\n    \"An unlisted Meridian OpsAgent process ran on WS-KNGUYEN-01 and attempted explicit authentication to DC-COP-01 as svc-routes. The supplied inventory places the RouteSync job on FILE-COP-01; investigate the workstation process and credential use separately. (T107-00147, T107-00149)\",\n    \"Kim Nguyen ran ChromeSetup.exe from the user Temp directory with a silent-install argument. Investigate software authorization separately. (T107-00153, T107-00154)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 35509,
+    "output": 3386
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "The domain account backupadmin was created at 13:42:55 with paul.becker recorded as the actor, then added to the Administrators group about one second later by the same recorded actor and DC logon ID. (T107-00101, T107-00105)",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T107-00101",
+     "T107-00105"
+    ]
+   },
+   {
+    "claim": "The account name and administrator-group membership conflict with the stated help-desk practice: temporary accounts use ext.<name> and are added only to Contractors. No approved change for this new administrative account is provided.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T107-00101",
+     "T107-00105"
+    ]
+   },
+   {
+    "claim": "Shortly before the account change, WS-KNGUYEN-01 recorded a remote interactive logon for paul.becker from 192.0.2.88, followed by a privileged-logon event. The supplied practice says remote administration is only done from WS-PBECKER-01 and there is no VPN, making this access path inconsistent with the stated practice. (T107-00078\u2013T107-00081)",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T107-00078",
+     "T107-00079",
+     "T107-00080",
+     "T107-00081"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records establish the account creation and group addition, but do not show the command, process, or tool that performed those changes.",
+   "The account-change records use a DC logon ID, while the workstation RDP record uses a workstation logon ID; the records do not directly establish that these are the same session.",
+   "The source address and paul.becker account name do not establish who controlled the remote session or whether credentials were compromised."
+  ],
+  "claims_not_established": [
+   "Whether paul.becker personally initiated or authorized the account creation and elevation.",
+   "Whether a valid approval or exception existed outside the supplied change calendar and evidence.",
+   "Whether backupadmin was subsequently used, or what access it obtained."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Validate the account creation and elevation against change approvals and confirm with paul.becker through a trusted channel.",
+   "Review DC authentication and account-management telemetry around the event to correlate the actor session and identify the mechanism used.",
+   "Investigate the remote session from 192.0.2.88, including RDP gateway/firewall records and evidence from WS-KNGUYEN-01 and WS-PBECKER-01.",
+   "Pending validation, disable backupadmin or remove its Administrators membership and preserve relevant logs and endpoint evidence."
+  ],
+  "unrelated_findings": [
+   "A scheduled task named Microsoft\\Windows\\HealthCheck was registered on WS-KNGUYEN-01 under paul.becker's workstation logon shortly after the account change. Its hidden PowerShell action contains an encoded command that retrieves a script from http://192.0.2.88/a.ps1. Investigate separately; this finding is not needed to establish the account-management concern. (T107-00106)",
+   "Firefox accessed a Google Docs document, a service not listed among approved services. The records show access but do not establish file upload or data transfer. Investigate separately. (T107-00127)",
+   "An unlisted Meridian OpsAgent process ran on WS-KNGUYEN-01 and attempted explicit authentication to DC-COP-01 as svc-routes. The supplied inventory places the RouteSync job on FILE-COP-01; investigate the workstation process and credential use separately. (T107-00147, T107-00149)",
+   "Kim Nguyen ran ChromeSetup.exe from the user Temp directory with a silent-install argument. Investigate software authorization separately. (T107-00153, T107-00154)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 8,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 38.4
+}

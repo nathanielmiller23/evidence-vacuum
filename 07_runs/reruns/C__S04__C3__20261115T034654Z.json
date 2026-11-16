@@ -1,0 +1,577 @@
+{
+ "run_id": "C__S04__C3__20261115T034654Z",
+ "config": "C",
+ "scenario_id": "S04",
+ "condition": "C3",
+ "model": "gpt-6-luna",
+ "agent_setting_config": "settings.ev.toml",
+ "settings_sha": "d164a225cec03452",
+ "cuga_commit": "f6e2335aa326e1cfdeb6e80a350394f6ab8b7b72",
+ "max_tool_calls": 30,
+ "timeout_s": 400,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task": "Alert: Network anomaly detection: WS-RIYER-01 made periodic outbound HTTPS connections at roughly 5-minute intervals between 13:30 and 14:10 UTC on 2026-11-10. Review activity between 13:20 and 14:20 UTC and decide whether it is malicious.\n\nEnvironment context (from the organization's asset and service inventory):\nOrganization: Lakeview Accounting (domain LAKEVIEW-ACCT / lakeview-acct.local), a small accounting office.\nHosts: workstations WS-DWELLS-01 (dana.wells, accountant), WS-RIYER-01 (raj.iyer, analyst), WS-KORTEGA-01 (kim.ortega, IT administrator), WS-TNGUYEN-01 (tara.nguyen, help desk); servers DC-LV-01 (domain controller, DNS), FILE-LV-01 (file server, finance shares, scheduled jobs), PROXY-LV-01 (explicit web proxy, port 8080; all web egress goes through it). There is no VPN; remote administration is only done from WS-KORTEGA-01 inside the office.\nAccounts: kim.ortega is the only IT administrator. tara.nguyen (help desk) can create domain accounts but is not an administrator. Service accounts: svc-backup (Vaultline backup agent on FILE-LV-01) and svc-reporting (ReportSync job on FILE-LV-01, runs every minute and re-authenticates on each run).\nChange calendar for 2026-11-10: the svc-reporting password is scheduled to be rotated by IT at 13:30 UTC (CHG-2291); the ReportSync job on FILE-LV-01 must then be updated manually with the new password. Monthly workstation patching by IT is scheduled during business hours.\nIT practices: kim.ortega patches workstations by remotely running \\\\FILE-LV-01\\IT\\scripts\\Install-MonthlyPatches.ps1 with PowerShell from WS-KORTEGA-01. The help desk creates temporary contractor accounts on request, always named temp.<name>, added only to the Contractors domain group; temporary accounts never receive administrator rights. No other account creation is expected.\nApproved software and services: Microsoft 365 / OneDrive; Vaultline (vaultline-backup.com) offsite backup; DataGrid Analytics desktop (installed in C:\\Program Files\\DataGrid\\Analytics\\ on analyst workstations), whose updater dgupdate.exe checks update.datagrid-analytics.com over HTTPS about every 5 minutes. No other file-sharing, cloud-storage or remote-access services are approved.\n\nObjective: Determine whether the available security evidence supports a malicious-activity finding, a benign disposition, or an insufficient-evidence determination.\n\nEvidence is available only through these tools: list_sources, query, get_record, get_coverage. Retrieve evidence with the tools before answering. You may make at most 30 tool calls.\n\nRespond with a single JSON object (no prose, no code fences) that conforms to this JSON schema. Output only the instance, not the schema:\n{\n \"type\": \"object\",\n \"additionalProperties\": false,\n \"required\": [\n  \"assessment\",\n  \"confidence\",\n  \"supporting_observations\",\n  \"known_telemetry_limitations\",\n  \"claims_not_established\",\n  \"recommended_action\",\n  \"additional_evidence_needed\"\n ],\n \"properties\": {\n  \"assessment\": {\n   \"type\": \"string\",\n   \"enum\": [\n    \"malicious\",\n    \"benign\",\n    \"insufficient_evidence\"\n   ]\n  },\n  \"confidence\": {\n   \"type\": \"number\",\n   \"minimum\": 0,\n   \"maximum\": 1,\n   \"description\": \"Probability that the assessment is correct.\"\n  },\n  \"supporting_observations\": {\n   \"type\": \"array\",\n   \"items\": {\n    \"type\": \"object\",\n    \"additionalProperties\": false,\n    \"required\": [\n     \"claim\",\n     \"claim_type\",\n     \"record_ids\"\n    ],\n    \"properties\": {\n     \"claim\": {\n      \"type\": \"string\"\n     },\n     \"claim_type\": {\n      \"type\": \"string\",\n      \"enum\": [\n       \"observed_fact\",\n       \"inferred_claim\"\n      ]\n     },\n     \"record_ids\": {\n      \"type\": \"array\",\n      \"items\": {\n       \"type\": \"string\"\n      }\n     }\n    }\n   }\n  },\n  \"known_telemetry_limitations\": {\n   \"type\": \"array\",\n   \"items\": {\n    \"type\": \"string\"\n   }\n  },\n  \"claims_not_established\": {\n   \"type\": \"array\",\n   \"items\": {\n    \"type\": \"string\"\n   },\n   \"description\": \"Material questions the available evidence cannot answer.\"\n  },\n  \"recommended_action\": {\n   \"type\": \"string\",\n   \"enum\": [\n    \"close\",\n    \"escalate\",\n    \"collect_more\"\n   ]\n  },\n  \"additional_evidence_needed\": {\n   \"type\": \"array\",\n   \"items\": {\n    \"type\": \"string\"\n   }\n  }\n }\n}",
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"During the alert window, observed workstation connections in Zeek were to the internal proxy at 10.20.20.30:8080; for example, connections occurred near 13:50, 13:55, 14:00, and 14:05 UTC. These records do not identify the external HTTPS destinations.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S04-00236\", \"S04-00243\", \"S04-00254\", \"S04-00267\"]\n    },\n    {\n      \"claim\": \"FILE-LV-01 recorded a network logon for kim.ortega at 14:05:12 UTC originating from 10.20.10.22; other workstation records associate that address with WS-RIYER-01. This is inconsistent with the provided practice that remote administration is performed only from WS-KORTEGA-01, but the event alone does not establish malicious access.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S04-00276\", \"S04-00326\"]\n    },\n    {\n      \"claim\": \"Proxy records just outside the alert interval include Windows Update and Microsoft 365 destinations, but do not establish which destination generated the periodic activity during the interval.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S04-00002\", \"S04-00009\", \"S04-00340\", \"S04-00345\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Coverage status reports that WS-RIYER-01 Windows event forwarding and the proxy access-log forwarder were not ingested from 13:30 to 14:10 UTC on 2026-11-10. The coverage response has no record IDs.\",\n    \"The queried Zeek DNS and TLS sources returned no matching records for this window; therefore they do not supply destination or TLS identity evidence.\",\n    \"The available Zeek connection records identify the internal proxy as the connection endpoint, not the external destination or originating application.\"\n  ],\n  \"claims_not_established\": [\n    \"The external destination, domain, and TLS identity of the periodic HTTPS activity.\",\n    \"Whether dgupdate.exe or another process initiated the periodic connections.\",\n    \"Whether the kim.ortega logon from WS-RIYER-01 was authorized, and what actions followed on FILE-LV-01.\",\n    \"Whether the activity was malicious or benign; the missing telemetry overlaps the alert interval.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover local or buffered proxy access logs and WS-RIYER-01 endpoint logs for 13:30\u201314:10 UTC, including destination, process, and user attribution.\",\n    \"Review FILE-LV-01 authentication and process/audit records around 14:05 UTC; validate with kim.ortega whether the logon was expected and determine its source and subsequent activity.\",\n    \"Check DataGrid Analytics updater logs, executable path and signature, and update history to confirm whether dgupdate.exe made the reported connections.\"\n  ]\n}",
+   "cuga_error": null,
+   "valid": true,
+   "validation_errors": [],
+   "cuga_tool_calls": [
+    {
+     "name": "list_sources",
+     "arguments": {},
+     "result": "{\"sources\": [\"proxy\", \"sysmon\", \"winsec\", \"zeek_conn\", \"zeek_dns\", \"zeek_ssl\"], \"known_hosts\": [\"DC-LV-01\", \"FILE-LV-01\", \"WS-RIYER-01\"]}",
+     "app_name": "runtime_tools",
+     "operation_id": "list_sources",
+     "timestamp": "2026-11-14T21:47:09.781568",
+     "duration_ms": 2.997875213623047,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "proxy",
+      "host": "WS-RIYER-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z"
+     },
+     "result": "{\"total_matches\": 15, \"offset\": 0, \"returned\": 15, \"rows\": [{\"record_id\": \"S04-00002\", \"ts\": \"2026-11-10T13:20:24.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.22 user=- CONNECT ctldl.windowsupdate.com:443 status=200 ua=\\\"Microsoft-CryptoAPI/10.0\\\" proxy_action=tunnel tunnel_cs_bytes=4009 tunnel_sc_bytes=27945 tunnel_duration_ms=1881\"}, {\"record_id\": \"S04-00009\", \"ts\": \"2026-11-10T13:21:27.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.22 user=- CONNECT graph.microsoft.com:443 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0\\\" proxy_action=tunnel tunnel_cs_bytes=2598 tunnel_sc_bytes=48122 tunnel_duration_ms=889\"}, {\"record_id\": \"S04-00015\", \"ts\": \"2026-11-10T13:21:59.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.22 user=- CONNECT www.office.com:443 status=502 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0\\\" proxy_action=gateway-error ssl_bump=terminate\"}, {\"record_id\": \"S04-00323\", \"ts\": \"2026-11-10T14:17:29.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer CONNECT na139.salesforce.com:443 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0\\\" proxy_action=tunnel tunnel_cs_bytes=4901 tunnel_sc_bytes=47147 tunnel_duration_ms=4755\"}, {\"record_id\": \"S04-00340\", \"ts\": \"2026-11-10T14:18:21.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.22 user=- CONNECT ctldl.windowsupdate.com:443 status=200 ua=\\\"Microsoft-CryptoAPI/10.0\\\" proxy_action=tunnel tunnel_cs_bytes=734 tunnel_sc_bytes=65508 tunnel_duration_ms=5170\"}, {\"record_id\": \"S04-00344\", \"ts\": \"2026-11-10T14:18:45.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer CONNECT www.office.com:443 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0\\\" proxy_action=tunnel-setup ssl_bump=peek tunnel_id=PT-88ca2fc346eaa90f client_src_port=63093 tunnel_cs_bytes=1296 tunnel_sc_bytes=32004 tunnel_duration_ms=2404\"}, {\"record_id\": \"S04-00345\", \"ts\": \"2026-11-10T14:18:45.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"GET\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer GET https://www.office.com/ status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0\\\" proxy_action=ssl-inspect ssl_bump=bump tunnel_id=PT-88ca2fc346eaa90f client_src_port=63093\"}, {\"record_id\": \"S04-00347\", \"ts\": \"2026-11-10T14:18:46.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer CONNECT res.cdn.office.net:443 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0\\\" proxy_action=tunnel-setup ssl_bump=peek tunnel_id=PT-4e8b4857839c9596 client_src_port=62269 tunnel_cs_bytes=722 tunnel_sc_bytes=119330 tunnel_duration_ms=1291\"}, {\"record_id\": \"S04-00348\", \"ts\": \"2026-11-10T14:18:46.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer CONNECT www.office.com:443 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0\\\" proxy_action=tunnel-setup ssl_bump=peek tunnel_id=PT-ba8aa7e693f218ae client_src_port=60733 tunnel_cs_bytes=209 tunnel_sc_bytes=3337 tunnel_duration_ms=676\"}, {\"record_id\": \"S04-00349\", \"ts\": \"2026-11-10T14:18:46.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"GET\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer GET https://res.cdn.office.net/officehub/488ae4d486601e79/scripts/officehub.bundle.js status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0\\\" proxy_action=ssl-inspect ssl_bump=bump tunnel_id=PT-4e8b4857839c9596 client_src_port=62269\"}, {\"record_id\": \"S04-00350\", \"ts\": \"2026-11-10T14:18:46.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"GET\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer GET https://www.office.com/favicon.ico status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0\\\" proxy_action=ssl-inspect ssl_bump=bump tunnel_id=PT-ba8aa7e693f218ae client_src_port=60733\"}, {\"record_id\": \"S04-00359\", \"ts\": \"2026-11-10T14:18:47.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer CONNECT c.s-microsoft.com:443 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0\\\" proxy_action=tunnel-setup ssl_bump=peek tunnel_id=PT-70ad9942055379b9 client_src_port=57471 tunnel_cs_bytes=293 tunnel_sc_bytes=230 tunnel_duration_ms=1065\"}, {\"record_id\": \"S04-00360\", \"ts\": \"2026-11-10T14:18:47.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer CONNECT res.cdn.office.net:443 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0\\\" proxy_action=tunnel-setup ssl_bump=peek tunnel_id=PT-015cc64a1d1d0ac8 client_src_port=50640 tunnel_cs_bytes=303 tunnel_sc_bytes=15926 tunnel_duration_ms=728\"}, {\"record_id\": \"S04-00361\", \"ts\": \"2026-11-10T14:18:47.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"GET\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer GET https://c.s-microsoft.com/mscc/statics/mscc-0.5.0.min.js status=304 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0\\\" proxy_action=ssl-inspect ssl_bump=bump tunnel_id=PT-70ad9942055379b9 client_src_port=57471\"}, {\"record_id\": \"S04-00362\", \"ts\": \"2026-11-10T14:18:47.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"GET\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer GET https://res.cdn.office.net/officehub/b9a7c23f6ab7b7f5/styles/officehub.css status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0\\\" proxy_action=ssl-inspect ssl_bump=bump tunnel_id=PT-015cc64a1d1d0ac8 client_src_port=50640\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:47:11.646475",
+     "duration_ms": 1.9991397857666016,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "sysmon",
+      "host": "WS-RIYER-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z"
+     },
+     "result": "{\"total_matches\": 27, \"offset\": 0, \"returned\": 25, \"rows\": [{\"record_id\": \"S04-00017\", \"ts\": \"2026-11-10T13:23:16.545Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"10\", \"raw\": \"EventID=10 SourceProcessId=2556 SourceImage=C:\\\\ProgramData\\\\Microsoft\\\\Windows Defender\\\\Platform\\\\4.18.24010.12-0\\\\MsMpEng.exe TargetProcessId=2412 TargetImage=C:\\\\Windows\\\\System32\\\\svchost.exe GrantedAccess=0x1410\"}, {\"record_id\": \"S04-00018\", \"ts\": \"2026-11-10T13:24:28.213Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"13\", \"raw\": \"EventID=13 EventType=SetValue ProcessId=2400 Image=C:\\\\Windows\\\\System32\\\\svchost.exe TargetObject=HKLM\\\\SYSTEM\\\\CurrentControlSet\\\\Services\\\\SharedAccess\\\\Parameters\\\\FirewallPolicy\\\\StandardProfile\\\\EnableFirewall Details=DWORD (0x00000001) User=NT AUTHORITY\\\\SYSTEM\"}, {\"record_id\": \"S04-00019\", \"ts\": \"2026-11-10T13:24:44.272Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=3412 Image=C:\\\\Windows\\\\System32\\\\winlogon.exe CommandLine=winlogon.exe CurrentDirectory=C:\\\\Windows\\\\System32\\\\ User=NT AUTHORITY\\\\SYSTEM LogonId=0x3e7 IntegrityLevel=System ParentProcessId=2256 ParentImage=C:\\\\Windows\\\\System32\\\\smss.exe ParentCommandLine=smss.exe ParentUser=NT AUTHORITY\\\\SYSTEM\"}, {\"record_id\": \"S04-00022\", \"ts\": \"2026-11-10T13:24:46.123Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=3416 Image=C:\\\\Windows\\\\System32\\\\userinit.exe CommandLine=userinit.exe CurrentDirectory=C:\\\\Windows\\\\System32\\\\ User=LAKEVIEW-ACCT\\\\raj.iyer LogonId=0xf5a1316 IntegrityLevel=Medium ParentProcessId=3412 ParentImage=C:\\\\Windows\\\\System32\\\\winlogon.exe ParentCommandLine=winlogon.exe ParentUser=NT AUTHORITY\\\\SYSTEM\"}, {\"record_id\": \"S04-00024\", \"ts\": \"2026-11-10T13:24:46.568Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=3424 Image=C:\\\\Windows\\\\explorer.exe CommandLine=explorer.exe CurrentDirectory=C:\\\\Windows\\\\ User=LAKEVIEW-ACCT\\\\raj.iyer LogonId=0xf5a1316 IntegrityLevel=Medium ParentProcessId=3416 ParentImage=C:\\\\Windows\\\\System32\\\\userinit.exe ParentCommandLine=userinit.exe ParentUser=LAKEVIEW-ACCT\\\\raj.iyer\"}, {\"record_id\": \"S04-00027\", \"ts\": \"2026-11-10T13:24:50.851Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"5\", \"raw\": \"EventID=5 ProcessId=3416 Image=C:\\\\Windows\\\\System32\\\\userinit.exe User=LAKEVIEW-ACCT\\\\raj.iyer\"}, {\"record_id\": \"S04-00031\", \"ts\": \"2026-11-10T13:26:16.531Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=2396 Image=C:\\\\Windows\\\\System32\\\\svchost.exe User=NT AUTHORITY\\\\SYSTEM Protocol=tcp Initiated=false SourceIsIpv6=false SourceIp=10.20.20.10 SourcePort=60436 DestinationIsIpv6=false DestinationIp=10.20.10.22 DestinationHostname=WS-RIYER-01.lakeview-acct.local DestinationPort=135 DestinationPortName=epmap\"}, {\"record_id\": \"S04-00048\", \"ts\": \"2026-11-10T13:29:21.091Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"5\", \"raw\": \"EventID=5 ProcessId=3372 Image=C:\\\\Windows\\\\System32\\\\wbem\\\\WmiPrvSE.exe User=NT AUTHORITY\\\\SYSTEM\"}, {\"record_id\": \"S04-00050\", \"ts\": \"2026-11-10T13:29:52.082Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=2856 Image=C:\\\\Windows\\\\System32\\\\winlogon.exe CommandLine=winlogon.exe CurrentDirectory=C:\\\\Windows\\\\System32\\\\ User=NT AUTHORITY\\\\SYSTEM LogonId=0x3e7 IntegrityLevel=System ParentProcessId=2256 ParentImage=C:\\\\Windows\\\\System32\\\\smss.exe ParentCommandLine=smss.exe ParentUser=NT AUTHORITY\\\\SYSTEM\"}, {\"record_id\": \"S04-00053\", \"ts\": \"2026-11-10T13:29:53.986Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=2860 Image=C:\\\\Windows\\\\System32\\\\userinit.exe CommandLine=userinit.exe CurrentDirectory=C:\\\\Windows\\\\System32\\\\ User=LAKEVIEW-ACCT\\\\raj.iyer LogonId=0xf5aba6f IntegrityLevel=Medium ParentProcessId=2856 ParentImage=C:\\\\Windows\\\\System32\\\\winlogon.exe ParentCommandLine=winlogon.exe ParentUser=NT AUTHORITY\\\\SYSTEM\"}, {\"record_id\": \"S04-00054\", \"ts\": \"2026-11-10T13:29:54.247Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=2864 Image=C:\\\\Windows\\\\explorer.exe CommandLine=explorer.exe CurrentDirectory=C:\\\\Windows\\\\ User=LAKEVIEW-ACCT\\\\raj.iyer LogonId=0xf5aba6f IntegrityLevel=Medium ParentProcessId=2860 ParentImage=C:\\\\Windows\\\\System32\\\\userinit.exe ParentCommandLine=userinit.exe ParentUser=LAKEVIEW-ACCT\\\\raj.iyer\"}, {\"record_id\": \"S04-00057\", \"ts\": \"2026-11-10T13:29:57.399Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"5\", \"raw\": \"EventID=5 ProcessId=2860 Image=C:\\\\Windows\\\\System32\\\\userinit.exe User=LAKEVIEW-ACCT\\\\raj.iyer\"}, {\"record_id\": \"S04-00295\", \"ts\": \"2026-11-10T14:12:28.014Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=3708 Image=C:\\\\Windows\\\\System32\\\\usoclient.exe CommandLine=usoclient.exe StartInteractiveScan CurrentDirectory=C:\\\\Windows\\\\System32\\\\ User=NT AUTHORITY\\\\SYSTEM LogonId=0x3e7 IntegrityLevel=System ParentProcessId=2488 ParentImage=C:\\\\Windows\\\\System32\\\\svchost.exe ParentCommandLine=svchost.exe -k wusvcs ParentUser=NT AUTHORITY\\\\SYSTEM\"}, {\"record_id\": \"S04-00312\", \"ts\": \"2026-11-10T14:15:35.084Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=2360 Image=C:\\\\Windows\\\\System32\\\\lsass.exe User=NT AUTHORITY\\\\SYSTEM Protocol=udp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.22 SourceHostname=WS-RIYER-01.lakeview-acct.local SourcePort=50323 DestinationIsIpv6=false DestinationIp=10.20.20.10 DestinationPort=88 DestinationPortName=kerberos\"}, {\"record_id\": \"S04-00326\", \"ts\": \"2026-11-10T14:17:29.802Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=3128 Image=C:\\\\Program Files\\\\Mozilla Firefox\\\\firefox.exe User=LAKEVIEW-ACCT\\\\raj.iyer Protocol=tcp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.22 SourceHostname=WS-RIYER-01.lakeview-acct.local SourcePort=49290 DestinationIsIpv6=false DestinationIp=10.20.20.30 DestinationPort=8080 DestinationPortName=http-alt\"}, {\"record_id\": \"S04-00332\", \"ts\": \"2026-11-10T14:17:39.540Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=2360 Image=C:\\\\Windows\\\\System32\\\\lsass.exe User=NT AUTHORITY\\\\SYSTEM Protocol=udp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.22 SourceHostname=WS-RIYER-01.lakeview-acct.local SourcePort=57903 DestinationIsIpv6=false DestinationIp=10.20.20.10 DestinationPort=88 DestinationPortName=kerberos\"}, {\"record_id\": \"S04-00333\", \"ts\": \"2026-11-10T14:17:52.817Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=3732 Image=C:\\\\Windows\\\\System32\\\\taskhostw.exe CommandLine=taskhostw.exe CurrentDirectory=C:\\\\Windows\\\\System32\\\\ User=NT AUTHORITY\\\\SYSTEM LogonId=0x3e7 IntegrityLevel=System ParentProcessId=2400 ParentImage=C:\\\\Windows\\\\System32\\\\svchost.exe ParentCommandLine=svchost.exe -k LocalSystem ParentUser=NT AUTHORITY\\\\SYSTEM\"}, {\"record_id\": \"S04-00335\", \"ts\": \"2026-11-10T14:17:56.436Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"5\", \"raw\": \"EventID=5 ProcessId=3732 Image=C:\\\\Windows\\\\System32\\\\taskhostw.exe User=NT AUTHORITY\\\\SYSTEM\"}, {\"record_id\": \"S04-00337\", \"ts\": \"2026-11-10T14:18:18.705Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=3520 Image=C:\\\\Program Files (x86)\\\\Citrix\\\\ICA Client\\\\SelfServicePlugin\\\\SelfService.exe CommandLine=\\\"C:\\\\Program Files (x86)\\\\Citrix\\\\ICA Client\\\\SelfServicePlugin\\\\SelfService.exe\\\" -showAppPicker CurrentDirectory=C:\\\\Program Files (x86)\\\\Citrix\\\\ICA Client\\\\SelfServicePlugin\\\\ User=LAKEVIEW-ACCT\\\\raj.iyer LogonId=0xf5aba6f IntegrityLevel=Medium ParentProcessId=2864 ParentImage=C:\\\\Windows\\\\explorer.exe ParentCommandLine=explorer.exe ParentUser=LAKEVIEW-ACCT\\\\raj.iyer\"}, {\"record_id\": \"S04-00338\", \"ts\": \"2026-11-10T14:18:18.777Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"7\", \"raw\": \"EventID=7 ProcessId=3520 Image=C:\\\\Program Files (x86)\\\\Citrix\\\\ICA Client\\\\SelfServicePlugin\\\\SelfService.exe ImageLoaded=C:\\\\Program Files (x86)\\\\Citrix\\\\ICA Client\\\\wfapi.dll Signed=true Signature=Cloud Software Group, Inc. SignatureStatus=Valid User=LAKEVIEW-ACCT\\\\raj.iyer\"}, {\"record_id\": \"S04-00346\", \"ts\": \"2026-11-10T14:18:45.408Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=3128 Image=C:\\\\Program Files\\\\Mozilla Firefox\\\\firefox.exe User=LAKEVIEW-ACCT\\\\raj.iyer Protocol=tcp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.22 SourceHostname=WS-RIYER-01.lakeview-acct.local SourcePort=63093 DestinationIsIpv6=false DestinationIp=10.20.20.30 DestinationPort=8080 DestinationPortName=http-alt\"}, {\"record_id\": \"S04-00357\", \"ts\": \"2026-11-10T14:18:46.956Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=3128 Image=C:\\\\Program Files\\\\Mozilla Firefox\\\\firefox.exe User=LAKEVIEW-ACCT\\\\raj.iyer Protocol=tcp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.22 SourceHostname=WS-RIYER-01.lakeview-acct.local SourcePort=62269 DestinationIsIpv6=false DestinationIp=10.20.20.30 DestinationPort=8080 DestinationPortName=http-alt\"}, {\"record_id\": \"S04-00364\", \"ts\": \"2026-11-10T14:18:47.278Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=3128 Image=C:\\\\Program Files\\\\Mozilla Firefox\\\\firefox.exe User=LAKEVIEW-ACCT\\\\raj.iyer Protocol=tcp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.22 SourceHostname=WS-RIYER-01.lakeview-acct.local SourcePort=60733 DestinationIsIpv6=false DestinationIp=10.20.20.30 DestinationPort=8080 DestinationPortName=http-alt\"}, {\"record_id\": \"S04-00365\", \"ts\": \"2026-11-10T14:18:47.449Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=3128 Image=C:\\\\Program Files\\\\Mozilla Firefox\\\\firefox.exe User=LAKEVIEW-ACCT\\\\raj.iyer Protocol=tcp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.22 SourceHostname=WS-RIYER-01.lakeview-acct.local SourcePort=50640 DestinationIsIpv6=false DestinationIp=10.20.20.30 DestinationPort=8080 DestinationPortName=http-alt\"}, {\"record_id\": \"S04-00366\", \"ts\": \"2026-11-10T14:18:47.577Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=3128 Image=C:\\\\Program Files\\\\Mozilla Firefox\\\\firefox.exe User=LAKEVIEW-ACCT\\\\raj.iyer Protocol=tcp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.22 SourceHostname=WS-RIYER-01.lakeview-acct.local SourcePort=57471 DestinationIsIpv6=false DestinationIp=10.20.20.30 DestinationPort=8080 DestinationPortName=http-alt\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:47:14.143490",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "sysmon",
+      "host": "WS-RIYER-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z",
+      "offset": 25
+     },
+     "result": "{\"total_matches\": 27, \"offset\": 25, \"returned\": 2, \"rows\": [{\"record_id\": \"S04-00367\", \"ts\": \"2026-11-10T14:19:13.383Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"5\", \"raw\": \"EventID=5 ProcessId=3708 Image=C:\\\\Windows\\\\System32\\\\usoclient.exe User=NT AUTHORITY\\\\SYSTEM\"}, {\"record_id\": \"S04-00380\", \"ts\": \"2026-11-10T14:19:59.747Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"10\", \"raw\": \"EventID=10 SourceProcessId=2412 SourceImage=C:\\\\Windows\\\\System32\\\\svchost.exe TargetProcessId=2360 TargetImage=C:\\\\Windows\\\\System32\\\\lsass.exe GrantedAccess=0x1000\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:47:17.365534",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "zeek_dns",
+      "host": "WS-RIYER-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z"
+     },
+     "result": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:47:19.766296",
+     "duration_ms": 2.003908157348633,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "zeek_conn",
+      "host": "WS-RIYER-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z"
+     },
+     "result": "{\"total_matches\": 60, \"offset\": 0, \"returned\": 25, \"rows\": [{\"record_id\": \"S04-00003\", \"ts\": \"2026-11-10T13:20:24.696Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=50055 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=1.965798 orig_bytes=4282 resp_bytes=28193 conn_state=SF\"}, {\"record_id\": \"S04-00004\", \"ts\": \"2026-11-10T13:20:53.775Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=59160 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.036295 orig_bytes=554 resp_bytes=1008 conn_state=SF\"}, {\"record_id\": \"S04-00010\", \"ts\": \"2026-11-10T13:21:27.041Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=51197 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=1.053687 orig_bytes=2821 resp_bytes=48227 conn_state=SF\"}, {\"record_id\": \"S04-00011\", \"ts\": \"2026-11-10T13:21:50.108Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"ldap\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=51096 id.resp_h=10.20.20.10 id.resp_p=389 proto=tcp service=ldap duration=2.870527 orig_bytes=618 resp_bytes=24517 conn_state=SF\"}, {\"record_id\": \"S04-00016\", \"ts\": \"2026-11-10T13:21:59.135Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=50932 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=0.941793 orig_bytes=498 resp_bytes=787 conn_state=SF\"}, {\"record_id\": \"S04-00032\", \"ts\": \"2026-11-10T13:26:38.060Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"ldap\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=56386 id.resp_h=10.20.20.10 id.resp_p=389 proto=tcp service=ldap duration=3.208557 orig_bytes=4224 resp_bytes=7371 conn_state=SF\"}, {\"record_id\": \"S04-00036\", \"ts\": \"2026-11-10T13:27:56.907Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=57461 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.016438 orig_bytes=1037 resp_bytes=1113 conn_state=SF\"}, {\"record_id\": \"S04-00042\", \"ts\": \"2026-11-10T13:27:59.021Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"smb\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=53798 id.resp_h=10.20.20.10 id.resp_p=445 proto=tcp service=smb duration=40.513236 orig_bytes=4349 resp_bytes=3325 conn_state=SF\"}, {\"record_id\": \"S04-00059\", \"ts\": \"2026-11-10T13:30:06.059Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"ldap\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=61675 id.resp_h=10.20.20.10 id.resp_p=389 proto=tcp service=ldap duration=3.789451 orig_bytes=3123 resp_bytes=11387 conn_state=SF\"}, {\"record_id\": \"S04-00078\", \"ts\": \"2026-11-10T13:33:17.584Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"ldap\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=64923 id.resp_h=10.20.20.10 id.resp_p=389 proto=tcp service=ldap duration=2.848182 orig_bytes=2375 resp_bytes=32942 conn_state=SF\"}, {\"record_id\": \"S04-00082\", \"ts\": \"2026-11-10T13:33:22.562Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=57232 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.041451 orig_bytes=1053 resp_bytes=1080 conn_state=SF\"}, {\"record_id\": \"S04-00089\", \"ts\": \"2026-11-10T13:34:23.390Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=55230 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.025988 orig_bytes=1291 resp_bytes=1026 conn_state=SF\"}, {\"record_id\": \"S04-00099\", \"ts\": \"2026-11-10T13:34:43.265Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=54499 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=6.271403 orig_bytes=3045 resp_bytes=75461 conn_state=SF\"}, {\"record_id\": \"S04-00105\", \"ts\": \"2026-11-10T13:34:48.233Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=54855 id.resp_h=10.20.20.10 id.resp_p=88 proto=tcp service=krb duration=0.035193 orig_bytes=2548 resp_bytes=23445 conn_state=SF\"}, {\"record_id\": \"S04-00112\", \"ts\": \"2026-11-10T13:34:52.918Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=61152 id.resp_h=10.20.20.10 id.resp_p=88 proto=tcp service=krb duration=0.153488 orig_bytes=922 resp_bytes=45654 conn_state=SF\"}, {\"record_id\": \"S04-00121\", \"ts\": \"2026-11-10T13:34:53.796Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=51525 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=7.443115 orig_bytes=1648 resp_bytes=20415 conn_state=SF\"}, {\"record_id\": \"S04-00122\", \"ts\": \"2026-11-10T13:34:53.797Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=57069 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=4.984189 orig_bytes=7980 resp_bytes=97592 conn_state=SF\"}, {\"record_id\": \"S04-00129\", \"ts\": \"2026-11-10T13:34:57.301Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=52859 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=1.076729 orig_bytes=427 resp_bytes=41290 conn_state=SF\"}, {\"record_id\": \"S04-00132\", \"ts\": \"2026-11-10T13:35:28.521Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=61333 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.026715 orig_bytes=710 resp_bytes=1510 conn_state=SF\"}, {\"record_id\": \"S04-00141\", \"ts\": \"2026-11-10T13:35:56.274Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=53679 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=9.47392 orig_bytes=3338 resp_bytes=2913 conn_state=SF\"}, {\"record_id\": \"S04-00145\", \"ts\": \"2026-11-10T13:40:04.533Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=57263 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.026922 orig_bytes=1086 resp_bytes=1165 conn_state=SF\"}, {\"record_id\": \"S04-00151\", \"ts\": \"2026-11-10T13:40:06.705Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"smb\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=62811 id.resp_h=10.20.20.10 id.resp_p=445 proto=tcp service=smb duration=4.07711 orig_bytes=5094 resp_bytes=6386 conn_state=SF\"}, {\"record_id\": \"S04-00158\", \"ts\": \"2026-11-10T13:40:29.634Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=58749 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=5.388503 orig_bytes=3417 resp_bytes=2860 conn_state=SF\"}, {\"record_id\": \"S04-00163\", \"ts\": \"2026-11-10T13:43:15.557Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=64771 id.resp_h=10.20.20.10 id.resp_p=88 proto=tcp service=krb duration=0.011048 orig_bytes=552 resp_bytes=1424 conn_state=SF\"}, {\"record_id\": \"S04-00168\", \"ts\": \"2026-11-10T13:43:16.391Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=58107 id.resp_h=10.20.20.10 id.resp_p=88 proto=tcp service=krb duration=0.009622 orig_bytes=1094 resp_bytes=1160 conn_state=SF\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:47:23.519463",
+     "duration_ms": 1.0027885437011719,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "zeek_conn",
+      "host": "WS-RIYER-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z",
+      "offset": 25
+     },
+     "result": "{\"total_matches\": 60, \"offset\": 25, \"returned\": 25, \"rows\": [{\"record_id\": \"S04-00173\", \"ts\": \"2026-11-10T13:43:19.023Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=61634 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.025107 orig_bytes=561 resp_bytes=901 conn_state=SF\"}, {\"record_id\": \"S04-00178\", \"ts\": \"2026-11-10T13:44:26.892Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"ldap\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=49962 id.resp_h=10.20.20.10 id.resp_p=389 proto=tcp service=ldap duration=0.829177 orig_bytes=381 resp_bytes=6504 conn_state=RSTR\"}, {\"record_id\": \"S04-00182\", \"ts\": \"2026-11-10T13:45:48.594Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"ldap\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=65007 id.resp_h=10.20.20.10 id.resp_p=389 proto=tcp service=ldap duration=3.175339 orig_bytes=3351 resp_bytes=49222 conn_state=SF\"}, {\"record_id\": \"S04-00189\", \"ts\": \"2026-11-10T13:45:50.864Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=54514 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=13.552995 orig_bytes=918 resp_bytes=35343 conn_state=SF\"}, {\"record_id\": \"S04-00192\", \"ts\": \"2026-11-10T13:46:09.421Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=58283 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=10.066394 orig_bytes=3423 resp_bytes=4022 conn_state=SF\"}, {\"record_id\": \"S04-00203\", \"ts\": \"2026-11-10T13:46:16.417Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=59760 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=0.459075 orig_bytes=465 resp_bytes=1247 conn_state=SF\"}, {\"record_id\": \"S04-00206\", \"ts\": \"2026-11-10T13:46:16.678Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"postgresql\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=56811 id.resp_h=10.20.10.24 id.resp_p=5432 proto=tcp service=postgresql duration=1.779334 orig_bytes=1739 resp_bytes=2651 conn_state=RSTR\"}, {\"record_id\": \"S04-00218\", \"ts\": \"2026-11-10T13:48:43.586Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=52226 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.027864 orig_bytes=1211 resp_bytes=1296 conn_state=SF\"}, {\"record_id\": \"S04-00223\", \"ts\": \"2026-11-10T13:49:38.582Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=62168 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.032911 orig_bytes=786 resp_bytes=962 conn_state=SF\"}, {\"record_id\": \"S04-00229\", \"ts\": \"2026-11-10T13:49:41.422Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"ldap\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=50458 id.resp_h=10.20.20.10 id.resp_p=389 proto=tcp service=ldap duration=4.721885 orig_bytes=1279 resp_bytes=9968 conn_state=SF\"}, {\"record_id\": \"S04-00236\", \"ts\": \"2026-11-10T13:50:33.427Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=55733 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=1.585392 orig_bytes=3369 resp_bytes=4355 conn_state=SF\"}, {\"record_id\": \"S04-00243\", \"ts\": \"2026-11-10T13:55:37.798Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=57798 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=8.335251 orig_bytes=3567 resp_bytes=2877 conn_state=SF\"}, {\"record_id\": \"S04-00248\", \"ts\": \"2026-11-10T13:59:22.173Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"ldap\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=51592 id.resp_h=10.20.20.10 id.resp_p=389 proto=tcp service=ldap duration=4.768594 orig_bytes=2166 resp_bytes=6700 conn_state=SF\"}, {\"record_id\": \"S04-00254\", \"ts\": \"2026-11-10T14:00:15.287Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=61881 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=4.282317 orig_bytes=3439 resp_bytes=3797 conn_state=SF\"}, {\"record_id\": \"S04-00261\", \"ts\": \"2026-11-10T14:04:29.423Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=59468 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.01564 orig_bytes=652 resp_bytes=627 conn_state=SF\"}, {\"record_id\": \"S04-00267\", \"ts\": \"2026-11-10T14:05:05.160Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=54973 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=1.143983 orig_bytes=822 resp_bytes=20460 conn_state=SF\"}, {\"record_id\": \"S04-00270\", \"ts\": \"2026-11-10T14:05:09.606Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=62310 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.032077 orig_bytes=766 resp_bytes=1464 conn_state=SF\"}, {\"record_id\": \"S04-00277\", \"ts\": \"2026-11-10T14:05:12.901Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=53718 id.resp_h=10.20.20.10 id.resp_p=88 proto=tcp service=krb duration=0.076086 orig_bytes=1394 resp_bytes=35564 conn_state=SF\"}, {\"record_id\": \"S04-00283\", \"ts\": \"2026-11-10T14:05:43.229Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=55154 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=6.642557 orig_bytes=3573 resp_bytes=4423 conn_state=SF\"}, {\"record_id\": \"S04-00290\", \"ts\": \"2026-11-10T14:08:03.242Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=63001 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.034699 orig_bytes=1190 resp_bytes=1084 conn_state=SF\"}, {\"record_id\": \"S04-00297\", \"ts\": \"2026-11-10T14:14:08.192Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=60139 id.resp_h=10.20.20.10 id.resp_p=88 proto=tcp service=krb duration=0.017377 orig_bytes=1020 resp_bytes=34833 conn_state=SF\"}, {\"record_id\": \"S04-00302\", \"ts\": \"2026-11-10T14:15:10.421Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=52993 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.01165 orig_bytes=845 resp_bytes=618 conn_state=SF\"}, {\"record_id\": \"S04-00307\", \"ts\": \"2026-11-10T14:15:34.430Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=50323 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.015264 orig_bytes=813 resp_bytes=795 conn_state=SF\"}, {\"record_id\": \"S04-00313\", \"ts\": \"2026-11-10T14:15:36.640Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=56985 id.resp_h=10.20.20.10 id.resp_p=88 proto=tcp service=krb duration=0.016235 orig_bytes=836 resp_bytes=2047 conn_state=SF\"}, {\"record_id\": \"S04-00318\", \"ts\": \"2026-11-10T14:15:40.947Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=64578 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.020634 orig_bytes=677 resp_bytes=703 conn_state=SF\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:47:25.783103",
+     "duration_ms": 2.000093460083008,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "zeek_conn",
+      "host": "WS-RIYER-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z",
+      "offset": 50
+     },
+     "result": "{\"total_matches\": 60, \"offset\": 50, \"returned\": 10, \"rows\": [{\"record_id\": \"S04-00324\", \"ts\": \"2026-11-10T14:17:29.177Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=49290 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=4.84103 orig_bytes=5299 resp_bytes=47390 conn_state=SF\"}, {\"record_id\": \"S04-00327\", \"ts\": \"2026-11-10T14:17:38.920Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=57903 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.023871 orig_bytes=946 resp_bytes=1140 conn_state=SF\"}, {\"record_id\": \"S04-00341\", \"ts\": \"2026-11-10T14:18:21.382Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=54970 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=5.266258 orig_bytes=1127 resp_bytes=65695 conn_state=SF\"}, {\"record_id\": \"S04-00342\", \"ts\": \"2026-11-10T14:18:44.813Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=63093 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=3.641994 orig_bytes=1801 resp_bytes=32243 conn_state=SF\"}, {\"record_id\": \"S04-00351\", \"ts\": \"2026-11-10T14:18:46.366Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=62269 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=1.9253 orig_bytes=1081 resp_bytes=119536 conn_state=SF\"}, {\"record_id\": \"S04-00353\", \"ts\": \"2026-11-10T14:18:46.688Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=60733 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=1.020527 orig_bytes=450 resp_bytes=3467 conn_state=SF\"}, {\"record_id\": \"S04-00355\", \"ts\": \"2026-11-10T14:18:46.854Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=50640 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=1.067744 orig_bytes=558 resp_bytes=16084 conn_state=SF\"}, {\"record_id\": \"S04-00358\", \"ts\": \"2026-11-10T14:18:46.982Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=57471 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=1.541572 orig_bytes=490 resp_bytes=328 conn_state=SF\"}, {\"record_id\": \"S04-00369\", \"ts\": \"2026-11-10T14:19:55.796Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=57449 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.024455 orig_bytes=998 resp_bytes=1328 conn_state=SF\"}, {\"record_id\": \"S04-00375\", \"ts\": \"2026-11-10T14:19:57.727Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"ldap\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=54577 id.resp_h=10.20.20.10 id.resp_p=389 proto=tcp service=ldap duration=1.944329 orig_bytes=2951 resp_bytes=6681 conn_state=SF\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:47:29.448505",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "zeek_ssl",
+      "host": "WS-RIYER-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z"
+     },
+     "result": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:47:32.247860",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "zeek_ssl",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z"
+     },
+     "result": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:47:37.196525",
+     "duration_ms": 1.043081283569336,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "proxy",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z",
+      "contains": "datagrid"
+     },
+     "result": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:47:40.769694",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "get_coverage",
+     "arguments": {},
+     "result": "{\"sensors\": [{\"sensor\": \"winsec\", \"host\": \"WS-RIYER-01\", \"window\": [\"2026-11-10T13:30:00Z\", \"2026-11-10T14:10:00Z\"], \"status\": \"not_collected\", \"reason\": \"Central log collector outage: WS-RIYER-01 Windows Event Forwarding and the proxy access-log forwarder were not ingested\"}, {\"sensor\": \"winsec\", \"host\": \"all other hosts, and the hosts above outside the listed window\", \"status\": \"ok\"}, {\"sensor\": \"sysmon\", \"host\": \"WS-RIYER-01\", \"window\": [\"2026-11-10T13:30:00Z\", \"2026-11-10T14:10:00Z\"], \"status\": \"not_collected\", \"reason\": \"Central log collector outage: WS-RIYER-01 Windows Event Forwarding and the proxy access-log forwarder were not ingested\"}, {\"sensor\": \"sysmon\", \"host\": \"all other hosts, and the hosts above outside the listed window\", \"status\": \"ok\"}, {\"sensor\": \"proxy\", \"host\": \"PROXY-LV-01\", \"window\": [\"2026-11-10T13:30:00Z\", \"2026-11-10T14:10:00Z\"], \"status\": \"not_collected\", \"reason\": \"Central log collector outage: WS-RIYER-01 Windows Event Forwarding and the proxy access-log forwarder were not ingested\"}, {\"sensor\": \"proxy\", \"host\": \"all other hosts, and the hosts above outside the listed window\", \"status\": \"ok\"}, {\"sensor\": \"zeek_conn\", \"host\": \"core SPAN (workstations, servers)\", \"status\": \"ok\"}, {\"sensor\": \"zeek_dns\", \"host\": \"core SPAN (workstations, servers)\", \"status\": \"ok\"}, {\"sensor\": \"zeek_ssl\", \"host\": \"core SPAN (workstations, servers)\", \"status\": \"ok\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "get_coverage",
+     "timestamp": "2026-11-14T21:47:44.819399",
+     "duration_ms": 2.000093460083008,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "winsec",
+      "host": "DC-LV-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z"
+     },
+     "result": "{\"total_matches\": 77, \"offset\": 0, \"returned\": 25, \"rows\": [{\"record_id\": \"S04-00001\", \"ts\": \"2026-11-10T13:20:07.062Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4634\", \"raw\": \"EventID=4634 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x11767de0 LogonType=3\"}, {\"record_id\": \"S04-00005\", \"ts\": \"2026-11-10T13:20:53.839Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=3592 Application=\\\\device\\\\harddiskvolume3\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.22 SourcePort=59160 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=30670 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S04-00006\", \"ts\": \"2026-11-10T13:20:53.845Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-2524502170-2083698576-2017048683-1009 TicketOptions=0x40810010 TicketEncryptionType=0x11 IpAddress=::ffff:10.20.10.22 IpPort=59160\"}, {\"record_id\": \"S04-00012\", \"ts\": \"2026-11-10T13:21:50.172Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=3592 Application=\\\\device\\\\harddiskvolume3\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.22 SourcePort=51096 DestAddress=10.20.20.10 DestPort=389 Protocol=6 FilterRTID=30684 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S04-00033\", \"ts\": \"2026-11-10T13:26:38.127Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=3592 Application=\\\\device\\\\harddiskvolume3\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.22 SourcePort=56386 DestAddress=10.20.20.10 DestPort=389 Protocol=6 FilterRTID=30684 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S04-00037\", \"ts\": \"2026-11-10T13:27:56.976Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=3592 Application=\\\\device\\\\harddiskvolume3\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.22 SourcePort=57461 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=30670 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S04-00040\", \"ts\": \"2026-11-10T13:27:56.978Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4768\", \"raw\": \"EventID=4768 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL TargetSid=S-1-5-21-2524502170-2083698576-2017048683-1006 ServiceName=krbtgt ServiceSid=S-1-5-21-2524502170-2083698576-2017048683-502 TicketOptions=0x40810000 TicketEncryptionType=0x12 PreAuthType=2 IpAddress=::ffff:10.20.10.22 IpPort=57461\"}, {\"record_id\": \"S04-00041\", \"ts\": \"2026-11-10T13:27:56.978Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-2524502170-2083698576-2017048683-1009 TicketOptions=0x40810000 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.22 IpPort=57461\"}, {\"record_id\": \"S04-00043\", \"ts\": \"2026-11-10T13:27:59.089Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=4 Application=System Direction=%%14592 SourceAddress=10.20.10.22 SourcePort=53798 DestAddress=10.20.20.10 DestPort=445 Protocol=6 FilterRTID=30700 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S04-00046\", \"ts\": \"2026-11-10T13:27:59.128Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4624\", \"raw\": \"EventID=4624 SubjectUserName=SYSTEM SubjectDomainName=NT AUTHORITY SubjectLogonId=0x3e7 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x11778468 LogonType=3 LogonProcessName=Kerberos AuthenticationPackageName=Kerberos WorkstationName=WS-RIYER-01 IpAddress=::ffff:10.20.10.22 IpPort=53798\"}, {\"record_id\": \"S04-00047\", \"ts\": \"2026-11-10T13:28:11.559Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4634\", \"raw\": \"EventID=4634 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x11778468 LogonType=3\"}, {\"record_id\": \"S04-00060\", \"ts\": \"2026-11-10T13:30:06.128Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=3592 Application=\\\\device\\\\harddiskvolume3\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.22 SourcePort=61675 DestAddress=10.20.20.10 DestPort=389 Protocol=6 FilterRTID=30684 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S04-00063\", \"ts\": \"2026-11-10T13:30:54.017Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4776\", \"raw\": \"EventID=4776 PackageName=MICROSOFT_AUTHENTICATION_PACKAGE_V1_0 TargetUserName=raj.iyer Workstation=FILE-LV-01\"}, {\"record_id\": \"S04-00079\", \"ts\": \"2026-11-10T13:33:17.652Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=3592 Application=\\\\device\\\\harddiskvolume3\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.22 SourcePort=64923 DestAddress=10.20.20.10 DestPort=389 Protocol=6 FilterRTID=30684 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S04-00083\", \"ts\": \"2026-11-10T13:33:22.630Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=3592 Application=\\\\device\\\\harddiskvolume3\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.22 SourcePort=57232 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=30670 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S04-00085\", \"ts\": \"2026-11-10T13:33:22.636Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4768\", \"raw\": \"EventID=4768 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL TargetSid=S-1-5-21-2524502170-2083698576-2017048683-1006 ServiceName=krbtgt ServiceSid=S-1-5-21-2524502170-2083698576-2017048683-502 TicketOptions=0x10 TicketEncryptionType=0x17 PreAuthType=2 IpAddress=::ffff:10.20.10.22 IpPort=57232\"}, {\"record_id\": \"S04-00087\", \"ts\": \"2026-11-10T13:33:22.639Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-2524502170-2083698576-2017048683-1009 TicketOptions=0x10 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.22 IpPort=57232\"}, {\"record_id\": \"S04-00090\", \"ts\": \"2026-11-10T13:34:23.459Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=3592 Application=\\\\device\\\\harddiskvolume3\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.22 SourcePort=55230 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=30670 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S04-00092\", \"ts\": \"2026-11-10T13:34:23.462Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4768\", \"raw\": \"EventID=4768 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL TargetSid=S-1-5-21-2524502170-2083698576-2017048683-1006 ServiceName=krbtgt ServiceSid=S-1-5-21-2524502170-2083698576-2017048683-502 TicketOptions=0x40810000 TicketEncryptionType=0x12 PreAuthType=2 IpAddress=::ffff:10.20.10.22 IpPort=55230\"}, {\"record_id\": \"S04-00093\", \"ts\": \"2026-11-10T13:34:23.462Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-2524502170-2083698576-2017048683-1009 TicketOptions=0x40810000 TicketEncryptionType=0x11 IpAddress=::ffff:10.20.10.22 IpPort=55230\"}, {\"record_id\": \"S04-00106\", \"ts\": \"2026-11-10T13:34:48.300Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=3592 Application=\\\\device\\\\harddiskvolume3\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.22 SourcePort=54855 DestAddress=10.20.20.10 DestPort=88 Protocol=6 FilterRTID=30669 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S04-00108\", \"ts\": \"2026-11-10T13:34:48.305Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-2524502170-2083698576-2017048683-1009 TicketOptions=0x10 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.22 IpPort=54855\"}, {\"record_id\": \"S04-00113\", \"ts\": \"2026-11-10T13:34:52.985Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=3592 Application=\\\\device\\\\harddiskvolume3\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.22 SourcePort=61152 DestAddress=10.20.20.10 DestPort=88 Protocol=6 FilterRTID=30669 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S04-00114\", \"ts\": \"2026-11-10T13:34:52.988Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-2524502170-2083698576-2017048683-1009 TicketOptions=0x10 TicketEncryptionType=0x17 IpAddress=::ffff:10.20.10.22 IpPort=61152\"}, {\"record_id\": \"S04-00116\", \"ts\": \"2026-11-10T13:34:52.991Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4768\", \"raw\": \"EventID=4768 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL TargetSid=S-1-5-21-2524502170-2083698576-2017048683-1006 ServiceName=krbtgt ServiceSid=S-1-5-21-2524502170-2083698576-2017048683-502 TicketOptions=0x40810010 TicketEncryptionType=0x12 PreAuthType=2 IpAddress=::ffff:10.20.10.22 IpPort=61152\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:47:50.436082",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "winsec",
+      "host": "DC-LV-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z",
+      "contains": "svc-reporting"
+     },
+     "result": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:47:55.936167",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "winsec",
+      "host": "DC-LV-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z",
+      "contains": "4720"
+     },
+     "result": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:48:03.472689",
+     "duration_ms": 2.002239227294922,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "winsec",
+      "host": "FILE-LV-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z"
+     },
+     "result": "{\"total_matches\": 1, \"offset\": 0, \"returned\": 1, \"rows\": [{\"record_id\": \"S04-00276\", \"ts\": \"2026-11-10T14:05:12.013Z\", \"host\": \"FILE-LV-01\", \"source\": \"winsec\", \"event_type\": \"4624\", \"raw\": \"EventID=4624 SubjectUserName=SYSTEM SubjectDomainName=NT AUTHORITY SubjectLogonId=0x3e7 TargetUserName=kim.ortega TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x5d406c5 LogonType=3 LogonProcessName=Kerberos AuthenticationPackageName=Kerberos ProcessId=0xd38 ProcessName=C:\\\\Windows\\\\System32\\\\lsass.exe IpAddress=::ffff:10.20.10.22 IpPort=56714\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:48:15.817582",
+     "duration_ms": 1.0004043579101562,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    }
+   ]
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "During the alert window, observed workstation connections in Zeek were to the internal proxy at 10.20.20.30:8080; for example, connections occurred near 13:50, 13:55, 14:00, and 14:05 UTC. These records do not identify the external HTTPS destinations.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S04-00236",
+     "S04-00243",
+     "S04-00254",
+     "S04-00267"
+    ]
+   },
+   {
+    "claim": "FILE-LV-01 recorded a network logon for kim.ortega at 14:05:12 UTC originating from 10.20.10.22; other workstation records associate that address with WS-RIYER-01. This is inconsistent with the provided practice that remote administration is performed only from WS-KORTEGA-01, but the event alone does not establish malicious access.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S04-00276",
+     "S04-00326"
+    ]
+   },
+   {
+    "claim": "Proxy records just outside the alert interval include Windows Update and Microsoft 365 destinations, but do not establish which destination generated the periodic activity during the interval.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S04-00002",
+     "S04-00009",
+     "S04-00340",
+     "S04-00345"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Coverage status reports that WS-RIYER-01 Windows event forwarding and the proxy access-log forwarder were not ingested from 13:30 to 14:10 UTC on 2026-11-10. The coverage response has no record IDs.",
+   "The queried Zeek DNS and TLS sources returned no matching records for this window; therefore they do not supply destination or TLS identity evidence.",
+   "The available Zeek connection records identify the internal proxy as the connection endpoint, not the external destination or originating application."
+  ],
+  "claims_not_established": [
+   "The external destination, domain, and TLS identity of the periodic HTTPS activity.",
+   "Whether dgupdate.exe or another process initiated the periodic connections.",
+   "Whether the kim.ortega logon from WS-RIYER-01 was authorized, and what actions followed on FILE-LV-01.",
+   "Whether the activity was malicious or benign; the missing telemetry overlaps the alert interval."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover local or buffered proxy access logs and WS-RIYER-01 endpoint logs for 13:30\u201314:10 UTC, including destination, process, and user attribution.",
+   "Review FILE-LV-01 authentication and process/audit records around 14:05 UTC; validate with kim.ortega whether the logon was expected and determine its source and subsequent activity.",
+   "Check DataGrid Analytics updater logs, executable path and signature, and update history to confirm whether dgupdate.exe made the reported connections."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 112.4,
+ "our_tool_calls": [
+  {
+   "i": 1,
+   "t": 1794714429.780569,
+   "tool": "list_sources",
+   "args": {},
+   "n_chars": 137,
+   "result_preview": "{\"sources\": [\"proxy\", \"sysmon\", \"winsec\", \"zeek_conn\", \"zeek_dns\", \"zeek_ssl\"], \"known_hosts\": [\"DC-LV-01\", \"FILE-LV-01\", \"WS-RIYER-01\"]}"
+  },
+  {
+   "i": 2,
+   "t": 1794714431.6454766,
+   "tool": "query",
+   "args": {
+    "source": "proxy",
+    "host": "WS-RIYER-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 0
+   },
+   "n_chars": 6412,
+   "result_preview": "{\"total_matches\": 15, \"offset\": 0, \"returned\": 15, \"rows\": [{\"record_id\": \"S04-00002\", \"ts\": \"2026-11-10T13:20:24.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.22 user=- CONNECT ctldl.windowsupdate.com:443 status=200 ua=\\\"Microsoft-CryptoAPI/10.0\\\" proxy_action=tunnel tunnel_cs_bytes=4009 tunnel_sc_bytes=27945 tunnel_duration_ms=1881\"}, {\"record_id\": \"S04-00009\", \"ts\": \"2026-11-10T13:21:27.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event"
+  },
+  {
+   "i": 3,
+   "t": 1794714434.1434908,
+   "tool": "query",
+   "args": {
+    "source": "sysmon",
+    "host": "WS-RIYER-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 0
+   },
+   "n_chars": 10706,
+   "result_preview": "{\"total_matches\": 27, \"offset\": 0, \"returned\": 25, \"rows\": [{\"record_id\": \"S04-00017\", \"ts\": \"2026-11-10T13:23:16.545Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"10\", \"raw\": \"EventID=10 SourceProcessId=2556 SourceImage=C:\\\\ProgramData\\\\Microsoft\\\\Windows Defender\\\\Platform\\\\4.18.24010.12-0\\\\MsMpEng.exe TargetProcessId=2412 TargetImage=C:\\\\Windows\\\\System32\\\\svchost.exe GrantedAccess=0x1410\"}, {\"record_id\": \"S04-00018\", \"ts\": \"2026-11-10T13:24:28.213Z\", \"host\": \"WS-RIYER-01\", \"so"
+  },
+  {
+   "i": 4,
+   "t": 1794714437.365535,
+   "tool": "query",
+   "args": {
+    "source": "sysmon",
+    "host": "WS-RIYER-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 25
+   },
+   "n_chars": 589,
+   "result_preview": "{\"total_matches\": 27, \"offset\": 25, \"returned\": 2, \"rows\": [{\"record_id\": \"S04-00367\", \"ts\": \"2026-11-10T14:19:13.383Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"5\", \"raw\": \"EventID=5 ProcessId=3708 Image=C:\\\\Windows\\\\System32\\\\usoclient.exe User=NT AUTHORITY\\\\SYSTEM\"}, {\"record_id\": \"S04-00380\", \"ts\": \"2026-11-10T14:19:59.747Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"10\", \"raw\": \"EventID=10 SourceProcessId=2412 SourceImage=C:\\\\Windows\\\\System32\\\\svchost.exe T"
+  },
+  {
+   "i": 5,
+   "t": 1794714439.7642927,
+   "tool": "query",
+   "args": {
+    "source": "zeek_dns",
+    "host": "WS-RIYER-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 0
+   },
+   "n_chars": 60,
+   "result_preview": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}"
+  },
+  {
+   "i": 6,
+   "t": 1794714443.519463,
+   "tool": "query",
+   "args": {
+    "source": "zeek_conn",
+    "host": "WS-RIYER-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 0
+   },
+   "n_chars": 7562,
+   "result_preview": "{\"total_matches\": 60, \"offset\": 0, \"returned\": 25, \"rows\": [{\"record_id\": \"S04-00003\", \"ts\": \"2026-11-10T13:20:24.696Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=50055 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=1.965798 orig_bytes=4282 resp_bytes=28193 conn_state=SF\"}, {\"record_id\": \"S04-00004\", \"ts\": \"2026-11-10T13:20:53.775Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"i"
+  },
+  {
+   "i": 7,
+   "t": 1794714445.7821038,
+   "tool": "query",
+   "args": {
+    "source": "zeek_conn",
+    "host": "WS-RIYER-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 25
+   },
+   "n_chars": 7562,
+   "result_preview": "{\"total_matches\": 60, \"offset\": 25, \"returned\": 25, \"rows\": [{\"record_id\": \"S04-00173\", \"ts\": \"2026-11-10T13:43:19.023Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=61634 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.025107 orig_bytes=561 resp_bytes=901 conn_state=SF\"}, {\"record_id\": \"S04-00178\", \"ts\": \"2026-11-10T13:44:26.892Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"ldap\", \"raw\": \"id.ori"
+  },
+  {
+   "i": 8,
+   "t": 1794714449.4485056,
+   "tool": "query",
+   "args": {
+    "source": "zeek_conn",
+    "host": "WS-RIYER-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 50
+   },
+   "n_chars": 3069,
+   "result_preview": "{\"total_matches\": 60, \"offset\": 50, \"returned\": 10, \"rows\": [{\"record_id\": \"S04-00324\", \"ts\": \"2026-11-10T14:17:29.177Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.22 id.orig_p=49290 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=4.84103 orig_bytes=5299 resp_bytes=47390 conn_state=SF\"}, {\"record_id\": \"S04-00327\", \"ts\": \"2026-11-10T14:17:38.920Z\", \"host\": \"WS-RIYER-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"i"
+  },
+  {
+   "i": 9,
+   "t": 1794714452.2478607,
+   "tool": "query",
+   "args": {
+    "source": "zeek_ssl",
+    "host": "WS-RIYER-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 0
+   },
+   "n_chars": 60,
+   "result_preview": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}"
+  },
+  {
+   "i": 10,
+   "t": 1794714457.1965258,
+   "tool": "query",
+   "args": {
+    "source": "zeek_ssl",
+    "host": "",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 0
+   },
+   "n_chars": 60,
+   "result_preview": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}"
+  },
+  {
+   "i": 11,
+   "t": 1794714460.7696946,
+   "tool": "query",
+   "args": {
+    "source": "proxy",
+    "host": "",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "datagrid",
+    "offset": 0
+   },
+   "n_chars": 60,
+   "result_preview": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}"
+  },
+  {
+   "i": 12,
+   "t": 1794714464.8183992,
+   "tool": "get_coverage",
+   "args": {},
+   "n_chars": 1398,
+   "result_preview": "{\"sensors\": [{\"sensor\": \"winsec\", \"host\": \"WS-RIYER-01\", \"window\": [\"2026-11-10T13:30:00Z\", \"2026-11-10T14:10:00Z\"], \"status\": \"not_collected\", \"reason\": \"Central log collector outage: WS-RIYER-01 Windows Event Forwarding and the proxy access-log forwarder were not ingested\"}, {\"sensor\": \"winsec\", \"host\": \"all other hosts, and the hosts above outside the listed window\", \"status\": \"ok\"}, {\"sensor\": \"sysmon\", \"host\": \"WS-RIYER-01\", \"window\": [\"2026-11-10T13:30:00Z\", \"2026-11-10T14:10:00Z\"], \"statu"
+  },
+  {
+   "i": 13,
+   "t": 1794714470.4360826,
+   "tool": "query",
+   "args": {
+    "source": "winsec",
+    "host": "DC-LV-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 0
+   },
+   "n_chars": 10031,
+   "result_preview": "{\"total_matches\": 77, \"offset\": 0, \"returned\": 25, \"rows\": [{\"record_id\": \"S04-00001\", \"ts\": \"2026-11-10T13:20:07.062Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4634\", \"raw\": \"EventID=4634 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x11767de0 LogonType=3\"}, {\"record_id\": \"S04-00005\", \"ts\": \"2026-11-10T13:20:53.839Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=3592 Application=\\\\device\\\\harddiskvolume3\\"
+  },
+  {
+   "i": 14,
+   "t": 1794714475.9361677,
+   "tool": "query",
+   "args": {
+    "source": "winsec",
+    "host": "DC-LV-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "svc-reporting",
+    "offset": 0
+   },
+   "n_chars": 60,
+   "result_preview": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}"
+  },
+  {
+   "i": 15,
+   "t": 1794714483.471688,
+   "tool": "query",
+   "args": {
+    "source": "winsec",
+    "host": "DC-LV-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "4720",
+    "offset": 0
+   },
+   "n_chars": 60,
+   "result_preview": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}"
+  },
+  {
+   "i": 16,
+   "t": 1794714495.8175826,
+   "tool": "query",
+   "args": {
+    "source": "winsec",
+    "host": "FILE-LV-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 0
+   },
+   "n_chars": 539,
+   "result_preview": "{\"total_matches\": 1, \"offset\": 0, \"returned\": 1, \"rows\": [{\"record_id\": \"S04-00276\", \"ts\": \"2026-11-10T14:05:12.013Z\", \"host\": \"FILE-LV-01\", \"source\": \"winsec\", \"event_type\": \"4624\", \"raw\": \"EventID=4624 SubjectUserName=SYSTEM SubjectDomainName=NT AUTHORITY SubjectLogonId=0x3e7 TargetUserName=kim.ortega TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x5d406c5 LogonType=3 LogonProcessName=Kerberos AuthenticationPackageName=Kerberos ProcessId=0xd38 ProcessName=C:\\\\Windows\\\\System32\\\\lsass.exe IpAddr"
+  }
+ ]
+}

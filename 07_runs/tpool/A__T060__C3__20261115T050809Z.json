@@ -1,0 +1,100 @@
+{
+ "run_id": "A__T060__C3__20261115T050809Z",
+ "config": "A",
+ "scenario_id": "T060",
+ "condition": "C3",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 395,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 156979,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.81,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:50:07 UTC, FILE-NWD-01 sent 640,000,237 bytes to PROXY-NWD-01 over port 8080. This supports a large client-to-proxy transfer, but does not identify the ultimate destination or show that the bytes reached an external host.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T060-00298\"]\n    },\n    {\n      \"claim\": \"At 13:49:22 UTC, the domain controller recorded a Kerberos service-ticket event for svc-archive and FILE-NWD-01$ with source IP 139.162.174.124, a public IP address.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T060-00279\"]\n    },\n    {\n      \"claim\": \"At 14:14:37 UTC, PROXY-NWD-01 connected to FILE-NWD-01 on RDP port 3389, followed by a failed network logon for svc_mgmt from PROXY-NWD-01. The failure status identifies the account as disabled.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T060-00500\", \"T060-00501\", \"T060-00503\"]\n    },\n    {\n      \"claim\": \"At 14:14:39\u201314:14:40 UTC, FILE-NWD-01 connected to PROXY-NWD-01 on SSH port 22 and attempted SMB authentication to DC-NWD-01; the domain controller recorded a failed logon for the disabled svc_mgmt account from FILE-NWD-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T060-00504\", \"T060-00505\", \"T060-00507\", \"T060-00509\"]\n    },\n    {\n      \"claim\": \"The RDP and SSH activity, and use of the disabled svc_mgmt account, are inconsistent with the stated practice that remote administration is only performed from WS-SOKAFOR-01 and that no remote-access services beyond approved services are authorized. This supports a malicious-activity finding, although it does not establish that any of these attempts succeeded.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T060-00500\", \"T060-00503\", \"T060-00504\", \"T060-00509\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"FILE-NWD-01 winsec and Sysmon collection was unavailable from 13:30 to 14:10 UTC, leaving a gap in process, logon, and execution evidence during the transfer window.\",\n    \"PROXY-NWD-01 proxy-log collection was unavailable from 13:30 to 14:10 UTC, so the proxy request destination, URL, and application-level transfer details for the large flow are not available.\",\n    \"Zeek connection telemetry was reported available, but the cited large-flow record identifies FILE-NWD-01 to the internal proxy only; it does not identify the ultimate external destination.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish that the 640,000,237 bytes were sent to an unapproved destination or that the transfer was exfiltration.\",\n    \"The evidence does not attribute the large transfer to the approved StratoSafe backup agent or confirm that it was a legitimate backup.\",\n    \"The evidence does not establish why the public IP appeared as the source of the svc-archive service-ticket event, or whether that event was part of the large transfer.\",\n    \"The evidence does not establish that the RDP, SSH, or SMB attempts succeeded, who initiated them, or whether the remote-access activity and large transfer were connected.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Recover or obtain FILE-NWD-01 process, service, authentication, and network telemetry for 13:30\u201314:10 UTC, including the process responsible for the 640 MB flow.\",\n    \"Obtain PROXY-NWD-01 request logs or equivalent records for the transfer to identify the destination host, URL, user agent, and request outcome.\",\n    \"Review StratoSafe agent logs and configuration, including whether it used the proxy and whether an upload of this size was scheduled at that time.\",\n    \"Investigate the svc-archive Kerberos event from 139.162.174.124, including related domain-controller authentication events and the source's network context.\",\n    \"Review RDP, SSH, and SMB authentication and host logs on FILE-NWD-01, PROXY-NWD-01, and DC-NWD-01 around 14:14 UTC, and determine the origin and purpose of the svc_mgmt attempts.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 59065,
+    "output": 3412,
+    "reasoning": 2346
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.81,
+  "supporting_observations": [
+   {
+    "claim": "At 13:50:07 UTC, FILE-NWD-01 sent 640,000,237 bytes to PROXY-NWD-01 over port 8080. This supports a large client-to-proxy transfer, but does not identify the ultimate destination or show that the bytes reached an external host.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T060-00298"
+    ]
+   },
+   {
+    "claim": "At 13:49:22 UTC, the domain controller recorded a Kerberos service-ticket event for svc-archive and FILE-NWD-01$ with source IP 139.162.174.124, a public IP address.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T060-00279"
+    ]
+   },
+   {
+    "claim": "At 14:14:37 UTC, PROXY-NWD-01 connected to FILE-NWD-01 on RDP port 3389, followed by a failed network logon for svc_mgmt from PROXY-NWD-01. The failure status identifies the account as disabled.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T060-00500",
+     "T060-00501",
+     "T060-00503"
+    ]
+   },
+   {
+    "claim": "At 14:14:39\u201314:14:40 UTC, FILE-NWD-01 connected to PROXY-NWD-01 on SSH port 22 and attempted SMB authentication to DC-NWD-01; the domain controller recorded a failed logon for the disabled svc_mgmt account from FILE-NWD-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T060-00504",
+     "T060-00505",
+     "T060-00507",
+     "T060-00509"
+    ]
+   },
+   {
+    "claim": "The RDP and SSH activity, and use of the disabled svc_mgmt account, are inconsistent with the stated practice that remote administration is only performed from WS-SOKAFOR-01 and that no remote-access services beyond approved services are authorized. This supports a malicious-activity finding, although it does not establish that any of these attempts succeeded.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T060-00500",
+     "T060-00503",
+     "T060-00504",
+     "T060-00509"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "FILE-NWD-01 winsec and Sysmon collection was unavailable from 13:30 to 14:10 UTC, leaving a gap in process, logon, and execution evidence during the transfer window.",
+   "PROXY-NWD-01 proxy-log collection was unavailable from 13:30 to 14:10 UTC, so the proxy request destination, URL, and application-level transfer details for the large flow are not available.",
+   "Zeek connection telemetry was reported available, but the cited large-flow record identifies FILE-NWD-01 to the internal proxy only; it does not identify the ultimate external destination."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish that the 640,000,237 bytes were sent to an unapproved destination or that the transfer was exfiltration.",
+   "The evidence does not attribute the large transfer to the approved StratoSafe backup agent or confirm that it was a legitimate backup.",
+   "The evidence does not establish why the public IP appeared as the source of the svc-archive service-ticket event, or whether that event was part of the large transfer.",
+   "The evidence does not establish that the RDP, SSH, or SMB attempts succeeded, who initiated them, or whether the remote-access activity and large transfer were connected."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Recover or obtain FILE-NWD-01 process, service, authentication, and network telemetry for 13:30\u201314:10 UTC, including the process responsible for the 640 MB flow.",
+   "Obtain PROXY-NWD-01 request logs or equivalent records for the transfer to identify the destination host, URL, user agent, and request outcome.",
+   "Review StratoSafe agent logs and configuration, including whether it used the proxy and whether an upload of this size was scheduled at that time.",
+   "Investigate the svc-archive Kerberos event from 139.162.174.124, including related domain-controller authentication events and the source's network context.",
+   "Review RDP, SSH, and SMB authentication and host logs on FILE-NWD-01, PROXY-NWD-01, and DC-NWD-01 around 14:14 UTC, and determine the origin and purpose of the svc_mgmt attempts."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 34.8
+}

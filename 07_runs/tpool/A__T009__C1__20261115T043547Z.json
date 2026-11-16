@@ -1,0 +1,84 @@
+{
+ "run_id": "A__T009__C1__20261115T043547Z",
+ "config": "A",
+ "scenario_id": "T009",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 373,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 155263,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.95,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:40 UTC, PowerShell running as maria.lopez executed Compress-Archive against \\\\\\\\FILE-HD-01\\\\Shared\\\\Clients and created C:\\\\Users\\\\maria.lopez\\\\AppData\\\\Local\\\\Temp\\\\c.zip.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T009-00160\",\n        \"T009-00161\",\n        \"T009-00162\"\n      ]\n    },\n    {\n      \"claim\": \"About six minutes later, a Firefox CONNECT tunnel to sendbox-files.io carried 51,000,000 client-to-server bytes over roughly 23 seconds; Zeek independently recorded about 51 MB of originating bytes for the corresponding proxy connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T009-00192\",\n        \"T009-00193\",\n        \"T009-00194\",\n        \"T009-00195\"\n      ]\n    },\n    {\n      \"claim\": \"The archive preparation followed by a large outbound transfer to a file-transfer-like destination not listed among the organization's approved services is strongly consistent with exfiltration of client data.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T009-00160\",\n        \"T009-00162\",\n        \"T009-00192\",\n        \"T009-00193\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and Zeek records establish the destination host and transfer volume, but do not expose the contents of the encrypted tunnel or identify the uploaded file (T009-00192, T009-00193).\",\n    \"The records show creation of c.zip but do not provide its size, hash, or contents, so they do not prove that this specific archive was the transferred payload (T009-00160, T009-00162).\",\n    \"The available evidence does not establish whether the transfer had authorization or what maria.lopez intended.\"\n  ],\n  \"claims_not_established\": [\n    \"That c.zip, or any specific client files, were the payload sent to sendbox-files.io.\",\n    \"The exact contents or sensitivity of the transferred data.\",\n    \"Whether the user had approval for this transfer or whether the activity resulted from account compromise.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine c.zip and relevant endpoint artifacts; obtain its size, hash, and contents where authorized.\",\n    \"Collect proxy/TLS inspection details, browser history, and any destination-side or service logs that could identify the uploaded object and account.\",\n    \"Review file-server access auditing for maria.lopez's reads of Shared\\\\Clients and establish which files were accessed before the archive was created.\",\n    \"Confirm with the user and relevant business owner whether the transfer was authorized; investigate the sendbox-files.io destination and related account activity.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 57375,
+    "output": 1387,
+    "reasoning": 724
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.95,
+  "supporting_observations": [
+   {
+    "claim": "At 13:40 UTC, PowerShell running as maria.lopez executed Compress-Archive against \\\\FILE-HD-01\\Shared\\Clients and created C:\\Users\\maria.lopez\\AppData\\Local\\Temp\\c.zip.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T009-00160",
+     "T009-00161",
+     "T009-00162"
+    ]
+   },
+   {
+    "claim": "About six minutes later, a Firefox CONNECT tunnel to sendbox-files.io carried 51,000,000 client-to-server bytes over roughly 23 seconds; Zeek independently recorded about 51 MB of originating bytes for the corresponding proxy connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T009-00192",
+     "T009-00193",
+     "T009-00194",
+     "T009-00195"
+    ]
+   },
+   {
+    "claim": "The archive preparation followed by a large outbound transfer to a file-transfer-like destination not listed among the organization's approved services is strongly consistent with exfiltration of client data.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T009-00160",
+     "T009-00162",
+     "T009-00192",
+     "T009-00193"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and Zeek records establish the destination host and transfer volume, but do not expose the contents of the encrypted tunnel or identify the uploaded file (T009-00192, T009-00193).",
+   "The records show creation of c.zip but do not provide its size, hash, or contents, so they do not prove that this specific archive was the transferred payload (T009-00160, T009-00162).",
+   "The available evidence does not establish whether the transfer had authorization or what maria.lopez intended."
+  ],
+  "claims_not_established": [
+   "That c.zip, or any specific client files, were the payload sent to sendbox-files.io.",
+   "The exact contents or sensitivity of the transferred data.",
+   "Whether the user had approval for this transfer or whether the activity resulted from account compromise."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine c.zip and relevant endpoint artifacts; obtain its size, hash, and contents where authorized.",
+   "Collect proxy/TLS inspection details, browser history, and any destination-side or service logs that could identify the uploaded object and account.",
+   "Review file-server access auditing for maria.lopez's reads of Shared\\Clients and establish which files were accessed before the archive was created.",
+   "Confirm with the user and relevant business owner whether the transfer was authorized; investigate the sendbox-files.io destination and related account activity."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 14.2
+}

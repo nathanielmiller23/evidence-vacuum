@@ -1,0 +1,74 @@
+{
+ "scenario_id": "T070",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:49:16 UTC, FILE-PIN-01 sent 640,000,367 bytes to PROXY-PIN-01 over HTTP; the record shows 39,193 response bytes. This is the large transfer associated with the alert.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T070-00281\"]\n    },\n    {\n      \"claim\": \"A smaller HTTP connection from FILE-PIN-01 to the proxy began shortly before the large transfer, but the available records do not identify its purpose or destination.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T070-00276\", \"T070-00281\"]\n    },\n    {\n      \"claim\": \"The transfer size is consistent with the inventory description of Vaultline backup uploads, but the available evidence does not establish that Vaultline or its approved agent produced this transfer.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T070-00281\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The connection record identifies the proxy as the network peer, but does not show the requested URL, ultimate destination, or proxy transaction details; the destination of the 640 MB transfer therefore cannot be verified from T070-00281.\",\n    \"The available network record does not attribute the transfer to a process or executable on FILE-PIN-01, so it cannot confirm or rule out the approved Vaultline agent as the source (T070-00281).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the transfer was an authorized Vaultline backup upload or data sent to an unapproved destination (T070-00281).\",\n    \"Which process, account, files, or data produced the transfer (T070-00281).\",\n    \"Whether the transfer was initiated by a legitimate scheduled job or by an unauthorized actor (T070-00281).\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Retrieve PROXY-PIN-01 access logs for the connection at 13:49:16 UTC, including URL or CONNECT target, authenticated identity, and request metadata.\",\n    \"Collect FILE-PIN-01 process creation and network attribution around 13:49 UTC, including Vaultline agent logs and job status.\",\n    \"Verify whether the Vaultline service received a corresponding upload of this size and whether it was expected at that time.\",\n    \"Identify the files or backup set associated with the transfer and verify the relevant job configuration and execution history.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:48:22 UTC, a domain-controller ticket event for svc-bkp targeting FILE-PIN-01 lists client IP 139.162.174.124. The supplied records do not link this event to the alerted transfer; review it separately. (T070-00261)\",\n    \"At 14:01 UTC, PROXY-PIN-01 attempted connections to FILE-PIN-01 on ports 22, 80, and 135 that were rejected, followed by an RDP connection recorded as successful; a later ticket event identifies emma.stone from the proxy IP. These events are not shown to be connected to the alerted transfer and warrant a separate review. (T070-00398, T070-00399, T070-00400, T070-00401, T070-00407)\",\n    \"At 13:42 and 13:48 UTC, FILE-PIN-01 generated NTLM authentication activity for emma.stone to WS-ESTONE-01. This is separate from the alerted transfer and may warrant review. (T070-00169, T070-00170, T070-00264, T070-00265)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 55193,
+    "output": 2687
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "At 13:49:16 UTC, FILE-PIN-01 sent 640,000,367 bytes to PROXY-PIN-01 over HTTP; the record shows 39,193 response bytes. This is the large transfer associated with the alert.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T070-00281"
+    ]
+   },
+   {
+    "claim": "A smaller HTTP connection from FILE-PIN-01 to the proxy began shortly before the large transfer, but the available records do not identify its purpose or destination.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T070-00276",
+     "T070-00281"
+    ]
+   },
+   {
+    "claim": "The transfer size is consistent with the inventory description of Vaultline backup uploads, but the available evidence does not establish that Vaultline or its approved agent produced this transfer.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T070-00281"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The connection record identifies the proxy as the network peer, but does not show the requested URL, ultimate destination, or proxy transaction details; the destination of the 640 MB transfer therefore cannot be verified from T070-00281.",
+   "The available network record does not attribute the transfer to a process or executable on FILE-PIN-01, so it cannot confirm or rule out the approved Vaultline agent as the source (T070-00281)."
+  ],
+  "claims_not_established": [
+   "Whether the transfer was an authorized Vaultline backup upload or data sent to an unapproved destination (T070-00281).",
+   "Which process, account, files, or data produced the transfer (T070-00281).",
+   "Whether the transfer was initiated by a legitimate scheduled job or by an unauthorized actor (T070-00281)."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Retrieve PROXY-PIN-01 access logs for the connection at 13:49:16 UTC, including URL or CONNECT target, authenticated identity, and request metadata.",
+   "Collect FILE-PIN-01 process creation and network attribution around 13:49 UTC, including Vaultline agent logs and job status.",
+   "Verify whether the Vaultline service received a corresponding upload of this size and whether it was expected at that time.",
+   "Identify the files or backup set associated with the transfer and verify the relevant job configuration and execution history."
+  ],
+  "unrelated_findings": [
+   "At 13:48:22 UTC, a domain-controller ticket event for svc-bkp targeting FILE-PIN-01 lists client IP 139.162.174.124. The supplied records do not link this event to the alerted transfer; review it separately. (T070-00261)",
+   "At 14:01 UTC, PROXY-PIN-01 attempted connections to FILE-PIN-01 on ports 22, 80, and 135 that were rejected, followed by an RDP connection recorded as successful; a later ticket event identifies emma.stone from the proxy IP. These events are not shown to be connected to the alerted transfer and warrant a separate review. (T070-00398, T070-00399, T070-00400, T070-00401, T070-00407)",
+   "At 13:42 and 13:48 UTC, FILE-PIN-01 generated NTLM authentication activity for emma.stone to WS-ESTONE-01. This is separate from the alerted transfer and may warrant review. (T070-00169, T070-00170, T070-00264, T070-00265)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 4,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 28.5
+}

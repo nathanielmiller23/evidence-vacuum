@@ -1,0 +1,93 @@
+{
+ "scenario_id": "T267",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted account was created on DC-ORC-01 as sysops, with sean.byrne recorded as the subject.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T267-00128\"]\n    },\n    {\n      \"claim\": \"About two seconds later, sysops was added to the domain Administrators group.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T267-00129\"]\n    },\n    {\n      \"claim\": \"Shortly before the account events, WS-RDIAZ-01 accepted an RDP logon for sean.byrne from 198.51.100.77; the same address had requested a Kerberos service ticket for WS-RDIAZ-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T267-00101\", \"T267-00103\", \"T267-00106\"]\n    },\n    {\n      \"claim\": \"The remote session was followed by registration of a task attributed to sean.byrne on WS-RDIAZ-01. Its encoded PowerShell arguments decode to an expression that retrieves and executes a script from http://198.51.100.77/a.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T267-00130\"]\n    },\n    {\n      \"claim\": \"The combination of the account\u2019s addition to Administrators and the preceding remote logon from an address inconsistent with the stated remote-administration practice supports treating the alerted account activity as malicious.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T267-00128\", \"T267-00129\", \"T267-00103\", \"T267-00106\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The account-management records do not include the originating client address or a process responsible for creating the account or changing group membership (T267-00128, T267-00129).\",\n    \"The account-management SubjectLogonId is recorded on the domain controller; these records do not establish a mapping between it and the endpoint session LogonId (T267-00128, T267-00106).\",\n    \"Task registration is observed, but the provided records do not show whether the task ran or what the retrieved script did (T267-00130).\"\n  ],\n  \"claims_not_established\": [\n    \"The records do not establish whether sean.byrne personally initiated the remote logon or whether the account or credentials were compromised (T267-00106, T267-00128).\",\n    \"The records do not establish whether sysops was subsequently used or whether any additional privileges or access were granted (T267-00128, T267-00129).\",\n    \"The records do not establish who controlled 198.51.100.77 or whether the task\u2019s remote script was successfully retrieved or executed (T267-00103, T267-00130).\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Investigate and preserve authentication, RDP, and endpoint telemetry for WS-RDIAZ-01 and DC-ORC-01, including attribution of the remote session and account-management actions.\",\n    \"Confirm with sean.byrne whether the remote session and creation of an administrator account were authorized; validate against any approved exception or change record.\",\n    \"Contain or disable sysops pending verification, and review its subsequent logons, group memberships, and activity.\",\n    \"Retrieve and analyze the registered task and any available proxy, network, or endpoint evidence for requests to 198.51.100.77/a.ps1.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox Update ran on WS-RDIAZ-01, although Dropbox is not listed as approved software; handle separately and do not use this alone to decide the alerted account activity (T267-00191, T267-00192).\",\n    \"WS-RDIAZ-01 accessed drive.google.com through the proxy, although Google Drive is not listed as an approved file-sharing service; review separately (T267-00219, T267-00220).\",\n    \"raul.diaz launched a .NET SDK installer from the user Temp directory; its authorization is not established here and it is separate from the sysops account activity (T267-00185, T267-00186).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 35398,
+    "output": 2222
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "The alerted account was created on DC-ORC-01 as sysops, with sean.byrne recorded as the subject.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T267-00128"
+    ]
+   },
+   {
+    "claim": "About two seconds later, sysops was added to the domain Administrators group.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T267-00129"
+    ]
+   },
+   {
+    "claim": "Shortly before the account events, WS-RDIAZ-01 accepted an RDP logon for sean.byrne from 198.51.100.77; the same address had requested a Kerberos service ticket for WS-RDIAZ-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T267-00101",
+     "T267-00103",
+     "T267-00106"
+    ]
+   },
+   {
+    "claim": "The remote session was followed by registration of a task attributed to sean.byrne on WS-RDIAZ-01. Its encoded PowerShell arguments decode to an expression that retrieves and executes a script from http://198.51.100.77/a.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T267-00130"
+    ]
+   },
+   {
+    "claim": "The combination of the account\u2019s addition to Administrators and the preceding remote logon from an address inconsistent with the stated remote-administration practice supports treating the alerted account activity as malicious.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T267-00128",
+     "T267-00129",
+     "T267-00103",
+     "T267-00106"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The account-management records do not include the originating client address or a process responsible for creating the account or changing group membership (T267-00128, T267-00129).",
+   "The account-management SubjectLogonId is recorded on the domain controller; these records do not establish a mapping between it and the endpoint session LogonId (T267-00128, T267-00106).",
+   "Task registration is observed, but the provided records do not show whether the task ran or what the retrieved script did (T267-00130)."
+  ],
+  "claims_not_established": [
+   "The records do not establish whether sean.byrne personally initiated the remote logon or whether the account or credentials were compromised (T267-00106, T267-00128).",
+   "The records do not establish whether sysops was subsequently used or whether any additional privileges or access were granted (T267-00128, T267-00129).",
+   "The records do not establish who controlled 198.51.100.77 or whether the task\u2019s remote script was successfully retrieved or executed (T267-00103, T267-00130)."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Investigate and preserve authentication, RDP, and endpoint telemetry for WS-RDIAZ-01 and DC-ORC-01, including attribution of the remote session and account-management actions.",
+   "Confirm with sean.byrne whether the remote session and creation of an administrator account were authorized; validate against any approved exception or change record.",
+   "Contain or disable sysops pending verification, and review its subsequent logons, group memberships, and activity.",
+   "Retrieve and analyze the registered task and any available proxy, network, or endpoint evidence for requests to 198.51.100.77/a.ps1."
+  ],
+  "unrelated_findings": [
+   "Dropbox Update ran on WS-RDIAZ-01, although Dropbox is not listed as approved software; handle separately and do not use this alone to decide the alerted account activity (T267-00191, T267-00192).",
+   "WS-RDIAZ-01 accessed drive.google.com through the proxy, although Google Drive is not listed as an approved file-sharing service; review separately (T267-00219, T267-00220).",
+   "raul.diaz launched a .NET SDK installer from the user Temp directory; its authorization is not established here and it is separate from the sysops account activity (T267-00185, T267-00186)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.2
+}

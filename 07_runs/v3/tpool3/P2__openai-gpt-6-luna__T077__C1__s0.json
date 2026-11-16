@@ -1,0 +1,104 @@
+{
+ "scenario_id": "T077",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted account it_support was created on the domain controller by raj.patel at 13:41:56 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T077-00062\"]\n    },\n    {\n      \"claim\": \"About two seconds after creation, it_support was added to the group recorded as Administrators.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T077-00063\"]\n    },\n    {\n      \"claim\": \"At 13:37:40 UTC, raj.patel logged on to WS-TWEBER-01 through RDP from 203.0.113.17; inventory says remote administration is only performed from WS-RPATEL-01 and there is no VPN.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T077-00049\", \"T077-00050\", \"T077-00051\"]\n    },\n    {\n      \"claim\": \"Seconds after the account creation and group addition, a task authored by raj.patel was registered on WS-TWEBER-01 to run hidden PowerShell with an encoded command that decodes to a download-and-execute expression for http://203.0.113.17/a.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T077-00064\"]\n    },\n    {\n      \"claim\": \"The account creation and group-add events name raj.patel but have logon ID 0x2eee5f2, which differs from the WS-TWEBER-01 RDP session's 0x1606abc9. The available records therefore do not establish that those domain-controller actions came from that specific RDP session.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T077-00051\", \"T077-00062\", \"T077-00063\"]\n    },\n    {\n      \"claim\": \"The combination of unauthorized-looking RDP access, a newly created account added to Administrators, and a near-immediate hidden task configured to retrieve and execute a script supports a malicious-activity finding for the alerted account activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T077-00049\", \"T077-00050\", \"T077-00051\", \"T077-00062\", \"T077-00063\", \"T077-00064\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show the scheduled task registration and its command, but do not show whether the task ran or whether the download or script execution succeeded.\",\n    \"The available records do not provide the contents or behavior of the referenced a.ps1 script.\",\n    \"The account creation and group-add events have a different logon ID from the observed RDP session, and the provided evidence does not correlate that domain-controller logon ID to a source host or session.\"\n  ],\n  \"claims_not_established\": [\n    \"Who controlled 203.0.113.17 or whether it was attacker-operated.\",\n    \"Whether raj.patel performed or authorized the account and task actions, or whether the account was compromised or the actions used another session.\",\n    \"Whether the scheduled task executed, what the downloaded script contained, or whether it caused further changes.\",\n    \"Whether it_support was subsequently used to authenticate or access resources.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Collect the full scheduled-task execution history and endpoint process, network, and file telemetry from WS-TWEBER-01 around and after 13:42 UTC.\",\n    \"Retrieve the script or preserved download, and proxy, firewall, DNS, and network records related to 203.0.113.17.\",\n    \"Correlate DC-PIN-01 logon ID 0x2eee5f2 with authentication records, source host, and session details; verify the actor and authorization with raj.patel.\",\n    \"Review the complete account attributes, group memberships, authentication history, and subsequent activity for it_support; contain or disable it pending investigation if appropriate.\",\n    \"Preserve and inspect the registered task XML and relevant endpoint and domain-controller logs.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-ESTONE-01 launched MSTSC toward WS-TWEBER-01 and supplied explicit credentials for tom.weber; the provided records show the attempt but do not establish a successful logon. Triage separately from the alerted account activity. (T077-00129, T077-00130, T077-00131)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 26993,
+    "output": 1979
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "The alerted account it_support was created on the domain controller by raj.patel at 13:41:56 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T077-00062"
+    ]
+   },
+   {
+    "claim": "About two seconds after creation, it_support was added to the group recorded as Administrators.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T077-00063"
+    ]
+   },
+   {
+    "claim": "At 13:37:40 UTC, raj.patel logged on to WS-TWEBER-01 through RDP from 203.0.113.17; inventory says remote administration is only performed from WS-RPATEL-01 and there is no VPN.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T077-00049",
+     "T077-00050",
+     "T077-00051"
+    ]
+   },
+   {
+    "claim": "Seconds after the account creation and group addition, a task authored by raj.patel was registered on WS-TWEBER-01 to run hidden PowerShell with an encoded command that decodes to a download-and-execute expression for http://203.0.113.17/a.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T077-00064"
+    ]
+   },
+   {
+    "claim": "The account creation and group-add events name raj.patel but have logon ID 0x2eee5f2, which differs from the WS-TWEBER-01 RDP session's 0x1606abc9. The available records therefore do not establish that those domain-controller actions came from that specific RDP session.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T077-00051",
+     "T077-00062",
+     "T077-00063"
+    ]
+   },
+   {
+    "claim": "The combination of unauthorized-looking RDP access, a newly created account added to Administrators, and a near-immediate hidden task configured to retrieve and execute a script supports a malicious-activity finding for the alerted account activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T077-00049",
+     "T077-00050",
+     "T077-00051",
+     "T077-00062",
+     "T077-00063",
+     "T077-00064"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show the scheduled task registration and its command, but do not show whether the task ran or whether the download or script execution succeeded.",
+   "The available records do not provide the contents or behavior of the referenced a.ps1 script.",
+   "The account creation and group-add events have a different logon ID from the observed RDP session, and the provided evidence does not correlate that domain-controller logon ID to a source host or session."
+  ],
+  "claims_not_established": [
+   "Who controlled 203.0.113.17 or whether it was attacker-operated.",
+   "Whether raj.patel performed or authorized the account and task actions, or whether the account was compromised or the actions used another session.",
+   "Whether the scheduled task executed, what the downloaded script contained, or whether it caused further changes.",
+   "Whether it_support was subsequently used to authenticate or access resources."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Collect the full scheduled-task execution history and endpoint process, network, and file telemetry from WS-TWEBER-01 around and after 13:42 UTC.",
+   "Retrieve the script or preserved download, and proxy, firewall, DNS, and network records related to 203.0.113.17.",
+   "Correlate DC-PIN-01 logon ID 0x2eee5f2 with authentication records, source host, and session details; verify the actor and authorization with raj.patel.",
+   "Review the complete account attributes, group memberships, authentication history, and subsequent activity for it_support; contain or disable it pending investigation if appropriate.",
+   "Preserve and inspect the registered task XML and relevant endpoint and domain-controller logs."
+  ],
+  "unrelated_findings": [
+   "WS-ESTONE-01 launched MSTSC toward WS-TWEBER-01 and supplied explicit credentials for tom.weber; the provided records show the attempt but do not establish a successful logon. Triage separately from the alerted account activity. (T077-00129, T077-00130, T077-00131)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.3
+}

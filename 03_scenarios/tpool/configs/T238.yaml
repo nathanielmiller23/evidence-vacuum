@@ -1,0 +1,187 @@
+version: '1.0'
+name: ev-T238
+description: Evidence Vacuum TRAINING scenario T238 (sunridge, helpdesk_temp, vb).
+environment:
+  description: Sunridge Credit Union
+  domain: sunridge.local
+  timezone:
+    default: UTC
+  proxy:
+    mode: explicit
+    listener_port: 8080
+  users:
+  - username: zoe.adams
+    full_name: Zoe Adams
+    email: zoe.adams@sunridgecu.org
+    persona: accountant
+    primary_system: WS-ZADAMS-01
+    groups:
+    - staff
+    enabled: true
+    browsing_intensity: normal
+  - username: max.fischer
+    full_name: Max Fischer
+    email: max.fischer@sunridgecu.org
+    persona: analyst
+    primary_system: WS-MFISCHER-01
+    groups:
+    - staff
+    enabled: true
+    browsing_intensity: light
+  - username: ian.doyle
+    full_name: Ian Doyle
+    email: ian.doyle@sunridgecu.org
+    persona: sysadmin
+    primary_system: WS-IDOYLE-01
+    groups:
+    - it-admins
+    - domain-admins
+    enabled: true
+    browsing_intensity: light
+  - username: lena.ward
+    full_name: Lena Ward
+    email: lena.ward@sunridgecu.org
+    persona: help_desk
+    primary_system: WS-LWARD-01
+    groups:
+    - staff
+    enabled: true
+    browsing_intensity: light
+  service_accounts:
+  - svc-store
+  - svc-ledger
+  systems:
+  - hostname: WS-ZADAMS-01
+    ip: 10.55.10.21
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: zoe.adams
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-MFISCHER-01
+    ip: 10.55.10.22
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: max.fischer
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-IDOYLE-01
+    ip: 10.55.10.23
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: ian.doyle
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-LWARD-01
+    ip: 10.55.10.24
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: lena.ward
+    services:
+    - dns-client
+    - termservice
+  - hostname: DC-SUN-01
+    ip: 10.55.20.10
+    os: Windows Server 2022
+    type: domain_controller
+    services:
+    - kerberos
+    - ldap
+    - dns
+    roles:
+    - domain_controller
+    - dns_server
+  - hostname: FILE-SUN-01
+    ip: 10.55.20.20
+    os: Windows Server 2022
+    type: server
+    services:
+    - smb
+    - dns-client
+    roles:
+    - file_server
+  - hostname: PROXY-SUN-01
+    ip: 10.55.20.30
+    os: Ubuntu 22.04 LTS
+    type: server
+    services:
+    - squid
+    - dns-client
+    roles:
+    - forward_proxy
+  network:
+    public_cidrs:
+    - 198.51.100.112/28
+    segments:
+    - name: workstations
+      cidr: 10.55.10.0/24
+      exposure: internal
+      systems:
+      - WS-ZADAMS-01
+      - WS-MFISCHER-01
+      - WS-IDOYLE-01
+      - WS-LWARD-01
+    - name: servers
+      cidr: 10.55.20.0/24
+      exposure: internal
+      systems:
+      - DC-SUN-01
+      - FILE-SUN-01
+      - PROXY-SUN-01
+    sensors:
+    - type: network
+      name: core-span
+      hostname: ZEEK-CORE
+      monitoring_segments:
+      - workstations
+      - servers
+      direction: bidirectional
+      placement: span
+      log_formats:
+      - zeek
+time_window:
+  start: '2026-10-06T13:00:00Z'
+  duration: 2h
+  warmup: 1h
+generation_seed: 8238
+baseline_activity:
+  description: Quiet afternoon
+  intensity: low
+  variation: low
+  suspicious_noise: low
+observation_profile: complete
+storyline:
+- id: logon
+  time: +38m
+  actor: lena.ward
+  system: DC-SUN-01
+  activity: Help desk console session to DC
+  events:
+  - type: logon
+    logon_type: 3
+    source_ip: 10.55.10.24
+- id: create
+  time: +42m
+  actor: lena.ward
+  system: DC-SUN-01
+  activity: Creates temporary account in contractor group
+  events:
+  - type: account_created
+    target_username: v.rwong
+  - type: group_member_added
+    group_name: Vendors
+    member_name: v.rwong
+    scope: global
+output:
+  logs:
+  - format: windows_event_security
+  - format: windows_event_sysmon
+  - format: zeek_conn
+  - format: zeek_dns
+  - format: zeek_ssl
+  - format: proxy_access
+  destination: out/T238
+  compression: false

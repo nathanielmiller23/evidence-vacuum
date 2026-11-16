@@ -1,0 +1,64 @@
+{
+ "scenario_id": "T152",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 14:18:47 UTC, a Windows 4648 event on WS-GLUND-01 records SYSTEM running PowerShell with svc-docsync as the target account and DC-MAP-01 as the target server.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T152-00037\"\n      ]\n    },\n    {\n      \"claim\": \"The event is consistent with an explicit-credential use from a help-desk workstation, whereas the provided inventory identifies svc-docsync as a DocSync job account on FILE-MAP-01. This warrants investigation but does not by itself establish malicious activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T152-00037\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Winsec and Sysmon collection were unavailable on DC-MAP-01 and FILE-MAP-01 from 13:25 to 14:20 UTC, overlapping most of the review window and the reported alert time.\",\n    \"The available evidence contains only one relevant event; it does not provide the domain-controller authentication results needed to verify repeated failures.\",\n    \"The available record does not show the PowerShell command line, the source of the credentials, or whether authentication succeeded.\"\n  ],\n  \"claims_not_established\": [\n    \"That repeated failed domain logons occurred; the available event does not record a failure result.\",\n    \"That the 4648 event was malicious or unauthorized.\",\n    \"That svc-docsync authentication succeeded, or that the password rotation and DocSync job update caused the event.\",\n    \"Who initiated or configured the PowerShell process running as SYSTEM.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover or obtain DC-MAP-01 authentication events for 13:20\u201314:20 UTC, including failed and successful logons for svc-docsync.\",\n    \"Obtain FILE-MAP-01 logs and DocSync job history for the same period, including evidence of the scheduled password rotation and manual job update.\",\n    \"Collect WS-GLUND-01 process-creation and PowerShell logs around 14:18 UTC, including command line, parent process, and task or service context.\",\n    \"Confirm whether the credential use from WS-GLUND-01 was an authorized troubleshooting or update action.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 1832,
+    "output": 1262
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "At 14:18:47 UTC, a Windows 4648 event on WS-GLUND-01 records SYSTEM running PowerShell with svc-docsync as the target account and DC-MAP-01 as the target server.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T152-00037"
+    ]
+   },
+   {
+    "claim": "The event is consistent with an explicit-credential use from a help-desk workstation, whereas the provided inventory identifies svc-docsync as a DocSync job account on FILE-MAP-01. This warrants investigation but does not by itself establish malicious activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T152-00037"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Winsec and Sysmon collection were unavailable on DC-MAP-01 and FILE-MAP-01 from 13:25 to 14:20 UTC, overlapping most of the review window and the reported alert time.",
+   "The available evidence contains only one relevant event; it does not provide the domain-controller authentication results needed to verify repeated failures.",
+   "The available record does not show the PowerShell command line, the source of the credentials, or whether authentication succeeded."
+  ],
+  "claims_not_established": [
+   "That repeated failed domain logons occurred; the available event does not record a failure result.",
+   "That the 4648 event was malicious or unauthorized.",
+   "That svc-docsync authentication succeeded, or that the password rotation and DocSync job update caused the event.",
+   "Who initiated or configured the PowerShell process running as SYSTEM."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover or obtain DC-MAP-01 authentication events for 13:20\u201314:20 UTC, including failed and successful logons for svc-docsync.",
+   "Obtain FILE-MAP-01 logs and DocSync job history for the same period, including evidence of the scheduled password rotation and manual job update.",
+   "Collect WS-GLUND-01 process-creation and PowerShell logs around 14:18 UTC, including command line, parent process, and task or service context.",
+   "Confirm whether the credential use from WS-GLUND-01 was an authorized troubleshooting or update action."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 2,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 14.1
+}

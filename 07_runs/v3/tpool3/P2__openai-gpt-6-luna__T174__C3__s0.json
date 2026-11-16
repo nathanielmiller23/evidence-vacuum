@@ -1,0 +1,87 @@
+{
+ "scenario_id": "T174",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.84,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The only PowerShell process-creation record in the supplied activity is at 13:42:53 on WS-JFROST-01, running as ali.hassan with the command to execute the organization's stated Patch-Workstations.ps1 script from FILE-MAP-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T174-00217\", \"T174-00218\"]\n    },\n    {\n      \"claim\": \"That PowerShell process launched wusa to install a Windows update package from C:\\\\Windows\\\\Temp\\\\patches; a 38,800,140-byte response through the proxy occurred immediately after the PowerShell network connection. These details are consistent with patching, but do not establish what the downloaded content was.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T174-00221\", \"T174-00222\", \"T174-00223\", \"T174-00224\"]\n    },\n    {\n      \"claim\": \"The logs show ali.hassan authenticating to WS-AHASSAN-01 from WS-JFROST-01, followed by an ali.hassan network logon to WS-JFROST-01 from WS-AHASSAN-01. This is compatible with authorized remote administration, but the records alone do not explain the authentication sequence.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T174-00185\", \"T174-00186\", \"T174-00188\", \"T174-00216\"]\n    },\n    {\n      \"claim\": \"Explorer wrote UserAssist entries on WS-JFROST-01 for Julia Frost that decode to the PowerShell executable path, at 13:32 and 14:12. These entries do not show the process command line or prove when a PowerShell process ran.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T174-00079\", \"T174-00515\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy logs for 13:30\u201314:10 UTC were not collected. The available Zeek record shows the size and timing of the proxy connection, but not its requested URL or content (T174-00220, T174-00221).\",\n    \"The supplied records do not include a Julia Frost PowerShell process-creation event corresponding to the UserAssist entries; the entries alone do not establish what she ran (T174-00079, T174-00515).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the PowerShell window Julia reported was the 13:42:53 ali.hassan patching process or a separate Julia Frost-launched process.\",\n    \"Whether the patch script and downloaded update package were authentic and unmodified; their contents, hashes, and signatures are not provided.\",\n    \"Why ali.hassan authentication activity originated from WS-JFROST-01 before the later logon from WS-AHASSAN-01.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Obtain the contents and hash/signature of the Patch-Workstations.ps1 script and the Windows update package used in this session.\",\n    \"Recover proxy request logs or equivalent upstream records for the 13:42:54 transfer to identify the destination and downloaded content.\",\n    \"Review endpoint process/session telemetry around 13:40 UTC, including console, remote-management, and logon-session details, to determine whether Julia Frost separately launched PowerShell.\",\n    \"Confirm with ali.hassan whether this patching session and the preceding authentication sequence were authorized, and whether the reported window matches that session.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox Update processes ran on WS-JFROST-01. Dropbox is not listed among approved software/services; review separately, without using this to decide the alert (T174-00226, T174-00227, T174-00308, T174-00309).\",\n    \"Traffic from 10.53.20.30, the inventory address of PROXY-MAP-01, reached WS-JFROST-01 on RDP and also attempted connections to ports 443 and 22. The records do not establish a successful remote session; review separately (T174-00074, T174-00075, T174-00076, T174-00077, T174-00078).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 76752,
+    "output": 4679
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.84,
+  "supporting_observations": [
+   {
+    "claim": "The only PowerShell process-creation record in the supplied activity is at 13:42:53 on WS-JFROST-01, running as ali.hassan with the command to execute the organization's stated Patch-Workstations.ps1 script from FILE-MAP-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T174-00217",
+     "T174-00218"
+    ]
+   },
+   {
+    "claim": "That PowerShell process launched wusa to install a Windows update package from C:\\Windows\\Temp\\patches; a 38,800,140-byte response through the proxy occurred immediately after the PowerShell network connection. These details are consistent with patching, but do not establish what the downloaded content was.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T174-00221",
+     "T174-00222",
+     "T174-00223",
+     "T174-00224"
+    ]
+   },
+   {
+    "claim": "The logs show ali.hassan authenticating to WS-AHASSAN-01 from WS-JFROST-01, followed by an ali.hassan network logon to WS-JFROST-01 from WS-AHASSAN-01. This is compatible with authorized remote administration, but the records alone do not explain the authentication sequence.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T174-00185",
+     "T174-00186",
+     "T174-00188",
+     "T174-00216"
+    ]
+   },
+   {
+    "claim": "Explorer wrote UserAssist entries on WS-JFROST-01 for Julia Frost that decode to the PowerShell executable path, at 13:32 and 14:12. These entries do not show the process command line or prove when a PowerShell process ran.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T174-00079",
+     "T174-00515"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy logs for 13:30\u201314:10 UTC were not collected. The available Zeek record shows the size and timing of the proxy connection, but not its requested URL or content (T174-00220, T174-00221).",
+   "The supplied records do not include a Julia Frost PowerShell process-creation event corresponding to the UserAssist entries; the entries alone do not establish what she ran (T174-00079, T174-00515)."
+  ],
+  "claims_not_established": [
+   "Whether the PowerShell window Julia reported was the 13:42:53 ali.hassan patching process or a separate Julia Frost-launched process.",
+   "Whether the patch script and downloaded update package were authentic and unmodified; their contents, hashes, and signatures are not provided.",
+   "Why ali.hassan authentication activity originated from WS-JFROST-01 before the later logon from WS-AHASSAN-01."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Obtain the contents and hash/signature of the Patch-Workstations.ps1 script and the Windows update package used in this session.",
+   "Recover proxy request logs or equivalent upstream records for the 13:42:54 transfer to identify the destination and downloaded content.",
+   "Review endpoint process/session telemetry around 13:40 UTC, including console, remote-management, and logon-session details, to determine whether Julia Frost separately launched PowerShell.",
+   "Confirm with ali.hassan whether this patching session and the preceding authentication sequence were authorized, and whether the reported window matches that session."
+  ],
+  "unrelated_findings": [
+   "Dropbox Update processes ran on WS-JFROST-01. Dropbox is not listed among approved software/services; review separately, without using this to decide the alert (T174-00226, T174-00227, T174-00308, T174-00309).",
+   "Traffic from 10.53.20.30, the inventory address of PROXY-MAP-01, reached WS-JFROST-01 on RDP and also attempted connections to ports 443 and 22. The records do not establish a successful remote session; review separately (T174-00074, T174-00075, T174-00076, T174-00077, T174-00078)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 46.9
+}

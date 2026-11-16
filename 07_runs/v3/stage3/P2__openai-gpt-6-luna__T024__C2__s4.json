@@ -1,0 +1,81 @@
+{
+ "scenario_id": "T024",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 4,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.87,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The supplied process-creation records after the reported time show SearchProtocolHost, GoogleDriveFS, conhost, and WmiPrvSE activity; they do not show a PowerShell process. These later records do not establish what appeared around 13:40 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T024-00276\", \"T024-00278\", \"T024-00285\", \"T024-00290\", \"T024-00292\", \"T024-00294\"]\n    },\n    {\n      \"claim\": \"At 13:44 UTC, WS-MLOPEZ-01 downloaded about 38.8 MB through the proxy from download.windowsupdate.com with a Windows Update Agent user agent. This is consistent with update activity but does not establish that PowerShell ran or who initiated it.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T024-00113\", \"T024-00115\"]\n    },\n    {\n      \"claim\": \"At 13:38:45 and 13:39:31 UTC, the domain controller recorded service tickets for FILE-HD-01$ requested by the WS-MLOPEZ-01$ machine account. The records do not establish subsequent access to FILE-HD-01 or a link to the reported PowerShell window.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T024-00067\", \"T024-00072\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records contain no process-creation telemetry from WS-MLOPEZ-01 around the reported 13:40 UTC time; the listed process records begin at 14:10 UTC (T024-00276 onward).\",\n    \"The supplied network and authentication records do not show PowerShell command lines, script contents, or the process that generated the reported window.\",\n    \"The Windows Update proxy activity is recorded after the reported time and does not identify the initiator or prove it was related to the alert (T024-00113, T024-00115).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether PowerShell actually ran on WS-MLOPEZ-01 around 13:40 UTC.\",\n    \"If it ran, its command line, script or payload, parent process, user context, and purpose.\",\n    \"Whether any activity was initiated by the authorized IT administrator from WS-OHADDAD-01 or was related to scheduled workstation patching.\",\n    \"Whether the 13:38\u201313:39 FILE-HD-01$ service tickets resulted in file-server access or relate to the alert.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Endpoint EDR or Windows process-creation and PowerShell logging for WS-MLOPEZ-01 covering at least 13:20\u201314:20 UTC, including command-line, parent-process, and script-block data if available.\",\n    \"The original help desk report details, including the observed window text, exact time, duration, and whether Maria interacted with it.\",\n    \"IT patch-deployment records and logs from WS-OHADDAD-01 and FILE-HD-01 for the interval, to determine whether a deployment reached WS-MLOPEZ-01.\",\n    \"Windows Update client and installation history for WS-MLOPEZ-01 to clarify the 13:44 UTC download.\"\n  ],\n  \"unrelated_findings\": [\n    \"Google Drive File Stream started under maria.lopez on WS-MLOPEZ-01 at 14:11 UTC. Google Drive is not among the approved services listed in the environment context; track separately, and it does not decide this alert (T024-00278, T024-00280).\",\n    \"FILE-HD-01 initiated a TCP connection to WS-MLOPEZ-01 on port 135 at 13:57 UTC; the supplied record shows an incomplete connection state and does not establish successful remote administration. Review separately rather than treating it as evidence for the alerted PowerShell activity (T024-00169, T024-00170).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 32327,
+    "output": 2120
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.87,
+  "supporting_observations": [
+   {
+    "claim": "The supplied process-creation records after the reported time show SearchProtocolHost, GoogleDriveFS, conhost, and WmiPrvSE activity; they do not show a PowerShell process. These later records do not establish what appeared around 13:40 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T024-00276",
+     "T024-00278",
+     "T024-00285",
+     "T024-00290",
+     "T024-00292",
+     "T024-00294"
+    ]
+   },
+   {
+    "claim": "At 13:44 UTC, WS-MLOPEZ-01 downloaded about 38.8 MB through the proxy from download.windowsupdate.com with a Windows Update Agent user agent. This is consistent with update activity but does not establish that PowerShell ran or who initiated it.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T024-00113",
+     "T024-00115"
+    ]
+   },
+   {
+    "claim": "At 13:38:45 and 13:39:31 UTC, the domain controller recorded service tickets for FILE-HD-01$ requested by the WS-MLOPEZ-01$ machine account. The records do not establish subsequent access to FILE-HD-01 or a link to the reported PowerShell window.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T024-00067",
+     "T024-00072"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records contain no process-creation telemetry from WS-MLOPEZ-01 around the reported 13:40 UTC time; the listed process records begin at 14:10 UTC (T024-00276 onward).",
+   "The supplied network and authentication records do not show PowerShell command lines, script contents, or the process that generated the reported window.",
+   "The Windows Update proxy activity is recorded after the reported time and does not identify the initiator or prove it was related to the alert (T024-00113, T024-00115)."
+  ],
+  "claims_not_established": [
+   "Whether PowerShell actually ran on WS-MLOPEZ-01 around 13:40 UTC.",
+   "If it ran, its command line, script or payload, parent process, user context, and purpose.",
+   "Whether any activity was initiated by the authorized IT administrator from WS-OHADDAD-01 or was related to scheduled workstation patching.",
+   "Whether the 13:38\u201313:39 FILE-HD-01$ service tickets resulted in file-server access or relate to the alert."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Endpoint EDR or Windows process-creation and PowerShell logging for WS-MLOPEZ-01 covering at least 13:20\u201314:20 UTC, including command-line, parent-process, and script-block data if available.",
+   "The original help desk report details, including the observed window text, exact time, duration, and whether Maria interacted with it.",
+   "IT patch-deployment records and logs from WS-OHADDAD-01 and FILE-HD-01 for the interval, to determine whether a deployment reached WS-MLOPEZ-01.",
+   "Windows Update client and installation history for WS-MLOPEZ-01 to clarify the 13:44 UTC download."
+  ],
+  "unrelated_findings": [
+   "Google Drive File Stream started under maria.lopez on WS-MLOPEZ-01 at 14:11 UTC. Google Drive is not among the approved services listed in the environment context; track separately, and it does not decide this alert (T024-00278, T024-00280).",
+   "FILE-HD-01 initiated a TCP connection to WS-MLOPEZ-01 on port 135 at 13:57 UTC; the supplied record shows an incomplete connection state and does not establish successful remote administration. Review separately rather than treating it as evidence for the alerted PowerShell activity (T024-00169, T024-00170)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.8
+}

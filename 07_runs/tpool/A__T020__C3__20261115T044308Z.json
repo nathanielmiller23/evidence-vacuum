@@ -1,0 +1,105 @@
+{
+ "run_id": "A__T020__C3__20261115T044308Z",
+ "config": "A",
+ "scenario_id": "T020",
+ "condition": "C3",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 515,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 207748,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.9,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The large outbound transfer is consistent with the approved CobaltVault backup: cvagent.exe ran on FILE-HD-01 as svc-bkp, and the proxy recorded approximately 640 MB sent to ingest.cobaltvault.net.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T020-00278\",\n        \"T020-00281\",\n        \"T020-00285\",\n        \"T020-00286\",\n        \"T020-00288\"\n      ]\n    },\n    {\n      \"claim\": \"Before that backup run, a PowerShell process on WS-OHADDAD-01 used explicit credentials for svc-bkp to access FILE-HD-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T020-00147\"\n      ]\n    },\n    {\n      \"claim\": \"A domain-controller service-ticket record for svc-bkp and FILE-HD-01 lists a public source IP, 23.129.64.210. This is anomalous in the stated no-VPN environment, but the record alone does not establish who or what used that address.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T020-00264\"\n      ]\n    },\n    {\n      \"claim\": \"WS-LPARK-01 established an RDP connection to FILE-HD-01, and Lucy Park successfully logged on there with an RDP logon. This is inconsistent with the stated practice that remote administration is done only from WS-OHADDAD-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T020-00342\",\n        \"T020-00344\",\n        \"T020-00349\"\n      ]\n    },\n    {\n      \"claim\": \"The available records do not show what Lucy Park did in the RDP session; the session's recorded duration extends beyond the review window.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T020-00342\",\n        \"T020-00349\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:58:44, svchost.exe running as NETWORK SERVICE set the Sysmon Operational channel's Enabled value to 1. This is a recorded configuration change, but the record does not establish its purpose.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T020-00368\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"WS-LPARK-01 winsec and Sysmon telemetry was not collected from 13:30 to 14:10 UTC because of a collection outage. This overlaps the RDP session, limiting evidence about its initiation and activity; the RDP and successful logon are independently recorded in T020-00342, T020-00344, and T020-00349.\",\n    \"The proxy and Zeek records establish the destination and transfer volume, but the available records do not identify the contents of the transferred data (T020-00285, T020-00286).\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish that the CobaltVault transfer was an exfiltration rather than the approved backup job.\",\n    \"The evidence does not establish what Lucy Park did during the RDP session, whether it was authorized as an exception, or whether it caused harm.\",\n    \"The public-IP svc-bkp ticket record does not establish that an external party authenticated to FILE-HD-01 or that the ticket request was malicious (T020-00264).\",\n    \"The records do not establish whether the PowerShell credential use, the public-IP ticket request, the backup execution, and Lucy Park's RDP session were related (T020-00147, T020-00264, T020-00278, T020-00349).\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Recover or obtain endpoint telemetry and user activity from WS-LPARK-01 for 13:30\u201314:10 UTC, including RDP client and session details.\",\n    \"Review FILE-HD-01 RDP session artifacts and account activity for Lucy Park, including commands, file access, account changes, and session termination.\",\n    \"Validate the source and legitimacy of the svc-bkp service-ticket request from 23.129.64.210 using domain-controller and network records (T020-00264).\",\n    \"Obtain CobaltVault job and audit records, including job authorization, uploaded object or dataset details, and whether this run matches the scheduled backup.\",\n    \"Review the PowerShell activity and change records on WS-OHADDAD-01 around T020-00147 to determine why svc-bkp credentials were used.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 76275,
+    "output": 3525,
+    "reasoning": 2452
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.9,
+  "supporting_observations": [
+   {
+    "claim": "The large outbound transfer is consistent with the approved CobaltVault backup: cvagent.exe ran on FILE-HD-01 as svc-bkp, and the proxy recorded approximately 640 MB sent to ingest.cobaltvault.net.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T020-00278",
+     "T020-00281",
+     "T020-00285",
+     "T020-00286",
+     "T020-00288"
+    ]
+   },
+   {
+    "claim": "Before that backup run, a PowerShell process on WS-OHADDAD-01 used explicit credentials for svc-bkp to access FILE-HD-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00147"
+    ]
+   },
+   {
+    "claim": "A domain-controller service-ticket record for svc-bkp and FILE-HD-01 lists a public source IP, 23.129.64.210. This is anomalous in the stated no-VPN environment, but the record alone does not establish who or what used that address.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00264"
+    ]
+   },
+   {
+    "claim": "WS-LPARK-01 established an RDP connection to FILE-HD-01, and Lucy Park successfully logged on there with an RDP logon. This is inconsistent with the stated practice that remote administration is done only from WS-OHADDAD-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00342",
+     "T020-00344",
+     "T020-00349"
+    ]
+   },
+   {
+    "claim": "The available records do not show what Lucy Park did in the RDP session; the session's recorded duration extends beyond the review window.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T020-00342",
+     "T020-00349"
+    ]
+   },
+   {
+    "claim": "At 13:58:44, svchost.exe running as NETWORK SERVICE set the Sysmon Operational channel's Enabled value to 1. This is a recorded configuration change, but the record does not establish its purpose.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00368"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "WS-LPARK-01 winsec and Sysmon telemetry was not collected from 13:30 to 14:10 UTC because of a collection outage. This overlaps the RDP session, limiting evidence about its initiation and activity; the RDP and successful logon are independently recorded in T020-00342, T020-00344, and T020-00349.",
+   "The proxy and Zeek records establish the destination and transfer volume, but the available records do not identify the contents of the transferred data (T020-00285, T020-00286)."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish that the CobaltVault transfer was an exfiltration rather than the approved backup job.",
+   "The evidence does not establish what Lucy Park did during the RDP session, whether it was authorized as an exception, or whether it caused harm.",
+   "The public-IP svc-bkp ticket record does not establish that an external party authenticated to FILE-HD-01 or that the ticket request was malicious (T020-00264).",
+   "The records do not establish whether the PowerShell credential use, the public-IP ticket request, the backup execution, and Lucy Park's RDP session were related (T020-00147, T020-00264, T020-00278, T020-00349)."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Recover or obtain endpoint telemetry and user activity from WS-LPARK-01 for 13:30\u201314:10 UTC, including RDP client and session details.",
+   "Review FILE-HD-01 RDP session artifacts and account activity for Lucy Park, including commands, file access, account changes, and session termination.",
+   "Validate the source and legitimacy of the svc-bkp service-ticket request from 23.129.64.210 using domain-controller and network records (T020-00264).",
+   "Obtain CobaltVault job and audit records, including job authorization, uploaded object or dataset details, and whether this run matches the scheduled backup.",
+   "Review the PowerShell activity and change records on WS-OHADDAD-01 around T020-00147 to determine why svc-bkp credentials were used."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 35.6
+}

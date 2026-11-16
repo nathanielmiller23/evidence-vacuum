@@ -1,0 +1,82 @@
+{
+ "scenario_id": "T120",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.86,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:49:52 UTC, FILE-COP-01 sent about 640 MB to the explicit proxy at 10.52.20.30:8080; the proxy returned about 39 KB. This supports that a large transfer occurred to the proxy, but does not identify its ultimate destination.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T120-00311\"\n      ]\n    },\n    {\n      \"claim\": \"A second, smaller HTTP connection from FILE-COP-01 to the same proxy occurred shortly before the large transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T120-00310\"\n      ]\n    },\n    {\n      \"claim\": \"The transfer volume is compatible with the organization's described Ironvault backup uploads, but the available record does not establish that the approved backup agent made this transfer.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T120-00311\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:49:14 UTC, the domain controller logged a Kerberos service-ticket event for svc-backup from public IP 91.219.236.174, shortly before the large transfer. This is anomalous in the stated environment, but the records do not establish that this authentication was connected to the transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T120-00298\",\n        \"T120-00311\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The network record identifies FILE-COP-01 and the explicit proxy, but does not show the proxy's external destination, URL, or transfer purpose.\",\n    \"The supplied records do not attribute the large transfer to a process, service account, or user.\",\n    \"The available evidence does not include backup-agent logs, file-access details, or contents of transferred data.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the transfer was made by the approved Ironvault backup agent or by another process.\",\n    \"Whether the transfer reached an approved backup service or an unapproved external destination.\",\n    \"Whether the svc-backup Kerberos event from the public IP is genuine, authorized, or causally related to the transfer.\",\n    \"Whether any sensitive data was transferred.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Retrieve PROXY-COP-01 logs for the 13:49:52 UTC connection, including CONNECT target or host, user, request details, and bytes transferred.\",\n    \"Obtain FILE-COP-01 endpoint or EDR process-network telemetry for the transfer, including the executable, command line, and associated account.\",\n    \"Check Ironvault agent logs and backup job status for an upload of this size and time.\",\n    \"Investigate the svc-backup Kerberos event from 91.219.236.174 against authentication, firewall, and identity records to determine its origin and legitimacy.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-SALI-01 launched mstsc.exe to FILE-COP-01 as sara.ali at 13:59:32, and the RDP connection began shortly afterward. This is outside the large transfer's observed time and conflicts with the stated practice that remote administration is only done from WS-PBECKER-01; investigate separately.\",\n    \"Supporting records: T120-00422, T120-00426, T120-00427, T120-00431.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 55342,
+    "output": 2663
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.86,
+  "supporting_observations": [
+   {
+    "claim": "At 13:49:52 UTC, FILE-COP-01 sent about 640 MB to the explicit proxy at 10.52.20.30:8080; the proxy returned about 39 KB. This supports that a large transfer occurred to the proxy, but does not identify its ultimate destination.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T120-00311"
+    ]
+   },
+   {
+    "claim": "A second, smaller HTTP connection from FILE-COP-01 to the same proxy occurred shortly before the large transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T120-00310"
+    ]
+   },
+   {
+    "claim": "The transfer volume is compatible with the organization's described Ironvault backup uploads, but the available record does not establish that the approved backup agent made this transfer.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T120-00311"
+    ]
+   },
+   {
+    "claim": "At 13:49:14 UTC, the domain controller logged a Kerberos service-ticket event for svc-backup from public IP 91.219.236.174, shortly before the large transfer. This is anomalous in the stated environment, but the records do not establish that this authentication was connected to the transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T120-00298",
+     "T120-00311"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The network record identifies FILE-COP-01 and the explicit proxy, but does not show the proxy's external destination, URL, or transfer purpose.",
+   "The supplied records do not attribute the large transfer to a process, service account, or user.",
+   "The available evidence does not include backup-agent logs, file-access details, or contents of transferred data."
+  ],
+  "claims_not_established": [
+   "Whether the transfer was made by the approved Ironvault backup agent or by another process.",
+   "Whether the transfer reached an approved backup service or an unapproved external destination.",
+   "Whether the svc-backup Kerberos event from the public IP is genuine, authorized, or causally related to the transfer.",
+   "Whether any sensitive data was transferred."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Retrieve PROXY-COP-01 logs for the 13:49:52 UTC connection, including CONNECT target or host, user, request details, and bytes transferred.",
+   "Obtain FILE-COP-01 endpoint or EDR process-network telemetry for the transfer, including the executable, command line, and associated account.",
+   "Check Ironvault agent logs and backup job status for an upload of this size and time.",
+   "Investigate the svc-backup Kerberos event from 91.219.236.174 against authentication, firewall, and identity records to determine its origin and legitimacy."
+  ],
+  "unrelated_findings": [
+   "WS-SALI-01 launched mstsc.exe to FILE-COP-01 as sara.ali at 13:59:32, and the RDP connection began shortly afterward. This is outside the large transfer's observed time and conflicts with the stated practice that remote administration is only done from WS-PBECKER-01; investigate separately.",
+   "Supporting records: T120-00422, T120-00426, T120-00427, T120-00431."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 5,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 24.1
+}

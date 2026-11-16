@@ -1,0 +1,77 @@
+{
+ "scenario_id": "T183",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.84,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:43:19 UTC, mia.santos's workstation successfully fetched a PowerShell file, u.ps1, from raw.githubusercontent.com under the bluefin-it/tools repository.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T183-00118\",\n        \"T183-00119\"\n      ]\n    },\n    {\n      \"claim\": \"About one minute later, WS-MSANTOS-01 connected to DC-BLU-01 over SMB; the DC recorded a network logon for the workstation computer account.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T183-00145\",\n        \"T183-00147\",\n        \"T183-00148\"\n      ]\n    },\n    {\n      \"claim\": \"The script download and subsequent SMB connection are suspicious in context: the reported PowerShell window was on WS-MSANTOS-01, while inventory says workstation patching is run from WS-KITO-01 against FILE-BLU-01. The available records do not link the download, PowerShell, and SMB connection as one execution.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T183-00119\",\n        \"T183-00147\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Winsec and Sysmon collection on WS-MSANTOS-01 was unavailable for the entire review window, so there is no endpoint process or logon telemetry from that workstation to confirm what PowerShell ran or who initiated the activity.\",\n    \"The proxy record establishes a successful request for u.ps1 but does not provide the script contents or establish that it was executed.\",\n    \"The SMB records establish a connection to DC-BLU-01, but do not establish what resource was accessed or whether the connection was caused by the reported PowerShell activity.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the reported PowerShell window was the process that fetched or executed u.ps1.\",\n    \"Whether u.ps1 was authorized, what it contained, or whether it performed malicious actions.\",\n    \"Whether the SMB connection to DC-BLU-01 involved remote administration or was related to the script.\",\n    \"Whether any data was accessed, changed, or exfiltrated as a result of the alerted activity.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover WS-MSANTOS-01 endpoint process, PowerShell, and security logs for 13:20\u201314:20 UTC, including any available EDR telemetry, to identify command lines, parent processes, script-block content, and execution timing.\",\n    \"Retrieve and review the exact contents and provenance of the u.ps1 file served at 13:43:19 UTC; verify whether it is an approved organizational tool.\",\n    \"Review DC-BLU-01 SMB auditing and share/object access records around 13:44:19 UTC to determine what was accessed and whether the session corresponds to the PowerShell activity.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:22 UTC, DC-BLU-01 issued Kerberos tickets for eli.brooks and WS-EBROOKS-01$ from WS-MSANTOS-01, followed by a successful network logon for eli.brooks on WS-EBROOKS-01 from that workstation. This is a separate activity to investigate and was not used to determine this alert's disposition. Records: T183-00015, T183-00017, T183-00019.\",\n    \"WS-MSANTOS-01 attempted to connect to Dropbox; one attempt returned a gateway error and a later attempt was denied by the proxy. This was not a successful connection and is separate from the alerted activity. Records: T183-00029, T183-00266.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 40498,
+    "output": 2397
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.84,
+  "supporting_observations": [
+   {
+    "claim": "At 13:43:19 UTC, mia.santos's workstation successfully fetched a PowerShell file, u.ps1, from raw.githubusercontent.com under the bluefin-it/tools repository.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T183-00118",
+     "T183-00119"
+    ]
+   },
+   {
+    "claim": "About one minute later, WS-MSANTOS-01 connected to DC-BLU-01 over SMB; the DC recorded a network logon for the workstation computer account.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T183-00145",
+     "T183-00147",
+     "T183-00148"
+    ]
+   },
+   {
+    "claim": "The script download and subsequent SMB connection are suspicious in context: the reported PowerShell window was on WS-MSANTOS-01, while inventory says workstation patching is run from WS-KITO-01 against FILE-BLU-01. The available records do not link the download, PowerShell, and SMB connection as one execution.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T183-00119",
+     "T183-00147"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Winsec and Sysmon collection on WS-MSANTOS-01 was unavailable for the entire review window, so there is no endpoint process or logon telemetry from that workstation to confirm what PowerShell ran or who initiated the activity.",
+   "The proxy record establishes a successful request for u.ps1 but does not provide the script contents or establish that it was executed.",
+   "The SMB records establish a connection to DC-BLU-01, but do not establish what resource was accessed or whether the connection was caused by the reported PowerShell activity."
+  ],
+  "claims_not_established": [
+   "Whether the reported PowerShell window was the process that fetched or executed u.ps1.",
+   "Whether u.ps1 was authorized, what it contained, or whether it performed malicious actions.",
+   "Whether the SMB connection to DC-BLU-01 involved remote administration or was related to the script.",
+   "Whether any data was accessed, changed, or exfiltrated as a result of the alerted activity."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover WS-MSANTOS-01 endpoint process, PowerShell, and security logs for 13:20\u201314:20 UTC, including any available EDR telemetry, to identify command lines, parent processes, script-block content, and execution timing.",
+   "Retrieve and review the exact contents and provenance of the u.ps1 file served at 13:43:19 UTC; verify whether it is an approved organizational tool.",
+   "Review DC-BLU-01 SMB auditing and share/object access records around 13:44:19 UTC to determine what was accessed and whether the session corresponds to the PowerShell activity."
+  ],
+  "unrelated_findings": [
+   "At 13:22 UTC, DC-BLU-01 issued Kerberos tickets for eli.brooks and WS-EBROOKS-01$ from WS-MSANTOS-01, followed by a successful network logon for eli.brooks on WS-EBROOKS-01 from that workstation. This is a separate activity to investigate and was not used to determine this alert's disposition. Records: T183-00015, T183-00017, T183-00019.",
+   "WS-MSANTOS-01 attempted to connect to Dropbox; one attempt returned a gateway error and a later attempt was denied by the proxy. This was not a successful connection and is separate from the alerted activity. Records: T183-00029, T183-00266."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 7,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.8
+}

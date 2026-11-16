@@ -1,0 +1,89 @@
+{
+ "run_id": "A__T040__C2__20261115T045514Z",
+ "config": "A",
+ "scenario_id": "T040",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 347,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 138049,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.82,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"A Kerberos service ticket request for svc-archive to FILE-NWD-01 was recorded from public IP 139.162.174.124. In the supplied environment context, there is no VPN, making this an unexplained external source for a service-account request.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T040-00193\"]\n    },\n    {\n      \"claim\": \"Help-desk user nora.blake launched Remote Desktop to FILE-NWD-01 from WS-NBLAKE-01, and the RDP connection lasted about 13 minutes. This is inconsistent with the stated practice that remote administration is only done from WS-SOKAFOR-01.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T040-00098\", \"T040-00103\", \"T040-00108\"]\n    },\n    {\n      \"claim\": \"FILE-NWD-01 sent about 640 MB of data to the explicit proxy on port 8080 shortly before the alert. The available record does not identify the ultimate destination or the process responsible.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T040-00204\"]\n    },\n    {\n      \"claim\": \"The external svc-archive ticket request, the help-desk RDP session, and the large proxy transfer occur in the same review window. Together they support escalating as suspected malicious activity, although the records do not establish that the events were directly connected.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T040-00193\", \"T040-00103\", \"T040-00204\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy connection record identifies the proxy and byte counts but does not show the HTTP host, URL, ultimate destination, or transferred content.\",\n    \"The supplied records do not attribute the large transfer to a specific process or executable.\",\n    \"The supplied evidence does not show whether the svc-archive ticket request led to a successful logon or subsequent action on FILE-NWD-01.\"\n  ],\n  \"claims_not_established\": [\n    \"That the 640 MB transfer was exfiltration rather than the approved StratoSafe backup upload.\",\n    \"That the transfer went to an unapproved service or attacker-controlled destination.\",\n    \"That the svc-archive ticket request and Nora Blake's RDP session were related to the transfer.\",\n    \"That the external ticket request was unauthorized rather than an explained but undocumented service interaction.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"PROXY-NWD-01 access logs for the transfer, including destination host, URL, user or client attribution, and request details.\",\n    \"FILE-NWD-01 process and EDR telemetry around 13:45 UTC to identify the process initiating the proxy connection and the files accessed or staged.\",\n    \"StratoSafe agent logs and service-side records to verify whether this was the expected backup job and destination.\",\n    \"Authentication and network records for 139.162.174.124, including the associated svc-archive authentication outcome and any follow-on sessions.\",\n    \"FILE-NWD-01 RDP session and activity logs for nora.blake, including actions performed during the session.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 51796,
+    "output": 2281,
+    "reasoning": 1536
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.82,
+  "supporting_observations": [
+   {
+    "claim": "A Kerberos service ticket request for svc-archive to FILE-NWD-01 was recorded from public IP 139.162.174.124. In the supplied environment context, there is no VPN, making this an unexplained external source for a service-account request.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T040-00193"
+    ]
+   },
+   {
+    "claim": "Help-desk user nora.blake launched Remote Desktop to FILE-NWD-01 from WS-NBLAKE-01, and the RDP connection lasted about 13 minutes. This is inconsistent with the stated practice that remote administration is only done from WS-SOKAFOR-01.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T040-00098",
+     "T040-00103",
+     "T040-00108"
+    ]
+   },
+   {
+    "claim": "FILE-NWD-01 sent about 640 MB of data to the explicit proxy on port 8080 shortly before the alert. The available record does not identify the ultimate destination or the process responsible.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T040-00204"
+    ]
+   },
+   {
+    "claim": "The external svc-archive ticket request, the help-desk RDP session, and the large proxy transfer occur in the same review window. Together they support escalating as suspected malicious activity, although the records do not establish that the events were directly connected.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T040-00193",
+     "T040-00103",
+     "T040-00204"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy connection record identifies the proxy and byte counts but does not show the HTTP host, URL, ultimate destination, or transferred content.",
+   "The supplied records do not attribute the large transfer to a specific process or executable.",
+   "The supplied evidence does not show whether the svc-archive ticket request led to a successful logon or subsequent action on FILE-NWD-01."
+  ],
+  "claims_not_established": [
+   "That the 640 MB transfer was exfiltration rather than the approved StratoSafe backup upload.",
+   "That the transfer went to an unapproved service or attacker-controlled destination.",
+   "That the svc-archive ticket request and Nora Blake's RDP session were related to the transfer.",
+   "That the external ticket request was unauthorized rather than an explained but undocumented service interaction."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "PROXY-NWD-01 access logs for the transfer, including destination host, URL, user or client attribution, and request details.",
+   "FILE-NWD-01 process and EDR telemetry around 13:45 UTC to identify the process initiating the proxy connection and the files accessed or staged.",
+   "StratoSafe agent logs and service-side records to verify whether this was the expected backup job and destination.",
+   "Authentication and network records for 139.162.174.124, including the associated svc-archive authentication outcome and any follow-on sessions.",
+   "FILE-NWD-01 RDP session and activity logs for nora.blake, including actions performed during the session."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 8,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.6
+}

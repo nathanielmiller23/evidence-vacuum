@@ -1,0 +1,94 @@
+{
+ "scenario_id": "T020",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 3,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.86,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:46:45 UTC, FILE-HD-01 started the approved CobaltVault agent as HARBOR-DENTAL\\\\svc-bkp with the command `--job Nightly --target https://ingest.cobaltvault.net`.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T020-00278\", \"T020-00279\"]\n    },\n    {\n      \"claim\": \"The subsequent outbound transfer went through the proxy to ingest.cobaltvault.net; the proxy and Zeek records report about 640 MB sent and only about 39 KB received. A FILE-HD-01 network event attributes the connection to the CobaltVault process.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T020-00285\", \"T020-00286\", \"T020-00288\"]\n    },\n    {\n      \"claim\": \"The destination, agent, and transfer size match the organization's stated approval for CobaltVault offsite backup, which uploads several hundred MB. This supports a benign explanation for the alerted transfer, but does not establish what data was uploaded or that the job was authorized on this occasion.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T020-00278\", \"T020-00285\", \"T020-00286\"]\n    },\n    {\n      \"claim\": \"Shortly before the transfer, the domain controller recorded a service-ticket request for svc-bkp to FILE-HD-01$ from public IP 23.129.64.210. FILE-HD-01 then logged a svc-bkp service logon and launched the CobaltVault agent under that logon ID. This timing and account association warrant investigation, but the records do not establish that the public-IP request caused the service logon or transfer.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T020-00264\", \"T020-00265\", \"T020-00278\", \"T020-00279\"]\n    },\n    {\n      \"claim\": \"Earlier, PowerShell on WS-OHADDAD-01 used explicit credentials for svc-bkp targeting FILE-HD-01. The available record does not show the command or establish a connection to the later transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T020-00147\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available records show transfer volume, destination, and process attribution, but not the uploaded files, their contents, or a backup manifest.\",\n    \"The records do not establish the origin, legitimacy, or outcome of the public-IP svc-bkp ticket request, or whether it was causally related to the local service logon and backup process.\",\n    \"The available evidence does not independently verify the CobaltVault job's schedule, authorization, or expected contents for this run.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the 640 MB consisted of expected backup data or data selected for unauthorized exfiltration.\",\n    \"Whether the svc-bkp request recorded from 23.129.64.210 was legitimate, and whether it was connected to the backup run.\",\n    \"Whether the earlier explicit-credential use of svc-bkp from WS-OHADDAD-01 was authorized or related to the transfer.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Obtain CobaltVault job and audit logs for this run, including job schedule, backup manifest, source paths, and upload result.\",\n    \"Review domain-controller and FILE-HD-01 authentication records around 13:45\u201313:47 UTC to identify the source and outcome of the svc-bkp request from 23.129.64.210.\",\n    \"Determine who initiated the PowerShell credential use on WS-OHADDAD-01 and review its command line and related session or script logs.\",\n    \"Compare the uploaded data and transfer size with prior authorized CobaltVault runs.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-LPARK-01 initiated an RDP session to FILE-HD-01 under lucy.park; this is outside the stated practice that remote administration is performed only from WS-OHADDAD-01. The session occurred after the alerted transfer and should be investigated separately. Records: T020-00342, T020-00349.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 76049,
+    "output": 3494
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.86,
+  "supporting_observations": [
+   {
+    "claim": "At 13:46:45 UTC, FILE-HD-01 started the approved CobaltVault agent as HARBOR-DENTAL\\svc-bkp with the command `--job Nightly --target https://ingest.cobaltvault.net`.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00278",
+     "T020-00279"
+    ]
+   },
+   {
+    "claim": "The subsequent outbound transfer went through the proxy to ingest.cobaltvault.net; the proxy and Zeek records report about 640 MB sent and only about 39 KB received. A FILE-HD-01 network event attributes the connection to the CobaltVault process.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00285",
+     "T020-00286",
+     "T020-00288"
+    ]
+   },
+   {
+    "claim": "The destination, agent, and transfer size match the organization's stated approval for CobaltVault offsite backup, which uploads several hundred MB. This supports a benign explanation for the alerted transfer, but does not establish what data was uploaded or that the job was authorized on this occasion.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T020-00278",
+     "T020-00285",
+     "T020-00286"
+    ]
+   },
+   {
+    "claim": "Shortly before the transfer, the domain controller recorded a service-ticket request for svc-bkp to FILE-HD-01$ from public IP 23.129.64.210. FILE-HD-01 then logged a svc-bkp service logon and launched the CobaltVault agent under that logon ID. This timing and account association warrant investigation, but the records do not establish that the public-IP request caused the service logon or transfer.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T020-00264",
+     "T020-00265",
+     "T020-00278",
+     "T020-00279"
+    ]
+   },
+   {
+    "claim": "Earlier, PowerShell on WS-OHADDAD-01 used explicit credentials for svc-bkp targeting FILE-HD-01. The available record does not show the command or establish a connection to the later transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00147"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available records show transfer volume, destination, and process attribution, but not the uploaded files, their contents, or a backup manifest.",
+   "The records do not establish the origin, legitimacy, or outcome of the public-IP svc-bkp ticket request, or whether it was causally related to the local service logon and backup process.",
+   "The available evidence does not independently verify the CobaltVault job's schedule, authorization, or expected contents for this run."
+  ],
+  "claims_not_established": [
+   "Whether the 640 MB consisted of expected backup data or data selected for unauthorized exfiltration.",
+   "Whether the svc-bkp request recorded from 23.129.64.210 was legitimate, and whether it was connected to the backup run.",
+   "Whether the earlier explicit-credential use of svc-bkp from WS-OHADDAD-01 was authorized or related to the transfer."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Obtain CobaltVault job and audit logs for this run, including job schedule, backup manifest, source paths, and upload result.",
+   "Review domain-controller and FILE-HD-01 authentication records around 13:45\u201313:47 UTC to identify the source and outcome of the svc-bkp request from 23.129.64.210.",
+   "Determine who initiated the PowerShell credential use on WS-OHADDAD-01 and review its command line and related session or script logs.",
+   "Compare the uploaded data and transfer size with prior authorized CobaltVault runs."
+  ],
+  "unrelated_findings": [
+   "WS-LPARK-01 initiated an RDP session to FILE-HD-01 under lucy.park; this is outside the stated practice that remote administration is performed only from WS-OHADDAD-01. The session occurred after the alerted transfer and should be investigated separately. Records: T020-00342, T020-00349."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 37.6
+}

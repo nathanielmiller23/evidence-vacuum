@@ -1,0 +1,76 @@
+{
+ "scenario_id": "T081",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Two failed network logons for tom.weber occurred at 13:40:58 and 13:42:24 UTC. Both were NTLM attempts from 203.0.113.17 and reported an incorrect-password substatus (0xc000006a).\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T081-00023\", \"T081-00026\"]\n    },\n    {\n      \"claim\": \"At 13:43:48 UTC, DC-PIN-01 recorded a successful network logon for tom.weber from the same source address, 203.0.113.17. This success used Kerberos, unlike the preceding failed NTLM attempts.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T081-00023\", \"T081-00026\", \"T081-00027\"]\n    },\n    {\n      \"claim\": \"The successful logon from an address not identified in the supplied asset inventory, following failed password attempts, is suspicious. The environment states there is no VPN and remote administration is only performed from WS-RPATEL-01.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T081-00023\", \"T081-00026\", \"T081-00027\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The provided records show the domain-controller authentication events but do not identify the device or person using 203.0.113.17; the successful event also has no WorkstationName field (T081-00027).\",\n    \"No network perimeter, firewall, or source-host telemetry is provided to corroborate the origin or explain how the successful logon was made (T081-00023, T081-00026, T081-00027).\"\n  ],\n  \"claims_not_established\": [\n    \"The records do not establish who controlled 203.0.113.17 or whether it corresponds to a real external system.\",\n    \"The records do not establish whether tom.weber's credentials were compromised, how the successful Kerberos logon was obtained, or what activity followed it.\",\n    \"The two failed attempts alone do not establish a password-spraying or brute-force campaign.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate the DC-PIN-01 events with firewall, network, and endpoint records to identify the source and validate the connection path.\",\n    \"Review follow-on activity for the successful logon, including domain-controller authentication events and access to other hosts or services.\",\n    \"Confirm with tom.weber and IT whether the logon was expected; if not, follow incident-response procedures for the account and investigate the source.\"\n  ],\n  \"unrelated_findings\": [\n    \"Google Drive File Stream and Dropbox clients were observed starting or present on WS-TWEBER-01, although the inventory does not approve those file-sharing services. These process records do not establish that data was transferred and do not decide the alerted authentication activity (T081-00029, T081-00030, T081-00085).\",\n    \"Cisco AnyConnect UI was launched on WS-TWEBER-01 despite the inventory stating there is no VPN; the records show the UI process and a signed module, not a VPN connection. This is separate from the alerted logons (T081-00037, T081-00038, T081-00039).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 13684,
+    "output": 1700
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "Two failed network logons for tom.weber occurred at 13:40:58 and 13:42:24 UTC. Both were NTLM attempts from 203.0.113.17 and reported an incorrect-password substatus (0xc000006a).",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T081-00023",
+     "T081-00026"
+    ]
+   },
+   {
+    "claim": "At 13:43:48 UTC, DC-PIN-01 recorded a successful network logon for tom.weber from the same source address, 203.0.113.17. This success used Kerberos, unlike the preceding failed NTLM attempts.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T081-00023",
+     "T081-00026",
+     "T081-00027"
+    ]
+   },
+   {
+    "claim": "The successful logon from an address not identified in the supplied asset inventory, following failed password attempts, is suspicious. The environment states there is no VPN and remote administration is only performed from WS-RPATEL-01.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T081-00023",
+     "T081-00026",
+     "T081-00027"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The provided records show the domain-controller authentication events but do not identify the device or person using 203.0.113.17; the successful event also has no WorkstationName field (T081-00027).",
+   "No network perimeter, firewall, or source-host telemetry is provided to corroborate the origin or explain how the successful logon was made (T081-00023, T081-00026, T081-00027)."
+  ],
+  "claims_not_established": [
+   "The records do not establish who controlled 203.0.113.17 or whether it corresponds to a real external system.",
+   "The records do not establish whether tom.weber's credentials were compromised, how the successful Kerberos logon was obtained, or what activity followed it.",
+   "The two failed attempts alone do not establish a password-spraying or brute-force campaign."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate the DC-PIN-01 events with firewall, network, and endpoint records to identify the source and validate the connection path.",
+   "Review follow-on activity for the successful logon, including domain-controller authentication events and access to other hosts or services.",
+   "Confirm with tom.weber and IT whether the logon was expected; if not, follow incident-response procedures for the account and investigate the source."
+  ],
+  "unrelated_findings": [
+   "Google Drive File Stream and Dropbox clients were observed starting or present on WS-TWEBER-01, although the inventory does not approve those file-sharing services. These process records do not establish that data was transferred and do not decide the alerted authentication activity (T081-00029, T081-00030, T081-00085).",
+   "Cisco AnyConnect UI was launched on WS-TWEBER-01 despite the inventory stating there is no VPN; the records show the UI process and a signed module, not a VPN connection. This is separate from the alerted logons (T081-00037, T081-00038, T081-00039)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 8,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 16.7
+}

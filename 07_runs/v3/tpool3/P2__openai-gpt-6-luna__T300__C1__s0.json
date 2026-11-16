@@ -1,0 +1,84 @@
+{
+ "scenario_id": "T300",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The large transfer is recorded from FILE-ORC-01 through the explicit proxy: Zeek reports 640,000,424 bytes sent in an HTTP connection, and the proxy records a 640,000,000-byte upload to ingest.keystone-backup.net.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T300-00267\",\n        \"T300-00269\"\n      ]\n    },\n    {\n      \"claim\": \"The transfer is attributed to C:\\\\Program Files\\\\Keystone\\\\agent.exe, running as ORCHARD\\\\svc-safe with the command line specifying the Nightly job and the Keystone ingest target.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T300-00261\",\n        \"T300-00264\",\n        \"T300-00268\",\n        \"T300-00271\"\n      ]\n    },\n    {\n      \"claim\": \"The destination is keystone-backup.net, which the supplied inventory identifies as the approved offsite backup service; the inventory also describes the Keystone agent as uploading several hundred MB. This matches the observed destination, process, and transfer size.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T300-00261\",\n        \"T300-00267\",\n        \"T300-00269\"\n      ]\n    },\n    {\n      \"claim\": \"The transfer records occur at 13:48 UTC, later than the alert\u2019s approximate 13:46 UTC time.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T300-00261\",\n        \"T300-00262\",\n        \"T300-00267\",\n        \"T300-00269\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records the destination and byte counts, but these records do not reveal the contents of the uploaded data. Relevant records: T300-00262, T300-00263, T300-00267, T300-00269.\",\n    \"The proxy records the user field as '-', so it does not independently identify the authenticated application user; process telemetry attributes the transfer to the Keystone agent running as svc-safe. Relevant records: T300-00262, T300-00264, T300-00268, T300-00269.\",\n    \"The supplied records do not establish why the alert timestamp is approximately 13:46 UTC when the large transfer is logged at 13:48 UTC. Relevant records: T300-00267, T300-00269.\"\n  ],\n  \"claims_not_established\": [\n    \"The exact files or data included in the backup upload are not established by the available records.\",\n    \"The logs do not establish whether the backup contents were expected for this particular run, beyond the supplied inventory context that the approved Keystone agent uploads several hundred MB.\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [],\n  \"unrelated_findings\": [\n    \"Separate ticket: At 13:33 UTC, FILE-ORC-01 made a proxy connection to updates.paloaltonetworks.com with a GlobalProtect user agent. The inventory says there is no VPN and no remote-access services are approved; the record alone does not establish whether this was an active remote-access session. Record: T300-00143.\",\n    \"Separate ticket: tess.hart initiated an RDP connection from WS-THART-01 to FILE-ORC-01 and logged on interactively. This is outside the stated remote-administration practice, which permits remote administration only from WS-SBYRNE-01. Records: T300-00470, T300-00479, T300-00482.\",\n    \"Separate ticket: PowerShell on WS-ACOLE-01 used explicit credentials for svc-safe to access FILE-ORC-01. The available record does not show the command or establish the purpose of this credential use. Record: T300-00349.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 81396,
+    "output": 1887
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "The large transfer is recorded from FILE-ORC-01 through the explicit proxy: Zeek reports 640,000,424 bytes sent in an HTTP connection, and the proxy records a 640,000,000-byte upload to ingest.keystone-backup.net.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T300-00267",
+     "T300-00269"
+    ]
+   },
+   {
+    "claim": "The transfer is attributed to C:\\Program Files\\Keystone\\agent.exe, running as ORCHARD\\svc-safe with the command line specifying the Nightly job and the Keystone ingest target.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T300-00261",
+     "T300-00264",
+     "T300-00268",
+     "T300-00271"
+    ]
+   },
+   {
+    "claim": "The destination is keystone-backup.net, which the supplied inventory identifies as the approved offsite backup service; the inventory also describes the Keystone agent as uploading several hundred MB. This matches the observed destination, process, and transfer size.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T300-00261",
+     "T300-00267",
+     "T300-00269"
+    ]
+   },
+   {
+    "claim": "The transfer records occur at 13:48 UTC, later than the alert\u2019s approximate 13:46 UTC time.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T300-00261",
+     "T300-00262",
+     "T300-00267",
+     "T300-00269"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records the destination and byte counts, but these records do not reveal the contents of the uploaded data. Relevant records: T300-00262, T300-00263, T300-00267, T300-00269.",
+   "The proxy records the user field as '-', so it does not independently identify the authenticated application user; process telemetry attributes the transfer to the Keystone agent running as svc-safe. Relevant records: T300-00262, T300-00264, T300-00268, T300-00269.",
+   "The supplied records do not establish why the alert timestamp is approximately 13:46 UTC when the large transfer is logged at 13:48 UTC. Relevant records: T300-00267, T300-00269."
+  ],
+  "claims_not_established": [
+   "The exact files or data included in the backup upload are not established by the available records.",
+   "The logs do not establish whether the backup contents were expected for this particular run, beyond the supplied inventory context that the approved Keystone agent uploads several hundred MB."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [],
+  "unrelated_findings": [
+   "Separate ticket: At 13:33 UTC, FILE-ORC-01 made a proxy connection to updates.paloaltonetworks.com with a GlobalProtect user agent. The inventory says there is no VPN and no remote-access services are approved; the record alone does not establish whether this was an active remote-access session. Record: T300-00143.",
+   "Separate ticket: tess.hart initiated an RDP connection from WS-THART-01 to FILE-ORC-01 and logged on interactively. This is outside the stated remote-administration practice, which permits remote administration only from WS-SBYRNE-01. Records: T300-00470, T300-00479, T300-00482.",
+   "Separate ticket: PowerShell on WS-ACOLE-01 used explicit credentials for svc-safe to access FILE-ORC-01. The available record does not show the command or establish the purpose of this credential use. Record: T300-00349."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.6
+}

@@ -1,0 +1,92 @@
+{
+ "scenario_id": "T044",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6.1-sol",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:39:57 UTC, sam.okafor authenticated to WS-ICHEN-01 with a type-3 network logon from WS-SOKAFOR-01, source IP 10.40.10.23, receiving logon ID 0x9ab2f6f.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T044-00069\"]\n    },\n    {\n      \"claim\": \"At 13:42:01 UTC, PowerShell PID 4720 ran as NWD\\\\sam.okafor in that same logon session, executing powershell.exe -NoProfile -ExecutionPolicy Bypass -File \\\\\\\\FILE-NWD-01\\\\Admin\\\\Apply-Updates.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T044-00069\", \"T044-00084\", \"T044-00085\"]\n    },\n    {\n      \"claim\": \"The administrator identity, originating workstation, script path, and business-hours timing match the workstation-patching practice supplied in the environment context. This supports an authorized-maintenance explanation for the alerted PowerShell activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T044-00069\", \"T044-00084\", \"T044-00085\"]\n    },\n    {\n      \"claim\": \"PowerShell PID 4720 connected to 10.40.20.30:8080. Contemporaneous proxy telemetry reports a successful tunnel to download.windowsupdate.com with 38,800,000 server-to-client bytes; connection telemetry records a similar inbound volume.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T044-00086\", \"T044-00087\", \"T044-00088\", \"T044-00089\"]\n    },\n    {\n      \"claim\": \"PowerShell spawned wusa.exe to process C:\\\\Windows\\\\Temp\\\\patches\\\\windows11-kb5047001-x64.msu with /quiet /norestart. PowerShell terminated at 13:42:47 UTC, approximately 46 seconds after starting, consistent with the reported brief window.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T044-00084\", \"T044-00090\", \"T044-00091\", \"T044-00095\", \"T044-00096\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Process records identify the script path and installer command but do not expose script contents, package integrity, or installation results (T044-00084, T044-00090, T044-00092).\",\n    \"The Windows Update proxy record describes a CONNECT tunnel rather than decrypted payload contents and lacks a client source port; association with PowerShell is supported by timing and matching traffic volume rather than a shared proxy connection identifier (T044-00086 through T044-00089).\"\n  ],\n  \"claims_not_established\": [\n    \"Successful patch installation is not established by the installer launch and termination records (T044-00090 through T044-00093).\",\n    \"The records do not directly establish that the logged PowerShell process was the exact window the user saw, although its timing and short lifetime support that explanation (T044-00084, T044-00095).\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [],\n  \"unrelated_findings\": [\n    \"Separate policy-review ticket: ivy.chen launched Firefox to https://customer.cloud.com/Citrix/StoreWeb/ and retrieved the portal and resource-list endpoint. This is outside the approved remote-access services described in the inventory; these records do not establish a remote session or a connection to the earlier PowerShell activity (T044-00163, T044-00172, T044-00189).\",\n    \"Separate process-review ticket: Webex.exe launched under ivy.chen with an app.slack.com URL, an unusual application/URL pairing. A loaded WebexHost.dll had a valid Cisco signature, but this does not establish the executable's integrity or maliciousness (T044-00168 through T044-00170).\",\n    \"Separate network-review ticket: DC-NWD-01 attempted connections to WS-ICHEN-01 on ports 8080, 443, 445, and 135 around 13:51 UTC. Connection records show REJ or S0 states and zero payload bytes; they do not establish successful remote administration or a relationship to the alerted PowerShell execution (T044-00127 through T044-00134).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 52793,
+    "output": 1007
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "At 13:39:57 UTC, sam.okafor authenticated to WS-ICHEN-01 with a type-3 network logon from WS-SOKAFOR-01, source IP 10.40.10.23, receiving logon ID 0x9ab2f6f.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T044-00069"
+    ]
+   },
+   {
+    "claim": "At 13:42:01 UTC, PowerShell PID 4720 ran as NWD\\sam.okafor in that same logon session, executing powershell.exe -NoProfile -ExecutionPolicy Bypass -File \\\\FILE-NWD-01\\Admin\\Apply-Updates.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T044-00069",
+     "T044-00084",
+     "T044-00085"
+    ]
+   },
+   {
+    "claim": "The administrator identity, originating workstation, script path, and business-hours timing match the workstation-patching practice supplied in the environment context. This supports an authorized-maintenance explanation for the alerted PowerShell activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T044-00069",
+     "T044-00084",
+     "T044-00085"
+    ]
+   },
+   {
+    "claim": "PowerShell PID 4720 connected to 10.40.20.30:8080. Contemporaneous proxy telemetry reports a successful tunnel to download.windowsupdate.com with 38,800,000 server-to-client bytes; connection telemetry records a similar inbound volume.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T044-00086",
+     "T044-00087",
+     "T044-00088",
+     "T044-00089"
+    ]
+   },
+   {
+    "claim": "PowerShell spawned wusa.exe to process C:\\Windows\\Temp\\patches\\windows11-kb5047001-x64.msu with /quiet /norestart. PowerShell terminated at 13:42:47 UTC, approximately 46 seconds after starting, consistent with the reported brief window.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T044-00084",
+     "T044-00090",
+     "T044-00091",
+     "T044-00095",
+     "T044-00096"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Process records identify the script path and installer command but do not expose script contents, package integrity, or installation results (T044-00084, T044-00090, T044-00092).",
+   "The Windows Update proxy record describes a CONNECT tunnel rather than decrypted payload contents and lacks a client source port; association with PowerShell is supported by timing and matching traffic volume rather than a shared proxy connection identifier (T044-00086 through T044-00089)."
+  ],
+  "claims_not_established": [
+   "Successful patch installation is not established by the installer launch and termination records (T044-00090 through T044-00093).",
+   "The records do not directly establish that the logged PowerShell process was the exact window the user saw, although its timing and short lifetime support that explanation (T044-00084, T044-00095)."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [],
+  "unrelated_findings": [
+   "Separate policy-review ticket: ivy.chen launched Firefox to https://customer.cloud.com/Citrix/StoreWeb/ and retrieved the portal and resource-list endpoint. This is outside the approved remote-access services described in the inventory; these records do not establish a remote session or a connection to the earlier PowerShell activity (T044-00163, T044-00172, T044-00189).",
+   "Separate process-review ticket: Webex.exe launched under ivy.chen with an app.slack.com URL, an unusual application/URL pairing. A loaded WebexHost.dll had a valid Cisco signature, but this does not establish the executable's integrity or maliciousness (T044-00168 through T044-00170).",
+   "Separate network-review ticket: DC-NWD-01 attempted connections to WS-ICHEN-01 on ports 8080, 443, 445, and 135 around 13:51 UTC. Connection records show REJ or S0 states and zero payload bytes; they do not establish successful remote administration or a relationship to the alerted PowerShell execution (T044-00127 through T044-00134)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 16,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 13.7
+}

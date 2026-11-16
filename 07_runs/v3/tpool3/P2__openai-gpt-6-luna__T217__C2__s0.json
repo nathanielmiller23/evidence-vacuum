@@ -1,0 +1,88 @@
+{
+ "scenario_id": "T217",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded creation of BLUEFIN\\\\svc_update by ken.ito at 13:47:22 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T217-00108\"]\n    },\n    {\n      \"claim\": \"One second later, svc_update was added to the domain Administrators group.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T217-00109\"]\n    },\n    {\n      \"claim\": \"Shortly before the account changes, ken.ito logged on interactively to WS-EBROOKS-01 by RDP from 203.0.113.133. The inventory says remote administration is only from WS-KITO-01, and there is no VPN.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T217-00074\", \"T217-00075\", \"T217-00076\"]\n    },\n    {\n      \"claim\": \"During ken.ito's WS-EBROOKS-01 session, a scheduled task named HealthCheck was registered to run hidden PowerShell with an encoded command that decodes to fetching and invoking a script from http://203.0.113.133/a.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T217-00110\"]\n    },\n    {\n      \"claim\": \"Creating an account named svc_update and granting it Administrators membership is inconsistent with the stated help-desk practice for temporary accounts, while the scheduled svc-inventory password rotation does not explain this account or its administrator membership.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T217-00108\", \"T217-00109\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not show whether the HealthCheck task executed or whether its encoded command successfully retrieved a script.\",\n    \"The supplied records do not establish who controlled the credentials used for the ken.ito logons.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish the identity of the person or system behind 203.0.113.133.\",\n    \"The evidence does not show what svc_update was intended to do, whether it was used after creation, or whether it remains enabled.\",\n    \"The account-creation records identify ken.ito as the subject, but do not by themselves establish whether ken.ito personally performed or authorized the activity.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and review DC-BLU-01 account, group-membership, and logon auditing around the creation event, including the session associated with SubjectLogonId 0x13c41799.\",\n    \"Collect the full RDP authentication and network-path records for the connection from 203.0.113.133, and verify whether it can be tied to WS-KITO-01 or an approved administration method.\",\n    \"Retrieve the HealthCheck task's subsequent execution history, PowerShell logs, and network/proxy records for access to 203.0.113.133/a.ps1.\",\n    \"Review svc_update's current account state, group memberships, logons, and resource access; disable or contain it pending validation.\"\n  ],\n  \"unrelated_findings\": [\n    \"eli.brooks launched msi_update.exe from the user's Temp directory on WS-EBROOKS-01; investigate separately and do not use this observation to decide the svc_update alert. (T217-00130, T217-00131)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 36776,
+    "output": 1823
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded creation of BLUEFIN\\svc_update by ken.ito at 13:47:22 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T217-00108"
+    ]
+   },
+   {
+    "claim": "One second later, svc_update was added to the domain Administrators group.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T217-00109"
+    ]
+   },
+   {
+    "claim": "Shortly before the account changes, ken.ito logged on interactively to WS-EBROOKS-01 by RDP from 203.0.113.133. The inventory says remote administration is only from WS-KITO-01, and there is no VPN.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T217-00074",
+     "T217-00075",
+     "T217-00076"
+    ]
+   },
+   {
+    "claim": "During ken.ito's WS-EBROOKS-01 session, a scheduled task named HealthCheck was registered to run hidden PowerShell with an encoded command that decodes to fetching and invoking a script from http://203.0.113.133/a.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T217-00110"
+    ]
+   },
+   {
+    "claim": "Creating an account named svc_update and granting it Administrators membership is inconsistent with the stated help-desk practice for temporary accounts, while the scheduled svc-inventory password rotation does not explain this account or its administrator membership.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T217-00108",
+     "T217-00109"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not show whether the HealthCheck task executed or whether its encoded command successfully retrieved a script.",
+   "The supplied records do not establish who controlled the credentials used for the ken.ito logons."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish the identity of the person or system behind 203.0.113.133.",
+   "The evidence does not show what svc_update was intended to do, whether it was used after creation, or whether it remains enabled.",
+   "The account-creation records identify ken.ito as the subject, but do not by themselves establish whether ken.ito personally performed or authorized the activity."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and review DC-BLU-01 account, group-membership, and logon auditing around the creation event, including the session associated with SubjectLogonId 0x13c41799.",
+   "Collect the full RDP authentication and network-path records for the connection from 203.0.113.133, and verify whether it can be tied to WS-KITO-01 or an approved administration method.",
+   "Retrieve the HealthCheck task's subsequent execution history, PowerShell logs, and network/proxy records for access to 203.0.113.133/a.ps1.",
+   "Review svc_update's current account state, group memberships, logons, and resource access; disable or contain it pending validation."
+  ],
+  "unrelated_findings": [
+   "eli.brooks launched msi_update.exe from the user's Temp directory on WS-EBROOKS-01; investigate separately and do not use this observation to decide the svc_update alert. (T217-00130, T217-00131)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 8,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 19.9
+}

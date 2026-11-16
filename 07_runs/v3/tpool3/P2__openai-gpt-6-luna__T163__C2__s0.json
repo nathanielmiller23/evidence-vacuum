@@ -1,0 +1,99 @@
+{
+ "scenario_id": "T163",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:46:07 UTC, WINWORD.EXE opened C:\\\\Users\\\\julia.frost\\\\Downloads\\\\Statement.docm and spawned PowerShell with no profile, a hidden-window option, and an encoded command. The command decodes to downloading and executing a script from raw.githubusercontent.com/maplehill-it/tools/main/u.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T163-00155\",\n        \"T163-00159\",\n        \"T163-00160\"\n      ]\n    },\n    {\n      \"claim\": \"The PowerShell process made proxy traffic to raw.githubusercontent.com, and the proxy recorded a successful GET for the same u.ps1 path.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T163-00162\",\n        \"T163-00164\",\n        \"T163-00167\",\n        \"T163-00168\"\n      ]\n    },\n    {\n      \"claim\": \"PowerShell then launched rundll32.exe to invoke C:\\\\Users\\\\julia.frost\\\\AppData\\\\Roaming\\\\svchelper.dll,Init. This sequence is strongly indicative of malicious execution on the alerted workstation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T163-00161\",\n        \"T163-00165\"\n      ]\n    },\n    {\n      \"claim\": \"The PowerShell process ended at 13:46:44 UTC, about 37 seconds after it started.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T163-00159\",\n        \"T163-00176\",\n        \"T163-00177\"\n      ]\n    },\n    {\n      \"claim\": \"The reported time is not an exact match to the logged PowerShell execution: at 13:40:08 UTC the recorded user-launched process was Chrome opening a Webex URL, and the proxy denied that connection at 13:41:08 UTC. The PowerShell process is logged at 13:46:07 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T163-00105\",\n        \"T163-00110\",\n        \"T163-00159\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records show the encoded PowerShell command and a successful proxy GET, but do not include the fetched script's contents or a hash to verify what was served. (T163-00159, T163-00164)\",\n    \"The records show rundll32 invoking svchelper.dll but do not include the DLL's contents, signature, or hash. (T163-00161, T163-00165)\",\n    \"The supplied evidence does not establish whether the user saw a PowerShell window; the logged command includes a hidden-window option. (T163-00159, T163-00160)\",\n    \"The logged PowerShell start is approximately six minutes after the reported time, so the records do not establish that it was the exact window Julia noticed around 13:40 UTC. (T163-00105, T163-00159)\"\n  ],\n  \"claims_not_established\": [\n    \"The content or behavior of the downloaded u.ps1 script.\",\n    \"Whether the downloaded DLL was successfully loaded and what actions it performed.\",\n    \"Whether Julia intentionally opened the document or was aware of the resulting execution.\",\n    \"Whether the PowerShell event at 13:46 UTC was the specific brief window reported around 13:40 UTC.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire Statement.docm, u.ps1, and svchelper.dll from the workstation or backups; preserve hashes and analyze their contents.\",\n    \"Review endpoint protection detections, quarantine records, and available process/module telemetry for the document, PowerShell process, script, and DLL.\",\n    \"Review the workstation's browser and email/download provenance for Statement.docm and the user's account activity around the execution.\",\n    \"Confirm with Julia the precise time and circumstances of the reported window.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:51:36 UTC, the workstation contacted clients4.google.com with a GoogleDriveFS user agent; Google Drive is not among the approved file-sharing or cloud-storage services in the supplied inventory. Track separately; it does not determine this alert. (T163-00222)\",\n    \"At 14:19:14 UTC, the workstation contacted desktop.dropbox.com with a DropboxUpdate user agent; Dropbox is not among the approved file-sharing or cloud-storage services in the supplied inventory. Track separately; it does not determine this alert. (T163-00323)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 50956,
+    "output": 2590
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "At 13:46:07 UTC, WINWORD.EXE opened C:\\Users\\julia.frost\\Downloads\\Statement.docm and spawned PowerShell with no profile, a hidden-window option, and an encoded command. The command decodes to downloading and executing a script from raw.githubusercontent.com/maplehill-it/tools/main/u.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T163-00155",
+     "T163-00159",
+     "T163-00160"
+    ]
+   },
+   {
+    "claim": "The PowerShell process made proxy traffic to raw.githubusercontent.com, and the proxy recorded a successful GET for the same u.ps1 path.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T163-00162",
+     "T163-00164",
+     "T163-00167",
+     "T163-00168"
+    ]
+   },
+   {
+    "claim": "PowerShell then launched rundll32.exe to invoke C:\\Users\\julia.frost\\AppData\\Roaming\\svchelper.dll,Init. This sequence is strongly indicative of malicious execution on the alerted workstation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T163-00161",
+     "T163-00165"
+    ]
+   },
+   {
+    "claim": "The PowerShell process ended at 13:46:44 UTC, about 37 seconds after it started.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T163-00159",
+     "T163-00176",
+     "T163-00177"
+    ]
+   },
+   {
+    "claim": "The reported time is not an exact match to the logged PowerShell execution: at 13:40:08 UTC the recorded user-launched process was Chrome opening a Webex URL, and the proxy denied that connection at 13:41:08 UTC. The PowerShell process is logged at 13:46:07 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T163-00105",
+     "T163-00110",
+     "T163-00159"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records show the encoded PowerShell command and a successful proxy GET, but do not include the fetched script's contents or a hash to verify what was served. (T163-00159, T163-00164)",
+   "The records show rundll32 invoking svchelper.dll but do not include the DLL's contents, signature, or hash. (T163-00161, T163-00165)",
+   "The supplied evidence does not establish whether the user saw a PowerShell window; the logged command includes a hidden-window option. (T163-00159, T163-00160)",
+   "The logged PowerShell start is approximately six minutes after the reported time, so the records do not establish that it was the exact window Julia noticed around 13:40 UTC. (T163-00105, T163-00159)"
+  ],
+  "claims_not_established": [
+   "The content or behavior of the downloaded u.ps1 script.",
+   "Whether the downloaded DLL was successfully loaded and what actions it performed.",
+   "Whether Julia intentionally opened the document or was aware of the resulting execution.",
+   "Whether the PowerShell event at 13:46 UTC was the specific brief window reported around 13:40 UTC."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire Statement.docm, u.ps1, and svchelper.dll from the workstation or backups; preserve hashes and analyze their contents.",
+   "Review endpoint protection detections, quarantine records, and available process/module telemetry for the document, PowerShell process, script, and DLL.",
+   "Review the workstation's browser and email/download provenance for Statement.docm and the user's account activity around the execution.",
+   "Confirm with Julia the precise time and circumstances of the reported window."
+  ],
+  "unrelated_findings": [
+   "At 13:51:36 UTC, the workstation contacted clients4.google.com with a GoogleDriveFS user agent; Google Drive is not among the approved file-sharing or cloud-storage services in the supplied inventory. Track separately; it does not determine this alert. (T163-00222)",
+   "At 14:19:14 UTC, the workstation contacted desktop.dropbox.com with a DropboxUpdate user agent; Dropbox is not among the approved file-sharing or cloud-storage services in the supplied inventory. Track separately; it does not determine this alert. (T163-00323)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 29.2
+}

@@ -1,0 +1,73 @@
+{
+ "scenario_id": "T257",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain account adm_temp was created at 13:45:13 UTC by ian.doyle, rather than at the alert's approximate 13:42 time. The account name does not match the documented temporary-account naming convention v.<name>.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T257-00100\"]\n    },\n    {\n      \"claim\": \"Immediately after creation, adm_temp was added to the Administrators group. This conflicts with the documented practice that temporary accounts never receive administrator rights and supports a malicious disposition of the alerted account activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T257-00101\"]\n    },\n    {\n      \"claim\": \"Before the account was created, ian.doyle logged on interactively to WS-MFISCHER-01 via RDP from 192.0.2.199. The inventory says remote administration is only performed from WS-IDOYLE-01 and there is no VPN; this session is inconsistent with that context.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T257-00079\", \"T257-00080\", \"T257-00083\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The provided records do not show the source host or IP for the domain account creation and group-membership change.\",\n    \"The alert's approximate creation time differs from the recorded account creation time of 13:45:13 UTC.\",\n    \"The evidence does not include change approval or confirmation from ian.doyle.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether ian.doyle intentionally performed these changes or the account or session was compromised.\",\n    \"Whether adm_temp was subsequently used, what its password was, or whether it accessed systems or data.\",\n    \"Whether the suspicious scheduled task on WS-MFISCHER-01 was part of the same activity.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Verify the account creation and administrator-group change with ian.doyle and the change records; preserve the relevant domain-controller audit logs.\",\n    \"Investigate the RDP session and authenticate its source and authorization, including the corresponding logs on WS-MFISCHER-01.\",\n    \"Review adm_temp's subsequent logons, group membership, password changes, and access to domain resources; disable or contain the account pending verification.\"\n  ],\n  \"unrelated_findings\": [\n    \"A scheduled task named HealthCheck was registered on WS-MFISCHER-01 under ian.doyle with hidden PowerShell execution and an encoded command that fetches a script from http://192.0.2.199/a.ps1. Investigate separately; it is not needed to determine the account-creation alert. (T257-00102)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 27662,
+    "output": 1506
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "The domain account adm_temp was created at 13:45:13 UTC by ian.doyle, rather than at the alert's approximate 13:42 time. The account name does not match the documented temporary-account naming convention v.<name>.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T257-00100"
+    ]
+   },
+   {
+    "claim": "Immediately after creation, adm_temp was added to the Administrators group. This conflicts with the documented practice that temporary accounts never receive administrator rights and supports a malicious disposition of the alerted account activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T257-00101"
+    ]
+   },
+   {
+    "claim": "Before the account was created, ian.doyle logged on interactively to WS-MFISCHER-01 via RDP from 192.0.2.199. The inventory says remote administration is only performed from WS-IDOYLE-01 and there is no VPN; this session is inconsistent with that context.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T257-00079",
+     "T257-00080",
+     "T257-00083"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The provided records do not show the source host or IP for the domain account creation and group-membership change.",
+   "The alert's approximate creation time differs from the recorded account creation time of 13:45:13 UTC.",
+   "The evidence does not include change approval or confirmation from ian.doyle."
+  ],
+  "claims_not_established": [
+   "Whether ian.doyle intentionally performed these changes or the account or session was compromised.",
+   "Whether adm_temp was subsequently used, what its password was, or whether it accessed systems or data.",
+   "Whether the suspicious scheduled task on WS-MFISCHER-01 was part of the same activity."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Verify the account creation and administrator-group change with ian.doyle and the change records; preserve the relevant domain-controller audit logs.",
+   "Investigate the RDP session and authenticate its source and authorization, including the corresponding logs on WS-MFISCHER-01.",
+   "Review adm_temp's subsequent logons, group membership, password changes, and access to domain resources; disable or contain the account pending verification."
+  ],
+  "unrelated_findings": [
+   "A scheduled task named HealthCheck was registered on WS-MFISCHER-01 under ian.doyle with hidden PowerShell execution and an encoded command that fetches a script from http://192.0.2.199/a.ps1. Investigate separately; it is not needed to determine the account-creation alert. (T257-00102)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 5,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 17.9
+}

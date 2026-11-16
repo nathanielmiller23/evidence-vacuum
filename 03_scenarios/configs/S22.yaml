@@ -1,0 +1,183 @@
+version: '1.0'
+name: ev-S22
+description: Evidence Vacuum v3 HELD-OUT TEST scenario S22 (lateral, BENIGN).
+environment:
+  description: Riverbend Veterinary Hospital
+  domain: riverbend.local
+  timezone:
+    default: UTC
+  proxy:
+    mode: explicit
+    listener_port: 8080
+  users:
+  - username: hana.ito
+    full_name: Hana Ito
+    email: hana.ito@riverbendvet.com
+    persona: receptionist
+    primary_system: WS-HITO-01
+    groups:
+    - staff
+    enabled: true
+    browsing_intensity: normal
+  - username: cole.price
+    full_name: Cole Price
+    email: cole.price@riverbendvet.com
+    persona: analyst
+    primary_system: WS-CPRICE-01
+    groups:
+    - staff
+    enabled: true
+    browsing_intensity: light
+  - username: dev.sharma
+    full_name: Dev Sharma
+    email: dev.sharma@riverbendvet.com
+    persona: sysadmin
+    primary_system: WS-DSHARMA-01
+    groups:
+    - it-admins
+    - domain-admins
+    enabled: true
+    browsing_intensity: light
+  - username: lily.okoro
+    full_name: Lily Okoro
+    email: lily.okoro@riverbendvet.com
+    persona: help_desk
+    primary_system: WS-LOKORO-01
+    groups:
+    - staff
+    enabled: true
+    browsing_intensity: light
+  service_accounts:
+  - svc-rbbackup
+  - svc-labsync
+  systems:
+  - hostname: WS-HITO-01
+    ip: 10.60.10.21
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: hana.ito
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-CPRICE-01
+    ip: 10.60.10.22
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: cole.price
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-DSHARMA-01
+    ip: 10.60.10.23
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: dev.sharma
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-LOKORO-01
+    ip: 10.60.10.24
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: lily.okoro
+    services:
+    - dns-client
+    - termservice
+  - hostname: DC-RB-01
+    ip: 10.60.20.10
+    os: Windows Server 2022
+    type: domain_controller
+    services:
+    - kerberos
+    - ldap
+    - dns
+    roles:
+    - domain_controller
+    - dns_server
+  - hostname: FILE-RB-01
+    ip: 10.60.20.20
+    os: Windows Server 2022
+    type: server
+    services:
+    - smb
+    - dns-client
+    roles:
+    - file_server
+  - hostname: PROXY-RB-01
+    ip: 10.60.20.30
+    os: Ubuntu 22.04 LTS
+    type: server
+    services:
+    - squid
+    - dns-client
+    roles:
+    - forward_proxy
+  network:
+    public_cidrs:
+    - 198.51.100.224/28
+    segments:
+    - name: workstations
+      cidr: 10.60.10.0/24
+      exposure: internal
+      systems:
+      - WS-HITO-01
+      - WS-CPRICE-01
+      - WS-DSHARMA-01
+      - WS-LOKORO-01
+    - name: servers
+      cidr: 10.60.20.0/24
+      exposure: internal
+      systems:
+      - DC-RB-01
+      - FILE-RB-01
+      - PROXY-RB-01
+    sensors:
+    - type: network
+      name: core-span
+      hostname: ZEEK-CORE
+      monitoring_segments:
+      - workstations
+      - servers
+      direction: bidirectional
+      placement: span
+      log_formats:
+      - zeek
+time_window:
+  start: '2026-11-03T13:00:00Z'
+  duration: 2h
+  warmup: 1h
+generation_seed: 9102
+baseline_activity:
+  description: Quiet afternoon
+  intensity: low
+  variation: low
+  suspicious_noise: low
+observation_profile: complete
+storyline:
+- id: rdp
+  time: +42m
+  actor: dev.sharma
+  system: FILE-RB-01
+  activity: Approved RDP maintenance session from the admin workstation
+  events:
+  - type: rdp_session
+    source_ip: 10.60.10.23
+- id: maint
+  time: +47m
+  actor: dev.sharma
+  system: FILE-RB-01
+  activity: Disk cleanup
+  events:
+  - type: process
+    process_name: C:\Windows\System32\cleanmgr.exe
+    command_line: cleanmgr.exe /sagerun:1
+output:
+  logs:
+  - format: windows_event_security
+  - format: windows_event_sysmon
+  - format: zeek_conn
+  - format: zeek_dns
+  - format: zeek_ssl
+  - format: proxy_access
+  destination: out/S22
+  compression: false

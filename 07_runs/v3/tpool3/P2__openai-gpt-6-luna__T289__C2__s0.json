@@ -1,0 +1,86 @@
+{
+ "scenario_id": "T289",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:46:42 UTC, WS-ACOLE-01, attributed by the proxy to amy.cole, established a connection to megadrop-files.com. The proxy recorded 51,000,000 client-to-server bytes and 8,800 server-to-client bytes; Zeek recorded a matching proxied connection with about 51 MB of originating bytes.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T289-00239\", \"T289-00240\"]\n    },\n    {\n      \"claim\": \"The megadrop-files.com connection was made by Chrome running as amy.cole, according to the endpoint network events matching the connection\u2019s source port and timestamp.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T289-00241\", \"T289-00242\"]\n    },\n    {\n      \"claim\": \"About five minutes before the large outbound transfer, amy.cole ran PowerShell to compress \\\\\\\\FILE-ORC-01\\\\Shared\\\\Clients into C:\\\\Users\\\\amy.cole\\\\AppData\\\\Local\\\\Temp\\\\c.zip; a file-creation event confirms c.zip was created.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T289-00219\", \"T289-00220\", \"T289-00221\"]\n    },\n    {\n      \"claim\": \"The close timing between creating an archive of the Clients share and sending tens of MB to an unapproved file-sharing destination strongly supports suspected data exfiltration. The available records do not directly prove that c.zip was the uploaded file.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T289-00219\", \"T289-00221\", \"T289-00239\", \"T289-00240\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records a CONNECT tunnel to megadrop-files.com and byte counts, but the supplied records do not show the upload URL, application-level request, upload response, or exact file transmitted.\",\n    \"The supplied records do not directly associate the Chrome network connection with c.zip or establish the archive's contents or size.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether c.zip was the file uploaded, or whether any other files were included in the transfer.\",\n    \"Whether the transfer completed successfully at the application level; the recorded status 200 is for the proxy CONNECT event.\",\n    \"Whether amy.cole knowingly initiated or authorized the transfer, or whether the account or browser was controlled by another party.\",\n    \"What data the destination retained or who accessed it.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and inspect c.zip and relevant source files, including archive contents, timestamps, and size.\",\n    \"Collect endpoint browser history, upload-related browser artifacts, and process/file telemetry linking Chrome activity to a local file.\",\n    \"Obtain detailed proxy or destination service logs, if available, to identify the request, account, uploaded object, and upload result.\",\n    \"Investigate the destination domain and account activity, and interview amy.cole to determine whether the transfer was authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate review: amy.cole launched PowerShell and sqlcmd to query the Users table on DB-SRV-01. The supplied network record for the database connection shows no established session; this activity is not evidence that decides the alerted transfer. (T289-00177, T289-00185, T289-00187, T289-00188)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 60930,
+    "output": 1310
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "At 13:46:42 UTC, WS-ACOLE-01, attributed by the proxy to amy.cole, established a connection to megadrop-files.com. The proxy recorded 51,000,000 client-to-server bytes and 8,800 server-to-client bytes; Zeek recorded a matching proxied connection with about 51 MB of originating bytes.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T289-00239",
+     "T289-00240"
+    ]
+   },
+   {
+    "claim": "The megadrop-files.com connection was made by Chrome running as amy.cole, according to the endpoint network events matching the connection\u2019s source port and timestamp.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T289-00241",
+     "T289-00242"
+    ]
+   },
+   {
+    "claim": "About five minutes before the large outbound transfer, amy.cole ran PowerShell to compress \\\\FILE-ORC-01\\Shared\\Clients into C:\\Users\\amy.cole\\AppData\\Local\\Temp\\c.zip; a file-creation event confirms c.zip was created.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T289-00219",
+     "T289-00220",
+     "T289-00221"
+    ]
+   },
+   {
+    "claim": "The close timing between creating an archive of the Clients share and sending tens of MB to an unapproved file-sharing destination strongly supports suspected data exfiltration. The available records do not directly prove that c.zip was the uploaded file.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T289-00219",
+     "T289-00221",
+     "T289-00239",
+     "T289-00240"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records a CONNECT tunnel to megadrop-files.com and byte counts, but the supplied records do not show the upload URL, application-level request, upload response, or exact file transmitted.",
+   "The supplied records do not directly associate the Chrome network connection with c.zip or establish the archive's contents or size."
+  ],
+  "claims_not_established": [
+   "Whether c.zip was the file uploaded, or whether any other files were included in the transfer.",
+   "Whether the transfer completed successfully at the application level; the recorded status 200 is for the proxy CONNECT event.",
+   "Whether amy.cole knowingly initiated or authorized the transfer, or whether the account or browser was controlled by another party.",
+   "What data the destination retained or who accessed it."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and inspect c.zip and relevant source files, including archive contents, timestamps, and size.",
+   "Collect endpoint browser history, upload-related browser artifacts, and process/file telemetry linking Chrome activity to a local file.",
+   "Obtain detailed proxy or destination service logs, if available, to identify the request, account, uploaded object, and upload result.",
+   "Investigate the destination domain and account activity, and interview amy.cole to determine whether the transfer was authorized."
+  ],
+  "unrelated_findings": [
+   "Separate review: amy.cole launched PowerShell and sqlcmd to query the Users table on DB-SRV-01. The supplied network record for the database connection shows no established session; this activity is not evidence that decides the alerted transfer. (T289-00177, T289-00185, T289-00187, T289-00188)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 14.4
+}

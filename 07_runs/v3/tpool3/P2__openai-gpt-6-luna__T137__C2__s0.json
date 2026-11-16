@@ -1,0 +1,93 @@
+{
+ "scenario_id": "T137",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:44:23 UTC, the domain controller recorded creation of the account backupadmin by paul.becker.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T137-00104\"\n      ]\n    },\n    {\n      \"claim\": \"One second later, the domain controller recorded backupadmin being added to the group named Administrators. This conflicts with the stated practice that temporary accounts are created by help desk and never receive administrator rights.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T137-00105\"\n      ]\n    },\n    {\n      \"claim\": \"Shortly before the account creation, paul.becker authenticated to WS-KNGUYEN-01 with an RDP logon from 192.0.2.88. The inventory says remote administration is only performed from WS-PBECKER-01, and the observed source is not identified as that workstation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T137-00052\",\n        \"T137-00055\",\n        \"T137-00056\",\n        \"T137-00057\"\n      ]\n    },\n    {\n      \"claim\": \"Two seconds after the account creation, a scheduled task was registered on WS-KNGUYEN-01 under paul.becker's RDP logon. Its encoded PowerShell action decodes to a command that downloads and executes content from http://192.0.2.88/a.ps1. This is strong contemporaneous context for treating the account creation and privilege assignment as malicious, though the records do not establish that the task successfully ran.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T137-00057\",\n        \"T137-00104\",\n        \"T137-00105\",\n        \"T137-00106\"\n      ]\n    },\n    {\n      \"claim\": \"The recorded account creation occurred at 13:44:23 UTC, later than the alert's approximate 13:42 UTC time.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T137-00104\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records show account creation and group addition, but do not show whether backupadmin subsequently authenticated or what it accessed.\",\n    \"The supplied records do not establish that the scheduled task's PowerShell action executed successfully.\",\n    \"The account-management records identify paul.becker as the subject, but the supplied evidence does not directly link the DC subject logon ID to the workstation RDP logon ID.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether paul.becker personally performed or authorized these actions, or whether the account was created using a compromised session.\",\n    \"Whether there was an approved change or incident-response authorization for creating backupadmin and adding it to Administrators.\",\n    \"Whether backupadmin was enabled, used, or granted any additional access beyond the recorded group membership.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Validate the account creation and group addition with paul.becker and the change/incident records; preserve the relevant DC and workstation logs.\",\n    \"Collect DC authentication and account-management audit details sufficient to correlate the account changes to the workstation session.\",\n    \"Check whether backupadmin authenticated or accessed systems after creation; review account status, group memberships, and subsequent activity.\",\n    \"Collect task execution history and the referenced script or network evidence to determine whether the scheduled task ran and what it did.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox was launched on WS-KNGUYEN-01 under kim.nguyen; Dropbox is an unapproved file-sharing/cloud-storage service in the supplied environment context. Track separately; it does not determine this alert. (T137-00216, T137-00217, T137-00218)\",\n    \"Cisco AnyConnect client activity was observed on WS-KNGUYEN-01, and a proxy request used a GlobalProtect user agent. The inventory states there is no VPN; these records show client activity but do not establish a VPN connection. Track separately; they do not determine this alert. (T137-00146, T137-00147, T137-00148, T137-00219)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 33876,
+    "output": 2947
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "At 13:44:23 UTC, the domain controller recorded creation of the account backupadmin by paul.becker.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T137-00104"
+    ]
+   },
+   {
+    "claim": "One second later, the domain controller recorded backupadmin being added to the group named Administrators. This conflicts with the stated practice that temporary accounts are created by help desk and never receive administrator rights.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T137-00105"
+    ]
+   },
+   {
+    "claim": "Shortly before the account creation, paul.becker authenticated to WS-KNGUYEN-01 with an RDP logon from 192.0.2.88. The inventory says remote administration is only performed from WS-PBECKER-01, and the observed source is not identified as that workstation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T137-00052",
+     "T137-00055",
+     "T137-00056",
+     "T137-00057"
+    ]
+   },
+   {
+    "claim": "Two seconds after the account creation, a scheduled task was registered on WS-KNGUYEN-01 under paul.becker's RDP logon. Its encoded PowerShell action decodes to a command that downloads and executes content from http://192.0.2.88/a.ps1. This is strong contemporaneous context for treating the account creation and privilege assignment as malicious, though the records do not establish that the task successfully ran.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T137-00057",
+     "T137-00104",
+     "T137-00105",
+     "T137-00106"
+    ]
+   },
+   {
+    "claim": "The recorded account creation occurred at 13:44:23 UTC, later than the alert's approximate 13:42 UTC time.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T137-00104"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records show account creation and group addition, but do not show whether backupadmin subsequently authenticated or what it accessed.",
+   "The supplied records do not establish that the scheduled task's PowerShell action executed successfully.",
+   "The account-management records identify paul.becker as the subject, but the supplied evidence does not directly link the DC subject logon ID to the workstation RDP logon ID."
+  ],
+  "claims_not_established": [
+   "Whether paul.becker personally performed or authorized these actions, or whether the account was created using a compromised session.",
+   "Whether there was an approved change or incident-response authorization for creating backupadmin and adding it to Administrators.",
+   "Whether backupadmin was enabled, used, or granted any additional access beyond the recorded group membership."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Validate the account creation and group addition with paul.becker and the change/incident records; preserve the relevant DC and workstation logs.",
+   "Collect DC authentication and account-management audit details sufficient to correlate the account changes to the workstation session.",
+   "Check whether backupadmin authenticated or accessed systems after creation; review account status, group memberships, and subsequent activity.",
+   "Collect task execution history and the referenced script or network evidence to determine whether the scheduled task ran and what it did."
+  ],
+  "unrelated_findings": [
+   "Dropbox was launched on WS-KNGUYEN-01 under kim.nguyen; Dropbox is an unapproved file-sharing/cloud-storage service in the supplied environment context. Track separately; it does not determine this alert. (T137-00216, T137-00217, T137-00218)",
+   "Cisco AnyConnect client activity was observed on WS-KNGUYEN-01, and a proxy request used a GlobalProtect user agent. The inventory states there is no VPN; these records show client activity but do not establish a VPN connection. Track separately; they do not determine this alert. (T137-00146, T137-00147, T137-00148, T137-00219)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 29.4
+}

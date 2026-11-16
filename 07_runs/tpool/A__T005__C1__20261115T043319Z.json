@@ -1,0 +1,118 @@
+{
+ "run_id": "A__T005__C1__20261115T043319Z",
+ "config": "A",
+ "scenario_id": "T005",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 400,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 169045,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.89,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"An unapproved Google Drive File Stream client started under ben.carter at 13:30:00; the inventory lists OneDrive as approved but no Google Drive service.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T005-00094\", \"T005-00095\", \"T005-00096\"]\n    },\n    {\n      \"claim\": \"The periodic HTTPS activity is associated with a ChartMate-named updater running from ben.carter's AppData directory and connecting through the proxy to update.chartmate-imaging.net. This resembles the approved updater's roughly five-minute check cadence, but differs from the inventoried Program Files path and update.chartmate-imaging.com domain.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T005-00123\", \"T005-00125\", \"T005-00127\", \"T005-00147\", \"T005-00149\", \"T005-00165\", \"T005-00167\", \"T005-00183\", \"T005-00185\", \"T005-00195\", \"T005-00197\", \"T005-00208\", \"T005-00213\"]\n    },\n    {\n      \"claim\": \"An unlisted Meridian OpsAgent ran as SYSTEM on WS-BCARTER-01 and generated an explicit-credentials event targeting svc-bkp on DC-HD-01. The inventory places svc-bkp on FILE-HD-01; the event shows credential use, but does not by itself establish successful authentication.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T005-00248\", \"T005-00249\", \"T005-00262\", \"T005-00263\", \"T005-00264\"]\n    },\n    {\n      \"claim\": \"The UserAssist value at 13:41 contains a ROT13-encoded path that decodes to C:\\\\Windows\\\\System32\\\\mstsc.exe. This suggests Remote Desktop Connection was launched from WS-BCARTER-01, contrary to the stated practice that remote administration is done from WS-OHADDAD-01; it does not prove a remote session succeeded.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T005-00151\"]\n    },\n    {\n      \"claim\": \"Chrome accessed the AWS console and its static assets through the proxy. AWS console use is not listed among approved services, but these records do not show what actions, if any, were taken in AWS.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T005-00227\", \"T005-00228\", \"T005-00232\", \"T005-00239\", \"T005-00240\", \"T005-00247\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records show HTTPS destinations and some inspected requests, but do not establish the contents or purpose of all tunneled traffic.\",\n    \"The supplied records do not include binary hashes, provenance, or signature-validation results for the AppData ChartMate updater or Meridian OpsAgent.\",\n    \"The records show an explicit-credentials attempt involving svc-bkp, but do not establish that authentication succeeded or that the credentials were used to access data.\",\n    \"A browser visit to the AWS console does not establish an AWS account action, and the UserAssist entry does not establish a successful remote desktop session.\"\n  ],\n  \"claims_not_established\": [\n    \"That files were uploaded, exfiltrated, or otherwise accessed through Google Drive, AWS, or another service.\",\n    \"That the svc-bkp authentication attempt succeeded or resulted in access to DC-HD-01 or FILE-HD-01.\",\n    \"That an RDP connection was established, or which system it may have targeted.\",\n    \"That the ChartMate-named updater is malicious; its path and domain differ from inventory, but the records alone do not establish its provenance or intent.\",\n    \"Who installed or authorized the unlisted software, or whether ben.carter knowingly initiated the observed activity.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze the Google Drive client, ChartMate-named updater, and Meridian OpsAgent binaries, including hashes, signatures, origin, and execution history.\",\n    \"Review proxy and endpoint records for uploads, file transfers, and activity associated with Google Drive, AWS, and update.chartmate-imaging.net.\",\n    \"Correlate domain-controller and FILE-HD-01 authentication, SMB, and file-access logs with the svc-bkp credential-use event; verify svc-bkp's allowed logon sources.\",\n    \"Review Windows Remote Desktop client and server logs to determine whether an RDP connection occurred and its destination.\",\n    \"Obtain AWS audit logs and the user's account/session context to establish whether any console operations occurred.\",\n    \"Confirm with IT and the application owner whether the updater path/domain and Meridian OpsAgent have an authorized deployment or business purpose.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 62106,
+    "output": 2882,
+    "reasoning": 1780
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.89,
+  "supporting_observations": [
+   {
+    "claim": "An unapproved Google Drive File Stream client started under ben.carter at 13:30:00; the inventory lists OneDrive as approved but no Google Drive service.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T005-00094",
+     "T005-00095",
+     "T005-00096"
+    ]
+   },
+   {
+    "claim": "The periodic HTTPS activity is associated with a ChartMate-named updater running from ben.carter's AppData directory and connecting through the proxy to update.chartmate-imaging.net. This resembles the approved updater's roughly five-minute check cadence, but differs from the inventoried Program Files path and update.chartmate-imaging.com domain.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T005-00123",
+     "T005-00125",
+     "T005-00127",
+     "T005-00147",
+     "T005-00149",
+     "T005-00165",
+     "T005-00167",
+     "T005-00183",
+     "T005-00185",
+     "T005-00195",
+     "T005-00197",
+     "T005-00208",
+     "T005-00213"
+    ]
+   },
+   {
+    "claim": "An unlisted Meridian OpsAgent ran as SYSTEM on WS-BCARTER-01 and generated an explicit-credentials event targeting svc-bkp on DC-HD-01. The inventory places svc-bkp on FILE-HD-01; the event shows credential use, but does not by itself establish successful authentication.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T005-00248",
+     "T005-00249",
+     "T005-00262",
+     "T005-00263",
+     "T005-00264"
+    ]
+   },
+   {
+    "claim": "The UserAssist value at 13:41 contains a ROT13-encoded path that decodes to C:\\Windows\\System32\\mstsc.exe. This suggests Remote Desktop Connection was launched from WS-BCARTER-01, contrary to the stated practice that remote administration is done from WS-OHADDAD-01; it does not prove a remote session succeeded.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T005-00151"
+    ]
+   },
+   {
+    "claim": "Chrome accessed the AWS console and its static assets through the proxy. AWS console use is not listed among approved services, but these records do not show what actions, if any, were taken in AWS.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T005-00227",
+     "T005-00228",
+     "T005-00232",
+     "T005-00239",
+     "T005-00240",
+     "T005-00247"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records show HTTPS destinations and some inspected requests, but do not establish the contents or purpose of all tunneled traffic.",
+   "The supplied records do not include binary hashes, provenance, or signature-validation results for the AppData ChartMate updater or Meridian OpsAgent.",
+   "The records show an explicit-credentials attempt involving svc-bkp, but do not establish that authentication succeeded or that the credentials were used to access data.",
+   "A browser visit to the AWS console does not establish an AWS account action, and the UserAssist entry does not establish a successful remote desktop session."
+  ],
+  "claims_not_established": [
+   "That files were uploaded, exfiltrated, or otherwise accessed through Google Drive, AWS, or another service.",
+   "That the svc-bkp authentication attempt succeeded or resulted in access to DC-HD-01 or FILE-HD-01.",
+   "That an RDP connection was established, or which system it may have targeted.",
+   "That the ChartMate-named updater is malicious; its path and domain differ from inventory, but the records alone do not establish its provenance or intent.",
+   "Who installed or authorized the unlisted software, or whether ben.carter knowingly initiated the observed activity."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze the Google Drive client, ChartMate-named updater, and Meridian OpsAgent binaries, including hashes, signatures, origin, and execution history.",
+   "Review proxy and endpoint records for uploads, file transfers, and activity associated with Google Drive, AWS, and update.chartmate-imaging.net.",
+   "Correlate domain-controller and FILE-HD-01 authentication, SMB, and file-access logs with the svc-bkp credential-use event; verify svc-bkp's allowed logon sources.",
+   "Review Windows Remote Desktop client and server logs to determine whether an RDP connection occurred and its destination.",
+   "Obtain AWS audit logs and the user's account/session context to establish whether any console operations occurred.",
+   "Confirm with IT and the application owner whether the updater path/domain and Meridian OpsAgent have an authorized deployment or business purpose."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 28,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 28.1
+}

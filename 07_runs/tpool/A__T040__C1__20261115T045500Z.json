@@ -1,0 +1,95 @@
+{
+ "run_id": "A__T040__C1__20261115T045500Z",
+ "config": "A",
+ "scenario_id": "T040",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 478,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 190604,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.84,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The large transfer itself is consistent with the approved backup workflow: FILE-NWD-01 ran the inventoried StratoSafe executable as svc-archive toward the approved StratoSafe endpoint, and the proxy and connection logs record about 640 MB sent.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T040-00197\",\n        \"T040-00198\",\n        \"T040-00199\",\n        \"T040-00204\",\n        \"T040-00206\"\n      ]\n    },\n    {\n      \"claim\": \"The domain controller recorded a service-ticket request for svc-archive from 139.162.174.124, followed shortly by a svc-archive service logon on FILE-NWD-01. Given the stated absence of VPN, the external source is anomalous and supports suspected unauthorized use of the account.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T040-00193\",\n        \"T040-00194\"\n      ]\n    },\n    {\n      \"claim\": \"nora.blake initiated RDP to FILE-NWD-01 and successfully logged on interactively. This is inconsistent with the stated practice that remote administration is only done from WS-SOKAFOR-01, and the session overlaps the transfer period.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T040-00098\",\n        \"T040-00103\",\n        \"T040-00113\",\n        \"T040-00214\"\n      ]\n    },\n    {\n      \"claim\": \"FILE-NWD-01 was the source of NTLM validation for sam.okafor, and WS-SOKAFOR-01 recorded a network logon for that account from FILE-NWD-01. This is an additional unexplained credential-use anomaly on the file server.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T040-00278\",\n        \"T040-00279\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The logs identify the transfer process, destination, and byte count but do not reveal the contents or business purpose of the uploaded data.\",\n    \"The proxy records a tunnel and a separate inspected GET, but the provided records do not show inspection of the bulk transfer payload.\",\n    \"The records do not establish who controlled the external IP or whether the svc-archive authentication was authorized.\",\n    \"Process and authentication records do not show the contents of the certificate-health script or establish whether the executables and scripts were unmodified.\"\n  ],\n  \"claims_not_established\": [\n    \"That the 640 MB upload contained stolen or otherwise unauthorized data; its observed destination and process match the approved backup service.\",\n    \"That the external svc-archive ticket request was definitively attacker-controlled rather than a misconfigured or otherwise legitimate source.\",\n    \"That nora.blake or sam.okafor intentionally participated in malicious activity.\",\n    \"That the scheduled svc-render password rotation caused or is connected to the observed transfer.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Confirm with StratoSafe and the backup owner whether the 13:45 job, source IP, volume, and svc-archive authentication were expected; obtain destination-side upload records.\",\n    \"Determine the owner and purpose of 139.162.174.124 and investigate how it obtained or used svc-archive credentials.\",\n    \"Review FILE-NWD-01 RDP session activity and session attribution for nora.blake, including commands, file access, and session details.\",\n    \"Investigate the sam.okafor network authentication from FILE-NWD-01, including the initiating process, authentication method, and any resulting access.\",\n    \"Collect relevant endpoint and script contents, scheduled-task/service configuration, and authentication records around the svc-render rotation and the observed events.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 70547,
+    "output": 2702,
+    "reasoning": 1828
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.84,
+  "supporting_observations": [
+   {
+    "claim": "The large transfer itself is consistent with the approved backup workflow: FILE-NWD-01 ran the inventoried StratoSafe executable as svc-archive toward the approved StratoSafe endpoint, and the proxy and connection logs record about 640 MB sent.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T040-00197",
+     "T040-00198",
+     "T040-00199",
+     "T040-00204",
+     "T040-00206"
+    ]
+   },
+   {
+    "claim": "The domain controller recorded a service-ticket request for svc-archive from 139.162.174.124, followed shortly by a svc-archive service logon on FILE-NWD-01. Given the stated absence of VPN, the external source is anomalous and supports suspected unauthorized use of the account.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T040-00193",
+     "T040-00194"
+    ]
+   },
+   {
+    "claim": "nora.blake initiated RDP to FILE-NWD-01 and successfully logged on interactively. This is inconsistent with the stated practice that remote administration is only done from WS-SOKAFOR-01, and the session overlaps the transfer period.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T040-00098",
+     "T040-00103",
+     "T040-00113",
+     "T040-00214"
+    ]
+   },
+   {
+    "claim": "FILE-NWD-01 was the source of NTLM validation for sam.okafor, and WS-SOKAFOR-01 recorded a network logon for that account from FILE-NWD-01. This is an additional unexplained credential-use anomaly on the file server.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T040-00278",
+     "T040-00279"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The logs identify the transfer process, destination, and byte count but do not reveal the contents or business purpose of the uploaded data.",
+   "The proxy records a tunnel and a separate inspected GET, but the provided records do not show inspection of the bulk transfer payload.",
+   "The records do not establish who controlled the external IP or whether the svc-archive authentication was authorized.",
+   "Process and authentication records do not show the contents of the certificate-health script or establish whether the executables and scripts were unmodified."
+  ],
+  "claims_not_established": [
+   "That the 640 MB upload contained stolen or otherwise unauthorized data; its observed destination and process match the approved backup service.",
+   "That the external svc-archive ticket request was definitively attacker-controlled rather than a misconfigured or otherwise legitimate source.",
+   "That nora.blake or sam.okafor intentionally participated in malicious activity.",
+   "That the scheduled svc-render password rotation caused or is connected to the observed transfer."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Confirm with StratoSafe and the backup owner whether the 13:45 job, source IP, volume, and svc-archive authentication were expected; obtain destination-side upload records.",
+   "Determine the owner and purpose of 139.162.174.124 and investigate how it obtained or used svc-archive credentials.",
+   "Review FILE-NWD-01 RDP session activity and session attribution for nora.blake, including commands, file access, and session details.",
+   "Investigate the sam.okafor network authentication from FILE-NWD-01, including the initiating process, authentication method, and any resulting access.",
+   "Collect relevant endpoint and script contents, scheduled-task/service configuration, and authentication records around the svc-render rotation and the observed events."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 25.8
+}

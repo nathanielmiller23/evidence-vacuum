@@ -1,0 +1,84 @@
+{
+ "run_id": "A__T033__C2__20261115T045030Z",
+ "config": "A",
+ "scenario_id": "T033",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 266,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 110721,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:40:29 UTC, the proxy recorded a successful GET for https://raw.githubusercontent.com/nwd-it/tools/main/u.ps1 from WS-ICHEN-01 under ivy.chen. The associated network records show a response of about 52 KB on the browser tunnel and about 5 KB on the separate tunnel linked to the GET; this is temporally consistent with the reported brief PowerShell window, but does not establish that the script ran.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T033-00089\",\n        \"T033-00090\",\n        \"T033-00091\",\n        \"T033-00093\",\n        \"T033-00095\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:27 UTC, a Kerberos TGT request for sam.okafor originated from 10.40.10.21, the IP associated with WS-ICHEN-01 in this evidence, and WS-SOKAFOR-01 recorded a type 3 network logon for sam.okafor from that same address. This conflicts with the stated practice that remote administration is only done from WS-SOKAFOR-01.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T033-00014\",\n        \"T033-00019\"\n      ]\n    },\n    {\n      \"claim\": \"At 14:13 UTC, DC-NWD-01 recorded Kerberos authentication for leo.martins from 10.40.10.21, including a service ticket for WS-NBLAKE-01; WS-NBLAKE-01 then recorded a type 3 network logon for leo.martins from that address. This is unexpected cross-host account use from WS-ICHEN-01 and supports escalation as suspected unauthorized activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T033-00237\",\n        \"T033-00238\",\n        \"T033-00249\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records show the proxy request for u.ps1 but do not include the script contents, a hash, or evidence that it was saved or executed (T033-00091, T033-00093, T033-00095).\",\n    \"The supplied excerpt does not include PowerShell process or script-block records that would identify commands or the process responsible for the download.\",\n    \"Authentication records establish account use and source IP, but do not identify the person or process that initiated the activity (T033-00014, T033-00019, T033-00237, T033-00238, T033-00249).\"\n  ],\n  \"claims_not_established\": [\n    \"That u.ps1 executed, or what its contents or effects were.\",\n    \"That the sam.okafor or leo.martins credentials were stolen or used by a particular person or process.\",\n    \"That the AWS console activity was unauthorized or connected to the PowerShell activity.\",\n    \"Whether the authentication events had an authorized explanation not represented in the supplied evidence.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"PowerShell operational/script-block logs, process creation telemetry, EDR data, and file-system evidence from WS-ICHEN-01 around 13:40 UTC.\",\n    \"The exact downloaded u.ps1 content and hash, plus repository ownership, commit history, and any organizational approval for that script.\",\n    \"Authentication and interactive-session context for sam.okafor and leo.martins, including source endpoint/session details and relevant activity on WS-SOKAFOR-01 and WS-NBLAKE-01.\",\n    \"Follow-on endpoint and network activity from WS-ICHEN-01 to determine whether the account use or script download led to additional actions.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 41045,
+    "output": 2606,
+    "reasoning": 1729
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "At 13:40:29 UTC, the proxy recorded a successful GET for https://raw.githubusercontent.com/nwd-it/tools/main/u.ps1 from WS-ICHEN-01 under ivy.chen. The associated network records show a response of about 52 KB on the browser tunnel and about 5 KB on the separate tunnel linked to the GET; this is temporally consistent with the reported brief PowerShell window, but does not establish that the script ran.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T033-00089",
+     "T033-00090",
+     "T033-00091",
+     "T033-00093",
+     "T033-00095"
+    ]
+   },
+   {
+    "claim": "At 13:27 UTC, a Kerberos TGT request for sam.okafor originated from 10.40.10.21, the IP associated with WS-ICHEN-01 in this evidence, and WS-SOKAFOR-01 recorded a type 3 network logon for sam.okafor from that same address. This conflicts with the stated practice that remote administration is only done from WS-SOKAFOR-01.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T033-00014",
+     "T033-00019"
+    ]
+   },
+   {
+    "claim": "At 14:13 UTC, DC-NWD-01 recorded Kerberos authentication for leo.martins from 10.40.10.21, including a service ticket for WS-NBLAKE-01; WS-NBLAKE-01 then recorded a type 3 network logon for leo.martins from that address. This is unexpected cross-host account use from WS-ICHEN-01 and supports escalation as suspected unauthorized activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T033-00237",
+     "T033-00238",
+     "T033-00249"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records show the proxy request for u.ps1 but do not include the script contents, a hash, or evidence that it was saved or executed (T033-00091, T033-00093, T033-00095).",
+   "The supplied excerpt does not include PowerShell process or script-block records that would identify commands or the process responsible for the download.",
+   "Authentication records establish account use and source IP, but do not identify the person or process that initiated the activity (T033-00014, T033-00019, T033-00237, T033-00238, T033-00249)."
+  ],
+  "claims_not_established": [
+   "That u.ps1 executed, or what its contents or effects were.",
+   "That the sam.okafor or leo.martins credentials were stolen or used by a particular person or process.",
+   "That the AWS console activity was unauthorized or connected to the PowerShell activity.",
+   "Whether the authentication events had an authorized explanation not represented in the supplied evidence."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "PowerShell operational/script-block logs, process creation telemetry, EDR data, and file-system evidence from WS-ICHEN-01 around 13:40 UTC.",
+   "The exact downloaded u.ps1 content and hash, plus repository ownership, commit history, and any organizational approval for that script.",
+   "Authentication and interactive-session context for sam.okafor and leo.martins, including source endpoint/session details and relevant activity on WS-SOKAFOR-01 and WS-NBLAKE-01.",
+   "Follow-on endpoint and network activity from WS-ICHEN-01 to determine whether the account use or script download led to additional actions."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 26.0
+}

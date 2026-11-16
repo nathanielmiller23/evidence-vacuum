@@ -1,0 +1,73 @@
+{
+ "scenario_id": "T232",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alert describes repeated failed domain logons involving svc-ledger around 13:40 UTC on 2026-10-06, but provides no event-level records or identifiers to verify the logons.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"provided_alert\"]\n    },\n    {\n      \"claim\": \"The change calendar says svc-ledger's password was scheduled for rotation at 13:30 UTC and the LedgerSync job must then be updated manually. This could plausibly relate to failures from a job that re-authenticates every minute, but the evidence does not establish that it caused the alerted activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"environment_context\"]\n    },\n    {\n      \"claim\": \"Winsec and Sysmon collection were unavailable on both DC-SUN-01 and FILE-SUN-01 from 13:30 to 14:20 UTC, overlapping the alert time and preventing review of relevant host events.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"provided_sensor_coverage\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Winsec and Sysmon records are unavailable for DC-SUN-01 and FILE-SUN-01 during 13:30\u201314:20 UTC on 2026-10-06.\",\n    \"No event-level authentication records, source details, or record IDs for the alerted failures were provided.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the reported failures occurred as described, and their exact count, timestamps, logon types, or status codes.\",\n    \"Whether the failures originated from the expected LedgerSync job on FILE-SUN-01 or from another source.\",\n    \"Whether the scheduled password rotation caused the failures or whether any successful logon or subsequent misuse occurred.\",\n    \"Whether the activity was malicious.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover or obtain DC-SUN-01 authentication records for 13:20\u201314:20 UTC, including account, source host/address, logon type, status codes, and any successful logons involving svc-ledger.\",\n    \"Recover or obtain FILE-SUN-01 process and authentication records for the same period to determine whether LedgerSync generated the attempts and when its credentials were updated.\",\n    \"Obtain the password-rotation and job-update audit trail, including the time and operator or process responsible.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 1664,
+    "output": 1077
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "The alert describes repeated failed domain logons involving svc-ledger around 13:40 UTC on 2026-10-06, but provides no event-level records or identifiers to verify the logons.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "provided_alert"
+    ]
+   },
+   {
+    "claim": "The change calendar says svc-ledger's password was scheduled for rotation at 13:30 UTC and the LedgerSync job must then be updated manually. This could plausibly relate to failures from a job that re-authenticates every minute, but the evidence does not establish that it caused the alerted activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "environment_context"
+    ]
+   },
+   {
+    "claim": "Winsec and Sysmon collection were unavailable on both DC-SUN-01 and FILE-SUN-01 from 13:30 to 14:20 UTC, overlapping the alert time and preventing review of relevant host events.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "provided_sensor_coverage"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Winsec and Sysmon records are unavailable for DC-SUN-01 and FILE-SUN-01 during 13:30\u201314:20 UTC on 2026-10-06.",
+   "No event-level authentication records, source details, or record IDs for the alerted failures were provided."
+  ],
+  "claims_not_established": [
+   "Whether the reported failures occurred as described, and their exact count, timestamps, logon types, or status codes.",
+   "Whether the failures originated from the expected LedgerSync job on FILE-SUN-01 or from another source.",
+   "Whether the scheduled password rotation caused the failures or whether any successful logon or subsequent misuse occurred.",
+   "Whether the activity was malicious."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover or obtain DC-SUN-01 authentication records for 13:20\u201314:20 UTC, including account, source host/address, logon type, status codes, and any successful logons involving svc-ledger.",
+   "Recover or obtain FILE-SUN-01 process and authentication records for the same period to determine whether LedgerSync generated the attempts and when its credentials were updated.",
+   "Obtain the password-rotation and job-update audit trail, including the time and operator or process responsible."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 3,
+  "n_missing": 3,
+  "missing": [
+   "provided_alert",
+   "environment_context",
+   "provided_sensor_coverage"
+  ]
+ },
+ "duration_s": 11.3
+}

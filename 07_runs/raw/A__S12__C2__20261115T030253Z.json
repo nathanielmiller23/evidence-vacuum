@@ -1,0 +1,92 @@
+{
+ "run_id": "A__S12__C2__20261115T030253Z",
+ "config": "A",
+ "scenario_id": "S12",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 52,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 26818,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.82,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The account alert itself has a policy-consistent pattern: tara.nguyen created temp.jsmith, and the observed group addition was to Contractors.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S12-00013\", \"S12-00014\"]\n    },\n    {\n      \"claim\": \"tara.nguyen initiated an RDP connection from WS-TNGUYEN-01 to DC-LV-01, and DC-LV-01 recorded a remote-interactive logon for her.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S12-00002\", \"S12-00004\", \"S12-00005\"]\n    },\n    {\n      \"claim\": \"The same help-desk account later initiated RDP to FILE-LV-01, which recorded a remote-interactive logon for her. This conflicts with the stated practice that remote administration is performed only from WS-KORTEGA-01.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S12-00038\", \"S12-00041\", \"S12-00042\"]\n    },\n    {\n      \"claim\": \"tara.nguyen launched GPMC from WS-TNGUYEN-01 with a high-integrity token; the process then made connections to DC-LV-01 on RPC endpoint mapper, SMB, and LDAP ports. This is anomalous for the stated non-administrator help-desk role.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S12-00015\", \"S12-00016\", \"S12-00018\", \"S12-00019\", \"S12-00020\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available records show GPMC launch and network connections, but not whether any Group Policy or directory changes were successfully made. Relevant records: S12-00015, S12-00018, S12-00019, S12-00020.\",\n    \"The account records show creation and addition to Contractors, but do not establish whether the account was used afterward or whether it had other group memberships. Relevant records: S12-00013, S12-00014.\",\n    \"The supplied records do not include the RDP session's interactive actions on DC-LV-01 or FILE-LV-01. Relevant records: S12-00005, S12-00042.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish who requested temp.jsmith or whether an approved contractor request existed.\",\n    \"The evidence does not establish that tara.nguyen changed Group Policy, used elevated privileges to make directory changes, or acted with malicious intent.\",\n    \"The evidence does not establish what actions occurred during the RDP sessions to DC-LV-01 or FILE-LV-01.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Validate the contractor request and change or help-desk ticket associated with temp.jsmith.\",\n    \"Collect DC-LV-01 directory-change and Group Policy audit events, including any changes attributable to tara.nguyen.\",\n    \"Collect interactive session and process telemetry from the RDP sessions on DC-LV-01 and FILE-LV-01.\",\n    \"Review authentication, privilege assignment, and account-group membership records for tara.nguyen and temp.jsmith during and after the alert window.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 9162,
+    "output": 2354,
+    "reasoning": 1580
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.82,
+  "supporting_observations": [
+   {
+    "claim": "The account alert itself has a policy-consistent pattern: tara.nguyen created temp.jsmith, and the observed group addition was to Contractors.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S12-00013",
+     "S12-00014"
+    ]
+   },
+   {
+    "claim": "tara.nguyen initiated an RDP connection from WS-TNGUYEN-01 to DC-LV-01, and DC-LV-01 recorded a remote-interactive logon for her.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S12-00002",
+     "S12-00004",
+     "S12-00005"
+    ]
+   },
+   {
+    "claim": "The same help-desk account later initiated RDP to FILE-LV-01, which recorded a remote-interactive logon for her. This conflicts with the stated practice that remote administration is performed only from WS-KORTEGA-01.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S12-00038",
+     "S12-00041",
+     "S12-00042"
+    ]
+   },
+   {
+    "claim": "tara.nguyen launched GPMC from WS-TNGUYEN-01 with a high-integrity token; the process then made connections to DC-LV-01 on RPC endpoint mapper, SMB, and LDAP ports. This is anomalous for the stated non-administrator help-desk role.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S12-00015",
+     "S12-00016",
+     "S12-00018",
+     "S12-00019",
+     "S12-00020"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available records show GPMC launch and network connections, but not whether any Group Policy or directory changes were successfully made. Relevant records: S12-00015, S12-00018, S12-00019, S12-00020.",
+   "The account records show creation and addition to Contractors, but do not establish whether the account was used afterward or whether it had other group memberships. Relevant records: S12-00013, S12-00014.",
+   "The supplied records do not include the RDP session's interactive actions on DC-LV-01 or FILE-LV-01. Relevant records: S12-00005, S12-00042."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish who requested temp.jsmith or whether an approved contractor request existed.",
+   "The evidence does not establish that tara.nguyen changed Group Policy, used elevated privileges to make directory changes, or acted with malicious intent.",
+   "The evidence does not establish what actions occurred during the RDP sessions to DC-LV-01 or FILE-LV-01."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Validate the contractor request and change or help-desk ticket associated with temp.jsmith.",
+   "Collect DC-LV-01 directory-change and Group Policy audit events, including any changes attributable to tara.nguyen.",
+   "Collect interactive session and process telemetry from the RDP sessions on DC-LV-01 and FILE-LV-01.",
+   "Review authentication, privilege assignment, and account-group membership records for tara.nguyen and temp.jsmith during and after the alert window."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 29.2
+}

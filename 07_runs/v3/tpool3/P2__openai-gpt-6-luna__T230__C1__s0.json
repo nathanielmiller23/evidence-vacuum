@@ -1,0 +1,96 @@
+{
+ "scenario_id": "T230",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.87,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"FILE-SUN-01's Arcvault agent ran as svc-store with the command line specifying the Nightly job and the approved Arcvault ingest destination; the proxy then recorded a 640,000,000-byte client-to-server transfer to that destination.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T230-00344\",\n        \"T230-00345\",\n        \"T230-00346\",\n        \"T230-00353\",\n        \"T230-00354\",\n        \"T230-00355\",\n        \"T230-00356\"\n      ]\n    },\n    {\n      \"claim\": \"The large transfer is consistent with the inventory's approved Arcvault backup agent and its expected several-hundred-MB uploads, which supports a benign explanation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T230-00344\",\n        \"T230-00345\",\n        \"T230-00353\",\n        \"T230-00355\"\n      ]\n    },\n    {\n      \"claim\": \"Shortly before the backup agent ran, a domain-controller Kerberos record for svc-store listed source IP 45.79.19.196; a svc-store service logon on FILE-SUN-01 followed. This source and timing warrant checking whether the account activity was authorized.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T230-00341\",\n        \"T230-00342\",\n        \"T230-00344\"\n      ]\n    },\n    {\n      \"claim\": \"The records do not place the 640,000,000-byte proxy transfer at the alert's approximate 13:46 time: the transfer is logged at 13:49:57. At 13:45:55, FILE-SUN-01 instead made a TLS connection to WS-ZADAMS-01 with 4,014 origin bytes recorded.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T230-00306\",\n        \"T230-00307\",\n        \"T230-00308\",\n        \"T230-00353\",\n        \"T230-00355\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available transfer records show byte counts and destination, but not the contents or business purpose of the uploaded data.\",\n    \"The records do not establish why the svc-store Kerberos event lists 45.79.19.196 as its source or whether that activity was authorized.\",\n    \"The alert's approximate time is not matched by a hundreds-of-MB transfer record in the supplied logs; the large proxy transfer is recorded several minutes later.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the alert refers to the 13:49:57 Arcvault transfer or to a separate transfer around 13:46.\",\n    \"Whether the 640,000,000 bytes were expected backup data or unauthorized data.\",\n    \"Whether the svc-store authentication from 45.79.19.196 was legitimate, and whether it was causally related to the Arcvault transfer.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Alert metadata and network-flow records identifying the precise transfer time, destination, and flow associated with the alert.\",\n    \"Arcvault job and service-account audit records confirming the Nightly job, expected upload volume, and whether the 13:49 run was scheduled.\",\n    \"Domain-controller and network evidence to validate the source and legitimacy of the svc-store Kerberos activity recorded from 45.79.19.196.\",\n    \"Endpoint evidence identifying the data collected or staged by the Arcvault agent for this upload.\"\n  ],\n  \"unrelated_findings\": [\n    \"Help-desk user lena.ward initiated an RDP session to FILE-SUN-01 and logged on there. This is outside the alerted transfer based on the available records and should be reviewed separately against the stated remote-administration practice. (T230-00272, T230-00278, T230-00281, T230-00285)\",\n    \"FILE-SUN-01 queried status-monitor.app, which is not among the approved services listed in the environment context. The records do not link this query to the large transfer. (T230-00009, T230-00011)\",\n    \"FILE-SUN-01 generated failed logons for the disabled account svc_mgmt, including an SMB-related attempt to DC-SUN-01. The records do not link these failures to the large transfer. (T230-00492, T230-00496, T230-00497)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 82749,
+    "output": 3445
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.87,
+  "supporting_observations": [
+   {
+    "claim": "FILE-SUN-01's Arcvault agent ran as svc-store with the command line specifying the Nightly job and the approved Arcvault ingest destination; the proxy then recorded a 640,000,000-byte client-to-server transfer to that destination.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T230-00344",
+     "T230-00345",
+     "T230-00346",
+     "T230-00353",
+     "T230-00354",
+     "T230-00355",
+     "T230-00356"
+    ]
+   },
+   {
+    "claim": "The large transfer is consistent with the inventory's approved Arcvault backup agent and its expected several-hundred-MB uploads, which supports a benign explanation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T230-00344",
+     "T230-00345",
+     "T230-00353",
+     "T230-00355"
+    ]
+   },
+   {
+    "claim": "Shortly before the backup agent ran, a domain-controller Kerberos record for svc-store listed source IP 45.79.19.196; a svc-store service logon on FILE-SUN-01 followed. This source and timing warrant checking whether the account activity was authorized.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T230-00341",
+     "T230-00342",
+     "T230-00344"
+    ]
+   },
+   {
+    "claim": "The records do not place the 640,000,000-byte proxy transfer at the alert's approximate 13:46 time: the transfer is logged at 13:49:57. At 13:45:55, FILE-SUN-01 instead made a TLS connection to WS-ZADAMS-01 with 4,014 origin bytes recorded.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T230-00306",
+     "T230-00307",
+     "T230-00308",
+     "T230-00353",
+     "T230-00355"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available transfer records show byte counts and destination, but not the contents or business purpose of the uploaded data.",
+   "The records do not establish why the svc-store Kerberos event lists 45.79.19.196 as its source or whether that activity was authorized.",
+   "The alert's approximate time is not matched by a hundreds-of-MB transfer record in the supplied logs; the large proxy transfer is recorded several minutes later."
+  ],
+  "claims_not_established": [
+   "Whether the alert refers to the 13:49:57 Arcvault transfer or to a separate transfer around 13:46.",
+   "Whether the 640,000,000 bytes were expected backup data or unauthorized data.",
+   "Whether the svc-store authentication from 45.79.19.196 was legitimate, and whether it was causally related to the Arcvault transfer."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Alert metadata and network-flow records identifying the precise transfer time, destination, and flow associated with the alert.",
+   "Arcvault job and service-account audit records confirming the Nightly job, expected upload volume, and whether the 13:49 run was scheduled.",
+   "Domain-controller and network evidence to validate the source and legitimacy of the svc-store Kerberos activity recorded from 45.79.19.196.",
+   "Endpoint evidence identifying the data collected or staged by the Arcvault agent for this upload."
+  ],
+  "unrelated_findings": [
+   "Help-desk user lena.ward initiated an RDP session to FILE-SUN-01 and logged on there. This is outside the alerted transfer based on the available records and should be reviewed separately against the stated remote-administration practice. (T230-00272, T230-00278, T230-00281, T230-00285)",
+   "FILE-SUN-01 queried status-monitor.app, which is not among the approved services listed in the environment context. The records do not link this query to the large transfer. (T230-00009, T230-00011)",
+   "FILE-SUN-01 generated failed logons for the disabled account svc_mgmt, including an SMB-related attempt to DC-SUN-01. The records do not link these failures to the large transfer. (T230-00492, T230-00496, T230-00497)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 19,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 35.5
+}

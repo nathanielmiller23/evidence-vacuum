@@ -1,0 +1,66 @@
+{
+ "scenario_id": "T280",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:47:04 UTC, FILE-ORC-01 sent 640,000,235 bytes to the explicit proxy at 10.56.20.30 over HTTP; the connection lasted about 22 seconds. This supports a large transfer to the proxy, but does not identify the external destination.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T280-00298\"]\n    },\n    {\n      \"claim\": \"The transfer's size is broadly consistent with the organization's description of approved offsite backups uploading several hundred MB, but the available record does not establish that this was the backup agent or a backup upload.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T280-00298\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"FILE-ORC-01 winsec and Sysmon collection was unavailable from 13:30 to 14:20 UTC, so process, user, and host event attribution for the transfer is missing.\",\n    \"Proxy logging for PROXY-ORC-01 was unavailable from 13:30 to 14:20 UTC, so the external destination, URL, and proxy request details for this transfer are not available.\",\n    \"Zeek connection telemetry was available, but the transfer record identifies only the connection from FILE-ORC-01 to the proxy, not the ultimate recipient or transferred content.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the transfer was made by the approved Keystone backup agent or another process.\",\n    \"Which external service or host received the data, and whether it was an approved Keystone endpoint.\",\n    \"What data or files were transferred, whether the transfer was authorized, and whether it completed successfully beyond the FILE-ORC-01-to-proxy connection.\",\n    \"Whether the transfer was malicious or a legitimate scheduled backup.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover proxy logs or equivalent retained records for 13:46\u201313:48 UTC to identify the destination and request details.\",\n    \"Collect FILE-ORC-01 EDR, process, and network telemetry for the transfer interval, including the process responsible for the connection.\",\n    \"Review Keystone agent logs, backup job history, configuration, and upload manifests for a job matching the time and volume.\",\n    \"If available, examine the transferred files or relevant file-access and staging records to determine what data was sent.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:21:53 UTC, FILE-ORC-01 made a proxy CONNECT request to downloads.cloud.com using an Apache HttpClient Java user agent; a Java process running as SYSTEM on FILE-ORC-01 also connected to the proxy. The organization lists no other approved file-sharing or cloud-storage services, so review this separately; it does not establish the destination or nature of the alerted transfer. (T280-00045, T280-00047, T280-00048)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 57053,
+    "output": 1886
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "At 13:47:04 UTC, FILE-ORC-01 sent 640,000,235 bytes to the explicit proxy at 10.56.20.30 over HTTP; the connection lasted about 22 seconds. This supports a large transfer to the proxy, but does not identify the external destination.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T280-00298"
+    ]
+   },
+   {
+    "claim": "The transfer's size is broadly consistent with the organization's description of approved offsite backups uploading several hundred MB, but the available record does not establish that this was the backup agent or a backup upload.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T280-00298"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "FILE-ORC-01 winsec and Sysmon collection was unavailable from 13:30 to 14:20 UTC, so process, user, and host event attribution for the transfer is missing.",
+   "Proxy logging for PROXY-ORC-01 was unavailable from 13:30 to 14:20 UTC, so the external destination, URL, and proxy request details for this transfer are not available.",
+   "Zeek connection telemetry was available, but the transfer record identifies only the connection from FILE-ORC-01 to the proxy, not the ultimate recipient or transferred content."
+  ],
+  "claims_not_established": [
+   "Whether the transfer was made by the approved Keystone backup agent or another process.",
+   "Which external service or host received the data, and whether it was an approved Keystone endpoint.",
+   "What data or files were transferred, whether the transfer was authorized, and whether it completed successfully beyond the FILE-ORC-01-to-proxy connection.",
+   "Whether the transfer was malicious or a legitimate scheduled backup."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover proxy logs or equivalent retained records for 13:46\u201313:48 UTC to identify the destination and request details.",
+   "Collect FILE-ORC-01 EDR, process, and network telemetry for the transfer interval, including the process responsible for the connection.",
+   "Review Keystone agent logs, backup job history, configuration, and upload manifests for a job matching the time and volume.",
+   "If available, examine the transferred files or relevant file-access and staging records to determine what data was sent."
+  ],
+  "unrelated_findings": [
+   "At 13:21:53 UTC, FILE-ORC-01 made a proxy CONNECT request to downloads.cloud.com using an Apache HttpClient Java user agent; a Java process running as SYSTEM on FILE-ORC-01 also connected to the proxy. The organization lists no other approved file-sharing or cloud-storage services, so review this separately; it does not establish the destination or nature of the alerted transfer. (T280-00045, T280-00047, T280-00048)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 2,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 19.7
+}

@@ -1,0 +1,108 @@
+{
+ "scenario_id": "T015",
+ "condition": "C2",
+ "variant": "P1",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.84,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alert\u2019s periodic HTTPS activity is directly attributable in endpoint telemetry to cmupdate.exe running as ben.carter from C:\\\\Users\\\\ben.carter\\\\AppData\\\\Local\\\\ChartMate\\\\cmupdate.exe; the process initiated proxy connections beginning at 13:38 and continuing at roughly five-minute intervals through 14:08.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T015-00108\",\n        \"T015-00110\",\n        \"T015-00113\",\n        \"T015-00151\",\n        \"T015-00209\",\n        \"T015-00212\",\n        \"T015-00264\",\n        \"T015-00267\",\n        \"T015-00269\",\n        \"T015-00272\",\n        \"T015-00281\",\n        \"T015-00284\"\n      ]\n    },\n    {\n      \"claim\": \"The updater process contacted update.chartmate-imaging.net, whereas the supplied inventory identifies update.chartmate-imaging.com as the expected ChartMate update host. Alongside the user-profile executable path, which differs from the inventory\u2019s Program Files path, this is consistent with possible masquerading and supports a malicious-activity finding.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T015-00108\",\n        \"T015-00110\",\n        \"T015-00152\",\n        \"T015-00209\",\n        \"T015-00234\",\n        \"T015-00264\",\n        \"T015-00269\",\n        \"T015-00281\"\n      ]\n    },\n    {\n      \"claim\": \"Sysmon recorded a file-creation event for the same cmupdate.exe path shortly after the process started. This warrants investigation, though the event alone does not establish what file contents were created or whether the executable replaced itself.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T015-00108\",\n        \"T015-00114\"\n      ]\n    },\n    {\n      \"claim\": \"Some connections to the ChartMate-named .net host did not succeed: the proxy recorded a 407 authentication-required response and later a 502 gateway error. Other attempts received status 200.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T015-00152\",\n        \"T015-00209\",\n        \"T015-00234\",\n        \"T015-00264\"\n      ]\n    },\n    {\n      \"claim\": \"WS-BCARTER-01 also made an SMB connection to FILE-HD-01 that resulted in an ANONYMOUS LOGON network logon. The records do not establish what resource was accessed or why.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T015-00253\",\n        \"T015-00255\",\n        \"T015-00257\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records HTTPS CONNECT hostnames and tunnel metadata, not the encrypted application contents; for example, the ChartMate-named connections are logged as tunnels (T015-00110, T015-00209, T015-00264).\",\n    \"The supplied records do not provide a hash, digital-signature validation, or file contents for cmupdate.exe (T015-00108, T015-00114).\",\n    \"The SMB records show a connection and an anonymous network logon but not the share, files, or actions involved (T015-00253, T015-00257).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether update.chartmate-imaging.net is controlled by ChartMate or is an authorized alternate domain.\",\n    \"Whether the cmupdate.exe file is genuine, signed, malicious, or was modified; the file-creation event does not establish its contents (T015-00108, T015-00114).\",\n    \"Whether the HTTPS sessions transferred a payload, sensitive data, or only routine updater traffic (T015-00110, T015-00209, T015-00264, T015-00269, T015-00281).\",\n    \"What activity occurred over the SMB session to FILE-HD-01 (T015-00253, T015-00257).\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire cmupdate.exe from the recorded user-profile path and verify its hash, signature, contents, origin, and file-system timeline, including the creation event at 13:38:01 UTC.\",\n    \"Validate update.chartmate-imaging.net and the observed executable path with ChartMate or an authoritative software deployment record; compare them with the approved domain and path in the inventory.\",\n    \"Obtain fuller proxy, DNS, TLS-certificate, and network telemetry for the repeated connections to determine what was transferred and whether the endpoint communicated with additional destinations.\",\n    \"Review FILE-HD-01 SMB auditing and share-access logs around 13:54:48 UTC to identify the resource and activity associated with the anonymous logon.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 54422,
+    "output": 2820
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.84,
+  "supporting_observations": [
+   {
+    "claim": "The alert\u2019s periodic HTTPS activity is directly attributable in endpoint telemetry to cmupdate.exe running as ben.carter from C:\\Users\\ben.carter\\AppData\\Local\\ChartMate\\cmupdate.exe; the process initiated proxy connections beginning at 13:38 and continuing at roughly five-minute intervals through 14:08.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T015-00108",
+     "T015-00110",
+     "T015-00113",
+     "T015-00151",
+     "T015-00209",
+     "T015-00212",
+     "T015-00264",
+     "T015-00267",
+     "T015-00269",
+     "T015-00272",
+     "T015-00281",
+     "T015-00284"
+    ]
+   },
+   {
+    "claim": "The updater process contacted update.chartmate-imaging.net, whereas the supplied inventory identifies update.chartmate-imaging.com as the expected ChartMate update host. Alongside the user-profile executable path, which differs from the inventory\u2019s Program Files path, this is consistent with possible masquerading and supports a malicious-activity finding.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T015-00108",
+     "T015-00110",
+     "T015-00152",
+     "T015-00209",
+     "T015-00234",
+     "T015-00264",
+     "T015-00269",
+     "T015-00281"
+    ]
+   },
+   {
+    "claim": "Sysmon recorded a file-creation event for the same cmupdate.exe path shortly after the process started. This warrants investigation, though the event alone does not establish what file contents were created or whether the executable replaced itself.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T015-00108",
+     "T015-00114"
+    ]
+   },
+   {
+    "claim": "Some connections to the ChartMate-named .net host did not succeed: the proxy recorded a 407 authentication-required response and later a 502 gateway error. Other attempts received status 200.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T015-00152",
+     "T015-00209",
+     "T015-00234",
+     "T015-00264"
+    ]
+   },
+   {
+    "claim": "WS-BCARTER-01 also made an SMB connection to FILE-HD-01 that resulted in an ANONYMOUS LOGON network logon. The records do not establish what resource was accessed or why.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T015-00253",
+     "T015-00255",
+     "T015-00257"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records HTTPS CONNECT hostnames and tunnel metadata, not the encrypted application contents; for example, the ChartMate-named connections are logged as tunnels (T015-00110, T015-00209, T015-00264).",
+   "The supplied records do not provide a hash, digital-signature validation, or file contents for cmupdate.exe (T015-00108, T015-00114).",
+   "The SMB records show a connection and an anonymous network logon but not the share, files, or actions involved (T015-00253, T015-00257)."
+  ],
+  "claims_not_established": [
+   "Whether update.chartmate-imaging.net is controlled by ChartMate or is an authorized alternate domain.",
+   "Whether the cmupdate.exe file is genuine, signed, malicious, or was modified; the file-creation event does not establish its contents (T015-00108, T015-00114).",
+   "Whether the HTTPS sessions transferred a payload, sensitive data, or only routine updater traffic (T015-00110, T015-00209, T015-00264, T015-00269, T015-00281).",
+   "What activity occurred over the SMB session to FILE-HD-01 (T015-00253, T015-00257)."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire cmupdate.exe from the recorded user-profile path and verify its hash, signature, contents, origin, and file-system timeline, including the creation event at 13:38:01 UTC.",
+   "Validate update.chartmate-imaging.net and the observed executable path with ChartMate or an authoritative software deployment record; compare them with the approved domain and path in the inventory.",
+   "Obtain fuller proxy, DNS, TLS-certificate, and network telemetry for the repeated connections to determine what was transferred and whether the endpoint communicated with additional destinations.",
+   "Review FILE-HD-01 SMB auditing and share-access logs around 13:54:48 UTC to identify the resource and activity associated with the anonymous logon."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 29,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 27.7
+}

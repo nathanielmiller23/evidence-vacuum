@@ -1,0 +1,93 @@
+{
+ "scenario_id": "T229",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45 UTC, zoe.adams ran PowerShell from Explorer at medium integrity to compress \\\\\\\\FILE-SUN-01\\\\Shared\\\\Clients into C:\\\\Users\\\\zoe.adams\\\\AppData\\\\Local\\\\Temp\\\\c.zip; a file-creation event confirms c.zip was created.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T229-00148\", \"T229-00149\", \"T229-00150\"]\n    },\n    {\n      \"claim\": \"At 13:50 UTC, Chrome opened zipshare-host.io, an unapproved file-sharing service, but the explicit proxy denied the CONNECT request with status 403. These records do not show a successful upload.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T229-00183\", \"T229-00192\", \"T229-00193\", \"T229-00195\"]\n    },\n    {\n      \"claim\": \"Around 13:46 UTC, the records show Kerberos activity and a ticket request for FILE-SUN-01, but do not show the destination, size, or successful completion of the alerted large outbound transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T229-00153\", \"T229-00160\", \"T229-00162\", \"T229-00166\"]\n    },\n    {\n      \"claim\": \"The archive of a Clients share followed shortly by an attempt to access an unapproved file-sharing site is suspicious and could indicate preparation for exfiltration, but the available records do not establish that the archive was uploaded or that this was the alerted transfer.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T229-00148\", \"T229-00150\", \"T229-00183\", \"T229-00192\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The provided records do not include a network-flow or proxy record identifying the destination, bytes transferred, or outcome of the alert-described transfer around 13:46 UTC.\",\n    \"The proxy records show a blocked request to zipshare-host.io, but do not establish whether the archive was transferred through another channel or at another time.\",\n    \"The records establish that c.zip was created, but do not reveal its contents, size, or whether it contained data from the Clients share.\"\n  ],\n  \"claims_not_established\": [\n    \"That tens of MB were successfully sent from WS-ZADAMS-01 around 13:46 UTC, or where they were sent.\",\n    \"That c.zip contained sensitive or unauthorized data, or was the file involved in the alert.\",\n    \"That zoe.adams was authorized to archive the Clients share or attempted to upload it.\",\n    \"That the proxy-denied zipshare request resulted in any transfer.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Retrieve the alert's underlying network-flow or packet evidence, including exact timestamps, destination, byte counts, protocol, and transfer outcome.\",\n    \"Review proxy and firewall records for WS-ZADAMS-01 from 13:40\u201313:55 UTC, including any upload requests and blocked or allowed connections.\",\n    \"Acquire and examine c.zip metadata, size, hash, and contents; correlate its creation and any subsequent access with endpoint and file-server audit logs.\",\n    \"Check FILE-SUN-01 SMB/share-access auditing for access to Shared\\\\Clients by zoe.adams and determine whether the archive operation was authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox is unapproved in this environment: Dropbox.exe was launched on WS-ZADAMS-01, and the host later connected to dl.dropboxusercontent.com. Investigate separately; these records do not establish that Dropbox carried the alerted transfer. (T229-00325, T229-00327, T229-00437)\",\n    \"GlobalProtect and Cisco AnyConnect client interfaces were launched on a workstation in an environment with no VPN; the records do not show a VPN connection. Investigate separately. (T229-00334, T229-00336, T229-00431, T229-00432)\",\n    \"At 13:30 UTC, ian.doyle authentication activity originated from WS-ZADAMS-01 and a network logon to WS-IDOYLE-01 came from that workstation, despite the stated practice that remote administration is done from WS-IDOYLE-01. Investigate separately; this activity does not establish the alerted transfer. (T229-00096, T229-00097, T229-00105)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 68759,
+    "output": 2566
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45 UTC, zoe.adams ran PowerShell from Explorer at medium integrity to compress \\\\FILE-SUN-01\\Shared\\Clients into C:\\Users\\zoe.adams\\AppData\\Local\\Temp\\c.zip; a file-creation event confirms c.zip was created.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T229-00148",
+     "T229-00149",
+     "T229-00150"
+    ]
+   },
+   {
+    "claim": "At 13:50 UTC, Chrome opened zipshare-host.io, an unapproved file-sharing service, but the explicit proxy denied the CONNECT request with status 403. These records do not show a successful upload.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T229-00183",
+     "T229-00192",
+     "T229-00193",
+     "T229-00195"
+    ]
+   },
+   {
+    "claim": "Around 13:46 UTC, the records show Kerberos activity and a ticket request for FILE-SUN-01, but do not show the destination, size, or successful completion of the alerted large outbound transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T229-00153",
+     "T229-00160",
+     "T229-00162",
+     "T229-00166"
+    ]
+   },
+   {
+    "claim": "The archive of a Clients share followed shortly by an attempt to access an unapproved file-sharing site is suspicious and could indicate preparation for exfiltration, but the available records do not establish that the archive was uploaded or that this was the alerted transfer.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T229-00148",
+     "T229-00150",
+     "T229-00183",
+     "T229-00192"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The provided records do not include a network-flow or proxy record identifying the destination, bytes transferred, or outcome of the alert-described transfer around 13:46 UTC.",
+   "The proxy records show a blocked request to zipshare-host.io, but do not establish whether the archive was transferred through another channel or at another time.",
+   "The records establish that c.zip was created, but do not reveal its contents, size, or whether it contained data from the Clients share."
+  ],
+  "claims_not_established": [
+   "That tens of MB were successfully sent from WS-ZADAMS-01 around 13:46 UTC, or where they were sent.",
+   "That c.zip contained sensitive or unauthorized data, or was the file involved in the alert.",
+   "That zoe.adams was authorized to archive the Clients share or attempted to upload it.",
+   "That the proxy-denied zipshare request resulted in any transfer."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Retrieve the alert's underlying network-flow or packet evidence, including exact timestamps, destination, byte counts, protocol, and transfer outcome.",
+   "Review proxy and firewall records for WS-ZADAMS-01 from 13:40\u201313:55 UTC, including any upload requests and blocked or allowed connections.",
+   "Acquire and examine c.zip metadata, size, hash, and contents; correlate its creation and any subsequent access with endpoint and file-server audit logs.",
+   "Check FILE-SUN-01 SMB/share-access auditing for access to Shared\\Clients by zoe.adams and determine whether the archive operation was authorized."
+  ],
+  "unrelated_findings": [
+   "Dropbox is unapproved in this environment: Dropbox.exe was launched on WS-ZADAMS-01, and the host later connected to dl.dropboxusercontent.com. Investigate separately; these records do not establish that Dropbox carried the alerted transfer. (T229-00325, T229-00327, T229-00437)",
+   "GlobalProtect and Cisco AnyConnect client interfaces were launched on a workstation in an environment with no VPN; the records do not show a VPN connection. Investigate separately. (T229-00334, T229-00336, T229-00431, T229-00432)",
+   "At 13:30 UTC, ian.doyle authentication activity originated from WS-ZADAMS-01 and a network logon to WS-IDOYLE-01 came from that workstation, despite the stated practice that remote administration is done from WS-IDOYLE-01. Investigate separately; this activity does not establish the alerted transfer. (T229-00096, T229-00097, T229-00105)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 25.2
+}

@@ -1,0 +1,99 @@
+{
+ "scenario_id": "T273",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:42:14 UTC, amy.cole opened Statement.docm in Word; about eight seconds later, Word spawned PowerShell with a hidden-window flag and an encoded command. The process lineage and timing link the PowerShell activity to the document.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T273-00137\",\n        \"T273-00141\"\n      ]\n    },\n    {\n      \"claim\": \"The encoded command decodes to an expression that uses Net.WebClient.DownloadString to retrieve and execute a script from raw.githubusercontent.com/orchard-it/tools/main/u.ps1.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T273-00141\",\n        \"T273-00143\"\n      ]\n    },\n    {\n      \"claim\": \"The proxy first recorded a denied request to raw.githubusercontent.com, then recorded a successful tunnel and a 200 response for the requested u.ps1 URL.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T273-00142\",\n        \"T273-00147\",\n        \"T273-00148\"\n      ]\n    },\n    {\n      \"claim\": \"The PowerShell process spawned rundll32 to invoke Init in C:\\\\Users\\\\amy.cole\\\\AppData\\\\Roaming\\\\svchelper.dll; the process then ran briefly before exiting.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T273-00152\",\n        \"T273-00154\",\n        \"T273-00158\",\n        \"T273-00159\"\n      ]\n    },\n    {\n      \"claim\": \"The document-to-hidden-PowerShell-to-downloaded-script-to-AppData-DLL execution chain is strongly indicative of malicious activity and is consistent with the reported brief PowerShell appearance, although the logs do not establish what the user saw.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T273-00137\",\n        \"T273-00141\",\n        \"T273-00148\",\n        \"T273-00152\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show the script URL and a successful HTTP 200 response, but do not include the downloaded script body or establish its contents.\",\n    \"The records show rundll32 invoking svchelper.dll, but do not provide the DLL contents, hash, signature, or a DLL image-load event.\",\n    \"The available records do not establish whether the reported PowerShell window was visibly rendered; the command line includes a hidden-window flag.\",\n    \"The evidence provided does not establish the full impact, persistence, or any later actions from this execution chain.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether amy.cole intentionally opened the document or knew about the resulting execution.\",\n    \"What the downloaded script and DLL do, and whether either created persistence or caused further impact.\",\n    \"Whether the PowerShell window was actually visible to the user.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and analyze Statement.docm, u.ps1, and svchelper.dll, including hashes, signatures, and content.\",\n    \"Collect endpoint response data for WS-ACOLE-01, including file, registry, persistence, and subsequent process/network activity related to the document and DLL.\",\n    \"Review the proxy transaction and available repository history or ownership records for the orchard-it/tools/u.ps1 resource.\",\n    \"Interview amy.cole about the document, its source, and the reported PowerShell window.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate-ticket lead: a SYSTEM PowerShell process ran C:\\\\Scripts\\\\service-health.ps1 with ExecutionPolicy Bypass, and that process was associated with an explicit-credentials event targeting svc-safe and PROXY-ORC-01. This is outside the alerted 13:42 document-launched activity. (T273-00002, T273-00005)\",\n    \"Separate-ticket lead: PROXY-ORC-01 at 10.56.20.30 connected to WS-ACOLE-01 over TCP 135. The inventory says remote administration is only done from WS-SBYRNE-01; the records do not establish the purpose of this connection. (T273-00087, T273-00088, T273-00090)\",\n    \"Separate-ticket lead: DC-ORC-01 recorded a tess.hart credential-validation event naming WS-ACOLE-01, followed by a network logon for tess.hart on WS-THART-01 with WS-ACOLE-01 as the workstation name. The records do not establish the purpose of this authentication. (T273-00106, T273-00107)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 45948,
+    "output": 2067
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:42:14 UTC, amy.cole opened Statement.docm in Word; about eight seconds later, Word spawned PowerShell with a hidden-window flag and an encoded command. The process lineage and timing link the PowerShell activity to the document.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T273-00137",
+     "T273-00141"
+    ]
+   },
+   {
+    "claim": "The encoded command decodes to an expression that uses Net.WebClient.DownloadString to retrieve and execute a script from raw.githubusercontent.com/orchard-it/tools/main/u.ps1.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T273-00141",
+     "T273-00143"
+    ]
+   },
+   {
+    "claim": "The proxy first recorded a denied request to raw.githubusercontent.com, then recorded a successful tunnel and a 200 response for the requested u.ps1 URL.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T273-00142",
+     "T273-00147",
+     "T273-00148"
+    ]
+   },
+   {
+    "claim": "The PowerShell process spawned rundll32 to invoke Init in C:\\Users\\amy.cole\\AppData\\Roaming\\svchelper.dll; the process then ran briefly before exiting.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T273-00152",
+     "T273-00154",
+     "T273-00158",
+     "T273-00159"
+    ]
+   },
+   {
+    "claim": "The document-to-hidden-PowerShell-to-downloaded-script-to-AppData-DLL execution chain is strongly indicative of malicious activity and is consistent with the reported brief PowerShell appearance, although the logs do not establish what the user saw.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T273-00137",
+     "T273-00141",
+     "T273-00148",
+     "T273-00152"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show the script URL and a successful HTTP 200 response, but do not include the downloaded script body or establish its contents.",
+   "The records show rundll32 invoking svchelper.dll, but do not provide the DLL contents, hash, signature, or a DLL image-load event.",
+   "The available records do not establish whether the reported PowerShell window was visibly rendered; the command line includes a hidden-window flag.",
+   "The evidence provided does not establish the full impact, persistence, or any later actions from this execution chain."
+  ],
+  "claims_not_established": [
+   "Whether amy.cole intentionally opened the document or knew about the resulting execution.",
+   "What the downloaded script and DLL do, and whether either created persistence or caused further impact.",
+   "Whether the PowerShell window was actually visible to the user."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and analyze Statement.docm, u.ps1, and svchelper.dll, including hashes, signatures, and content.",
+   "Collect endpoint response data for WS-ACOLE-01, including file, registry, persistence, and subsequent process/network activity related to the document and DLL.",
+   "Review the proxy transaction and available repository history or ownership records for the orchard-it/tools/u.ps1 resource.",
+   "Interview amy.cole about the document, its source, and the reported PowerShell window."
+  ],
+  "unrelated_findings": [
+   "Separate-ticket lead: a SYSTEM PowerShell process ran C:\\Scripts\\service-health.ps1 with ExecutionPolicy Bypass, and that process was associated with an explicit-credentials event targeting svc-safe and PROXY-ORC-01. This is outside the alerted 13:42 document-launched activity. (T273-00002, T273-00005)",
+   "Separate-ticket lead: PROXY-ORC-01 at 10.56.20.30 connected to WS-ACOLE-01 over TCP 135. The inventory says remote administration is only done from WS-SBYRNE-01; the records do not establish the purpose of this connection. (T273-00087, T273-00088, T273-00090)",
+   "Separate-ticket lead: DC-ORC-01 recorded a tess.hart credential-validation event naming WS-ACOLE-01, followed by a network logon for tess.hart on WS-THART-01 with WS-ACOLE-01 as the workstation name. The records do not establish the purpose of this authentication. (T273-00106, T273-00107)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 19.9
+}

@@ -1,0 +1,94 @@
+{
+ "scenario_id": "T213",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The user-reported time is not an exact match to the recorded PowerShell execution: at 13:40:16, MpCmdRun.exe was launched by the Windows service manager to run a scan, while the recorded PowerShell process appears at 13:45:09.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T213-00110\", \"T213-00111\", \"T213-00144\", \"T213-00145\"]\n    },\n    {\n      \"claim\": \"At 13:45:08, mia.santos opened Statement.docm in Word from the Downloads folder; the following second, Word spawned PowerShell under her account with -nop, -w hidden, and an encoded command.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T213-00140\", \"T213-00143\", \"T213-00144\", \"T213-00145\"]\n    },\n    {\n      \"claim\": \"The encoded PowerShell command decodes to an expression that downloads and executes a script from raw.githubusercontent.com/bluefin-it/tools/main/u.ps1. The proxy records a successful GET for that exact URL, and the network connection is attributed to the PowerShell process.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T213-00144\", \"T213-00147\", \"T213-00149\", \"T213-00150\", \"T213-00151\", \"T213-00153\", \"T213-00154\"]\n    },\n    {\n      \"claim\": \"PowerShell then launched rundll32.exe to run C:\\\\Users\\\\mia.santos\\\\AppData\\\\Roaming\\\\svchelper.dll,Init. This chain of a hidden encoded download-and-execute command followed by DLL execution is strongly indicative of malicious activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T213-00144\", \"T213-00155\", \"T213-00156\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not show a PowerShell process at the reported time around 13:40; the closest recorded event is the MpCmdRun.exe scan at 13:40:16, and the suspicious PowerShell launch is at 13:45:09. (T213-00110, T213-00111, T213-00144, T213-00145)\",\n    \"The supplied records do not include the downloaded script contents, the DLL contents or hashes, or PowerShell script-block/transcription output; the proxy records a successful request but not the response body. (T213-00144, T213-00150, T213-00155)\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the user saw the recorded hidden PowerShell process or a different window around 13:40.\",\n    \"What the downloaded u.ps1 script or svchelper.dll does, and whether either file was modified or persisted beyond the recorded execution.\",\n    \"Whether the GitHub repository or script was authorized by Bluefin; the inventory and logs provided do not establish its provenance.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Collect the exact contents and provenance of u.ps1, including repository history and any approved-change records.\",\n    \"Acquire svchelper.dll and the opened Statement.docm from WS-MSANTOS-01; record hashes and inspect their contents and origin.\",\n    \"Review endpoint security/Defender detections, PowerShell operational logs, AMSI data, and Office macro telemetry for this execution chain.\",\n    \"Confirm with mia.santos what appeared on screen and the approximate time, noting the recorded PowerShell launch occurred at 13:45 rather than 13:40.\"\n  ],\n  \"unrelated_findings\": [\n    \"Google Drive File Stream launched under mia.santos at 14:17:46, although the inventory approves OneDrive and lists no other approved cloud-storage services. This is separate from the alerted execution chain. (T213-00401, T213-00403)\",\n    \"Dropbox launched under mia.santos at 14:19:44, although the inventory lists no approved Dropbox service. This is separate from the alerted execution chain. (T213-00421, T213-00422)\",\n    \"Cisco AnyConnect's VPN UI launched at 14:18:14. The inventory says there is no VPN; the supplied records show the UI launch but do not establish a VPN connection. This is separate from the alerted execution chain. (T213-00406, T213-00408)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 66235,
+    "output": 2764
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "The user-reported time is not an exact match to the recorded PowerShell execution: at 13:40:16, MpCmdRun.exe was launched by the Windows service manager to run a scan, while the recorded PowerShell process appears at 13:45:09.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T213-00110",
+     "T213-00111",
+     "T213-00144",
+     "T213-00145"
+    ]
+   },
+   {
+    "claim": "At 13:45:08, mia.santos opened Statement.docm in Word from the Downloads folder; the following second, Word spawned PowerShell under her account with -nop, -w hidden, and an encoded command.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T213-00140",
+     "T213-00143",
+     "T213-00144",
+     "T213-00145"
+    ]
+   },
+   {
+    "claim": "The encoded PowerShell command decodes to an expression that downloads and executes a script from raw.githubusercontent.com/bluefin-it/tools/main/u.ps1. The proxy records a successful GET for that exact URL, and the network connection is attributed to the PowerShell process.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T213-00144",
+     "T213-00147",
+     "T213-00149",
+     "T213-00150",
+     "T213-00151",
+     "T213-00153",
+     "T213-00154"
+    ]
+   },
+   {
+    "claim": "PowerShell then launched rundll32.exe to run C:\\Users\\mia.santos\\AppData\\Roaming\\svchelper.dll,Init. This chain of a hidden encoded download-and-execute command followed by DLL execution is strongly indicative of malicious activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T213-00144",
+     "T213-00155",
+     "T213-00156"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not show a PowerShell process at the reported time around 13:40; the closest recorded event is the MpCmdRun.exe scan at 13:40:16, and the suspicious PowerShell launch is at 13:45:09. (T213-00110, T213-00111, T213-00144, T213-00145)",
+   "The supplied records do not include the downloaded script contents, the DLL contents or hashes, or PowerShell script-block/transcription output; the proxy records a successful request but not the response body. (T213-00144, T213-00150, T213-00155)"
+  ],
+  "claims_not_established": [
+   "Whether the user saw the recorded hidden PowerShell process or a different window around 13:40.",
+   "What the downloaded u.ps1 script or svchelper.dll does, and whether either file was modified or persisted beyond the recorded execution.",
+   "Whether the GitHub repository or script was authorized by Bluefin; the inventory and logs provided do not establish its provenance."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Collect the exact contents and provenance of u.ps1, including repository history and any approved-change records.",
+   "Acquire svchelper.dll and the opened Statement.docm from WS-MSANTOS-01; record hashes and inspect their contents and origin.",
+   "Review endpoint security/Defender detections, PowerShell operational logs, AMSI data, and Office macro telemetry for this execution chain.",
+   "Confirm with mia.santos what appeared on screen and the approximate time, noting the recorded PowerShell launch occurred at 13:45 rather than 13:40."
+  ],
+  "unrelated_findings": [
+   "Google Drive File Stream launched under mia.santos at 14:17:46, although the inventory approves OneDrive and lists no other approved cloud-storage services. This is separate from the alerted execution chain. (T213-00401, T213-00403)",
+   "Dropbox launched under mia.santos at 14:19:44, although the inventory lists no approved Dropbox service. This is separate from the alerted execution chain. (T213-00421, T213-00422)",
+   "Cisco AnyConnect's VPN UI launched at 14:18:14. The inventory says there is no VPN; the supplied records show the UI launch but do not establish a VPN connection. This is separate from the alerted execution chain. (T213-00406, T213-00408)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 18,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 27.1
+}

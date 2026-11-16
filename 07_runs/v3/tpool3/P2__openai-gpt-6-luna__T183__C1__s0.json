@@ -1,0 +1,88 @@
+{
+ "scenario_id": "T183",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:43:17 UTC, WINWORD.EXE opened C:\\\\Users\\\\mia.santos\\\\Downloads\\\\Statement.docm and launched PowerShell as a child process. The PowerShell command used -nop, -w hidden, and -enc.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T183-00110\", \"T183-00113\", \"T183-00115\"]\n    },\n    {\n      \"claim\": \"The encoded command decodes to an expression that downloads and executes a script from raw.githubusercontent.com/bluefin-it/tools/main/u.ps1. The proxy recorded a successful GET for that script shortly after PowerShell started.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T183-00113\", \"T183-00119\"]\n    },\n    {\n      \"claim\": \"PowerShell then launched rundll32.exe to call Init in C:\\\\Users\\\\mia.santos\\\\AppData\\\\Roaming\\\\svchelper.dll; the recorded process ran from 13:43:30 to 13:43:43 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T183-00130\", \"T183-00131\", \"T183-00134\", \"T183-00135\"]\n    },\n    {\n      \"claim\": \"The process evidence places the observed PowerShell activity at 13:43, not around the reported 13:40 time. The 13:40:23 record is an Explorer UserAssist registry write, not a PowerShell process-start event.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T183-00107\", \"T183-00113\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The logs show the PowerShell command line and a successful script download request, but do not include the downloaded script's contents.\",\n    \"The provided records do not include the DLL's contents, hash, signature, or a module-load event confirming what code rundll32 loaded.\",\n    \"The records establish a process chain but do not show whether the user knowingly opened the document or how the document was obtained.\"\n  ],\n  \"claims_not_established\": [\n    \"The exact contents and effects of u.ps1 and svchelper.dll are not established by these records.\",\n    \"The evidence does not establish persistence, data theft, exfiltration, or successful access to other systems.\",\n    \"The evidence does not establish who authored or controlled the GitHub-hosted script, or whether the repository was authorized.\",\n    \"The precise time the user saw a PowerShell window is not established; the process telemetry records PowerShell starting at 13:43:17 UTC.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze Statement.docm, including its hash, macro contents, origin, and delivery context.\",\n    \"Recover and analyze the downloaded u.ps1 and svchelper.dll, including hashes, signatures, and timestamps.\",\n    \"Collect endpoint forensic or EDR data for WS-MSANTOS-01 around and after 13:43 UTC to determine execution effects, persistence, and any subsequent access or data movement.\",\n    \"Confirm with mia.santos whether she opened the document and what she observed, including the reported time.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate review: WS-MSANTOS-01 attempted to connect to unapproved Dropbox; the proxy logged a gateway error at 13:24 and denied a later attempt at 13:46. These records do not link the attempts to the alerted process chain. (T183-00029, T183-00266)\",\n    \"Separate review: authentication activity from WS-MSANTOS-01's address involved eli.brooks and was followed by a network logon to WS-EBROOKS-01. The supplied records do not link this activity to the alerted document and PowerShell chain. (T183-00015, T183-00017, T183-00019)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 66669,
+    "output": 2407
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:43:17 UTC, WINWORD.EXE opened C:\\Users\\mia.santos\\Downloads\\Statement.docm and launched PowerShell as a child process. The PowerShell command used -nop, -w hidden, and -enc.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T183-00110",
+     "T183-00113",
+     "T183-00115"
+    ]
+   },
+   {
+    "claim": "The encoded command decodes to an expression that downloads and executes a script from raw.githubusercontent.com/bluefin-it/tools/main/u.ps1. The proxy recorded a successful GET for that script shortly after PowerShell started.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T183-00113",
+     "T183-00119"
+    ]
+   },
+   {
+    "claim": "PowerShell then launched rundll32.exe to call Init in C:\\Users\\mia.santos\\AppData\\Roaming\\svchelper.dll; the recorded process ran from 13:43:30 to 13:43:43 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T183-00130",
+     "T183-00131",
+     "T183-00134",
+     "T183-00135"
+    ]
+   },
+   {
+    "claim": "The process evidence places the observed PowerShell activity at 13:43, not around the reported 13:40 time. The 13:40:23 record is an Explorer UserAssist registry write, not a PowerShell process-start event.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T183-00107",
+     "T183-00113"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The logs show the PowerShell command line and a successful script download request, but do not include the downloaded script's contents.",
+   "The provided records do not include the DLL's contents, hash, signature, or a module-load event confirming what code rundll32 loaded.",
+   "The records establish a process chain but do not show whether the user knowingly opened the document or how the document was obtained."
+  ],
+  "claims_not_established": [
+   "The exact contents and effects of u.ps1 and svchelper.dll are not established by these records.",
+   "The evidence does not establish persistence, data theft, exfiltration, or successful access to other systems.",
+   "The evidence does not establish who authored or controlled the GitHub-hosted script, or whether the repository was authorized.",
+   "The precise time the user saw a PowerShell window is not established; the process telemetry records PowerShell starting at 13:43:17 UTC."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze Statement.docm, including its hash, macro contents, origin, and delivery context.",
+   "Recover and analyze the downloaded u.ps1 and svchelper.dll, including hashes, signatures, and timestamps.",
+   "Collect endpoint forensic or EDR data for WS-MSANTOS-01 around and after 13:43 UTC to determine execution effects, persistence, and any subsequent access or data movement.",
+   "Confirm with mia.santos whether she opened the document and what she observed, including the reported time."
+  ],
+  "unrelated_findings": [
+   "Separate review: WS-MSANTOS-01 attempted to connect to unapproved Dropbox; the proxy logged a gateway error at 13:24 and denied a later attempt at 13:46. These records do not link the attempts to the alerted process chain. (T183-00029, T183-00266)",
+   "Separate review: authentication activity from WS-MSANTOS-01's address involved eli.brooks and was followed by a network logon to WS-EBROOKS-01. The supplied records do not link this activity to the alerted document and PowerShell chain. (T183-00015, T183-00017, T183-00019)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 24.9
+}

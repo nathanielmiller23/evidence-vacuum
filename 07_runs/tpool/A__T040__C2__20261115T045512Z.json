@@ -1,0 +1,97 @@
+{
+ "run_id": "A__T040__C2__20261115T045512Z",
+ "config": "A",
+ "scenario_id": "T040",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 347,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 138049,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.82,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded a Kerberos service-ticket request for svc-archive to FILE-NWD-01 from 139.162.174.124, a public IP address. Given the stated absence of VPN and svc-archive's role as a file-server backup service account, this is strongly inconsistent with the described environment and supports suspected unauthorized credential use.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T040-00193\"\n      ]\n    },\n    {\n      \"claim\": \"During the alert window, FILE-NWD-01 sent 640,000,221 bytes to PROXY-NWD-01 on port 8080. The record establishes a large transfer to the internal proxy, but does not identify the ultimate destination or the originating process.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T040-00204\"\n      ]\n    },\n    {\n      \"claim\": \"A large transfer of several hundred MB could be consistent with the approved StratoSafe backup, but the available record does not show that the approved backup agent or destination was involved.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T040-00204\"\n      ]\n    },\n    {\n      \"claim\": \"Nora Blake launched RDP to FILE-NWD-01, and the recorded RDP connection overlapped the large transfer. The stated practice restricts remote administration to Sam Okafor from WS-SOKAFOR-01, so this access is unexplained and increases concern; the records do not establish what Nora did in the session.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T040-00098\",\n        \"T040-00103\",\n        \"T040-00108\",\n        \"T040-00204\"\n      ]\n    },\n    {\n      \"claim\": \"Sam Okafor's recorded RDP connection to FILE-NWD-01 began after the large transfer record, so it does not explain the transfer's initiation based on the available timestamps.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T040-00204\",\n        \"T040-00231\",\n        \"T040-00235\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The transfer record identifies FILE-NWD-01, the internal proxy, byte counts, and timing, but provides no URL, ultimate external destination, or process attribution (T040-00204).\",\n    \"The supplied records do not establish which user or process on FILE-NWD-01 initiated the transfer; the RDP connection timing alone does not attribute it to Nora Blake (T040-00103, T040-00204).\",\n    \"The Kerberos record identifies a public source IP and svc-archive but does not, by itself, establish who controlled that IP or how the credentials were obtained (T040-00193).\"\n  ],\n  \"claims_not_established\": [\n    \"That the 640 MB transfer went to StratoSafe or to any other particular external destination.\",\n    \"That the 640 MB transfer was caused by svc-archive or by Nora Blake's RDP session.\",\n    \"That data was stolen, what data was transferred, or whether the transfer was an authorized backup.\",\n    \"That the public IP associated with the svc-archive ticket request was controlled by an attacker.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Proxy logs for the transfer, including URL, destination host, authenticated identity, and request details.\",\n    \"FILE-NWD-01 process and service telemetry around 13:43\u201313:47 UTC to identify the uploader and its command line or parent process.\",\n    \"Domain-controller authentication details and surrounding records for the svc-archive request, plus account sign-in and credential-use history.\",\n    \"FILE-NWD-01 RDP session and Windows logon records identifying Nora Blake's session activity and any files or commands accessed.\",\n    \"StratoSafe agent logs and backup-job records to determine whether this transfer matches an expected backup.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 51796,
+    "output": 2323,
+    "reasoning": 1406
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.82,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded a Kerberos service-ticket request for svc-archive to FILE-NWD-01 from 139.162.174.124, a public IP address. Given the stated absence of VPN and svc-archive's role as a file-server backup service account, this is strongly inconsistent with the described environment and supports suspected unauthorized credential use.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T040-00193"
+    ]
+   },
+   {
+    "claim": "During the alert window, FILE-NWD-01 sent 640,000,221 bytes to PROXY-NWD-01 on port 8080. The record establishes a large transfer to the internal proxy, but does not identify the ultimate destination or the originating process.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T040-00204"
+    ]
+   },
+   {
+    "claim": "A large transfer of several hundred MB could be consistent with the approved StratoSafe backup, but the available record does not show that the approved backup agent or destination was involved.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T040-00204"
+    ]
+   },
+   {
+    "claim": "Nora Blake launched RDP to FILE-NWD-01, and the recorded RDP connection overlapped the large transfer. The stated practice restricts remote administration to Sam Okafor from WS-SOKAFOR-01, so this access is unexplained and increases concern; the records do not establish what Nora did in the session.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T040-00098",
+     "T040-00103",
+     "T040-00108",
+     "T040-00204"
+    ]
+   },
+   {
+    "claim": "Sam Okafor's recorded RDP connection to FILE-NWD-01 began after the large transfer record, so it does not explain the transfer's initiation based on the available timestamps.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T040-00204",
+     "T040-00231",
+     "T040-00235"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The transfer record identifies FILE-NWD-01, the internal proxy, byte counts, and timing, but provides no URL, ultimate external destination, or process attribution (T040-00204).",
+   "The supplied records do not establish which user or process on FILE-NWD-01 initiated the transfer; the RDP connection timing alone does not attribute it to Nora Blake (T040-00103, T040-00204).",
+   "The Kerberos record identifies a public source IP and svc-archive but does not, by itself, establish who controlled that IP or how the credentials were obtained (T040-00193)."
+  ],
+  "claims_not_established": [
+   "That the 640 MB transfer went to StratoSafe or to any other particular external destination.",
+   "That the 640 MB transfer was caused by svc-archive or by Nora Blake's RDP session.",
+   "That data was stolen, what data was transferred, or whether the transfer was an authorized backup.",
+   "That the public IP associated with the svc-archive ticket request was controlled by an attacker."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Proxy logs for the transfer, including URL, destination host, authenticated identity, and request details.",
+   "FILE-NWD-01 process and service telemetry around 13:43\u201313:47 UTC to identify the uploader and its command line or parent process.",
+   "Domain-controller authentication details and surrounding records for the svc-archive request, plus account sign-in and credential-use history.",
+   "FILE-NWD-01 RDP session and Windows logon records identifying Nora Blake's session activity and any files or commands accessed.",
+   "StratoSafe agent logs and backup-job records to determine whether this transfer matches an expected backup."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.1
+}

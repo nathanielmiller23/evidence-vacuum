@@ -1,0 +1,92 @@
+{
+ "scenario_id": "T254",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.92,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:42:51 UTC, PowerShell ran under SUNRIDGE\\\\ian.doyle and invoked the exact \\\\FILE-SUN-01\\\\IT\\\\Patch-Workstations.ps1 path specified in the organization's patching practice. The process was recorded on the alerted workstation.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T254-00118\", \"T254-00119\"]\n    },\n    {\n      \"claim\": \"Shortly beforehand, the alerted workstation recorded a network logon for ian.doyle from 10.55.10.23; the domain controller also issued a ticket for ian.doyle to access WS-ZADAMS-01 from that address. This is consistent with remote execution, though the records do not identify the source host by name.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T254-00106\", \"T254-00112\"]\n    },\n    {\n      \"claim\": \"During the PowerShell run, the workstation downloaded about 38.8 MB through the proxy from download.windowsupdate.com; the proxy record reports a Windows Update Agent user agent.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T254-00120\", \"T254-00121\", \"T254-00123\"]\n    },\n    {\n      \"claim\": \"PowerShell launched wusa.exe to install windows11-kb5047001-x64.msu quietly, and both wusa.exe and the PowerShell process subsequently exited.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T254-00125\", \"T254-00127\", \"T254-00128\", \"T254-00146\", \"T254-00147\"]\n    },\n    {\n      \"claim\": \"Taken together, the script path, account attribution, Windows Update traffic, and MSU installation align with the documented workstation-patching workflow and support a benign disposition for the alerted PowerShell activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T254-00118\", \"T254-00119\", \"T254-00121\", \"T254-00125\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show the script path and command line, but not the script contents, its signature, or a hash that would establish the exact script version executed.\",\n    \"The proxy records show the destination, user agent, and transfer volume, but do not expose the HTTPS payload.\",\n    \"The process and logon records attribute activity to an account; they do not establish which person was physically operating the source device.\"\n  ],\n  \"claims_not_established\": [\n    \"The available records do not independently establish that this specific execution was approved by IT or that the script on the share was untampered.\",\n    \"The records do not establish whether the named update installed successfully.\",\n    \"The logs do not directly establish that this was the exact PowerShell window Zoe saw; the recorded PowerShell start was at 13:42:51 UTC, while her reported time was approximate.\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [],\n  \"unrelated_findings\": [\n    \"Separate review recommended: at about 13:30 UTC, the domain controller issued ian.doyle a service ticket for WS-IDOYLE-01 from 10.55.10.21, and WS-IDOYLE-01 recorded a type 3 logon for ian.doyle from that same address. The inventory identifies 10.55.10.21 as WS-ZADAMS-01 and says remote administration is only done from WS-IDOYLE-01. These records warrant checking the account use, but do not by themselves establish that the later, documented patch-script execution was malicious. (T254-00045, T254-00046, T254-00048)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 43012,
+    "output": 4230
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.92,
+  "supporting_observations": [
+   {
+    "claim": "At 13:42:51 UTC, PowerShell ran under SUNRIDGE\\ian.doyle and invoked the exact \\FILE-SUN-01\\IT\\Patch-Workstations.ps1 path specified in the organization's patching practice. The process was recorded on the alerted workstation.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T254-00118",
+     "T254-00119"
+    ]
+   },
+   {
+    "claim": "Shortly beforehand, the alerted workstation recorded a network logon for ian.doyle from 10.55.10.23; the domain controller also issued a ticket for ian.doyle to access WS-ZADAMS-01 from that address. This is consistent with remote execution, though the records do not identify the source host by name.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T254-00106",
+     "T254-00112"
+    ]
+   },
+   {
+    "claim": "During the PowerShell run, the workstation downloaded about 38.8 MB through the proxy from download.windowsupdate.com; the proxy record reports a Windows Update Agent user agent.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T254-00120",
+     "T254-00121",
+     "T254-00123"
+    ]
+   },
+   {
+    "claim": "PowerShell launched wusa.exe to install windows11-kb5047001-x64.msu quietly, and both wusa.exe and the PowerShell process subsequently exited.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T254-00125",
+     "T254-00127",
+     "T254-00128",
+     "T254-00146",
+     "T254-00147"
+    ]
+   },
+   {
+    "claim": "Taken together, the script path, account attribution, Windows Update traffic, and MSU installation align with the documented workstation-patching workflow and support a benign disposition for the alerted PowerShell activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T254-00118",
+     "T254-00119",
+     "T254-00121",
+     "T254-00125"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show the script path and command line, but not the script contents, its signature, or a hash that would establish the exact script version executed.",
+   "The proxy records show the destination, user agent, and transfer volume, but do not expose the HTTPS payload.",
+   "The process and logon records attribute activity to an account; they do not establish which person was physically operating the source device."
+  ],
+  "claims_not_established": [
+   "The available records do not independently establish that this specific execution was approved by IT or that the script on the share was untampered.",
+   "The records do not establish whether the named update installed successfully.",
+   "The logs do not directly establish that this was the exact PowerShell window Zoe saw; the recorded PowerShell start was at 13:42:51 UTC, while her reported time was approximate."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [],
+  "unrelated_findings": [
+   "Separate review recommended: at about 13:30 UTC, the domain controller issued ian.doyle a service ticket for WS-IDOYLE-01 from 10.55.10.21, and WS-IDOYLE-01 recorded a type 3 logon for ian.doyle from that same address. The inventory identifies 10.55.10.21 as WS-ZADAMS-01 and says remote administration is only done from WS-IDOYLE-01. These records warrant checking the account use, but do not by themselves establish that the later, documented patch-script execution was malicious. (T254-00045, T254-00046, T254-00048)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 16,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 39.9
+}

@@ -1,0 +1,84 @@
+{
+ "scenario_id": "T244",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.95,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:42:41 UTC, PowerShell ran on WS-ZADAMS-01 as SUNRIDGE\\\\ian.doyle with the command `-NoProfile -ExecutionPolicy Bypass -File \\\\\\\\FILE-SUN-01\\\\IT\\\\Patch-Workstations.ps1`, matching the documented IT workstation-patching practice. The timestamp is close to the reported brief appearance around 13:40 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T244-00119\", \"T244-00120\"]\n    },\n    {\n      \"claim\": \"Shortly before PowerShell started, WS-ZADAMS-01 recorded a network logon for ian.doyle from 10.55.10.23 and a privileged-logon event for that account. This is consistent with the documented administrator-led remote patching, though these records do not identify the source hostname.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T244-00110\", \"T244-00111\", \"T244-00112\"]\n    },\n    {\n      \"claim\": \"The PowerShell process connected through the proxy while Windows Update Agent traffic downloaded about 38.8 MB, and it launched wusa.exe to install a Windows update package. This sequence supports the patching explanation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T244-00121\", \"T244-00122\", \"T244-00124\", \"T244-00125\", \"T244-00126\"]\n    },\n    {\n      \"claim\": \"The PowerShell and wusa.exe processes exited within seconds of starting; the logs do not show evidence in this sequence of a longer-running shell.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T244-00128\", \"T244-00129\", \"T244-00130\", \"T244-00131\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The listed winsec and sysmon collection outage applies to WS-LWARD-01, not the alerted host WS-ZADAMS-01; the provided sensor status reports these sources as OK for the alerted host.\",\n    \"The records do not identify the hostname associated with source IP 10.55.10.23.\",\n    \"The provided records show the PowerShell command line and related process/network events, but not the contents or provenance of the patch script or the update package.\"\n  ],\n  \"claims_not_established\": [\n    \"The logs do not establish the hostname or physical operator behind source IP 10.55.10.23.\",\n    \"The logs do not independently verify the contents or integrity of Patch-Workstations.ps1 or the downloaded update package.\",\n    \"The logs do not establish whether the user saw this specific process window; they establish that the reported time closely coincides with the documented patching sequence.\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [],\n  \"unrelated_findings\": [\n    \"At 14:15 UTC, an unlisted Meridian OpsAgent executable ran as SYSTEM on WS-ZADAMS-01; it then attempted explicit authentication as svc-ledger. This is separate from the alerted PowerShell process and merits a separate review of the software, its deployment, and the svc-ledger credential use. Records: T244-00227, T244-00228, T244-00235, T244-00236, T244-00237.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 38806,
+    "output": 1844
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.95,
+  "supporting_observations": [
+   {
+    "claim": "At 13:42:41 UTC, PowerShell ran on WS-ZADAMS-01 as SUNRIDGE\\ian.doyle with the command `-NoProfile -ExecutionPolicy Bypass -File \\\\FILE-SUN-01\\IT\\Patch-Workstations.ps1`, matching the documented IT workstation-patching practice. The timestamp is close to the reported brief appearance around 13:40 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T244-00119",
+     "T244-00120"
+    ]
+   },
+   {
+    "claim": "Shortly before PowerShell started, WS-ZADAMS-01 recorded a network logon for ian.doyle from 10.55.10.23 and a privileged-logon event for that account. This is consistent with the documented administrator-led remote patching, though these records do not identify the source hostname.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T244-00110",
+     "T244-00111",
+     "T244-00112"
+    ]
+   },
+   {
+    "claim": "The PowerShell process connected through the proxy while Windows Update Agent traffic downloaded about 38.8 MB, and it launched wusa.exe to install a Windows update package. This sequence supports the patching explanation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T244-00121",
+     "T244-00122",
+     "T244-00124",
+     "T244-00125",
+     "T244-00126"
+    ]
+   },
+   {
+    "claim": "The PowerShell and wusa.exe processes exited within seconds of starting; the logs do not show evidence in this sequence of a longer-running shell.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T244-00128",
+     "T244-00129",
+     "T244-00130",
+     "T244-00131"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The listed winsec and sysmon collection outage applies to WS-LWARD-01, not the alerted host WS-ZADAMS-01; the provided sensor status reports these sources as OK for the alerted host.",
+   "The records do not identify the hostname associated with source IP 10.55.10.23.",
+   "The provided records show the PowerShell command line and related process/network events, but not the contents or provenance of the patch script or the update package."
+  ],
+  "claims_not_established": [
+   "The logs do not establish the hostname or physical operator behind source IP 10.55.10.23.",
+   "The logs do not independently verify the contents or integrity of Patch-Workstations.ps1 or the downloaded update package.",
+   "The logs do not establish whether the user saw this specific process window; they establish that the reported time closely coincides with the documented patching sequence."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [],
+  "unrelated_findings": [
+   "At 14:15 UTC, an unlisted Meridian OpsAgent executable ran as SYSTEM on WS-ZADAMS-01; it then attempted explicit authentication as svc-ledger. This is separate from the alerted PowerShell process and merits a separate review of the software, its deployment, and the svc-ledger credential use. Records: T244-00227, T244-00228, T244-00235, T244-00236, T244-00237."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 14,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.1
+}

@@ -1,0 +1,67 @@
+{
+ "scenario_id": "T189",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:49:14 UTC, WS-MSANTOS-01 sent 51,000,519 bytes to the internal proxy at 10.54.20.30:8080 and received 8,932 bytes in the same connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T189-00270\"\n      ]\n    },\n    {\n      \"claim\": \"The recorded connection supports that a large transfer from the workstation to the proxy occurred, but does not identify the ultimate external recipient or the content transferred.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T189-00270\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy telemetry for PROXY-BLU-01 was not collected from 13:30 to 14:15 UTC, so the proxy request details and ultimate destination for the 13:49 transfer are unavailable.\",\n    \"WS-MSANTOS-01 winsec and Sysmon telemetry was not collected from 13:30 to 14:15 UTC, leaving the initiating process, user context, and local file activity for the transfer unobserved.\",\n    \"Zeek connection telemetry was available, but the provided record identifies only the connection to the internal proxy, not the proxied destination or transferred data.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the transfer went to an approved service such as Microsoft 365/OneDrive or to an unapproved destination.\",\n    \"Whether the transfer was an authorized user action, a legitimate application upload, or malicious exfiltration.\",\n    \"What files or other data were transferred and whether they were sensitive.\",\n    \"Which process initiated the transfer and whether the workstation was compromised.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover or obtain proxy logs for the 13:49 UTC connection, including URL or destination host, request method, authenticated user, and upload details.\",\n    \"Obtain endpoint process, file-access, and user-session telemetry for WS-MSANTOS-01 around 13:49 UTC from an alternate source or restored collection.\",\n    \"Check available OneDrive/Microsoft 365 audit records and user confirmation for a matching large upload.\",\n    \"Determine whether the proxy connection was forwarded externally and identify the destination and outcome.\"\n  ],\n  \"unrelated_findings\": [\n    \"FILE-BLU-01 initiated an RDP connection to WS-MSANTOS-01 at 13:54:31 UTC. This is outside the alerted transfer and is worth separate review given the stated remote-administration practice; the connection record alone does not establish a successful session. (T189-00286)\",\n    \"WS-MSANTOS-01 connected to DC-BLU-01 over SMB at 13:45:36 UTC, with a successful machine-account network logon. This is separate from the later proxy transfer and the records do not establish what resource was accessed. (T189-00255, T189-00259)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 30524,
+    "output": 1677
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "At 13:49:14 UTC, WS-MSANTOS-01 sent 51,000,519 bytes to the internal proxy at 10.54.20.30:8080 and received 8,932 bytes in the same connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T189-00270"
+    ]
+   },
+   {
+    "claim": "The recorded connection supports that a large transfer from the workstation to the proxy occurred, but does not identify the ultimate external recipient or the content transferred.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T189-00270"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy telemetry for PROXY-BLU-01 was not collected from 13:30 to 14:15 UTC, so the proxy request details and ultimate destination for the 13:49 transfer are unavailable.",
+   "WS-MSANTOS-01 winsec and Sysmon telemetry was not collected from 13:30 to 14:15 UTC, leaving the initiating process, user context, and local file activity for the transfer unobserved.",
+   "Zeek connection telemetry was available, but the provided record identifies only the connection to the internal proxy, not the proxied destination or transferred data."
+  ],
+  "claims_not_established": [
+   "Whether the transfer went to an approved service such as Microsoft 365/OneDrive or to an unapproved destination.",
+   "Whether the transfer was an authorized user action, a legitimate application upload, or malicious exfiltration.",
+   "What files or other data were transferred and whether they were sensitive.",
+   "Which process initiated the transfer and whether the workstation was compromised."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover or obtain proxy logs for the 13:49 UTC connection, including URL or destination host, request method, authenticated user, and upload details.",
+   "Obtain endpoint process, file-access, and user-session telemetry for WS-MSANTOS-01 around 13:49 UTC from an alternate source or restored collection.",
+   "Check available OneDrive/Microsoft 365 audit records and user confirmation for a matching large upload.",
+   "Determine whether the proxy connection was forwarded externally and identify the destination and outcome."
+  ],
+  "unrelated_findings": [
+   "FILE-BLU-01 initiated an RDP connection to WS-MSANTOS-01 at 13:54:31 UTC. This is outside the alerted transfer and is worth separate review given the stated remote-administration practice; the connection record alone does not establish a successful session. (T189-00286)",
+   "WS-MSANTOS-01 connected to DC-BLU-01 over SMB at 13:45:36 UTC, with a successful machine-account network logon. This is separate from the later proxy transfer and the records do not establish what resource was accessed. (T189-00255, T189-00259)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 2,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 17.6
+}

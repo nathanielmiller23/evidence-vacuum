@@ -1,0 +1,115 @@
+{
+ "scenario_id": "T205",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted periodic connections are associated with stockpilotupd.exe running from Eli Brooks's user-writable AppData\\\\Local\\\\StockPilot directory, rather than the inventory-listed C:\\\\Program Files\\\\StockPilot path. The process started at 13:41:11, and a file-creation event for that same executable was recorded seconds before its first observed connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T205-00138\", \"T205-00139\", \"T205-00140\"]\n    },\n    {\n      \"claim\": \"The updater process connected through the explicit proxy at approximately five-minute intervals to update.stockpilot.co:443. The proxy recorded successful CONNECTs at 13:41:16, 13:46:01, 13:55:59, 14:00:51, and 14:06:04; the 13:51:42 attempt returned 504 and was terminated.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T205-00141\", \"T205-00143\", \"T205-00144\", \"T205-00171\", \"T205-00173\", \"T205-00174\", \"T205-00219\", \"T205-00220\", \"T205-00238\", \"T205-00240\", \"T205-00241\", \"T205-00247\", \"T205-00249\", \"T205-00250\", \"T205-00263\", \"T205-00265\", \"T205-00266\"]\n    },\n    {\n      \"claim\": \"The observed destination is update.stockpilot.co, whereas the provided inventory identifies update.stockpilot.com as the approved StockPilot update host. The domain discrepancy, together with the executable's user-profile location, makes the periodic traffic suspicious.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T205-00141\", \"T205-00171\", \"T205-00219\", \"T205-00238\", \"T205-00247\", \"T205-00263\"]\n    },\n    {\n      \"claim\": \"The proxy CONNECT records report an Edge user agent, while endpoint network events attribute the proxy connections to stockpilotupd.exe. This attribution difference is an additional point to validate; the available records do not establish why the user agent differs.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T205-00141\", \"T205-00143\", \"T205-00171\", \"T205-00173\", \"T205-00238\", \"T205-00240\", \"T205-00247\", \"T205-00249\", \"T205-00263\", \"T205-00265\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records show CONNECT tunnels and the Zeek records show connections to the proxy; the available evidence does not expose the HTTPS request or response contents.\",\n    \"The logs do not provide the updater's hash, signature status, or a verified comparison against a known-good StockPilot binary.\",\n    \"The proxy user-agent field does not by itself identify the process that originated the tunneled request.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish what data, if any, was sent to or received from update.stockpilot.co.\",\n    \"The evidence does not establish whether update.stockpilot.co is controlled by StockPilot or is malicious.\",\n    \"The evidence does not establish that the file-creation event represents tampering rather than legitimate self-update behavior.\",\n    \"The evidence does not establish compromise of Eli Brooks's account or workstation beyond the suspicious activity described.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and analyze the stockpilotupd.exe file, including its hash, signature, creation history, and comparison with the approved StockPilot installation.\",\n    \"Validate ownership and legitimacy of update.stockpilot.co against StockPilot/vendor records and proxy or DNS reputation data.\",\n    \"Obtain proxy TLS inspection or other available session metadata and any endpoint telemetry that can identify the HTTPS request and response contents.\",\n    \"Review the workstation's persistence, execution, and file-modification history around the updater launch and repeated connections.\"\n  ],\n  \"unrelated_findings\": [\n    \"DropboxUpdate.exe ran as SYSTEM on WS-EBROOKS-01; Dropbox is not among the listed approved services. This is separate from the StockPilot connection activity. (T205-00091, T205-00092)\",\n    \"Cisco AnyConnect's UI was launched on WS-EBROOKS-01 despite the inventory stating there is no VPN; the records shown do not establish that a VPN connection was made. (T205-00177, T205-00178, T205-00179)\",\n    \"The browser accessed images.wellbridge.co at 14:12 UTC, outside the alert's stated 13:30\u201314:10 activity interval; assess separately. (T205-00299, T205-00300, T205-00301, T205-00302)\",\n    \"Windows Defender wrote a DetectionHistory file during the review window, but its contents and relation to the alerted activity are not shown. Investigate separately without treating it as proof about this alert. (T205-00352)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 55581,
+    "output": 2631
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "The alerted periodic connections are associated with stockpilotupd.exe running from Eli Brooks's user-writable AppData\\Local\\StockPilot directory, rather than the inventory-listed C:\\Program Files\\StockPilot path. The process started at 13:41:11, and a file-creation event for that same executable was recorded seconds before its first observed connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T205-00138",
+     "T205-00139",
+     "T205-00140"
+    ]
+   },
+   {
+    "claim": "The updater process connected through the explicit proxy at approximately five-minute intervals to update.stockpilot.co:443. The proxy recorded successful CONNECTs at 13:41:16, 13:46:01, 13:55:59, 14:00:51, and 14:06:04; the 13:51:42 attempt returned 504 and was terminated.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T205-00141",
+     "T205-00143",
+     "T205-00144",
+     "T205-00171",
+     "T205-00173",
+     "T205-00174",
+     "T205-00219",
+     "T205-00220",
+     "T205-00238",
+     "T205-00240",
+     "T205-00241",
+     "T205-00247",
+     "T205-00249",
+     "T205-00250",
+     "T205-00263",
+     "T205-00265",
+     "T205-00266"
+    ]
+   },
+   {
+    "claim": "The observed destination is update.stockpilot.co, whereas the provided inventory identifies update.stockpilot.com as the approved StockPilot update host. The domain discrepancy, together with the executable's user-profile location, makes the periodic traffic suspicious.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T205-00141",
+     "T205-00171",
+     "T205-00219",
+     "T205-00238",
+     "T205-00247",
+     "T205-00263"
+    ]
+   },
+   {
+    "claim": "The proxy CONNECT records report an Edge user agent, while endpoint network events attribute the proxy connections to stockpilotupd.exe. This attribution difference is an additional point to validate; the available records do not establish why the user agent differs.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T205-00141",
+     "T205-00143",
+     "T205-00171",
+     "T205-00173",
+     "T205-00238",
+     "T205-00240",
+     "T205-00247",
+     "T205-00249",
+     "T205-00263",
+     "T205-00265"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records show CONNECT tunnels and the Zeek records show connections to the proxy; the available evidence does not expose the HTTPS request or response contents.",
+   "The logs do not provide the updater's hash, signature status, or a verified comparison against a known-good StockPilot binary.",
+   "The proxy user-agent field does not by itself identify the process that originated the tunneled request."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish what data, if any, was sent to or received from update.stockpilot.co.",
+   "The evidence does not establish whether update.stockpilot.co is controlled by StockPilot or is malicious.",
+   "The evidence does not establish that the file-creation event represents tampering rather than legitimate self-update behavior.",
+   "The evidence does not establish compromise of Eli Brooks's account or workstation beyond the suspicious activity described."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and analyze the stockpilotupd.exe file, including its hash, signature, creation history, and comparison with the approved StockPilot installation.",
+   "Validate ownership and legitimacy of update.stockpilot.co against StockPilot/vendor records and proxy or DNS reputation data.",
+   "Obtain proxy TLS inspection or other available session metadata and any endpoint telemetry that can identify the HTTPS request and response contents.",
+   "Review the workstation's persistence, execution, and file-modification history around the updater launch and repeated connections."
+  ],
+  "unrelated_findings": [
+   "DropboxUpdate.exe ran as SYSTEM on WS-EBROOKS-01; Dropbox is not among the listed approved services. This is separate from the StockPilot connection activity. (T205-00091, T205-00092)",
+   "Cisco AnyConnect's UI was launched on WS-EBROOKS-01 despite the inventory stating there is no VPN; the records shown do not establish that a VPN connection was made. (T205-00177, T205-00178, T205-00179)",
+   "The browser accessed images.wellbridge.co at 14:12 UTC, outside the alert's stated 13:30\u201314:10 activity interval; assess separately. (T205-00299, T205-00300, T205-00301, T205-00302)",
+   "Windows Defender wrote a DetectionHistory file during the review window, but its contents and relation to the alerted activity are not shown. Investigate separately without treating it as proof about this alert. (T205-00352)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 36,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 26.4
+}

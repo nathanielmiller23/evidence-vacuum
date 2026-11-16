@@ -1,0 +1,73 @@
+{
+ "scenario_id": "T160",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.9,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:48:58 UTC, FILE-MAP-01 sent 640,000,535 bytes to PROXY-MAP-01 over port 8080 in a connection lasting about 10.5 seconds; the log records the transfer only as traffic to the proxy.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T160-00278\"\n      ]\n    },\n    {\n      \"claim\": \"About 39 seconds before that transfer, a Kerberos event recorded a service-ticket request for FILE-MAP-01$ using svc-vault from IP 139.162.174.124. This is temporally close to the transfer, but the logs do not establish a connection between the authentication and the upload.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T160-00261\",\n        \"T160-00278\"\n      ]\n    },\n    {\n      \"claim\": \"The provided environment context identifies an approved backup agent on FILE-MAP-01 that uploads several hundred MB, making a benign explanation plausible; the available flow record does not identify that agent as the sender.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T160-00278\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The large-transfer record identifies the internal proxy as the destination but does not show the external host or service reached through it. The available proxy record is an unrelated Windows Update request from 13:24, not a record of the large transfer. (T160-00278, T160-00023)\",\n    \"The large-transfer flow record contains no process or account attribution, so it cannot be tied to the Safeharbor agent or another process. (T160-00278)\",\n    \"The svc-vault Kerberos event records the account, requested service, and source IP, but does not establish what process initiated the request or whether it led to the transfer. (T160-00261, T160-00278)\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the transfer went to the approved safeharbor-backup.net service or to an unapproved destination.\",\n    \"Whether the Safeharbor backup agent initiated the transfer.\",\n    \"Whether the svc-vault request from 139.162.174.124 was legitimate or causally related to the transfer.\",\n    \"Whether the transferred data was authorized backup data or sensitive data being exfiltrated.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Retrieve PROXY-MAP-01 access/tunnel logs for the large transfer to identify the requested external destination, URL or service, and proxy identity.\",\n    \"Collect FILE-MAP-01 process-to-network telemetry and Safeharbor agent/job logs covering the transfer time, including the files or dataset uploaded.\",\n    \"Investigate the svc-vault Kerberos request from 139.162.174.124, including DC and FILE-MAP-01 authentication, account-use, and network records around 13:48 UTC.\"\n  ],\n  \"unrelated_findings\": [\n    \"Greta Lund launched mstsc.exe from WS-GLUND-01 and established an RDP connection to FILE-MAP-01. This conflicts with the stated practice that remote administration is only performed from WS-AHASSAN-01; handle separately and do not use it to decide this transfer alert. (T160-00338, T160-00342)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 50209,
+    "output": 2597
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.9,
+  "supporting_observations": [
+   {
+    "claim": "At 13:48:58 UTC, FILE-MAP-01 sent 640,000,535 bytes to PROXY-MAP-01 over port 8080 in a connection lasting about 10.5 seconds; the log records the transfer only as traffic to the proxy.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T160-00278"
+    ]
+   },
+   {
+    "claim": "About 39 seconds before that transfer, a Kerberos event recorded a service-ticket request for FILE-MAP-01$ using svc-vault from IP 139.162.174.124. This is temporally close to the transfer, but the logs do not establish a connection between the authentication and the upload.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T160-00261",
+     "T160-00278"
+    ]
+   },
+   {
+    "claim": "The provided environment context identifies an approved backup agent on FILE-MAP-01 that uploads several hundred MB, making a benign explanation plausible; the available flow record does not identify that agent as the sender.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T160-00278"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The large-transfer record identifies the internal proxy as the destination but does not show the external host or service reached through it. The available proxy record is an unrelated Windows Update request from 13:24, not a record of the large transfer. (T160-00278, T160-00023)",
+   "The large-transfer flow record contains no process or account attribution, so it cannot be tied to the Safeharbor agent or another process. (T160-00278)",
+   "The svc-vault Kerberos event records the account, requested service, and source IP, but does not establish what process initiated the request or whether it led to the transfer. (T160-00261, T160-00278)"
+  ],
+  "claims_not_established": [
+   "Whether the transfer went to the approved safeharbor-backup.net service or to an unapproved destination.",
+   "Whether the Safeharbor backup agent initiated the transfer.",
+   "Whether the svc-vault request from 139.162.174.124 was legitimate or causally related to the transfer.",
+   "Whether the transferred data was authorized backup data or sensitive data being exfiltrated."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Retrieve PROXY-MAP-01 access/tunnel logs for the large transfer to identify the requested external destination, URL or service, and proxy identity.",
+   "Collect FILE-MAP-01 process-to-network telemetry and Safeharbor agent/job logs covering the transfer time, including the files or dataset uploaded.",
+   "Investigate the svc-vault Kerberos request from 139.162.174.124, including DC and FILE-MAP-01 authentication, account-use, and network records around 13:48 UTC."
+  ],
+  "unrelated_findings": [
+   "Greta Lund launched mstsc.exe from WS-GLUND-01 and established an RDP connection to FILE-MAP-01. This conflicts with the stated practice that remote administration is only performed from WS-AHASSAN-01; handle separately and do not use it to decide this transfer alert. (T160-00338, T160-00342)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 4,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 32.0
+}

@@ -1,0 +1,81 @@
+{
+ "scenario_id": "T191",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded two failed NTLM network logons for eli.brooks from 203.0.113.133, both with SubStatus 0xc000006a (wrong password).\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T191-00009\",\n        \"T191-00019\"\n      ]\n    },\n    {\n      \"claim\": \"The domain controller then recorded a successful NTLM network logon for eli.brooks from the same address, 203.0.113.133, at 13:46:02 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T191-00022\"\n      ]\n    },\n    {\n      \"claim\": \"Failed network logons followed by a successful network logon from the same source are consistent with unauthorized password guessing that eventually succeeded; the supplied evidence does not identify an authorized explanation for this source.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T191-00009\",\n        \"T191-00019\",\n        \"T191-00022\"\n      ]\n    },\n    {\n      \"claim\": \"eli.brooks also had a successful interactive logon on WS-EBROOKS-01, followed by a local interactive failed logon with a wrong-password status; this is distinct from the network logons attributed to 203.0.113.133.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T191-00002\",\n        \"T191-00010\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The domain-controller records identify the source address as 203.0.113.133 but do not identify the device or person behind it. (T191-00009, T191-00019, T191-00022)\",\n    \"The supplied records do not show what actions, if any, followed the successful network logon.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish who controlled the source associated with 203.0.113.133.\",\n    \"The evidence does not establish whether the successful network logon was authorized or what resources it accessed.\",\n    \"The local wrong-password failure does not establish whether eli.brooks made a typo or another person attempted that logon. (T191-00010)\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Investigate the successful network logon on DC-BLU-01, including its accessed resources, session activity, and any correlated authentication or network events.\",\n    \"Determine whether 203.0.113.133 can be attributed to a known host, proxy, or other authorized source using network, firewall, and identity-provider records.\",\n    \"Review eli.brooks account activity and credential changes around the event, and confirm with the account owner whether the activity was expected.\"\n  ],\n  \"unrelated_findings\": [\n    \"Google Drive File Stream ran under eli.brooks's account, and browser traffic accessed drive.google.com. Google Drive is cloud storage not listed as approved in the supplied context; track separately, and do not use this finding to decide the alerted authentication activity. (T191-00016, T191-00103, T191-00104, T191-00112, T191-00113)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 21291,
+    "output": 1792
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded two failed NTLM network logons for eli.brooks from 203.0.113.133, both with SubStatus 0xc000006a (wrong password).",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T191-00009",
+     "T191-00019"
+    ]
+   },
+   {
+    "claim": "The domain controller then recorded a successful NTLM network logon for eli.brooks from the same address, 203.0.113.133, at 13:46:02 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T191-00022"
+    ]
+   },
+   {
+    "claim": "Failed network logons followed by a successful network logon from the same source are consistent with unauthorized password guessing that eventually succeeded; the supplied evidence does not identify an authorized explanation for this source.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T191-00009",
+     "T191-00019",
+     "T191-00022"
+    ]
+   },
+   {
+    "claim": "eli.brooks also had a successful interactive logon on WS-EBROOKS-01, followed by a local interactive failed logon with a wrong-password status; this is distinct from the network logons attributed to 203.0.113.133.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T191-00002",
+     "T191-00010"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The domain-controller records identify the source address as 203.0.113.133 but do not identify the device or person behind it. (T191-00009, T191-00019, T191-00022)",
+   "The supplied records do not show what actions, if any, followed the successful network logon."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish who controlled the source associated with 203.0.113.133.",
+   "The evidence does not establish whether the successful network logon was authorized or what resources it accessed.",
+   "The local wrong-password failure does not establish whether eli.brooks made a typo or another person attempted that logon. (T191-00010)"
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Investigate the successful network logon on DC-BLU-01, including its accessed resources, session activity, and any correlated authentication or network events.",
+   "Determine whether 203.0.113.133 can be attributed to a known host, proxy, or other authorized source using network, firewall, and identity-provider records.",
+   "Review eli.brooks account activity and credential changes around the event, and confirm with the account owner whether the activity was expected."
+  ],
+  "unrelated_findings": [
+   "Google Drive File Stream ran under eli.brooks's account, and browser traffic accessed drive.google.com. Google Drive is cloud storage not listed as approved in the supplied context; track separately, and do not use this finding to decide the alerted authentication activity. (T191-00016, T191-00103, T191-00104, T191-00112, T191-00113)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 8,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.6
+}

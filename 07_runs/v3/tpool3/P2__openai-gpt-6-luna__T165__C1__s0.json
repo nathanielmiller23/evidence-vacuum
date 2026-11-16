@@ -1,0 +1,107 @@
+{
+ "scenario_id": "T165",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"WS-NKIM-01 repeatedly connected through the proxy to update.casebinder.co:443. Logged checks occurred at 13:42:26, 13:47:24, 13:52:06, 13:57:27, 14:02:20, and 14:06:33 UTC, broadly matching the alert's periodic pattern. The proxy accepted these tunnels with status 200.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T165-00139\",\n        \"T165-00140\",\n        \"T165-00181\",\n        \"T165-00184\",\n        \"T165-00210\",\n        \"T165-00213\",\n        \"T165-00229\",\n        \"T165-00230\",\n        \"T165-00235\",\n        \"T165-00238\",\n        \"T165-00242\",\n        \"T165-00244\"\n      ]\n    },\n    {\n      \"claim\": \"The connections are attributed to casebinderupd.exe running from Noah Kim's user-writable AppData\\\\Local\\\\CaseBinder directory, rather than the inventory's approved C:\\\\Program Files\\\\CaseBinder location. The process was launched at 13:41:59 and created a file at its own executable path shortly afterward.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T165-00118\",\n        \"T165-00120\",\n        \"T165-00137\",\n        \"T165-00138\",\n        \"T165-00139\"\n      ]\n    },\n    {\n      \"claim\": \"The observed destination is update.casebinder.co, whereas the inventory identifies update.casebinder.com as the approved updater destination. Together with the unexpected user-writable executable location, this is consistent with possible impersonation of the approved updater and supports treating the alerted traffic as malicious pending investigation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T165-00118\",\n        \"T165-00137\",\n        \"T165-00139\",\n        \"T165-00181\",\n        \"T165-00210\",\n        \"T165-00229\",\n        \"T165-00235\",\n        \"T165-00242\"\n      ]\n    },\n    {\n      \"claim\": \"At 14:12:02 UTC, a further connection from the same process to update.casebinder.co received proxy status 407 and was terminated; this is later than the alert's stated interval but is consistent with the same recurring activity.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T165-00262\",\n        \"T165-00263\",\n        \"T165-00264\",\n        \"T165-00265\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records show CONNECT tunnels and byte counts, but do not expose the tunneled request or response content.\",\n    \"The available records do not provide the executable's hash, signer or certificate details, file contents, or provenance.\",\n    \"The listed proxy records do not establish the resolved external IP address or independently verify ownership of update.casebinder.co.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish what data, if any, was sent through the tunnels.\",\n    \"The evidence does not establish whether the AppData executable is a tampered or counterfeit updater, or whether it could be a legitimate per-user installation.\",\n    \"The evidence does not establish who installed or launched the executable, or whether any other system was affected.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze the AppData executable and any related files; collect hashes, signature-validation results, timestamps, and origin/provenance.\",\n    \"Obtain DNS and proxy destination-resolution records, TLS certificate details, and any available decrypted or endpoint-side HTTP telemetry for update.casebinder.co.\",\n    \"Compare the executable and its behavior with a verified CaseBinder updater, and confirm with the software owner whether update.casebinder.co and this per-user installation path are legitimate.\",\n    \"Review endpoint persistence, download, and execution records around the updater's creation and launch.\"\n  ],\n  \"unrelated_findings\": [\n    \"No VPN is listed in the environment context, but GlobalProtect was launched under Noah Kim's account and a Cisco AnyConnect VPN agent was running as SYSTEM; investigate separately. (T165-00016, T165-00018, T165-00221, T165-00222)\",\n    \"No Google Drive or other Google file-sharing service is approved, but Noah Kim launched Chrome to Google Drive and accessed drive.google.com through the proxy; investigate separately. (T165-00019, T165-00024, T165-00025, T165-00029)\",\n    \"FILE-MAP-01 attempted an RDP connection to WS-NKIM-01, and DC-MAP-01 made connection attempts toward WS-NKIM-01 on ports 443 and 22; these are not the alerted outbound HTTPS activity and merit separate review. (T165-00010, T165-00012, T165-00177, T165-00178, T165-00179, T165-00180)\",\n    \"Noah Kim ran a netstat command at 14:07; this is outside the identified updater connections and is not by itself evidence that the alerted activity was malicious. (T165-00246, T165-00247)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 44500,
+    "output": 2386
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "WS-NKIM-01 repeatedly connected through the proxy to update.casebinder.co:443. Logged checks occurred at 13:42:26, 13:47:24, 13:52:06, 13:57:27, 14:02:20, and 14:06:33 UTC, broadly matching the alert's periodic pattern. The proxy accepted these tunnels with status 200.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T165-00139",
+     "T165-00140",
+     "T165-00181",
+     "T165-00184",
+     "T165-00210",
+     "T165-00213",
+     "T165-00229",
+     "T165-00230",
+     "T165-00235",
+     "T165-00238",
+     "T165-00242",
+     "T165-00244"
+    ]
+   },
+   {
+    "claim": "The connections are attributed to casebinderupd.exe running from Noah Kim's user-writable AppData\\Local\\CaseBinder directory, rather than the inventory's approved C:\\Program Files\\CaseBinder location. The process was launched at 13:41:59 and created a file at its own executable path shortly afterward.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T165-00118",
+     "T165-00120",
+     "T165-00137",
+     "T165-00138",
+     "T165-00139"
+    ]
+   },
+   {
+    "claim": "The observed destination is update.casebinder.co, whereas the inventory identifies update.casebinder.com as the approved updater destination. Together with the unexpected user-writable executable location, this is consistent with possible impersonation of the approved updater and supports treating the alerted traffic as malicious pending investigation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T165-00118",
+     "T165-00137",
+     "T165-00139",
+     "T165-00181",
+     "T165-00210",
+     "T165-00229",
+     "T165-00235",
+     "T165-00242"
+    ]
+   },
+   {
+    "claim": "At 14:12:02 UTC, a further connection from the same process to update.casebinder.co received proxy status 407 and was terminated; this is later than the alert's stated interval but is consistent with the same recurring activity.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T165-00262",
+     "T165-00263",
+     "T165-00264",
+     "T165-00265"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records show CONNECT tunnels and byte counts, but do not expose the tunneled request or response content.",
+   "The available records do not provide the executable's hash, signer or certificate details, file contents, or provenance.",
+   "The listed proxy records do not establish the resolved external IP address or independently verify ownership of update.casebinder.co."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish what data, if any, was sent through the tunnels.",
+   "The evidence does not establish whether the AppData executable is a tampered or counterfeit updater, or whether it could be a legitimate per-user installation.",
+   "The evidence does not establish who installed or launched the executable, or whether any other system was affected."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze the AppData executable and any related files; collect hashes, signature-validation results, timestamps, and origin/provenance.",
+   "Obtain DNS and proxy destination-resolution records, TLS certificate details, and any available decrypted or endpoint-side HTTP telemetry for update.casebinder.co.",
+   "Compare the executable and its behavior with a verified CaseBinder updater, and confirm with the software owner whether update.casebinder.co and this per-user installation path are legitimate.",
+   "Review endpoint persistence, download, and execution records around the updater's creation and launch."
+  ],
+  "unrelated_findings": [
+   "No VPN is listed in the environment context, but GlobalProtect was launched under Noah Kim's account and a Cisco AnyConnect VPN agent was running as SYSTEM; investigate separately. (T165-00016, T165-00018, T165-00221, T165-00222)",
+   "No Google Drive or other Google file-sharing service is approved, but Noah Kim launched Chrome to Google Drive and accessed drive.google.com through the proxy; investigate separately. (T165-00019, T165-00024, T165-00025, T165-00029)",
+   "FILE-MAP-01 attempted an RDP connection to WS-NKIM-01, and DC-MAP-01 made connection attempts toward WS-NKIM-01 on ports 443 and 22; these are not the alerted outbound HTTPS activity and merit separate review. (T165-00010, T165-00012, T165-00177, T165-00178, T165-00179, T165-00180)",
+   "Noah Kim ran a netstat command at 14:07; this is outside the identified updater connections and is not by itself evidence that the alerted activity was malicious. (T165-00246, T165-00247)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 29,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 25.7
+}

@@ -1,0 +1,84 @@
+{
+ "scenario_id": "T234",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:40:23 UTC, PowerShell ran on WS-ZADAMS-01 as ian.doyle with the command `-NoProfile -ExecutionPolicy Bypass -File \\\\\\\\FILE-SUN-01\\\\IT\\\\Patch-Workstations.ps1`; Sysmon and Windows process-creation telemetry corroborate the execution.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T234-00117\", \"T234-00118\"]\n    },\n    {\n      \"claim\": \"The activity aligns with the documented IT patching practice: ian.doyle remotely runs that same patch script from WS-IDOYLE-01, and workstation patching was scheduled during business hours. The preceding network logon identifies ian.doyle and WS-IDOYLE-01 as the source.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T234-00110\", \"T234-00117\", \"T234-00118\"]\n    },\n    {\n      \"claim\": \"The PowerShell process connected to the explicit proxy, which recorded a successful Windows Update download of about 38.8 MB; PowerShell then launched wusa to install a Windows update package in quiet, no-restart mode.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T234-00119\", \"T234-00120\", \"T234-00121\", \"T234-00122\", \"T234-00123\", \"T234-00124\"]\n    },\n    {\n      \"claim\": \"The wusa and PowerShell processes exited shortly afterward, consistent with the brief window reported by the user.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T234-00125\", \"T234-00126\", \"T234-00127\", \"T234-00128\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records show the PowerShell command line and related process and network activity, but do not include the contents, hash, or signature verification of Patch-Workstations.ps1 or the downloaded update package.\",\n    \"The records do not establish everything the script may have done beyond the observed process and network events.\"\n  ],\n  \"claims_not_established\": [\n    \"The available evidence does not independently verify the integrity or contents of Patch-Workstations.ps1.\",\n    \"The available evidence does not establish whether any activity outside the supplied records occurred.\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [],\n  \"unrelated_findings\": [\n    \"Separate ticket: FILE-SUN-01 (10.55.20.20) made an RDP connection to WS-ZADAMS-01 at 13:41 UTC. The inventory says remote administration is only done from WS-IDOYLE-01; the supplied evidence does not establish why this connection occurred or tie it to the alerted PowerShell activity. Records: T234-00131, T234-00132, T234-00133.\",\n    \"Separate ticket: PROXY-SUN-01 (10.55.20.30) made an RDP connection to WS-ZADAMS-01 at 14:10 UTC, followed by connection attempts to ports 80 and 22. This is outside the alerted PowerShell execution and should be investigated separately. Records: T234-00263, T234-00264, T234-00265, T234-00266, T234-00267.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 48526,
+    "output": 1731
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "At 13:40:23 UTC, PowerShell ran on WS-ZADAMS-01 as ian.doyle with the command `-NoProfile -ExecutionPolicy Bypass -File \\\\FILE-SUN-01\\IT\\Patch-Workstations.ps1`; Sysmon and Windows process-creation telemetry corroborate the execution.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T234-00117",
+     "T234-00118"
+    ]
+   },
+   {
+    "claim": "The activity aligns with the documented IT patching practice: ian.doyle remotely runs that same patch script from WS-IDOYLE-01, and workstation patching was scheduled during business hours. The preceding network logon identifies ian.doyle and WS-IDOYLE-01 as the source.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T234-00110",
+     "T234-00117",
+     "T234-00118"
+    ]
+   },
+   {
+    "claim": "The PowerShell process connected to the explicit proxy, which recorded a successful Windows Update download of about 38.8 MB; PowerShell then launched wusa to install a Windows update package in quiet, no-restart mode.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T234-00119",
+     "T234-00120",
+     "T234-00121",
+     "T234-00122",
+     "T234-00123",
+     "T234-00124"
+    ]
+   },
+   {
+    "claim": "The wusa and PowerShell processes exited shortly afterward, consistent with the brief window reported by the user.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T234-00125",
+     "T234-00126",
+     "T234-00127",
+     "T234-00128"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records show the PowerShell command line and related process and network activity, but do not include the contents, hash, or signature verification of Patch-Workstations.ps1 or the downloaded update package.",
+   "The records do not establish everything the script may have done beyond the observed process and network events."
+  ],
+  "claims_not_established": [
+   "The available evidence does not independently verify the integrity or contents of Patch-Workstations.ps1.",
+   "The available evidence does not establish whether any activity outside the supplied records occurred."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [],
+  "unrelated_findings": [
+   "Separate ticket: FILE-SUN-01 (10.55.20.20) made an RDP connection to WS-ZADAMS-01 at 13:41 UTC. The inventory says remote administration is only done from WS-IDOYLE-01; the supplied evidence does not establish why this connection occurred or tie it to the alerted PowerShell activity. Records: T234-00131, T234-00132, T234-00133.",
+   "Separate ticket: PROXY-SUN-01 (10.55.20.30) made an RDP connection to WS-ZADAMS-01 at 14:10 UTC, followed by connection attempts to ports 80 and 22. This is outside the alerted PowerShell execution and should be investigated separately. Records: T234-00263, T234-00264, T234-00265, T234-00266, T234-00267."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.1
+}

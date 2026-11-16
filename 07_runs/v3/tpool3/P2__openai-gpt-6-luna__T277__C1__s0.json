@@ -1,0 +1,82 @@
+{
+ "scenario_id": "T277",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:43:57 UTC, the domain controller recorded creation of the account sysops, with sean.byrne listed as the subject.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T277-00101\"]\n    },\n    {\n      \"claim\": \"About one second later, the domain controller recorded sysops being added to the ORCHARD Administrators group, again with sean.byrne as the subject. This conflicts with the stated practice that temporary help-desk accounts receive no administrator rights and are named guest.<name>.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T277-00102\"]\n    },\n    {\n      \"claim\": \"Shortly before the account events, WS-RDIAZ-01 received an RDP connection from 198.51.100.77 and recorded a successful type-10 logon for sean.byrne. The inventory says remote administration is only done from WS-SBYRNE-01, so this activity is inconsistent with the stated practice.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T277-00072\", \"T277-00073\", \"T277-00074\"]\n    },\n    {\n      \"claim\": \"At 13:44, a task named Microsoft\\\\Windows\\\\HealthCheck was created on WS-RDIAZ-01 under sean.byrne. Its hidden PowerShell action contains an encoded command that decodes to downloading and executing a script from http://198.51.100.77/a.ps1. This is suspicious context for the account activity, although these records do not establish that the task ran.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T277-00103\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show the account creation and administrator-group addition, but do not establish whether sean.byrne personally performed them or whether the account was subsequently used.\",\n    \"The records do not establish the real-world attribution or ownership of source address 198.51.100.77.\",\n    \"The task-creation record shows its configured action, not whether the task executed or what the downloaded script contained.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether sean.byrne's credentials or session were compromised, or whether he authorized the activity.\",\n    \"Whether sysops authenticated, persisted, or performed other actions after creation.\",\n    \"Whether the scheduled task executed and whether its referenced script was retrieved.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Verify the activity and any approval directly with sean.byrne; review change tickets or other authorization records for creating sysops and granting it administrator membership.\",\n    \"Investigate the RDP source and session, including firewall, endpoint, and authentication evidence, and determine whether WS-RDIAZ-01 was accessed through an approved path.\",\n    \"Preserve and examine WS-RDIAZ-01 for the task's execution history, PowerShell logs, downloaded script or related artifacts, and any follow-on activity.\",\n    \"Review domain-controller audit and authentication records for sysops, including subsequent logons, group changes, and account use; consider disabling the account and removing its administrator membership while investigating.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-RDIAZ-01 made a proxy connection to desktop.dropbox.com with a DropboxUpdate user agent. Dropbox is not among the approved services in the supplied inventory; investigate separately. This finding does not determine the account alert.\",\n    \"WS-RDIAZ-01 queried a1b2c3d4e5.cloudfront.net through svchost.exe. The supplied records do not establish what prompted the query; investigate separately if warranted. This finding does not determine the account alert.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 47674,
+    "output": 2686
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:43:57 UTC, the domain controller recorded creation of the account sysops, with sean.byrne listed as the subject.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T277-00101"
+    ]
+   },
+   {
+    "claim": "About one second later, the domain controller recorded sysops being added to the ORCHARD Administrators group, again with sean.byrne as the subject. This conflicts with the stated practice that temporary help-desk accounts receive no administrator rights and are named guest.<name>.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T277-00102"
+    ]
+   },
+   {
+    "claim": "Shortly before the account events, WS-RDIAZ-01 received an RDP connection from 198.51.100.77 and recorded a successful type-10 logon for sean.byrne. The inventory says remote administration is only done from WS-SBYRNE-01, so this activity is inconsistent with the stated practice.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T277-00072",
+     "T277-00073",
+     "T277-00074"
+    ]
+   },
+   {
+    "claim": "At 13:44, a task named Microsoft\\Windows\\HealthCheck was created on WS-RDIAZ-01 under sean.byrne. Its hidden PowerShell action contains an encoded command that decodes to downloading and executing a script from http://198.51.100.77/a.ps1. This is suspicious context for the account activity, although these records do not establish that the task ran.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T277-00103"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show the account creation and administrator-group addition, but do not establish whether sean.byrne personally performed them or whether the account was subsequently used.",
+   "The records do not establish the real-world attribution or ownership of source address 198.51.100.77.",
+   "The task-creation record shows its configured action, not whether the task executed or what the downloaded script contained."
+  ],
+  "claims_not_established": [
+   "Whether sean.byrne's credentials or session were compromised, or whether he authorized the activity.",
+   "Whether sysops authenticated, persisted, or performed other actions after creation.",
+   "Whether the scheduled task executed and whether its referenced script was retrieved."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Verify the activity and any approval directly with sean.byrne; review change tickets or other authorization records for creating sysops and granting it administrator membership.",
+   "Investigate the RDP source and session, including firewall, endpoint, and authentication evidence, and determine whether WS-RDIAZ-01 was accessed through an approved path.",
+   "Preserve and examine WS-RDIAZ-01 for the task's execution history, PowerShell logs, downloaded script or related artifacts, and any follow-on activity.",
+   "Review domain-controller audit and authentication records for sysops, including subsequent logons, group changes, and account use; consider disabling the account and removing its administrator membership while investigating."
+  ],
+  "unrelated_findings": [
+   "WS-RDIAZ-01 made a proxy connection to desktop.dropbox.com with a DropboxUpdate user agent. Dropbox is not among the approved services in the supplied inventory; investigate separately. This finding does not determine the account alert.",
+   "WS-RDIAZ-01 queried a1b2c3d4e5.cloudfront.net through svchost.exe. The supplied records do not establish what prompted the query; investigate separately if warranted. This finding does not determine the account alert."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 6,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 27.8
+}

@@ -1,0 +1,88 @@
+{
+ "scenario_id": "S27",
+ "condition": "C1",
+ "variant": "P1",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:42:53 UTC, dev.sharma added cole.price to the Remote Desktop Users group on DC-RB-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S27-00048\"]\n    },\n    {\n      \"claim\": \"The supplied environment context says Remote Desktop Users membership is restricted to IT, while cole.price is identified as a veterinary technician. The logged addition therefore conflicts with the stated access policy.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S27-00048\"]\n    },\n    {\n      \"claim\": \"About 50 seconds after the group change, dev.sharma initiated an RDP session from WS-DSHARMA-01 to FILE-RB-01, and FILE-RB-01 recorded a successful type-10 logon for dev.sharma.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S27-00049\", \"S27-00052\", \"S27-00053\"]\n    },\n    {\n      \"claim\": \"About a minute after the group change, Explorer on cole.price's workstation recorded a UserAssist entry for mstsc.exe. This is consistent with the RDP client being launched, but does not establish its destination or a successful connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S27-00060\"]\n    },\n    {\n      \"claim\": \"The unauthorized-looking group addition followed shortly by an RDP-client entry on cole.price's workstation supports escalation as suspected malicious access enablement, although the logs do not prove cole.price used the new membership.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S27-00048\", \"S27-00060\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records show the group addition and an RDP-client UserAssist entry on WS-CPRICE-01, but do not show a process-creation or network-connection event for mstsc.exe on that workstation (S27-00048, S27-00060).\",\n    \"The available FILE-RB-01 logon records identify dev.sharma as the RDP user; they do not establish an RDP logon by cole.price (S27-00053).\",\n    \"The supplied records do not include the relevant change ticket or approval evidence.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the group addition had an approved ticket or other authorization.\",\n    \"Whether cole.price successfully connected to any host using Remote Desktop.\",\n    \"Whether the group change was made with malicious intent or was an unauthorized operational error.\",\n    \"Whether cole.price's mstsc.exe entry was directly related to the group change, or which destination it targeted.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Retrieve the change-management ticket and approval records for the group change; compare them with the stated calendar items.\",\n    \"Collect domain group membership history and subsequent changes to determine how long cole.price remained in Remote Desktop Users.\",\n    \"Review WS-CPRICE-01 process and network telemetry around 13:42\u201314:00 UTC for mstsc.exe execution, command line, destination, and connection outcome.\",\n    \"Review RDP authentication and session records on FILE-RB-01 and other servers for attempts or logons by cole.price during and after the alert window.\",\n    \"Interview the responsible administrator and cole.price to establish the purpose and authorization for the access.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 15181,
+    "output": 2202
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "At 13:42:53 UTC, dev.sharma added cole.price to the Remote Desktop Users group on DC-RB-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S27-00048"
+    ]
+   },
+   {
+    "claim": "The supplied environment context says Remote Desktop Users membership is restricted to IT, while cole.price is identified as a veterinary technician. The logged addition therefore conflicts with the stated access policy.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S27-00048"
+    ]
+   },
+   {
+    "claim": "About 50 seconds after the group change, dev.sharma initiated an RDP session from WS-DSHARMA-01 to FILE-RB-01, and FILE-RB-01 recorded a successful type-10 logon for dev.sharma.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S27-00049",
+     "S27-00052",
+     "S27-00053"
+    ]
+   },
+   {
+    "claim": "About a minute after the group change, Explorer on cole.price's workstation recorded a UserAssist entry for mstsc.exe. This is consistent with the RDP client being launched, but does not establish its destination or a successful connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S27-00060"
+    ]
+   },
+   {
+    "claim": "The unauthorized-looking group addition followed shortly by an RDP-client entry on cole.price's workstation supports escalation as suspected malicious access enablement, although the logs do not prove cole.price used the new membership.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S27-00048",
+     "S27-00060"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records show the group addition and an RDP-client UserAssist entry on WS-CPRICE-01, but do not show a process-creation or network-connection event for mstsc.exe on that workstation (S27-00048, S27-00060).",
+   "The available FILE-RB-01 logon records identify dev.sharma as the RDP user; they do not establish an RDP logon by cole.price (S27-00053).",
+   "The supplied records do not include the relevant change ticket or approval evidence."
+  ],
+  "claims_not_established": [
+   "Whether the group addition had an approved ticket or other authorization.",
+   "Whether cole.price successfully connected to any host using Remote Desktop.",
+   "Whether the group change was made with malicious intent or was an unauthorized operational error.",
+   "Whether cole.price's mstsc.exe entry was directly related to the group change, or which destination it targeted."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Retrieve the change-management ticket and approval records for the group change; compare them with the stated calendar items.",
+   "Collect domain group membership history and subsequent changes to determine how long cole.price remained in Remote Desktop Users.",
+   "Review WS-CPRICE-01 process and network telemetry around 13:42\u201314:00 UTC for mstsc.exe execution, command line, destination, and connection outcome.",
+   "Review RDP authentication and session records on FILE-RB-01 and other servers for attempts or logons by cole.price during and after the alert window.",
+   "Interview the responsible administrator and cole.price to establish the purpose and authorization for the access."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 8,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.0
+}

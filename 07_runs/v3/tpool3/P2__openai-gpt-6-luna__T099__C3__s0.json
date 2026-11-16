@@ -1,0 +1,83 @@
+{
+ "scenario_id": "T099",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.93,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:44:34, ana.ruiz ran PowerShell to compress \\\\\\\\FILE-PIN-01\\\\Shared\\\\Clients into C:\\\\Users\\\\ana.ruiz\\\\AppData\\\\Local\\\\Temp\\\\c.zip; Sysmon recorded creation of that archive at 13:44:38.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T099-00307\", \"T099-00308\", \"T099-00309\"]\n    },\n    {\n      \"claim\": \"At 13:50:57, the proxy recorded a 51,000,000-byte client-to-server tunnel from WS-ARUIZ-01 to dropzone-transfer.net, attributed to ana.ruiz and Firefox. Zeek independently recorded 51,000,372 originating bytes for the corresponding proxy connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T099-00399\", \"T099-00400\", \"T099-00401\", \"T099-00402\"]\n    },\n    {\n      \"claim\": \"The archive creation and large outbound transfer occur within minutes of one another, and the destination is not among the approved services listed in the environment context. This sequence supports a finding of likely data exfiltration, although the available records do not prove the archive was the transferred payload.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T099-00307\", \"T099-00309\", \"T099-00399\", \"T099-00401\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Winsec collection was unavailable on DC-PIN-01 from 13:30 to 14:10 UTC, limiting domain-controller authentication and audit visibility during that interval.\",\n    \"The proxy records the destination, user, tunnel byte counts, and duration, but this transfer is logged as a tunnel; the available records do not show the uploaded filename or payload.\",\n    \"The prominent large transfer in the records occurred at 13:50:57 UTC, several minutes after the alert's approximate 13:46 time.\"\n  ],\n  \"claims_not_established\": [\n    \"The contents of c.zip and whether it contained sensitive client data.\",\n    \"Whether c.zip was the payload sent to dropzone-transfer.net, or whether the large transfer contained other data.\",\n    \"Who initiated or authorized the activity, and whether the user had a legitimate business purpose.\",\n    \"Whether the approximate alert time refers to the observed 13:50:57 transfer.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Recover and preserve c.zip and relevant endpoint file-system or forensic evidence, including its size, hash, contents, and creation/access history.\",\n    \"Obtain proxy or destination-side details that identify the request path, upload metadata, and payload if available.\",\n    \"Confirm with ana.ruiz and the relevant data owner whether the archive and transfer were authorized.\",\n    \"Review domain-controller audit data for the outage window if recoverable.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox.exe was launched by ana.ruiz, and a subsequent proxy connection used the DropboxUpdate user agent to reach desktop.dropbox.com. Dropbox is not listed among approved services; investigate separately. (T099-00239, T099-00241, T099-00247, T099-00248)\",\n    \"ana.ruiz ran PowerShell to query AD users in the IT OU. This is separate from the alerted transfer and merits contextual review. (T099-00433, T099-00434)\",\n    \"PROXY-PIN-01 initiated an RPC connection to WS-ARUIZ-01 on port 135. The supplied IT practices describe remote administration from WS-RPATEL-01; investigate this separately without treating it as evidence for the alerted transfer. (T099-00110, T099-00111, T099-00112, T099-00113)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 69031,
+    "output": 2325
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.93,
+  "supporting_observations": [
+   {
+    "claim": "At 13:44:34, ana.ruiz ran PowerShell to compress \\\\FILE-PIN-01\\Shared\\Clients into C:\\Users\\ana.ruiz\\AppData\\Local\\Temp\\c.zip; Sysmon recorded creation of that archive at 13:44:38.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T099-00307",
+     "T099-00308",
+     "T099-00309"
+    ]
+   },
+   {
+    "claim": "At 13:50:57, the proxy recorded a 51,000,000-byte client-to-server tunnel from WS-ARUIZ-01 to dropzone-transfer.net, attributed to ana.ruiz and Firefox. Zeek independently recorded 51,000,372 originating bytes for the corresponding proxy connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T099-00399",
+     "T099-00400",
+     "T099-00401",
+     "T099-00402"
+    ]
+   },
+   {
+    "claim": "The archive creation and large outbound transfer occur within minutes of one another, and the destination is not among the approved services listed in the environment context. This sequence supports a finding of likely data exfiltration, although the available records do not prove the archive was the transferred payload.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T099-00307",
+     "T099-00309",
+     "T099-00399",
+     "T099-00401"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Winsec collection was unavailable on DC-PIN-01 from 13:30 to 14:10 UTC, limiting domain-controller authentication and audit visibility during that interval.",
+   "The proxy records the destination, user, tunnel byte counts, and duration, but this transfer is logged as a tunnel; the available records do not show the uploaded filename or payload.",
+   "The prominent large transfer in the records occurred at 13:50:57 UTC, several minutes after the alert's approximate 13:46 time."
+  ],
+  "claims_not_established": [
+   "The contents of c.zip and whether it contained sensitive client data.",
+   "Whether c.zip was the payload sent to dropzone-transfer.net, or whether the large transfer contained other data.",
+   "Who initiated or authorized the activity, and whether the user had a legitimate business purpose.",
+   "Whether the approximate alert time refers to the observed 13:50:57 transfer."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Recover and preserve c.zip and relevant endpoint file-system or forensic evidence, including its size, hash, contents, and creation/access history.",
+   "Obtain proxy or destination-side details that identify the request path, upload metadata, and payload if available.",
+   "Confirm with ana.ruiz and the relevant data owner whether the archive and transfer were authorized.",
+   "Review domain-controller audit data for the outage window if recoverable."
+  ],
+  "unrelated_findings": [
+   "Dropbox.exe was launched by ana.ruiz, and a subsequent proxy connection used the DropboxUpdate user agent to reach desktop.dropbox.com. Dropbox is not listed among approved services; investigate separately. (T099-00239, T099-00241, T099-00247, T099-00248)",
+   "ana.ruiz ran PowerShell to query AD users in the IT OU. This is separate from the alerted transfer and merits contextual review. (T099-00433, T099-00434)",
+   "PROXY-PIN-01 initiated an RPC connection to WS-ARUIZ-01 on port 135. The supplied IT practices describe remote administration from WS-RPATEL-01; investigate this separately without treating it as evidence for the alerted transfer. (T099-00110, T099-00111, T099-00112, T099-00113)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.9
+}

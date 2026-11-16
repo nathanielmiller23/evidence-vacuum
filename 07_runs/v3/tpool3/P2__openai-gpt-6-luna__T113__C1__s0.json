@@ -1,0 +1,119 @@
+{
+ "scenario_id": "T113",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:44:31 UTC, dan.reyes opened Statement.docm from the Downloads folder in Word; Word was the parent of a PowerShell process started about two seconds later.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T113-00117\", \"T113-00120\", \"T113-00121\", \"T113-00122\"]\n    },\n    {\n      \"claim\": \"The PowerShell command used -nop, a hidden window, and an encoded command that decodes to an expression invoking DownloadString for a script at raw.githubusercontent.com/copperline-it/tools/main/u.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T113-00121\", \"T113-00122\"]\n    },\n    {\n      \"claim\": \"The proxy recorded a successful GET for that u.ps1 URL, and the PowerShell process made network connections through the proxy.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T113-00123\", \"T113-00124\", \"T113-00125\", \"T113-00126\", \"T113-00128\", \"T113-00129\", \"T113-00130\", \"T113-00131\"]\n    },\n    {\n      \"claim\": \"PowerShell then launched rundll32.exe with C:\\\\Users\\\\dan.reyes\\\\AppData\\\\Roaming\\\\svchelper.dll,Init; both processes are recorded terminating shortly afterward.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T113-00132\", \"T113-00133\", \"T113-00137\", \"T113-00138\", \"T113-00139\", \"T113-00140\"]\n    },\n    {\n      \"claim\": \"The hidden PowerShell download-and-launch sequence, followed by rundll32 targeting a DLL in the user's AppData Roaming directory, is strongly consistent with malicious execution rather than routine workstation patching.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T113-00121\", \"T113-00128\", \"T113-00132\"]\n    },\n    {\n      \"claim\": \"A short-lived conhost.exe process was recorded at 13:40:20 UTC, near the reported time, but its recorded parent was csrss.exe and it ran as SYSTEM; these records do not link it to PowerShell.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T113-00097\", \"T113-00098\", \"T113-00099\", \"T113-00100\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The 13:40 conhost.exe event does not establish that a PowerShell window appeared or identify what caused the user's report; no PowerShell process is recorded at that time in the supplied events. (T113-00097, T113-00098)\",\n    \"The proxy records the script URL and a successful GET, but the supplied records do not include the downloaded script contents. (T113-00128)\",\n    \"The rundll32 process command line references svchelper.dll, but the supplied records do not establish the DLL's contents or independently confirm its successful load. (T113-00132)\",\n    \"The supplied records do not establish whether data was exfiltrated or persistence was created.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the reported PowerShell window around 13:40 was the same activity as the hidden PowerShell process recorded at 13:44; the timing and available process records do not prove that link. (T113-00097, T113-00121)\",\n    \"Who supplied or authored Statement.docm, whether a macro was enabled, or what actions it contained. (T113-00117, T113-00121)\",\n    \"Whether the GitHub-hosted script or svchelper.dll was authorized, and what either contained. (T113-00128, T113-00132)\",\n    \"Whether the apparent script and DLL execution led to further compromise, persistence, or data access.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze Statement.docm, including its origin, macro content, and relevant Office security or execution logs.\",\n    \"Retrieve the exact u.ps1 version served at the recorded time, along with repository ownership, commit history, and authorization records.\",\n    \"Acquire svchelper.dll and the recorded temporary file, then calculate hashes and analyze their contents and provenance.\",\n    \"Review PowerShell operational logs, AMSI/EDR telemetry, and endpoint evidence for the process and file activity around 13:40\u201313:45 UTC.\",\n    \"Confirm with dan.reyes whether the reported window timing and document opening match the recorded sequence.\"\n  ],\n  \"unrelated_findings\": [\n    \"Google Drive File Stream launched under dan.reyes; the inventory approves OneDrive but does not list Google Drive as approved cloud storage. Validate separately; this does not establish that files were synchronized. (T113-00227, T113-00228, T113-00229)\",\n    \"GlobalProtect PanGPA.exe launched under dan.reyes. The inventory says there is no VPN and no other remote-access service is approved; the process launch alone does not establish a VPN connection. Validate separately. (T113-00234, T113-00235, T113-00236)\",\n    \"DC records show a Kerberos ticket for paul.becker requested from WS-DREYES-01, followed by a network logon for paul.becker on WS-PBECKER-01 sourced from WS-DREYES-01's IP. This differs from the stated remote-administration practice and merits separate identity/remote-access review; it is not used to determine this alert. (T113-00077, T113-00078, T113-00081)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 42871,
+    "output": 3675
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "At 13:44:31 UTC, dan.reyes opened Statement.docm from the Downloads folder in Word; Word was the parent of a PowerShell process started about two seconds later.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T113-00117",
+     "T113-00120",
+     "T113-00121",
+     "T113-00122"
+    ]
+   },
+   {
+    "claim": "The PowerShell command used -nop, a hidden window, and an encoded command that decodes to an expression invoking DownloadString for a script at raw.githubusercontent.com/copperline-it/tools/main/u.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T113-00121",
+     "T113-00122"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a successful GET for that u.ps1 URL, and the PowerShell process made network connections through the proxy.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T113-00123",
+     "T113-00124",
+     "T113-00125",
+     "T113-00126",
+     "T113-00128",
+     "T113-00129",
+     "T113-00130",
+     "T113-00131"
+    ]
+   },
+   {
+    "claim": "PowerShell then launched rundll32.exe with C:\\Users\\dan.reyes\\AppData\\Roaming\\svchelper.dll,Init; both processes are recorded terminating shortly afterward.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T113-00132",
+     "T113-00133",
+     "T113-00137",
+     "T113-00138",
+     "T113-00139",
+     "T113-00140"
+    ]
+   },
+   {
+    "claim": "The hidden PowerShell download-and-launch sequence, followed by rundll32 targeting a DLL in the user's AppData Roaming directory, is strongly consistent with malicious execution rather than routine workstation patching.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T113-00121",
+     "T113-00128",
+     "T113-00132"
+    ]
+   },
+   {
+    "claim": "A short-lived conhost.exe process was recorded at 13:40:20 UTC, near the reported time, but its recorded parent was csrss.exe and it ran as SYSTEM; these records do not link it to PowerShell.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T113-00097",
+     "T113-00098",
+     "T113-00099",
+     "T113-00100"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The 13:40 conhost.exe event does not establish that a PowerShell window appeared or identify what caused the user's report; no PowerShell process is recorded at that time in the supplied events. (T113-00097, T113-00098)",
+   "The proxy records the script URL and a successful GET, but the supplied records do not include the downloaded script contents. (T113-00128)",
+   "The rundll32 process command line references svchelper.dll, but the supplied records do not establish the DLL's contents or independently confirm its successful load. (T113-00132)",
+   "The supplied records do not establish whether data was exfiltrated or persistence was created."
+  ],
+  "claims_not_established": [
+   "Whether the reported PowerShell window around 13:40 was the same activity as the hidden PowerShell process recorded at 13:44; the timing and available process records do not prove that link. (T113-00097, T113-00121)",
+   "Who supplied or authored Statement.docm, whether a macro was enabled, or what actions it contained. (T113-00117, T113-00121)",
+   "Whether the GitHub-hosted script or svchelper.dll was authorized, and what either contained. (T113-00128, T113-00132)",
+   "Whether the apparent script and DLL execution led to further compromise, persistence, or data access."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze Statement.docm, including its origin, macro content, and relevant Office security or execution logs.",
+   "Retrieve the exact u.ps1 version served at the recorded time, along with repository ownership, commit history, and authorization records.",
+   "Acquire svchelper.dll and the recorded temporary file, then calculate hashes and analyze their contents and provenance.",
+   "Review PowerShell operational logs, AMSI/EDR telemetry, and endpoint evidence for the process and file activity around 13:40\u201313:45 UTC.",
+   "Confirm with dan.reyes whether the reported window timing and document opening match the recorded sequence."
+  ],
+  "unrelated_findings": [
+   "Google Drive File Stream launched under dan.reyes; the inventory approves OneDrive but does not list Google Drive as approved cloud storage. Validate separately; this does not establish that files were synchronized. (T113-00227, T113-00228, T113-00229)",
+   "GlobalProtect PanGPA.exe launched under dan.reyes. The inventory says there is no VPN and no other remote-access service is approved; the process launch alone does not establish a VPN connection. Validate separately. (T113-00234, T113-00235, T113-00236)",
+   "DC records show a Kerberos ticket for paul.becker requested from WS-DREYES-01, followed by a network logon for paul.becker on WS-PBECKER-01 sourced from WS-DREYES-01's IP. This differs from the stated remote-administration practice and merits separate identity/remote-access review; it is not used to determine this alert. (T113-00077, T113-00078, T113-00081)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 27,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 34.3
+}

@@ -1,0 +1,107 @@
+{
+ "scenario_id": "T083",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"On WS-ARUIZ-01, ana.ruiz opened Statement.docm in Microsoft Word shortly before PowerShell started; Word was recorded as PowerShell's parent process.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T083-00145\", \"T083-00149\", \"T083-00150\"]\n    },\n    {\n      \"claim\": \"The launched PowerShell command used -nop, -w hidden, and -enc, and its encoded command decodes to downloading and invoking a script from https://raw.githubusercontent.com/pinecrest-it/tools/main/u.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T083-00149\", \"T083-00150\"]\n    },\n    {\n      \"claim\": \"The proxy recorded a successful request for that u.ps1 URL, and PowerShell made connections to the proxy at the corresponding time.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T083-00153\", \"T083-00154\", \"T083-00155\", \"T083-00156\", \"T083-00158\", \"T083-00159\"]\n    },\n    {\n      \"claim\": \"PowerShell then launched rundll32 to execute Init from C:\\\\Users\\\\ana.ruiz\\\\AppData\\\\Roaming\\\\svchelper.dll; both rundll32 and PowerShell exited shortly afterward.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T083-00160\", \"T083-00161\", \"T083-00169\", \"T083-00170\", \"T083-00171\", \"T083-00172\"]\n    },\n    {\n      \"claim\": \"The Word-to-hidden-PowerShell-to-downloaded-script-to-rundll32 sequence is strong evidence of malicious execution and is consistent with the reported brief PowerShell appearance.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T083-00145\", \"T083-00149\", \"T083-00150\", \"T083-00153\", \"T083-00160\", \"T083-00161\", \"T083-00171\", \"T083-00172\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Winsec and Sysmon collection for WS-ESTONE-01 was unavailable from 13:30 to 14:20 UTC due to a collection outage, according to the supplied sensor status. This does not remove the direct process and proxy evidence on WS-ARUIZ-01.\",\n    \"The available records show the downloaded script URL and execution chain, but do not include the script or DLL contents.\"\n  ],\n  \"claims_not_established\": [\n    \"What the downloaded u.ps1 script or svchelper.dll did beyond the execution shown in the logs.\",\n    \"Whether the activity created persistence, stole data, or affected other systems.\",\n    \"How Statement.docm reached the Downloads folder or whether ana.ruiz knowingly opened it.\",\n    \"Whether the apparent Pinecrest IT GitHub path is controlled or authorized by the organization.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire Statement.docm, u.ps1, and svchelper.dll; preserve hashes and inspect their contents, signatures, and provenance.\",\n    \"Collect Office macro, PowerShell script-block/AMSI, and endpoint forensic artifacts around the execution to establish the payload's actions and any persistence.\",\n    \"Review proxy and endpoint records for subsequent connections or activity attributable to the script and DLL, and check for related activity on other hosts.\",\n    \"Confirm whether the GitHub repository and script are authorized and whether ana.ruiz recognizes the document and its source.\"\n  ],\n  \"unrelated_findings\": [\n    \"The DC recorded authentication for raj.patel from WS-ARUIZ-01, including network logons to WS-RPATEL-01 and a later NTLM logon. This merits a separate review against the stated remote-administration practice; it does not determine the finding for the alerted Word/PowerShell chain. (T083-00102, T083-00103, T083-00105, T083-00108, T083-00110, T083-00117, T083-00282, T083-00283)\",\n    \"Google Drive File Stream and Dropbox processes were launched under ana.ruiz on WS-ARUIZ-01. The inventory says these file-sharing services are not approved; the records establish launches, not file transfers. Handle separately from the alerted activity. (T083-00402, T083-00403, T083-00404, T083-00427, T083-00428, T083-00429)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 77616,
+    "output": 2377
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "On WS-ARUIZ-01, ana.ruiz opened Statement.docm in Microsoft Word shortly before PowerShell started; Word was recorded as PowerShell's parent process.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T083-00145",
+     "T083-00149",
+     "T083-00150"
+    ]
+   },
+   {
+    "claim": "The launched PowerShell command used -nop, -w hidden, and -enc, and its encoded command decodes to downloading and invoking a script from https://raw.githubusercontent.com/pinecrest-it/tools/main/u.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T083-00149",
+     "T083-00150"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a successful request for that u.ps1 URL, and PowerShell made connections to the proxy at the corresponding time.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T083-00153",
+     "T083-00154",
+     "T083-00155",
+     "T083-00156",
+     "T083-00158",
+     "T083-00159"
+    ]
+   },
+   {
+    "claim": "PowerShell then launched rundll32 to execute Init from C:\\Users\\ana.ruiz\\AppData\\Roaming\\svchelper.dll; both rundll32 and PowerShell exited shortly afterward.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T083-00160",
+     "T083-00161",
+     "T083-00169",
+     "T083-00170",
+     "T083-00171",
+     "T083-00172"
+    ]
+   },
+   {
+    "claim": "The Word-to-hidden-PowerShell-to-downloaded-script-to-rundll32 sequence is strong evidence of malicious execution and is consistent with the reported brief PowerShell appearance.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T083-00145",
+     "T083-00149",
+     "T083-00150",
+     "T083-00153",
+     "T083-00160",
+     "T083-00161",
+     "T083-00171",
+     "T083-00172"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Winsec and Sysmon collection for WS-ESTONE-01 was unavailable from 13:30 to 14:20 UTC due to a collection outage, according to the supplied sensor status. This does not remove the direct process and proxy evidence on WS-ARUIZ-01.",
+   "The available records show the downloaded script URL and execution chain, but do not include the script or DLL contents."
+  ],
+  "claims_not_established": [
+   "What the downloaded u.ps1 script or svchelper.dll did beyond the execution shown in the logs.",
+   "Whether the activity created persistence, stole data, or affected other systems.",
+   "How Statement.docm reached the Downloads folder or whether ana.ruiz knowingly opened it.",
+   "Whether the apparent Pinecrest IT GitHub path is controlled or authorized by the organization."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire Statement.docm, u.ps1, and svchelper.dll; preserve hashes and inspect their contents, signatures, and provenance.",
+   "Collect Office macro, PowerShell script-block/AMSI, and endpoint forensic artifacts around the execution to establish the payload's actions and any persistence.",
+   "Review proxy and endpoint records for subsequent connections or activity attributable to the script and DLL, and check for related activity on other hosts.",
+   "Confirm whether the GitHub repository and script are authorized and whether ana.ruiz recognizes the document and its source."
+  ],
+  "unrelated_findings": [
+   "The DC recorded authentication for raj.patel from WS-ARUIZ-01, including network logons to WS-RPATEL-01 and a later NTLM logon. This merits a separate review against the stated remote-administration practice; it does not determine the finding for the alerted Word/PowerShell chain. (T083-00102, T083-00103, T083-00105, T083-00108, T083-00110, T083-00117, T083-00282, T083-00283)",
+   "Google Drive File Stream and Dropbox processes were launched under ana.ruiz on WS-ARUIZ-01. The inventory says these file-sharing services are not approved; the records establish launches, not file transfers. Handle separately from the alerted activity. (T083-00402, T083-00403, T083-00404, T083-00427, T083-00428, T083-00429)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 25,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 24.1
+}

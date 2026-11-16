@@ -1,0 +1,88 @@
+{
+ "scenario_id": "T129",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:51:07 UTC, WS-DREYES-01 sent approximately 51 MB of client-to-server traffic through the proxy to fastfile-share.io; the proxy and Zeek records independently show the large outbound transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T129-00240\",\n        \"T129-00242\"\n      ]\n    },\n    {\n      \"claim\": \"The transfer was associated with Firefox running as COPPERLINE\\\\dan.reyes, and the supplied inventory does not list fastfile-share.io as an approved service.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T129-00181\",\n        \"T129-00241\",\n        \"T129-00243\"\n      ]\n    },\n    {\n      \"claim\": \"About six minutes before the large transfer, Dan Reyes ran PowerShell to compress \\\\\\\\FILE-COP-01\\\\Shared\\\\Clients into a temporary c.zip file, and a file-creation event records that archive.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T129-00190\",\n        \"T129-00191\",\n        \"T129-00192\"\n      ]\n    },\n    {\n      \"claim\": \"The archive creation followed by a large outbound transfer to an unapproved file-sharing service is consistent with staging and exfiltration. The available records do not prove that c.zip was the exact content transferred.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T129-00190\",\n        \"T129-00192\",\n        \"T129-00240\",\n        \"T129-00242\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The large-transfer records show the destination and byte counts, but do not expose the uploaded file name, contents, or request-level details.\",\n    \"The alert describes activity around 13:46 UTC, while the logged approximately 51 MB transfer is at 13:51:07 UTC; the evidence does not establish whether these refer to the same precise event.\",\n    \"The listed winsec and Sysmon collection outage is for WS-SALI-01, not WS-DREYES-01; the provided coverage status reports those sensors as OK for the other hosts.\"\n  ],\n  \"claims_not_established\": [\n    \"The exact contents of the approximately 51 MB transfer and whether c.zip was uploaded.\",\n    \"Whether Dan Reyes personally initiated or authorized the archive creation or transfer.\",\n    \"Whether fastfile-share.io was accessed for any legitimate business purpose.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Obtain proxy or destination-side request details for the fastfile-share.io session, including upload metadata, account, and object identifiers.\",\n    \"Preserve and inspect WS-DREYES-01 for c.zip, its contents and hash, browser upload history, and related user-session artifacts.\",\n    \"Review FILE-COP-01 access and audit records to identify what data was read from Shared\\\\Clients and by which account.\",\n    \"Confirm with Dan Reyes and the relevant business owner whether the transfer was authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"Firefox browsed to Google Drive, an unapproved cloud-storage service under the supplied inventory; the cited records show browsing activity, not a large Google Drive upload. Investigate separately.\",\n    \"Cisco AnyConnect's user-interface process was launched on WS-DREYES-01, despite the supplied context stating there is no VPN; these records do not show a VPN connection. Investigate separately.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 53205,
+    "output": 2145
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "At 13:51:07 UTC, WS-DREYES-01 sent approximately 51 MB of client-to-server traffic through the proxy to fastfile-share.io; the proxy and Zeek records independently show the large outbound transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T129-00240",
+     "T129-00242"
+    ]
+   },
+   {
+    "claim": "The transfer was associated with Firefox running as COPPERLINE\\dan.reyes, and the supplied inventory does not list fastfile-share.io as an approved service.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T129-00181",
+     "T129-00241",
+     "T129-00243"
+    ]
+   },
+   {
+    "claim": "About six minutes before the large transfer, Dan Reyes ran PowerShell to compress \\\\FILE-COP-01\\Shared\\Clients into a temporary c.zip file, and a file-creation event records that archive.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T129-00190",
+     "T129-00191",
+     "T129-00192"
+    ]
+   },
+   {
+    "claim": "The archive creation followed by a large outbound transfer to an unapproved file-sharing service is consistent with staging and exfiltration. The available records do not prove that c.zip was the exact content transferred.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T129-00190",
+     "T129-00192",
+     "T129-00240",
+     "T129-00242"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The large-transfer records show the destination and byte counts, but do not expose the uploaded file name, contents, or request-level details.",
+   "The alert describes activity around 13:46 UTC, while the logged approximately 51 MB transfer is at 13:51:07 UTC; the evidence does not establish whether these refer to the same precise event.",
+   "The listed winsec and Sysmon collection outage is for WS-SALI-01, not WS-DREYES-01; the provided coverage status reports those sensors as OK for the other hosts."
+  ],
+  "claims_not_established": [
+   "The exact contents of the approximately 51 MB transfer and whether c.zip was uploaded.",
+   "Whether Dan Reyes personally initiated or authorized the archive creation or transfer.",
+   "Whether fastfile-share.io was accessed for any legitimate business purpose."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Obtain proxy or destination-side request details for the fastfile-share.io session, including upload metadata, account, and object identifiers.",
+   "Preserve and inspect WS-DREYES-01 for c.zip, its contents and hash, browser upload history, and related user-session artifacts.",
+   "Review FILE-COP-01 access and audit records to identify what data was read from Shared\\Clients and by which account.",
+   "Confirm with Dan Reyes and the relevant business owner whether the transfer was authorized."
+  ],
+  "unrelated_findings": [
+   "Firefox browsed to Google Drive, an unapproved cloud-storage service under the supplied inventory; the cited records show browsing activity, not a large Google Drive upload. Investigate separately.",
+   "Cisco AnyConnect's user-interface process was launched on WS-DREYES-01, despite the supplied context stating there is no VPN; these records do not show a VPN connection. Investigate separately."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 24.6
+}

@@ -1,0 +1,101 @@
+{
+ "scenario_id": "T015",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 2,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The observed periodic HTTPS proxy connections are attributable to C:\\\\Users\\\\ben.carter\\\\AppData\\\\Local\\\\ChartMate\\\\cmupdate.exe: the process was launched in the background at 13:37:57, and its network events correlate with proxy connections to update.chartmate-imaging.net.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T015-00108\", \"T015-00110\", \"T015-00112\", \"T015-00113\"]\n    },\n    {\n      \"claim\": \"The supplied records show repeated requests to update.chartmate-imaging.net at 13:38, 13:43, 13:47, 13:52, 13:58, 14:03, and 14:08 UTC\u2014roughly five-minute intervals. Several proxy requests succeeded, while others returned 407 or 502.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T015-00110\", \"T015-00111\", \"T015-00151\", \"T015-00152\", \"T015-00209\", \"T015-00210\", \"T015-00234\", \"T015-00235\", \"T015-00264\", \"T015-00265\", \"T015-00269\", \"T015-00270\", \"T015-00281\", \"T015-00282\"]\n    },\n    {\n      \"claim\": \"This activity differs from the inventory description: the observed updater is under the user's AppData\\\\Local path rather than the listed Program Files path, and it connects to update.chartmate-imaging.net rather than the listed update.chartmate-imaging.com. These discrepancies warrant verification but do not by themselves establish maliciousness.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T015-00108\", \"T015-00110\", \"T015-00209\", \"T015-00264\", \"T015-00269\", \"T015-00281\"]\n    },\n    {\n      \"claim\": \"A file-create event for the same cmupdate.exe path was logged immediately after the 13:38 connection; the record does not establish what created or wrote the file.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T015-00110\", \"T015-00114\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records show CONNECT destinations and tunnel metadata, not the HTTPS contents or downloaded payload; for example, the 13:38 request records a tunnel to update.chartmate-imaging.net but not its content (T015-00110).\",\n    \"The provided records do not include a hash, signature, version, or full file lineage for the AppData\\\\Local cmupdate.exe (T015-00108, T015-00114).\",\n    \"The supplied matching HTTPS records begin at 13:38 UTC, so they do not independently corroborate the alert's stated 13:30 start.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether update.chartmate-imaging.net is controlled or authorized by ChartMate, or whether it is malicious.\",\n    \"Whether the AppData\\\\Local executable is a legitimate ChartMate updater, a modified binary, or an impostor.\",\n    \"Whether successful proxy tunnels transferred an update, other content, or any malicious payload.\",\n    \"Whether the file-create event at 13:38 represents a legitimate updater self-update or other file activity.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Obtain the updater's file hash, Authenticode signature, version, and process/file lineage; compare them with a verified ChartMate release.\",\n    \"Verify with ChartMate or the organization's software owner whether the .net hostname and per-user AppData installation are authorized; check the hostname's DNS and TLS certificate details.\",\n    \"Collect available proxy or endpoint telemetry that identifies the HTTPS response and any downloaded file, and determine whether the file-create event was caused by the updater.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-BCARTER-01 made an SMB connection to FILE-HD-01 that was logged on the server as ANONYMOUS LOGON using NTLM; investigate separately, and do not use it to determine this HTTPS alert (T015-00253, T015-00255, T015-00257).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 54916,
+    "output": 2593
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "The observed periodic HTTPS proxy connections are attributable to C:\\Users\\ben.carter\\AppData\\Local\\ChartMate\\cmupdate.exe: the process was launched in the background at 13:37:57, and its network events correlate with proxy connections to update.chartmate-imaging.net.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T015-00108",
+     "T015-00110",
+     "T015-00112",
+     "T015-00113"
+    ]
+   },
+   {
+    "claim": "The supplied records show repeated requests to update.chartmate-imaging.net at 13:38, 13:43, 13:47, 13:52, 13:58, 14:03, and 14:08 UTC\u2014roughly five-minute intervals. Several proxy requests succeeded, while others returned 407 or 502.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T015-00110",
+     "T015-00111",
+     "T015-00151",
+     "T015-00152",
+     "T015-00209",
+     "T015-00210",
+     "T015-00234",
+     "T015-00235",
+     "T015-00264",
+     "T015-00265",
+     "T015-00269",
+     "T015-00270",
+     "T015-00281",
+     "T015-00282"
+    ]
+   },
+   {
+    "claim": "This activity differs from the inventory description: the observed updater is under the user's AppData\\Local path rather than the listed Program Files path, and it connects to update.chartmate-imaging.net rather than the listed update.chartmate-imaging.com. These discrepancies warrant verification but do not by themselves establish maliciousness.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T015-00108",
+     "T015-00110",
+     "T015-00209",
+     "T015-00264",
+     "T015-00269",
+     "T015-00281"
+    ]
+   },
+   {
+    "claim": "A file-create event for the same cmupdate.exe path was logged immediately after the 13:38 connection; the record does not establish what created or wrote the file.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T015-00110",
+     "T015-00114"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records show CONNECT destinations and tunnel metadata, not the HTTPS contents or downloaded payload; for example, the 13:38 request records a tunnel to update.chartmate-imaging.net but not its content (T015-00110).",
+   "The provided records do not include a hash, signature, version, or full file lineage for the AppData\\Local cmupdate.exe (T015-00108, T015-00114).",
+   "The supplied matching HTTPS records begin at 13:38 UTC, so they do not independently corroborate the alert's stated 13:30 start."
+  ],
+  "claims_not_established": [
+   "Whether update.chartmate-imaging.net is controlled or authorized by ChartMate, or whether it is malicious.",
+   "Whether the AppData\\Local executable is a legitimate ChartMate updater, a modified binary, or an impostor.",
+   "Whether successful proxy tunnels transferred an update, other content, or any malicious payload.",
+   "Whether the file-create event at 13:38 represents a legitimate updater self-update or other file activity."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Obtain the updater's file hash, Authenticode signature, version, and process/file lineage; compare them with a verified ChartMate release.",
+   "Verify with ChartMate or the organization's software owner whether the .net hostname and per-user AppData installation are authorized; check the hostname's DNS and TLS certificate details.",
+   "Collect available proxy or endpoint telemetry that identifies the HTTPS response and any downloaded file, and determine whether the file-create event was caused by the updater."
+  ],
+  "unrelated_findings": [
+   "WS-BCARTER-01 made an SMB connection to FILE-HD-01 that was logged on the server as ANONYMOUS LOGON using NTLM; investigate separately, and do not use it to determine this HTTPS alert (T015-00253, T015-00255, T015-00257)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 26,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 24.0
+}

@@ -1,0 +1,97 @@
+{
+ "scenario_id": "T163",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:46:07 UTC, Julia Frost's Word process opened C:\\\\Users\\\\julia.frost\\\\Downloads\\\\Statement.docm and launched PowerShell as its child. PowerShell was run with a hidden window, no profile, and an encoded command.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T163-00155\", \"T163-00158\", \"T163-00159\", \"T163-00160\"]\n    },\n    {\n      \"claim\": \"The encoded PowerShell command decodes to an expression that uses WebClient.DownloadString to retrieve and execute content from https://raw.githubusercontent.com/maplehill-it/tools/main/u.ps1.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T163-00159\", \"T163-00160\"]\n    },\n    {\n      \"claim\": \"The proxy recorded a successful HTTP 200 GET for that u.ps1 URL, and the corresponding PowerShell process connected through the proxy at the same time.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T163-00162\", \"T163-00164\", \"T163-00167\", \"T163-00168\"]\n    },\n    {\n      \"claim\": \"PowerShell launched rundll32 to invoke C:\\\\Users\\\\julia.frost\\\\AppData\\\\Roaming\\\\svchelper.dll,Init.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T163-00161\", \"T163-00165\"]\n    },\n    {\n      \"claim\": \"The observed suspicious PowerShell chain began at 13:46 UTC, not at the reported approximate time of 13:40 UTC. At 13:40, the logged user process was Chrome opening Webex, and the proxy denied that request.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T163-00105\", \"T163-00110\", \"T163-00159\", \"T163-00160\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The provided records establish the PowerShell command, the successful script request, and the rundll32 invocation, but do not include the contents or hashes of u.ps1 or svchelper.dll.\",\n    \"The suspicious process chain is timestamped about six minutes after the alert's approximate 13:40 time; the records do not establish whether the reported window appearance refers to that later chain.\"\n  ],\n  \"claims_not_established\": [\n    \"The contents and behavior of the downloaded u.ps1 script and svchelper.dll are not established by these records.\",\n    \"The records do not establish how Statement.docm arrived on the workstation, whether Julia intentionally opened it, or whether she saw the PowerShell window.\",\n    \"The records do not establish whether the invoked DLL created persistence, accessed data, or caused activity beyond the logged process and network events.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze Statement.docm, u.ps1, and svchelper.dll, including file hashes, provenance, and relevant repository history.\",\n    \"Collect endpoint forensic evidence for the document's origin, process and file activity, persistence mechanisms, and any follow-on execution or data access.\",\n    \"Confirm with Julia whether and when she opened the document or observed a PowerShell window, resolving the reported-time discrepancy.\"\n  ],\n  \"unrelated_findings\": [\n    \"GoogleDriveFS made a connection to clients4.google.com; Google Drive is not among the approved services listed in the environment context. Review separately; this does not decide the alert. (T163-00222, T163-00223)\",\n    \"DropboxUpdate connected to desktop.dropbox.com; Dropbox is not among the approved services listed in the environment context. Review separately; this does not decide the alert. (T163-00323, T163-00324)\",\n    \"GlobalProtect PanGPA.exe was launched on the workstation. The inventory says there is no VPN; the process record alone does not establish that a VPN connection was made. Review separately; this does not decide the alert. (T163-00178, T163-00179)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 51316,
+    "output": 2583
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:46:07 UTC, Julia Frost's Word process opened C:\\Users\\julia.frost\\Downloads\\Statement.docm and launched PowerShell as its child. PowerShell was run with a hidden window, no profile, and an encoded command.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T163-00155",
+     "T163-00158",
+     "T163-00159",
+     "T163-00160"
+    ]
+   },
+   {
+    "claim": "The encoded PowerShell command decodes to an expression that uses WebClient.DownloadString to retrieve and execute content from https://raw.githubusercontent.com/maplehill-it/tools/main/u.ps1.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T163-00159",
+     "T163-00160"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a successful HTTP 200 GET for that u.ps1 URL, and the corresponding PowerShell process connected through the proxy at the same time.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T163-00162",
+     "T163-00164",
+     "T163-00167",
+     "T163-00168"
+    ]
+   },
+   {
+    "claim": "PowerShell launched rundll32 to invoke C:\\Users\\julia.frost\\AppData\\Roaming\\svchelper.dll,Init.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T163-00161",
+     "T163-00165"
+    ]
+   },
+   {
+    "claim": "The observed suspicious PowerShell chain began at 13:46 UTC, not at the reported approximate time of 13:40 UTC. At 13:40, the logged user process was Chrome opening Webex, and the proxy denied that request.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T163-00105",
+     "T163-00110",
+     "T163-00159",
+     "T163-00160"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The provided records establish the PowerShell command, the successful script request, and the rundll32 invocation, but do not include the contents or hashes of u.ps1 or svchelper.dll.",
+   "The suspicious process chain is timestamped about six minutes after the alert's approximate 13:40 time; the records do not establish whether the reported window appearance refers to that later chain."
+  ],
+  "claims_not_established": [
+   "The contents and behavior of the downloaded u.ps1 script and svchelper.dll are not established by these records.",
+   "The records do not establish how Statement.docm arrived on the workstation, whether Julia intentionally opened it, or whether she saw the PowerShell window.",
+   "The records do not establish whether the invoked DLL created persistence, accessed data, or caused activity beyond the logged process and network events."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze Statement.docm, u.ps1, and svchelper.dll, including file hashes, provenance, and relevant repository history.",
+   "Collect endpoint forensic evidence for the document's origin, process and file activity, persistence mechanisms, and any follow-on execution or data access.",
+   "Confirm with Julia whether and when she opened the document or observed a PowerShell window, resolving the reported-time discrepancy."
+  ],
+  "unrelated_findings": [
+   "GoogleDriveFS made a connection to clients4.google.com; Google Drive is not among the approved services listed in the environment context. Review separately; this does not decide the alert. (T163-00222, T163-00223)",
+   "DropboxUpdate connected to desktop.dropbox.com; Dropbox is not among the approved services listed in the environment context. Review separately; this does not decide the alert. (T163-00323, T163-00324)",
+   "GlobalProtect PanGPA.exe was launched on the workstation. The inventory says there is no VPN; the process record alone does not establish that a VPN connection was made. Review separately; this does not decide the alert. (T163-00178, T163-00179)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 16,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 24.6
+}

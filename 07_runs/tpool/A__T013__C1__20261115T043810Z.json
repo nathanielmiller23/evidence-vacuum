@@ -1,0 +1,115 @@
+{
+ "run_id": "A__T013__C1__20261115T043810Z",
+ "config": "A",
+ "scenario_id": "T013",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 341,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 144062,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"On WS-MLOPEZ-01, Maria's Word process opened C:\\\\Users\\\\maria.lopez\\\\Downloads\\\\Statement.docm and spawned PowerShell with no profile, a hidden window, and an encoded command. Decoding the command yields an instruction to download and execute a script from raw.githubusercontent.com.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T013-00071\", \"T013-00075\", \"T013-00076\"]\n    },\n    {\n      \"claim\": \"PowerShell made a proxied request for https://raw.githubusercontent.com/harbor-dental-it/tools/main/u.ps1, which returned status 200.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T013-00082\", \"T013-00083\", \"T013-00085\"]\n    },\n    {\n      \"claim\": \"That PowerShell process spawned rundll32 to run C:\\\\Users\\\\maria.lopez\\\\AppData\\\\Roaming\\\\svchelper.dll,Init. The process and command line are recorded, although these logs do not show the DLL's contents.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T013-00086\", \"T013-00087\"]\n    },\n    {\n      \"claim\": \"A SYSTEM PowerShell process on WS-MLOPEZ-01 ran C:\\\\Scripts\\\\backup-check.ps1 and used explicit credentials for svc-claimsync. Inventory says that service account is for a job on FILE-HD-01, not this workstation; this use is inconsistent with the stated role and warrants investigation.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T013-00198\", \"T013-00199\", \"T013-00202\", \"T013-00204\"]\n    },\n    {\n      \"claim\": \"The evidence shows a suspicious execution chain on Maria's workstation: a downloaded macro-enabled document, hidden encoded PowerShell retrieving a remote script, and subsequent DLL execution. This is not the documented workstation-patching procedure, which is performed remotely by IT from WS-OHADDAD-01.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T013-00071\", \"T013-00075\", \"T013-00082\", \"T013-00086\"]\n    },\n    {\n      \"claim\": \"The domain controller issued Kerberos tickets for maria.lopez from 10.30.10.24, and WS-MLOPEZ-01 recorded a network logon for that account with WS-LPARK-01 as the workstation. This is an additional unexpected access event, but the records alone do not establish who initiated it or why.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T013-00106\", \"T013-00107\", \"T013-00108\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show process creation and network requests but do not include the contents or hashes of Statement.docm, u.ps1, svchelper.dll, or the downloaded response.\",\n    \"Proxy records establish the requested URL and response status, but do not provide the response body needed to verify the downloaded script's behavior.\",\n    \"The logs do not establish who was physically or remotely operating the workstation, or whether the WS-LPARK-01 logon had an authorized explanation.\",\n    \"The supplied records cover only the specified one-hour window and do not establish the full scope, persistence, or impact of activity.\"\n  ],\n  \"claims_not_established\": [\n    \"The exact behavior or payload of u.ps1 and svchelper.dll, including whether they stole data, established persistence, or contacted additional infrastructure.\",\n    \"Whether Statement.docm was intentionally opened by Maria, opened as part of an authorized test, or opened through some other means.\",\n    \"Whether svc-claimsync credentials were exposed or misused beyond the recorded explicit-credential event.\",\n    \"The identity and intent of the actor behind the WS-LPARK-01 network logon, and whether it is related to the PowerShell activity.\",\n    \"Whether any data was accessed, altered, or exfiltrated.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Isolate or contain WS-MLOPEZ-01 while preserving volatile memory and forensic images; collect the document, downloaded script, DLL, temporary file, and relevant file-system metadata.\",\n    \"Obtain PowerShell Script Block Logging, AMSI, Defender, and EDR telemetry for the process chain, plus hashes and malware analysis of the document and DLL.\",\n    \"Review the full proxy transaction and available cached or repository copies of u.ps1; verify whether the repository and script are authorized and who changed them.\",\n    \"Investigate the scheduled task and script at C:\\\\Scripts\\\\backup-check.ps1, including its origin, contents, creation history, and svc-claimsync credential handling.\",\n    \"Review DC-HD-01 and WS-MLOPEZ-01 authentication and network logs around the WS-LPARK-01 logon; confirm with the help desk whether it was authorized.\",\n    \"Check svc-claimsync use and password-rotation records across FILE-HD-01 and other systems, and rotate the credential if unauthorized exposure or use is confirmed.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 53063,
+    "output": 2995,
+    "reasoning": 1819
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "On WS-MLOPEZ-01, Maria's Word process opened C:\\Users\\maria.lopez\\Downloads\\Statement.docm and spawned PowerShell with no profile, a hidden window, and an encoded command. Decoding the command yields an instruction to download and execute a script from raw.githubusercontent.com.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T013-00071",
+     "T013-00075",
+     "T013-00076"
+    ]
+   },
+   {
+    "claim": "PowerShell made a proxied request for https://raw.githubusercontent.com/harbor-dental-it/tools/main/u.ps1, which returned status 200.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T013-00082",
+     "T013-00083",
+     "T013-00085"
+    ]
+   },
+   {
+    "claim": "That PowerShell process spawned rundll32 to run C:\\Users\\maria.lopez\\AppData\\Roaming\\svchelper.dll,Init. The process and command line are recorded, although these logs do not show the DLL's contents.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T013-00086",
+     "T013-00087"
+    ]
+   },
+   {
+    "claim": "A SYSTEM PowerShell process on WS-MLOPEZ-01 ran C:\\Scripts\\backup-check.ps1 and used explicit credentials for svc-claimsync. Inventory says that service account is for a job on FILE-HD-01, not this workstation; this use is inconsistent with the stated role and warrants investigation.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T013-00198",
+     "T013-00199",
+     "T013-00202",
+     "T013-00204"
+    ]
+   },
+   {
+    "claim": "The evidence shows a suspicious execution chain on Maria's workstation: a downloaded macro-enabled document, hidden encoded PowerShell retrieving a remote script, and subsequent DLL execution. This is not the documented workstation-patching procedure, which is performed remotely by IT from WS-OHADDAD-01.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T013-00071",
+     "T013-00075",
+     "T013-00082",
+     "T013-00086"
+    ]
+   },
+   {
+    "claim": "The domain controller issued Kerberos tickets for maria.lopez from 10.30.10.24, and WS-MLOPEZ-01 recorded a network logon for that account with WS-LPARK-01 as the workstation. This is an additional unexpected access event, but the records alone do not establish who initiated it or why.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T013-00106",
+     "T013-00107",
+     "T013-00108"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show process creation and network requests but do not include the contents or hashes of Statement.docm, u.ps1, svchelper.dll, or the downloaded response.",
+   "Proxy records establish the requested URL and response status, but do not provide the response body needed to verify the downloaded script's behavior.",
+   "The logs do not establish who was physically or remotely operating the workstation, or whether the WS-LPARK-01 logon had an authorized explanation.",
+   "The supplied records cover only the specified one-hour window and do not establish the full scope, persistence, or impact of activity."
+  ],
+  "claims_not_established": [
+   "The exact behavior or payload of u.ps1 and svchelper.dll, including whether they stole data, established persistence, or contacted additional infrastructure.",
+   "Whether Statement.docm was intentionally opened by Maria, opened as part of an authorized test, or opened through some other means.",
+   "Whether svc-claimsync credentials were exposed or misused beyond the recorded explicit-credential event.",
+   "The identity and intent of the actor behind the WS-LPARK-01 network logon, and whether it is related to the PowerShell activity.",
+   "Whether any data was accessed, altered, or exfiltrated."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Isolate or contain WS-MLOPEZ-01 while preserving volatile memory and forensic images; collect the document, downloaded script, DLL, temporary file, and relevant file-system metadata.",
+   "Obtain PowerShell Script Block Logging, AMSI, Defender, and EDR telemetry for the process chain, plus hashes and malware analysis of the document and DLL.",
+   "Review the full proxy transaction and available cached or repository copies of u.ps1; verify whether the repository and script are authorized and who changed them.",
+   "Investigate the scheduled task and script at C:\\Scripts\\backup-check.ps1, including its origin, contents, creation history, and svc-claimsync credential handling.",
+   "Review DC-HD-01 and WS-MLOPEZ-01 authentication and network logs around the WS-LPARK-01 logon; confirm with the help desk whether it was authorized.",
+   "Check svc-claimsync use and password-rotation records across FILE-HD-01 and other systems, and rotate the credential if unauthorized exposure or use is confirmed."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 19,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 29.4
+}

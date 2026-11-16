@@ -1,0 +1,187 @@
+version: '1.0'
+name: ev-T188
+description: Evidence Vacuum TRAINING scenario T188 (bluefin, helpdesk_temp, va).
+environment:
+  description: Bluefin Marine Supply
+  domain: bluefin.local
+  timezone:
+    default: UTC
+  proxy:
+    mode: explicit
+    listener_port: 8080
+  users:
+  - username: mia.santos
+    full_name: Mia Santos
+    email: mia.santos@bluefinmarine.com
+    persona: sales
+    primary_system: WS-MSANTOS-01
+    groups:
+    - staff
+    enabled: true
+    browsing_intensity: normal
+  - username: eli.brooks
+    full_name: Eli Brooks
+    email: eli.brooks@bluefinmarine.com
+    persona: sales
+    primary_system: WS-EBROOKS-01
+    groups:
+    - staff
+    enabled: true
+    browsing_intensity: light
+  - username: ken.ito
+    full_name: Ken Ito
+    email: ken.ito@bluefinmarine.com
+    persona: sysadmin
+    primary_system: WS-KITO-01
+    groups:
+    - it-admins
+    - domain-admins
+    enabled: true
+    browsing_intensity: light
+  - username: ruth.moss
+    full_name: Ruth Moss
+    email: ruth.moss@bluefinmarine.com
+    persona: help_desk
+    primary_system: WS-RMOSS-01
+    groups:
+    - staff
+    enabled: true
+    browsing_intensity: light
+  service_accounts:
+  - svc-arch
+  - svc-inventory
+  systems:
+  - hostname: WS-MSANTOS-01
+    ip: 10.54.10.21
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: mia.santos
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-EBROOKS-01
+    ip: 10.54.10.22
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: eli.brooks
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-KITO-01
+    ip: 10.54.10.23
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: ken.ito
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-RMOSS-01
+    ip: 10.54.10.24
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: ruth.moss
+    services:
+    - dns-client
+    - termservice
+  - hostname: DC-BLU-01
+    ip: 10.54.20.10
+    os: Windows Server 2022
+    type: domain_controller
+    services:
+    - kerberos
+    - ldap
+    - dns
+    roles:
+    - domain_controller
+    - dns_server
+  - hostname: FILE-BLU-01
+    ip: 10.54.20.20
+    os: Windows Server 2022
+    type: server
+    services:
+    - smb
+    - dns-client
+    roles:
+    - file_server
+  - hostname: PROXY-BLU-01
+    ip: 10.54.20.30
+    os: Ubuntu 22.04 LTS
+    type: server
+    services:
+    - squid
+    - dns-client
+    roles:
+    - forward_proxy
+  network:
+    public_cidrs:
+    - 192.0.2.96/28
+    segments:
+    - name: workstations
+      cidr: 10.54.10.0/24
+      exposure: internal
+      systems:
+      - WS-MSANTOS-01
+      - WS-EBROOKS-01
+      - WS-KITO-01
+      - WS-RMOSS-01
+    - name: servers
+      cidr: 10.54.20.0/24
+      exposure: internal
+      systems:
+      - DC-BLU-01
+      - FILE-BLU-01
+      - PROXY-BLU-01
+    sensors:
+    - type: network
+      name: core-span
+      hostname: ZEEK-CORE
+      monitoring_segments:
+      - workstations
+      - servers
+      direction: bidirectional
+      placement: span
+      log_formats:
+      - zeek
+time_window:
+  start: '2026-09-29T13:00:00Z'
+  duration: 2h
+  warmup: 1h
+generation_seed: 8188
+baseline_activity:
+  description: Quiet afternoon
+  intensity: low
+  variation: low
+  suspicious_noise: low
+observation_profile: complete
+storyline:
+- id: logon
+  time: +41m
+  actor: ruth.moss
+  system: DC-BLU-01
+  activity: Help desk console session to DC
+  events:
+  - type: logon
+    logon_type: 3
+    source_ip: 10.54.10.24
+- id: create
+  time: +45m
+  actor: ruth.moss
+  system: DC-BLU-01
+  activity: Creates temporary account in contractor group
+  events:
+  - type: account_created
+    target_username: c.rwong
+  - type: group_member_added
+    group_name: Seasonal
+    member_name: c.rwong
+    scope: global
+output:
+  logs:
+  - format: windows_event_security
+  - format: windows_event_sysmon
+  - format: zeek_conn
+  - format: zeek_dns
+  - format: zeek_ssl
+  - format: proxy_access
+  destination: out/T188
+  compression: false

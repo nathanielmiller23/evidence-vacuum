@@ -1,0 +1,91 @@
+{
+ "run_id": "A__T019__C2__20261115T044218Z",
+ "config": "A",
+ "scenario_id": "T019",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 311,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 132183,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:41:56 UTC, PowerShell run as maria.lopez compressed \\\\\\\\FILE-HD-01\\\\Shared\\\\Clients into C:\\\\Users\\\\maria.lopez\\\\AppData\\\\Local\\\\Temp\\\\c.zip; Sysmon then recorded creation of that archive.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T019-00117\", \"T019-00118\", \"T019-00119\"]\n    },\n    {\n      \"claim\": \"At 13:45:24 UTC, the same user session launched Chrome to https://sendbox-files.io/.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T019-00150\", \"T019-00154\"]\n    },\n    {\n      \"claim\": \"Network records show about 51 MB sent from WS-MLOPEZ-01 through the proxy to sendbox-files.io at about 13:48 UTC; the proxy attributes the connection to maria.lopez, and endpoint telemetry attributes it to Chrome process 4896.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T019-00170\", \"T019-00171\", \"T019-00172\", \"T019-00173\"]\n    },\n    {\n      \"claim\": \"The sequence\u2014archiving a Clients share, opening an unapproved file-sharing destination, and sending about 51 MB\u2014strongly supports attempted or completed data exfiltration and a malicious-activity finding.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T019-00117\", \"T019-00119\", \"T019-00150\", \"T019-00170\", \"T019-00171\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records a CONNECT tunnel and byte counts, but the available records do not show the transfer payload or identify the uploaded object; the archive-to-transfer linkage is strongly timed but not directly verified. (T019-00119, T019-00170, T019-00171)\",\n    \"The records attribute activity to maria.lopez's account and session, but do not independently establish who was physically operating the workstation. (T019-00117, T019-00150, T019-00171)\"\n  ],\n  \"claims_not_established\": [\n    \"Whether c.zip itself was uploaded, or whether the 51 MB transfer contained all or part of that archive.\",\n    \"Which specific client files or records were included in the archive or transfer.\",\n    \"Whether maria.lopez personally initiated the activity or another person used her logged-in session.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine c.zip and the source files on FILE-HD-01; record archive contents, hashes, timestamps, and relevant access logs.\",\n    \"Obtain proxy, browser, and endpoint artifacts that may identify the upload request, filename, destination account, or server-side transfer receipt.\",\n    \"Interview maria.lopez and confirm whether the activity was authorized; check for related activity involving the account, workstation, or destination.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 48624,
+    "output": 1492,
+    "reasoning": 783
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "At 13:41:56 UTC, PowerShell run as maria.lopez compressed \\\\FILE-HD-01\\Shared\\Clients into C:\\Users\\maria.lopez\\AppData\\Local\\Temp\\c.zip; Sysmon then recorded creation of that archive.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00117",
+     "T019-00118",
+     "T019-00119"
+    ]
+   },
+   {
+    "claim": "At 13:45:24 UTC, the same user session launched Chrome to https://sendbox-files.io/.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00150",
+     "T019-00154"
+    ]
+   },
+   {
+    "claim": "Network records show about 51 MB sent from WS-MLOPEZ-01 through the proxy to sendbox-files.io at about 13:48 UTC; the proxy attributes the connection to maria.lopez, and endpoint telemetry attributes it to Chrome process 4896.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00170",
+     "T019-00171",
+     "T019-00172",
+     "T019-00173"
+    ]
+   },
+   {
+    "claim": "The sequence\u2014archiving a Clients share, opening an unapproved file-sharing destination, and sending about 51 MB\u2014strongly supports attempted or completed data exfiltration and a malicious-activity finding.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T019-00117",
+     "T019-00119",
+     "T019-00150",
+     "T019-00170",
+     "T019-00171"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records a CONNECT tunnel and byte counts, but the available records do not show the transfer payload or identify the uploaded object; the archive-to-transfer linkage is strongly timed but not directly verified. (T019-00119, T019-00170, T019-00171)",
+   "The records attribute activity to maria.lopez's account and session, but do not independently establish who was physically operating the workstation. (T019-00117, T019-00150, T019-00171)"
+  ],
+  "claims_not_established": [
+   "Whether c.zip itself was uploaded, or whether the 51 MB transfer contained all or part of that archive.",
+   "Which specific client files or records were included in the archive or transfer.",
+   "Whether maria.lopez personally initiated the activity or another person used her logged-in session."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine c.zip and the source files on FILE-HD-01; record archive contents, hashes, timestamps, and relevant access logs.",
+   "Obtain proxy, browser, and endpoint artifacts that may identify the upload request, filename, destination account, or server-side transfer receipt.",
+   "Interview maria.lopez and confirm whether the activity was authorized; check for related activity involving the account, workstation, or destination."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 14,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 16.5
+}

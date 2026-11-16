@@ -1,0 +1,86 @@
+{
+ "scenario_id": "T010",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 3,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.93,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Near the alerted time, the supplied network records show FILE-HD-01 communicating with DC-HD-01 over LDAP and Kerberos; they do not identify an external destination or a large transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T010-00338\",\n        \"T010-00341\",\n        \"T010-00342\",\n        \"T010-00346\",\n        \"T010-00347\",\n        \"T010-00351\"\n      ]\n    },\n    {\n      \"claim\": \"Nearby FILE-HD-01-to-PROXY-HD-01 HTTP connection records report only a few KB of originator bytes, and do not establish that these connections are the alerted transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T010-00325\",\n        \"T010-00331\",\n        \"T010-00362\"\n      ]\n    },\n    {\n      \"claim\": \"The evidence does not link the reported large transfer to the approved CobaltVault backup agent or destination, nor does it identify another destination or process; the alert cannot be classified as malicious or benign from the supplied records.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T010-00325\",\n        \"T010-00331\",\n        \"T010-00362\",\n        \"T010-00338\",\n        \"T010-00351\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy sensor on PROXY-HD-01 was not collected from 13:30 to 14:10 UTC, overlapping the alerted time.\",\n    \"Winsec and Sysmon on FILE-HD-01 were not collected from 13:30 to 14:10 UTC, so process and host-event attribution during the alert window is unavailable.\",\n    \"The supplied records do not include a record identifying the large transfer's destination, byte count, or generating process.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the alerted transfer went to the approved cobaltvault.net backup service.\",\n    \"Whether CobaltVault's approved backup agent generated the transfer.\",\n    \"The transfer's exact start and end times, destination, and byte count.\",\n    \"Whether the transfer contained authorized backup data or unauthorized data.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Retrieve the original network-monitoring alert details, including destination, byte count, flow timestamps, and any proxy or TLS metadata.\",\n    \"Recover proxy logs for PROXY-HD-01 from 13:30 to 14:10 UTC and correlate them with the alert's flow.\",\n    \"Recover FILE-HD-01 process and application logs for the same interval; verify whether cvagent.exe was running and uploading to cobaltvault.net.\",\n    \"Check CobaltVault service-side or agent upload records for a matching transfer.\"\n  ],\n  \"unrelated_findings\": [\n    \"PROXY-HD-01 connected to FILE-HD-01 over SMB at 13:39:43 UTC; this is outside the alerted transfer evidence and merits separate review.\",\n    \"DC-HD-01 made a connection attempt to FILE-HD-01 on port 8443 at 13:54:45 UTC that was rejected; this is unrelated to the alerted transfer.\",\n    \"PROXY-HD-01 established TLS to FILE-HD-01 on port 443 at 14:17:29 UTC; this is outside the alerted transfer evidence and merits separate review.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 78284,
+    "output": 2076
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.93,
+  "supporting_observations": [
+   {
+    "claim": "Near the alerted time, the supplied network records show FILE-HD-01 communicating with DC-HD-01 over LDAP and Kerberos; they do not identify an external destination or a large transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T010-00338",
+     "T010-00341",
+     "T010-00342",
+     "T010-00346",
+     "T010-00347",
+     "T010-00351"
+    ]
+   },
+   {
+    "claim": "Nearby FILE-HD-01-to-PROXY-HD-01 HTTP connection records report only a few KB of originator bytes, and do not establish that these connections are the alerted transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T010-00325",
+     "T010-00331",
+     "T010-00362"
+    ]
+   },
+   {
+    "claim": "The evidence does not link the reported large transfer to the approved CobaltVault backup agent or destination, nor does it identify another destination or process; the alert cannot be classified as malicious or benign from the supplied records.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T010-00325",
+     "T010-00331",
+     "T010-00362",
+     "T010-00338",
+     "T010-00351"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy sensor on PROXY-HD-01 was not collected from 13:30 to 14:10 UTC, overlapping the alerted time.",
+   "Winsec and Sysmon on FILE-HD-01 were not collected from 13:30 to 14:10 UTC, so process and host-event attribution during the alert window is unavailable.",
+   "The supplied records do not include a record identifying the large transfer's destination, byte count, or generating process."
+  ],
+  "claims_not_established": [
+   "Whether the alerted transfer went to the approved cobaltvault.net backup service.",
+   "Whether CobaltVault's approved backup agent generated the transfer.",
+   "The transfer's exact start and end times, destination, and byte count.",
+   "Whether the transfer contained authorized backup data or unauthorized data."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Retrieve the original network-monitoring alert details, including destination, byte count, flow timestamps, and any proxy or TLS metadata.",
+   "Recover proxy logs for PROXY-HD-01 from 13:30 to 14:10 UTC and correlate them with the alert's flow.",
+   "Recover FILE-HD-01 process and application logs for the same interval; verify whether cvagent.exe was running and uploading to cobaltvault.net.",
+   "Check CobaltVault service-side or agent upload records for a matching transfer."
+  ],
+  "unrelated_findings": [
+   "PROXY-HD-01 connected to FILE-HD-01 over SMB at 13:39:43 UTC; this is outside the alerted transfer evidence and merits separate review.",
+   "DC-HD-01 made a connection attempt to FILE-HD-01 on port 8443 at 13:54:45 UTC that was rejected; this is unrelated to the alerted transfer.",
+   "PROXY-HD-01 established TLS to FILE-HD-01 on port 443 at 14:17:29 UTC; this is outside the alerted transfer evidence and merits separate review."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 14,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.1
+}

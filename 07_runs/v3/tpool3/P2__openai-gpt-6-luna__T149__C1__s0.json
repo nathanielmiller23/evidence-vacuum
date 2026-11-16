@@ -1,0 +1,88 @@
+{
+ "scenario_id": "T149",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45 UTC, julia.frost ran PowerShell from Explorer to compress \\\\\\\\FILE-MAP-01\\\\Shared\\\\Clients into C:\\\\Users\\\\julia.frost\\\\AppData\\\\Local\\\\Temp\\\\c.zip; Sysmon recorded creation of that archive shortly afterward.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T149-00122\",\n        \"T149-00123\",\n        \"T149-00124\"\n      ]\n    },\n    {\n      \"claim\": \"Chrome was launched under julia.frost's account to visit sharefast-files.com, a file-sharing service not listed as approved in the provided environment context.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T149-00135\",\n        \"T149-00139\"\n      ]\n    },\n    {\n      \"claim\": \"The proxy recorded a 51,000,000-byte client-to-server transfer through a successful TLS tunnel to sharefast-files.com; Zeek independently recorded about 51 MB of client-originated traffic, and endpoint records attribute the proxy connection to Chrome running as julia.frost.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T149-00167\",\n        \"T149-00168\",\n        \"T149-00169\",\n        \"T149-00170\"\n      ]\n    },\n    {\n      \"claim\": \"The close timing and same-user sequence\u2014archiving the Clients share, opening the unapproved file-sharing site, then sending approximately 51 MB outbound\u2014strongly supports an inference of data exfiltration and makes this activity malicious.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T149-00122\",\n        \"T149-00124\",\n        \"T149-00135\",\n        \"T149-00167\",\n        \"T149-00168\",\n        \"T149-00169\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records a CONNECT tunnel, and the available evidence does not expose the encrypted TLS application payload or identify the exact uploaded file.\",\n    \"The records establish archive creation and a large outbound transfer, but do not directly establish the archive's contents, whether the transfer contained that archive, or the user's authorization or intent.\"\n  ],\n  \"claims_not_established\": [\n    \"The exact contents of c.zip and whether it contained confidential or client-identifying information.\",\n    \"Whether the 51 MB transfer was the c.zip archive, another file, or other data sent during the tunnel.\",\n    \"Who controls sharefast-files.com, whether the destination retained the data, or whether julia.frost had authorization for this transfer.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Recover and examine c.zip, if available, and compare its size and contents with the outbound transfer.\",\n    \"Obtain browser, endpoint, and proxy details sufficient to identify the specific upload request and file, while preserving relevant evidence.\",\n    \"Confirm with the organization and julia.frost whether the archive and transfer were authorized; assess exposure and take incident-response steps appropriate to the data involved.\"\n  ],\n  \"unrelated_findings\": [\n    \"Cisco AnyConnect vpnagent.exe ran on WS-JFROST-01 despite the provided inventory stating there is no VPN. These records show the agent process, not a VPN connection; investigate separately and do not use this to decide the alerted transfer. (T149-00023, T149-00024)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 43209,
+    "output": 1446
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45 UTC, julia.frost ran PowerShell from Explorer to compress \\\\FILE-MAP-01\\Shared\\Clients into C:\\Users\\julia.frost\\AppData\\Local\\Temp\\c.zip; Sysmon recorded creation of that archive shortly afterward.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T149-00122",
+     "T149-00123",
+     "T149-00124"
+    ]
+   },
+   {
+    "claim": "Chrome was launched under julia.frost's account to visit sharefast-files.com, a file-sharing service not listed as approved in the provided environment context.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T149-00135",
+     "T149-00139"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a 51,000,000-byte client-to-server transfer through a successful TLS tunnel to sharefast-files.com; Zeek independently recorded about 51 MB of client-originated traffic, and endpoint records attribute the proxy connection to Chrome running as julia.frost.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T149-00167",
+     "T149-00168",
+     "T149-00169",
+     "T149-00170"
+    ]
+   },
+   {
+    "claim": "The close timing and same-user sequence\u2014archiving the Clients share, opening the unapproved file-sharing site, then sending approximately 51 MB outbound\u2014strongly supports an inference of data exfiltration and makes this activity malicious.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T149-00122",
+     "T149-00124",
+     "T149-00135",
+     "T149-00167",
+     "T149-00168",
+     "T149-00169"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records a CONNECT tunnel, and the available evidence does not expose the encrypted TLS application payload or identify the exact uploaded file.",
+   "The records establish archive creation and a large outbound transfer, but do not directly establish the archive's contents, whether the transfer contained that archive, or the user's authorization or intent."
+  ],
+  "claims_not_established": [
+   "The exact contents of c.zip and whether it contained confidential or client-identifying information.",
+   "Whether the 51 MB transfer was the c.zip archive, another file, or other data sent during the tunnel.",
+   "Who controls sharefast-files.com, whether the destination retained the data, or whether julia.frost had authorization for this transfer."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Recover and examine c.zip, if available, and compare its size and contents with the outbound transfer.",
+   "Obtain browser, endpoint, and proxy details sufficient to identify the specific upload request and file, while preserving relevant evidence.",
+   "Confirm with the organization and julia.frost whether the archive and transfer were authorized; assess exposure and take incident-response steps appropriate to the data involved."
+  ],
+  "unrelated_findings": [
+   "Cisco AnyConnect vpnagent.exe ran on WS-JFROST-01 despite the provided inventory stating there is no VPN. These records show the agent process, not a VPN connection; investigate separately and do not use this to decide the alerted transfer. (T149-00023, T149-00024)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 16.4
+}

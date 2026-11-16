@@ -1,0 +1,84 @@
+{
+ "scenario_id": "T167",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.93,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded creation of helpdesk2 by ali.hassan at 13:47:31 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T167-00124\"\n      ]\n    },\n    {\n      \"claim\": \"About two seconds later, helpdesk2 was added to the Administrators group by ali.hassan. This conflicts with the stated practice that temporary accounts are not given administrator rights, and the account name does not follow the stated temp.<name> convention.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T167-00124\",\n        \"T167-00125\"\n      ]\n    },\n    {\n      \"claim\": \"An ali.hassan account received a privileged remote-interactive logon to WS-NKIM-01 from 198.51.100.201 at 13:44:09 UTC, with special privileges recorded. The inventory says remote administration is only done from WS-AHASSAN-01 and there is no VPN, making this access inconsistent with the stated practice.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T167-00092\",\n        \"T167-00095\",\n        \"T167-00096\",\n        \"T167-00097\",\n        \"T167-00098\"\n      ]\n    },\n    {\n      \"claim\": \"The account-creation event's subject logon ID (0x1301d31d) differs from the ali.hassan remote-interactive logon ID on WS-NKIM-01 (0x1369a042); the available records do not establish that this particular remote session created the account.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T167-00124\",\n        \"T167-00097\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy logs for the proxy host were not collected from 13:25 to 14:20 UTC because of a collection outage, according to the provided sensor-status metadata; that metadata contains no record ID. This limits review of web destinations and content during the window.\",\n    \"The records shown do not establish which session or workstation originated the account-creation action; the available account-creation and remote-logon records have different logon IDs (T167-00124, T167-00097).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether there was an approved change authorizing helpdesk2 to be created and added to Administrators.\",\n    \"Whether the 198.51.100.201 remote session was responsible for creating helpdesk2.\",\n    \"Who controlled the ali.hassan credentials used for the account creation and remote logon.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Check the change-management record and obtain confirmation from ali.hassan about the helpdesk2 account and its Administrators membership.\",\n    \"Correlate domain-controller authentication and logon records for logon ID 0x1301d31d to identify the origin and session associated with the account-creation event.\",\n    \"Investigate the 198.51.100.201 remote logon to WS-NKIM-01, including the source owner, firewall or gateway records, and whether it was authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"A task named Microsoft\\\\Windows\\\\HealthCheck was registered on WS-NKIM-01 under ali.hassan shortly after the account events. Its action runs hidden PowerShell with an encoded command that decodes to an attempt to retrieve and execute a script from http://198.51.100.201/a.ps1. Track this as a separate finding; it is not needed to support the account-management assessment. (T167-00126)\",\n    \"Google Drive File Stream, an unapproved cloud-storage service per the inventory, was launched under noah.kim on WS-NKIM-01. Track this separately; the process records do not establish that it was involved in the account activity. (T167-00038, T167-00039, T167-00040)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 28972,
+    "output": 2789
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.93,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded creation of helpdesk2 by ali.hassan at 13:47:31 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T167-00124"
+    ]
+   },
+   {
+    "claim": "About two seconds later, helpdesk2 was added to the Administrators group by ali.hassan. This conflicts with the stated practice that temporary accounts are not given administrator rights, and the account name does not follow the stated temp.<name> convention.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T167-00124",
+     "T167-00125"
+    ]
+   },
+   {
+    "claim": "An ali.hassan account received a privileged remote-interactive logon to WS-NKIM-01 from 198.51.100.201 at 13:44:09 UTC, with special privileges recorded. The inventory says remote administration is only done from WS-AHASSAN-01 and there is no VPN, making this access inconsistent with the stated practice.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T167-00092",
+     "T167-00095",
+     "T167-00096",
+     "T167-00097",
+     "T167-00098"
+    ]
+   },
+   {
+    "claim": "The account-creation event's subject logon ID (0x1301d31d) differs from the ali.hassan remote-interactive logon ID on WS-NKIM-01 (0x1369a042); the available records do not establish that this particular remote session created the account.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T167-00124",
+     "T167-00097"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy logs for the proxy host were not collected from 13:25 to 14:20 UTC because of a collection outage, according to the provided sensor-status metadata; that metadata contains no record ID. This limits review of web destinations and content during the window.",
+   "The records shown do not establish which session or workstation originated the account-creation action; the available account-creation and remote-logon records have different logon IDs (T167-00124, T167-00097)."
+  ],
+  "claims_not_established": [
+   "Whether there was an approved change authorizing helpdesk2 to be created and added to Administrators.",
+   "Whether the 198.51.100.201 remote session was responsible for creating helpdesk2.",
+   "Who controlled the ali.hassan credentials used for the account creation and remote logon."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Check the change-management record and obtain confirmation from ali.hassan about the helpdesk2 account and its Administrators membership.",
+   "Correlate domain-controller authentication and logon records for logon ID 0x1301d31d to identify the origin and session associated with the account-creation event.",
+   "Investigate the 198.51.100.201 remote logon to WS-NKIM-01, including the source owner, firewall or gateway records, and whether it was authorized."
+  ],
+  "unrelated_findings": [
+   "A task named Microsoft\\Windows\\HealthCheck was registered on WS-NKIM-01 under ali.hassan shortly after the account events. Its action runs hidden PowerShell with an encoded command that decodes to an attempt to retrieve and execute a script from http://198.51.100.201/a.ps1. Track this as a separate finding; it is not needed to support the account-management assessment. (T167-00126)",
+   "Google Drive File Stream, an unapproved cloud-storage service per the inventory, was launched under noah.kim on WS-NKIM-01. Track this separately; the process records do not establish that it was involved in the account activity. (T167-00038, T167-00039, T167-00040)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 30.1
+}

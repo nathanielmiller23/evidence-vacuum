@@ -1,0 +1,85 @@
+{
+ "scenario_id": "T019",
+ "condition": "C3",
+ "variant": "P4",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.92,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:41:56, maria.lopez ran PowerShell to compress \\\\\\\\FILE-HD-01\\\\Shared\\\\Clients into C:\\\\Users\\\\maria.lopez\\\\AppData\\\\Local\\\\Temp\\\\c.zip; Sysmon recorded the archive being created shortly afterward.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T019-00117\",\n        \"T019-00119\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:45:24, the same user session launched Chrome to https://sendbox-files.io/.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T019-00150\",\n        \"T019-00154\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:48:17, the proxy recorded a successful TLS tunnel from WS-MLOPEZ-01 to sendbox-files.io with about 51 MB sent client-to-server and about 8.8 KB received; the corresponding connection is attributed to Chrome process 4896.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T019-00170\",\n        \"T019-00171\",\n        \"T019-00172\",\n        \"T019-00173\"\n      ]\n    },\n    {\n      \"claim\": \"The sequence of archiving the Clients share, opening a file-transfer site, and sending tens of MB to that site strongly supports likely unauthorized data exfiltration.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T019-00117\",\n        \"T019-00119\",\n        \"T019-00150\",\n        \"T019-00170\",\n        \"T019-00171\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records show a TLS CONNECT tunnel and byte counts, but do not identify the exact uploaded file or its contents. The archive creation and subsequent transfer are evidenced separately, without a direct record linking c.zip to the transfer. (T019-00117, T019-00119, T019-00170, T019-00171)\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish that c.zip itself was the payload sent, or exactly which data was transferred.\",\n    \"The evidence does not establish whether maria.lopez had authorization or a legitimate business purpose for this activity.\",\n    \"The evidence does not identify the recipient account or what happened to the transferred data after it reached the destination.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and review browser history, cache, and session artifacts for the sendbox-files.io activity, including any upload filename or account details.\",\n    \"Review endpoint file-access and DLP telemetry around the archive creation and transfer to determine the archive contents and whether it was accessed by Chrome.\",\n    \"Obtain relevant business authorization or user context and, if available, destination-service records identifying the uploaded object and recipient.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate review: maria.lopez launched dotnet-sdk-installer.exe from the Temp directory with /install /quiet shortly after the alerted transfer; this does not establish a connection to the alert. (T019-00181, T019-00182)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 49269,
+    "output": 2239
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.92,
+  "supporting_observations": [
+   {
+    "claim": "At 13:41:56, maria.lopez ran PowerShell to compress \\\\FILE-HD-01\\Shared\\Clients into C:\\Users\\maria.lopez\\AppData\\Local\\Temp\\c.zip; Sysmon recorded the archive being created shortly afterward.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00117",
+     "T019-00119"
+    ]
+   },
+   {
+    "claim": "At 13:45:24, the same user session launched Chrome to https://sendbox-files.io/.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00150",
+     "T019-00154"
+    ]
+   },
+   {
+    "claim": "At 13:48:17, the proxy recorded a successful TLS tunnel from WS-MLOPEZ-01 to sendbox-files.io with about 51 MB sent client-to-server and about 8.8 KB received; the corresponding connection is attributed to Chrome process 4896.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00170",
+     "T019-00171",
+     "T019-00172",
+     "T019-00173"
+    ]
+   },
+   {
+    "claim": "The sequence of archiving the Clients share, opening a file-transfer site, and sending tens of MB to that site strongly supports likely unauthorized data exfiltration.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T019-00117",
+     "T019-00119",
+     "T019-00150",
+     "T019-00170",
+     "T019-00171"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records show a TLS CONNECT tunnel and byte counts, but do not identify the exact uploaded file or its contents. The archive creation and subsequent transfer are evidenced separately, without a direct record linking c.zip to the transfer. (T019-00117, T019-00119, T019-00170, T019-00171)"
+  ],
+  "claims_not_established": [
+   "The evidence does not establish that c.zip itself was the payload sent, or exactly which data was transferred.",
+   "The evidence does not establish whether maria.lopez had authorization or a legitimate business purpose for this activity.",
+   "The evidence does not identify the recipient account or what happened to the transferred data after it reached the destination."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and review browser history, cache, and session artifacts for the sendbox-files.io activity, including any upload filename or account details.",
+   "Review endpoint file-access and DLP telemetry around the archive creation and transfer to determine the archive contents and whether it was accessed by Chrome.",
+   "Obtain relevant business authorization or user context and, if available, destination-service records identifying the uploaded object and recipient."
+  ],
+  "unrelated_findings": [
+   "Separate review: maria.lopez launched dotnet-sdk-installer.exe from the Temp directory with /install /quiet shortly after the alerted transfer; this does not establish a connection to the alert. (T019-00181, T019-00182)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.8
+}

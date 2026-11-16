@@ -1,0 +1,187 @@
+version: '1.0'
+name: ev-T148
+description: Evidence Vacuum TRAINING scenario T148 (maplehill, helpdesk_temp, va).
+environment:
+  description: Maple Hill Law Office
+  domain: maplehill.local
+  timezone:
+    default: UTC
+  proxy:
+    mode: explicit
+    listener_port: 8080
+  users:
+  - username: julia.frost
+    full_name: Julia Frost
+    email: julia.frost@maplehilllaw.com
+    persona: legal_counsel
+    primary_system: WS-JFROST-01
+    groups:
+    - staff
+    enabled: true
+    browsing_intensity: normal
+  - username: noah.kim
+    full_name: Noah Kim
+    email: noah.kim@maplehilllaw.com
+    persona: legal_counsel
+    primary_system: WS-NKIM-01
+    groups:
+    - staff
+    enabled: true
+    browsing_intensity: light
+  - username: ali.hassan
+    full_name: Ali Hassan
+    email: ali.hassan@maplehilllaw.com
+    persona: sysadmin
+    primary_system: WS-AHASSAN-01
+    groups:
+    - it-admins
+    - domain-admins
+    enabled: true
+    browsing_intensity: light
+  - username: greta.lund
+    full_name: Greta Lund
+    email: greta.lund@maplehilllaw.com
+    persona: help_desk
+    primary_system: WS-GLUND-01
+    groups:
+    - staff
+    enabled: true
+    browsing_intensity: light
+  service_accounts:
+  - svc-vault
+  - svc-docsync
+  systems:
+  - hostname: WS-JFROST-01
+    ip: 10.53.10.21
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: julia.frost
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-NKIM-01
+    ip: 10.53.10.22
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: noah.kim
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-AHASSAN-01
+    ip: 10.53.10.23
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: ali.hassan
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-GLUND-01
+    ip: 10.53.10.24
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: greta.lund
+    services:
+    - dns-client
+    - termservice
+  - hostname: DC-MAP-01
+    ip: 10.53.20.10
+    os: Windows Server 2022
+    type: domain_controller
+    services:
+    - kerberos
+    - ldap
+    - dns
+    roles:
+    - domain_controller
+    - dns_server
+  - hostname: FILE-MAP-01
+    ip: 10.53.20.20
+    os: Windows Server 2022
+    type: server
+    services:
+    - smb
+    - dns-client
+    roles:
+    - file_server
+  - hostname: PROXY-MAP-01
+    ip: 10.53.20.30
+    os: Ubuntu 22.04 LTS
+    type: server
+    services:
+    - squid
+    - dns-client
+    roles:
+    - forward_proxy
+  network:
+    public_cidrs:
+    - 203.0.113.64/28
+    segments:
+    - name: workstations
+      cidr: 10.53.10.0/24
+      exposure: internal
+      systems:
+      - WS-JFROST-01
+      - WS-NKIM-01
+      - WS-AHASSAN-01
+      - WS-GLUND-01
+    - name: servers
+      cidr: 10.53.20.0/24
+      exposure: internal
+      systems:
+      - DC-MAP-01
+      - FILE-MAP-01
+      - PROXY-MAP-01
+    sensors:
+    - type: network
+      name: core-span
+      hostname: ZEEK-CORE
+      monitoring_segments:
+      - workstations
+      - servers
+      direction: bidirectional
+      placement: span
+      log_formats:
+      - zeek
+time_window:
+  start: '2026-09-22T13:00:00Z'
+  duration: 2h
+  warmup: 1h
+generation_seed: 8148
+baseline_activity:
+  description: Quiet afternoon
+  intensity: low
+  variation: low
+  suspicious_noise: medium
+observation_profile: complete
+storyline:
+- id: logon
+  time: +43m
+  actor: greta.lund
+  system: DC-MAP-01
+  activity: Help desk console session to DC
+  events:
+  - type: logon
+    logon_type: 3
+    source_ip: 10.53.10.24
+- id: create
+  time: +47m
+  actor: greta.lund
+  system: DC-MAP-01
+  activity: Creates temporary account in contractor group
+  events:
+  - type: account_created
+    target_username: temp.rwong
+  - type: group_member_added
+    group_name: Externals
+    member_name: temp.rwong
+    scope: global
+output:
+  logs:
+  - format: windows_event_security
+  - format: windows_event_sysmon
+  - format: zeek_conn
+  - format: zeek_dns
+  - format: zeek_ssl
+  - format: proxy_access
+  destination: out/T148
+  compression: false

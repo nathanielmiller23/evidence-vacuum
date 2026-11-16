@@ -1,0 +1,117 @@
+{
+ "scenario_id": "T032",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6.1-sol",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.9,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The supplied file-server events show repeated svc-render network-logon failures from 13:31:03 through 13:46:04 UTC. They consistently identify FILE-NWD-01 as the workstation, source address ::ffff:10.40.20.20, and SubStatus 0xc000006a, indicating an incorrect password.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T032-00001\",\n        \"T032-00003\",\n        \"T032-00005\",\n        \"T032-00008\",\n        \"T032-00010\",\n        \"T032-00012\",\n        \"T032-00014\",\n        \"T032-00017\",\n        \"T032-00019\",\n        \"T032-00021\",\n        \"T032-00023\",\n        \"T032-00025\",\n        \"T032-00027\",\n        \"T032-00029\",\n        \"T032-00031\",\n        \"T032-00033\"\n      ]\n    },\n    {\n      \"claim\": \"The failures recur approximately once per minute rather than as a rapid burst. This matches the supplied inventory description of RenderQueue re-authenticating each minute on FILE-NWD-01.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T032-00001\",\n        \"T032-00003\",\n        \"T032-00005\",\n        \"T032-00008\",\n        \"T032-00010\",\n        \"T032-00012\",\n        \"T032-00014\",\n        \"T032-00017\",\n        \"T032-00019\",\n        \"T032-00021\",\n        \"T032-00023\",\n        \"T032-00025\",\n        \"T032-00027\",\n        \"T032-00029\",\n        \"T032-00031\",\n        \"T032-00033\"\n      ]\n    },\n    {\n      \"claim\": \"Domain-controller records corroborate credential failures for svc-render: NTLM validation returns 0xc000006a for FILE-NWD-01, and Kerberos pre-authentication fails with status 0x18 from the same source address. These are corroborating authentication records, not evidence of additional attacking hosts.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T032-00002\",\n        \"T032-00004\",\n        \"T032-00006\",\n        \"T032-00007\",\n        \"T032-00024\",\n        \"T032-00028\",\n        \"T032-00034\"\n      ]\n    },\n    {\n      \"claim\": \"The first supplied failure occurs just after the scheduled 13:30 password rotation. Combined with the expected host, incorrect-password errors, and minute-level cadence, the evidence favors a scheduled job retaining the old password rather than malicious authentication attempts. The rotation schedule and manual-update requirement are supplied context, not independently verified log events.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T032-00001\",\n        \"T032-00002\",\n        \"T032-00003\",\n        \"T032-00005\",\n        \"T032-00031\",\n        \"T032-00033\",\n        \"T032-00034\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records cover only 13:31:03\u201313:46:04 UTC, not the entire requested 13:20\u201314:20 interval (T032-00001, T032-00034).\",\n    \"The authentication records do not directly identify RenderQueue as the initiating job; the file-server events identify lsass.exe as the logging authentication process (T032-00001, T032-00033).\",\n    \"No password-change audit, task-configuration change, or subsequent successful authentication is included; the final supplied records still show failure (T032-00033, T032-00034).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the scheduled password rotation actually completed at 13:30 and whether RenderQueue retained the previous password.\",\n    \"Whether and when the job credentials were corrected and successful execution resumed.\",\n    \"The records do not establish password guessing, account compromise, or successful unauthorized access.\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [\n    \"No further evidence is required for the supported benign alert disposition. For operational confirmation, check the password-rotation audit and RenderQueue credential configuration and execution history.\",\n    \"Confirm successful svc-render authentication and RenderQueue execution after the job credentials are updated.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 5884,
+    "output": 1122
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.9,
+  "supporting_observations": [
+   {
+    "claim": "The supplied file-server events show repeated svc-render network-logon failures from 13:31:03 through 13:46:04 UTC. They consistently identify FILE-NWD-01 as the workstation, source address ::ffff:10.40.20.20, and SubStatus 0xc000006a, indicating an incorrect password.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T032-00001",
+     "T032-00003",
+     "T032-00005",
+     "T032-00008",
+     "T032-00010",
+     "T032-00012",
+     "T032-00014",
+     "T032-00017",
+     "T032-00019",
+     "T032-00021",
+     "T032-00023",
+     "T032-00025",
+     "T032-00027",
+     "T032-00029",
+     "T032-00031",
+     "T032-00033"
+    ]
+   },
+   {
+    "claim": "The failures recur approximately once per minute rather than as a rapid burst. This matches the supplied inventory description of RenderQueue re-authenticating each minute on FILE-NWD-01.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T032-00001",
+     "T032-00003",
+     "T032-00005",
+     "T032-00008",
+     "T032-00010",
+     "T032-00012",
+     "T032-00014",
+     "T032-00017",
+     "T032-00019",
+     "T032-00021",
+     "T032-00023",
+     "T032-00025",
+     "T032-00027",
+     "T032-00029",
+     "T032-00031",
+     "T032-00033"
+    ]
+   },
+   {
+    "claim": "Domain-controller records corroborate credential failures for svc-render: NTLM validation returns 0xc000006a for FILE-NWD-01, and Kerberos pre-authentication fails with status 0x18 from the same source address. These are corroborating authentication records, not evidence of additional attacking hosts.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T032-00002",
+     "T032-00004",
+     "T032-00006",
+     "T032-00007",
+     "T032-00024",
+     "T032-00028",
+     "T032-00034"
+    ]
+   },
+   {
+    "claim": "The first supplied failure occurs just after the scheduled 13:30 password rotation. Combined with the expected host, incorrect-password errors, and minute-level cadence, the evidence favors a scheduled job retaining the old password rather than malicious authentication attempts. The rotation schedule and manual-update requirement are supplied context, not independently verified log events.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T032-00001",
+     "T032-00002",
+     "T032-00003",
+     "T032-00005",
+     "T032-00031",
+     "T032-00033",
+     "T032-00034"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records cover only 13:31:03\u201313:46:04 UTC, not the entire requested 13:20\u201314:20 interval (T032-00001, T032-00034).",
+   "The authentication records do not directly identify RenderQueue as the initiating job; the file-server events identify lsass.exe as the logging authentication process (T032-00001, T032-00033).",
+   "No password-change audit, task-configuration change, or subsequent successful authentication is included; the final supplied records still show failure (T032-00033, T032-00034)."
+  ],
+  "claims_not_established": [
+   "Whether the scheduled password rotation actually completed at 13:30 and whether RenderQueue retained the previous password.",
+   "Whether and when the job credentials were corrected and successful execution resumed.",
+   "The records do not establish password guessing, account compromise, or successful unauthorized access."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [
+   "No further evidence is required for the supported benign alert disposition. For operational confirmation, check the password-rotation audit and RenderQueue credential configuration and execution history.",
+   "Confirm successful svc-render authentication and RenderQueue execution after the job credentials are updated."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 46,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.7
+}

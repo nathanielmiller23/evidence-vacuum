@@ -1,0 +1,85 @@
+{
+ "scenario_id": "T209",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.95,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:44:56 UTC, mia.santos ran PowerShell from Explorer to compress \\\\\\\\FILE-BLU-01\\\\Shared\\\\Clients into C:\\\\Users\\\\mia.santos\\\\AppData\\\\Local\\\\Temp\\\\c.zip; the process ran at medium integrity.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T209-00189\", \"T209-00190\"]\n    },\n    {\n      \"claim\": \"Sysmon recorded creation of c.zip at 13:45:00 UTC, shortly after the archive command.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T209-00191\"]\n    },\n    {\n      \"claim\": \"At 13:50:36 UTC, WS-MSANTOS-01 connected through the proxy to bigsend-drop.net with 51,000,000 client-to-server tunnel bytes; Zeek recorded 51,000,299 originating bytes and only 9,029 response bytes. The associated proxy connection was made by Chrome running as mia.santos.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T209-00202\", \"T209-00203\", \"T209-00204\", \"T209-00205\"]\n    },\n    {\n      \"claim\": \"The close sequence and scale\u2014creating an archive of the Clients share, then sending about 51 MB to a destination not among the approved services\u2014strongly indicates likely data exfiltration. The records do not directly link c.zip to the proxy transfer.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T209-00189\", \"T209-00191\", \"T209-00202\", \"T209-00203\", \"T209-00205\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy record identifies the destination and byte counts, but does not expose the upload URL, payload contents, or uploaded filename (T209-00202).\",\n    \"The network records associate the transfer with Chrome and mia.santos, but do not establish which local file Chrome sent (T209-00204, T209-00205).\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not prove that c.zip was the file transferred or establish the archive's exact contents or size.\",\n    \"The evidence does not establish whether mia.santos had a business reason or authorization for the archive or transfer.\",\n    \"The records do not identify the recipient account, ultimate recipient, or what happened to the data after transfer.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Collect c.zip and endpoint file-system or EDR telemetry to establish its size, contents, hash, and whether it was read by Chrome.\",\n    \"Obtain detailed proxy, TLS inspection, or DLP records for the bigsend-drop.net session, including request metadata and any available upload filename or account.\",\n    \"Confirm with mia.santos and the relevant data owner whether the archive and external transfer were authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:49:53 UTC, DC-BLU-01 recorded Kerberos ticket activity for ruth.moss originating from WS-MSANTOS-01's IP, followed by a network logon as ruth.moss to WS-RMOSS-01 from that same IP. This is outside the alerted transfer and should be reviewed separately; the records alone do not establish why it occurred. (T209-00197, T209-00199, T209-00201)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 45754,
+    "output": 1967
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.95,
+  "supporting_observations": [
+   {
+    "claim": "At 13:44:56 UTC, mia.santos ran PowerShell from Explorer to compress \\\\FILE-BLU-01\\Shared\\Clients into C:\\Users\\mia.santos\\AppData\\Local\\Temp\\c.zip; the process ran at medium integrity.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T209-00189",
+     "T209-00190"
+    ]
+   },
+   {
+    "claim": "Sysmon recorded creation of c.zip at 13:45:00 UTC, shortly after the archive command.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T209-00191"
+    ]
+   },
+   {
+    "claim": "At 13:50:36 UTC, WS-MSANTOS-01 connected through the proxy to bigsend-drop.net with 51,000,000 client-to-server tunnel bytes; Zeek recorded 51,000,299 originating bytes and only 9,029 response bytes. The associated proxy connection was made by Chrome running as mia.santos.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T209-00202",
+     "T209-00203",
+     "T209-00204",
+     "T209-00205"
+    ]
+   },
+   {
+    "claim": "The close sequence and scale\u2014creating an archive of the Clients share, then sending about 51 MB to a destination not among the approved services\u2014strongly indicates likely data exfiltration. The records do not directly link c.zip to the proxy transfer.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T209-00189",
+     "T209-00191",
+     "T209-00202",
+     "T209-00203",
+     "T209-00205"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy record identifies the destination and byte counts, but does not expose the upload URL, payload contents, or uploaded filename (T209-00202).",
+   "The network records associate the transfer with Chrome and mia.santos, but do not establish which local file Chrome sent (T209-00204, T209-00205)."
+  ],
+  "claims_not_established": [
+   "The evidence does not prove that c.zip was the file transferred or establish the archive's exact contents or size.",
+   "The evidence does not establish whether mia.santos had a business reason or authorization for the archive or transfer.",
+   "The records do not identify the recipient account, ultimate recipient, or what happened to the data after transfer."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Collect c.zip and endpoint file-system or EDR telemetry to establish its size, contents, hash, and whether it was read by Chrome.",
+   "Obtain detailed proxy, TLS inspection, or DLP records for the bigsend-drop.net session, including request metadata and any available upload filename or account.",
+   "Confirm with mia.santos and the relevant data owner whether the archive and external transfer were authorized."
+  ],
+  "unrelated_findings": [
+   "At 13:49:53 UTC, DC-BLU-01 recorded Kerberos ticket activity for ruth.moss originating from WS-MSANTOS-01's IP, followed by a network logon as ruth.moss to WS-RMOSS-01 from that same IP. This is outside the alerted transfer and should be reviewed separately; the records alone do not establish why it occurred. (T209-00197, T209-00199, T209-00201)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.0
+}

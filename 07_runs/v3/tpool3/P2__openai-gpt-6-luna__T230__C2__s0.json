@@ -1,0 +1,82 @@
+{
+ "scenario_id": "T230",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.79,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:49:57 UTC, FILE-SUN-01 (10.55.20.20) sent about 640 MB of client-side data to the explicit proxy at 10.55.20.30:8080.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T230-00355\"]\n    },\n    {\n      \"claim\": \"At 13:49:01 UTC, a Kerberos service-ticket request for svc-store to FILE-SUN-01 was recorded from public IP 45.79.19.196, approximately 56 seconds before the large proxy transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T230-00341\", \"T230-00355\"]\n    },\n    {\n      \"claim\": \"The unusual svc-store authentication immediately preceding the large outbound transfer makes malicious use of the account a credible explanation; the evidence supports escalation, though it does not prove the authentication caused the transfer.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T230-00341\", \"T230-00355\"]\n    },\n    {\n      \"claim\": \"The inventory provides a benign alternative: svc-store is the backup agent account and approved offsite backups can upload several hundred MB. The available flow record does not identify the process or destination needed to confirm that explanation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T230-00355\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available Zeek record identifies FILE-SUN-01 communicating with the proxy, but does not show the ultimate external destination, URL, or proxy action for the large transfer (T230-00355).\",\n    \"The available records do not attribute the large transfer to a process, user session, or specific files; the adjacent svc-store ticket request is not by itself proof that svc-store initiated the transfer (T230-00341, T230-00355).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the transfer went to the approved arcvault-backup.com service or to an unapproved destination (T230-00355).\",\n    \"Whether the payload contained backup data, sensitive files, or other content (T230-00355).\",\n    \"Whether the public-IP svc-store ticket request was authorized or directly related to the transfer (T230-00341, T230-00355).\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Retrieve PROXY-SUN-01 access and CONNECT logs for the transfer to establish the ultimate destination, request details, and authenticated identity.\",\n    \"Collect FILE-SUN-01 EDR/process and network telemetry around 13:49 UTC to identify the process and account responsible for the transfer.\",\n    \"Review Arcvault agent and backup-job logs, including upload destination, job status, and transferred objects, for the same period.\",\n    \"Investigate the svc-store ticket request from 45.79.19.196, including authentication source, account use, and related domain-controller events.\"\n  ],\n  \"unrelated_findings\": [\n    \"A help-desk user, lena.ward, initiated an RDP session to FILE-SUN-01; the inventory says remote administration is only done from WS-IDOYLE-01. Track separately and do not treat this alone as attribution for the transfer (T230-00272, T230-00281).\",\n    \"WS-MFISCHER-01 generated an explicit-credentials event for svc-ledger on FILE-SUN-01 after the scheduled password rotation; investigate the job update separately from this alert (T230-00437).\",\n    \"FILE-SUN-01 queried the unapproved domain status-monitor.app; investigate separately from the large transfer (T230-00009, T230-00011).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 59101,
+    "output": 3163
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.79,
+  "supporting_observations": [
+   {
+    "claim": "At 13:49:57 UTC, FILE-SUN-01 (10.55.20.20) sent about 640 MB of client-side data to the explicit proxy at 10.55.20.30:8080.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T230-00355"
+    ]
+   },
+   {
+    "claim": "At 13:49:01 UTC, a Kerberos service-ticket request for svc-store to FILE-SUN-01 was recorded from public IP 45.79.19.196, approximately 56 seconds before the large proxy transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T230-00341",
+     "T230-00355"
+    ]
+   },
+   {
+    "claim": "The unusual svc-store authentication immediately preceding the large outbound transfer makes malicious use of the account a credible explanation; the evidence supports escalation, though it does not prove the authentication caused the transfer.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T230-00341",
+     "T230-00355"
+    ]
+   },
+   {
+    "claim": "The inventory provides a benign alternative: svc-store is the backup agent account and approved offsite backups can upload several hundred MB. The available flow record does not identify the process or destination needed to confirm that explanation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T230-00355"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available Zeek record identifies FILE-SUN-01 communicating with the proxy, but does not show the ultimate external destination, URL, or proxy action for the large transfer (T230-00355).",
+   "The available records do not attribute the large transfer to a process, user session, or specific files; the adjacent svc-store ticket request is not by itself proof that svc-store initiated the transfer (T230-00341, T230-00355)."
+  ],
+  "claims_not_established": [
+   "Whether the transfer went to the approved arcvault-backup.com service or to an unapproved destination (T230-00355).",
+   "Whether the payload contained backup data, sensitive files, or other content (T230-00355).",
+   "Whether the public-IP svc-store ticket request was authorized or directly related to the transfer (T230-00341, T230-00355)."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Retrieve PROXY-SUN-01 access and CONNECT logs for the transfer to establish the ultimate destination, request details, and authenticated identity.",
+   "Collect FILE-SUN-01 EDR/process and network telemetry around 13:49 UTC to identify the process and account responsible for the transfer.",
+   "Review Arcvault agent and backup-job logs, including upload destination, job status, and transferred objects, for the same period.",
+   "Investigate the svc-store ticket request from 45.79.19.196, including authentication source, account use, and related domain-controller events."
+  ],
+  "unrelated_findings": [
+   "A help-desk user, lena.ward, initiated an RDP session to FILE-SUN-01; the inventory says remote administration is only done from WS-IDOYLE-01. Track separately and do not treat this alone as attribution for the transfer (T230-00272, T230-00281).",
+   "WS-MFISCHER-01 generated an explicit-credentials event for svc-ledger on FILE-SUN-01 after the scheduled password rotation; investigate the job update separately from this alert (T230-00437).",
+   "FILE-SUN-01 queried the unapproved domain status-monitor.app; investigate separately from the large transfer (T230-00009, T230-00011)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 6,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 33.1
+}

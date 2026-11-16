@@ -1,0 +1,97 @@
+{
+ "scenario_id": "T129",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"PowerShell ran as dan.reyes and was explicitly commanded to compress \\\\\\\\FILE-COP-01\\\\Shared\\\\Clients into C:\\\\Users\\\\dan.reyes\\\\AppData\\\\Local\\\\Temp\\\\c.zip; Sysmon recorded creation of that archive seconds later.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T129-00190\",\n        \"T129-00191\",\n        \"T129-00192\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:51:07 UTC, the proxy recorded 51,000,000 client-to-server bytes from WS-DREYES-01 to fastfile-share.io. Zeek recorded 51,000,325 originating bytes for the corresponding proxy connection, which lasted about 28.5 seconds.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T129-00240\",\n        \"T129-00242\"\n      ]\n    },\n    {\n      \"claim\": \"The large transfer was attributed by the proxy to dan.reyes, and endpoint network telemetry links the corresponding connection to Firefox process 6216.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T129-00240\",\n        \"T129-00241\",\n        \"T129-00243\"\n      ]\n    },\n    {\n      \"claim\": \"The transfer destination, fastfile-share.io, is not among the organization's approved services, and the environment context states that no other file-sharing or cloud-storage services are approved.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T129-00240\"\n      ]\n    },\n    {\n      \"claim\": \"The archive of client-share data shortly preceded a large outbound transfer to an unapproved file-sharing domain. The sequence strongly supports suspected data exfiltration, although the available records do not prove that c.zip was the transferred content.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T129-00190\",\n        \"T129-00192\",\n        \"T129-00240\",\n        \"T129-00242\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy record identifies the destination and byte counts but does not show the upload request, remote account, or transferred content.\",\n    \"The available records do not establish that c.zip was the file uploaded, or show its size or hash.\",\n    \"The large transfer is logged at 13:51:07 UTC, later than the alert's approximate 13:46 UTC time; the supplied records do not explain that timing difference.\"\n  ],\n  \"claims_not_established\": [\n    \"That the 51 MB transfer contained c.zip or any particular client files.\",\n    \"Which remote account received the data or whether the transfer completed successfully at the application level.\",\n    \"Whether dan.reyes initiated or authorized the activity, or whether the account or workstation was compromised.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Proxy or destination-service logs with the request method, upload result, account identity, and available file or object metadata for the fastfile-share.io transfer.\",\n    \"Endpoint evidence for c.zip, including file size, hash, access history, and any browser upload or file-read telemetry.\",\n    \"FILE-COP-01 share-access auditing for dan.reyes and the contents accessed from Shared\\\\Clients around 13:44 UTC.\",\n    \"Confirm the alert's underlying flow timestamps and whether they correspond to the 13:51:07 UTC proxy connection.\",\n    \"User and business-owner confirmation of whether the archive creation and external transfer were authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"Firefox accessed Google Drive, an unapproved cloud-storage service under the supplied environment context; this browsing is separate from the fastfile-share.io transfer. Records: T129-00105, T129-00106.\",\n    \"Cisco AnyConnect VPN UI launched on WS-DREYES-01 despite the environment context stating there is no VPN; these records show process launch, not a successful VPN connection. Records: T129-00026, T129-00027, T129-00028.\",\n    \"Firefox opened the AWS console shortly before the archive command; the supplied records do not show activity in the console or connect it to the transfer. Records: T129-00181, T129-00186.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 52847,
+    "output": 2032
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "PowerShell ran as dan.reyes and was explicitly commanded to compress \\\\FILE-COP-01\\Shared\\Clients into C:\\Users\\dan.reyes\\AppData\\Local\\Temp\\c.zip; Sysmon recorded creation of that archive seconds later.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T129-00190",
+     "T129-00191",
+     "T129-00192"
+    ]
+   },
+   {
+    "claim": "At 13:51:07 UTC, the proxy recorded 51,000,000 client-to-server bytes from WS-DREYES-01 to fastfile-share.io. Zeek recorded 51,000,325 originating bytes for the corresponding proxy connection, which lasted about 28.5 seconds.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T129-00240",
+     "T129-00242"
+    ]
+   },
+   {
+    "claim": "The large transfer was attributed by the proxy to dan.reyes, and endpoint network telemetry links the corresponding connection to Firefox process 6216.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T129-00240",
+     "T129-00241",
+     "T129-00243"
+    ]
+   },
+   {
+    "claim": "The transfer destination, fastfile-share.io, is not among the organization's approved services, and the environment context states that no other file-sharing or cloud-storage services are approved.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T129-00240"
+    ]
+   },
+   {
+    "claim": "The archive of client-share data shortly preceded a large outbound transfer to an unapproved file-sharing domain. The sequence strongly supports suspected data exfiltration, although the available records do not prove that c.zip was the transferred content.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T129-00190",
+     "T129-00192",
+     "T129-00240",
+     "T129-00242"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy record identifies the destination and byte counts but does not show the upload request, remote account, or transferred content.",
+   "The available records do not establish that c.zip was the file uploaded, or show its size or hash.",
+   "The large transfer is logged at 13:51:07 UTC, later than the alert's approximate 13:46 UTC time; the supplied records do not explain that timing difference."
+  ],
+  "claims_not_established": [
+   "That the 51 MB transfer contained c.zip or any particular client files.",
+   "Which remote account received the data or whether the transfer completed successfully at the application level.",
+   "Whether dan.reyes initiated or authorized the activity, or whether the account or workstation was compromised."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Proxy or destination-service logs with the request method, upload result, account identity, and available file or object metadata for the fastfile-share.io transfer.",
+   "Endpoint evidence for c.zip, including file size, hash, access history, and any browser upload or file-read telemetry.",
+   "FILE-COP-01 share-access auditing for dan.reyes and the contents accessed from Shared\\Clients around 13:44 UTC.",
+   "Confirm the alert's underlying flow timestamps and whether they correspond to the 13:51:07 UTC proxy connection.",
+   "User and business-owner confirmation of whether the archive creation and external transfer were authorized."
+  ],
+  "unrelated_findings": [
+   "Firefox accessed Google Drive, an unapproved cloud-storage service under the supplied environment context; this browsing is separate from the fastfile-share.io transfer. Records: T129-00105, T129-00106.",
+   "Cisco AnyConnect VPN UI launched on WS-DREYES-01 despite the environment context stating there is no VPN; these records show process launch, not a successful VPN connection. Records: T129-00026, T129-00027, T129-00028.",
+   "Firefox opened the AWS console shortly before the archive command; the supplied records do not show activity in the console or connect it to the transfer. Records: T129-00181, T129-00186."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 22.2
+}

@@ -1,0 +1,93 @@
+{
+ "run_id": "A__T027__C2__20261115T044712Z",
+ "config": "A",
+ "scenario_id": "T027",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 124,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 51509,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:46:31 UTC, DC-HD-01 recorded creation of the domain account it_helper by omar.haddad; the event gives logon ID 0xfd8b8ad.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T027-00088\"]\n    },\n    {\n      \"claim\": \"At 13:46:33 UTC, omar.haddad added it_helper to the Administrators group, using the same logon ID recorded for the account creation.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T027-00088\", \"T027-00089\"]\n    },\n    {\n      \"claim\": \"The account name and administrator membership conflict with the stated help-desk practice: temporary accounts use the tmp.<name> format and never receive administrator rights. The inventory also identifies omar.haddad as the only IT administrator, not lucy.park.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T027-00088\", \"T027-00089\"]\n    },\n    {\n      \"claim\": \"At 13:42:58 UTC, the domain controller recorded a Kerberos service-ticket request for omar.haddad to WS-BCARTER-01$ from 192.0.2.45. That source is not among the inventoried hosts; the stated policy says remote administration is only from WS-OHADDAD-01 and there is no VPN.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T027-00072\"]\n    },\n    {\n      \"claim\": \"The ticket request from 192.0.2.45 precedes the account creation by about four minutes, but the available records do not establish that it caused or enabled the creation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T027-00072\", \"T027-00088\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The evidence records account creation and group membership changes, but does not show the command or tool used to make them.\",\n    \"The available records do not establish who controlled the source at 192.0.2.45 or connect that ticket request to the logon ID used for the account changes.\",\n    \"The supplied records do not show subsequent logons or actions by it_helper.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether omar.haddad performed or authorized the changes, or whether the account was created using compromised credentials.\",\n    \"Whether the activity was part of an approved change not represented in the supplied change-calendar context.\",\n    \"Whether it_helper was used after creation, and whether any data or systems were accessed or affected.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate logon ID 0xfd8b8ad with DC-HD-01 logon/session records and relevant authentication-source telemetry.\",\n    \"Review WS-OHADDAD-01 and WS-BCARTER-01 endpoint process, logon, and remote-administration records around 13:42\u201313:47 UTC.\",\n    \"Verify with the organization whether creation of it_helper and its Administrators membership had an approved change or business justification.\",\n    \"Review the account's current status, group memberships, authentication history, and subsequent activity.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 19725,
+    "output": 1785,
+    "reasoning": 1024
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "At 13:46:31 UTC, DC-HD-01 recorded creation of the domain account it_helper by omar.haddad; the event gives logon ID 0xfd8b8ad.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T027-00088"
+    ]
+   },
+   {
+    "claim": "At 13:46:33 UTC, omar.haddad added it_helper to the Administrators group, using the same logon ID recorded for the account creation.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T027-00088",
+     "T027-00089"
+    ]
+   },
+   {
+    "claim": "The account name and administrator membership conflict with the stated help-desk practice: temporary accounts use the tmp.<name> format and never receive administrator rights. The inventory also identifies omar.haddad as the only IT administrator, not lucy.park.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T027-00088",
+     "T027-00089"
+    ]
+   },
+   {
+    "claim": "At 13:42:58 UTC, the domain controller recorded a Kerberos service-ticket request for omar.haddad to WS-BCARTER-01$ from 192.0.2.45. That source is not among the inventoried hosts; the stated policy says remote administration is only from WS-OHADDAD-01 and there is no VPN.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T027-00072"
+    ]
+   },
+   {
+    "claim": "The ticket request from 192.0.2.45 precedes the account creation by about four minutes, but the available records do not establish that it caused or enabled the creation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T027-00072",
+     "T027-00088"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The evidence records account creation and group membership changes, but does not show the command or tool used to make them.",
+   "The available records do not establish who controlled the source at 192.0.2.45 or connect that ticket request to the logon ID used for the account changes.",
+   "The supplied records do not show subsequent logons or actions by it_helper."
+  ],
+  "claims_not_established": [
+   "Whether omar.haddad performed or authorized the changes, or whether the account was created using compromised credentials.",
+   "Whether the activity was part of an approved change not represented in the supplied change-calendar context.",
+   "Whether it_helper was used after creation, and whether any data or systems were accessed or affected."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate logon ID 0xfd8b8ad with DC-HD-01 logon/session records and relevant authentication-source telemetry.",
+   "Review WS-OHADDAD-01 and WS-BCARTER-01 endpoint process, logon, and remote-administration records around 13:42\u201313:47 UTC.",
+   "Verify with the organization whether creation of it_helper and its Administrators membership had an approved change or business justification.",
+   "Review the account's current status, group memberships, authentication history, and subsequent activity."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 8,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 16.5
+}

@@ -1,0 +1,88 @@
+{
+ "scenario_id": "T209",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:44:56 UTC, mia.santos launched PowerShell to compress \\\\\\\\FILE-BLU-01\\\\Shared\\\\Clients into C:\\\\Users\\\\mia.santos\\\\AppData\\\\Local\\\\Temp\\\\c.zip; a file-creation event records c.zip at 13:45:00 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T209-00189\", \"T209-00190\", \"T209-00191\"]\n    },\n    {\n      \"claim\": \"At 13:50:36 UTC, the proxy recorded a Chrome tunnel from WS-MSANTOS-01 to bigsend-drop.net with 51,000,000 client-to-server bytes; Zeek independently recorded 51,000,299 originating bytes for the same connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T209-00202\", \"T209-00203\"]\n    },\n    {\n      \"claim\": \"The large transfer was made through Chrome running as BLUEFIN\\\\mia.santos and is outbound to a service not listed among the organization's approved services.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T209-00202\", \"T209-00204\", \"T209-00205\"]\n    },\n    {\n      \"claim\": \"The close sequence of compressing client-share data into c.zip and then sending about 51 MB to an unapproved file-transfer domain strongly supports an exfiltration interpretation, though the logs do not prove the uploaded bytes were c.zip.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T209-00189\", \"T209-00191\", \"T209-00202\", \"T209-00203\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The large transfer is logged as a proxy tunnel, not an SSL-inspected request, so the destination path, uploaded filename, and payload contents are not visible in these records (T209-00202, T209-00203).\",\n    \"The provided sensor-status information reports winsec and Sysmon collection outages on WS-RMOSS-01 from 13:30 to 14:20 UTC; collection on other hosts was reported as OK. No record IDs are supplied for this sensor-status metadata.\",\n    \"The supplied evidence does not include file-server access or auditing records that would confirm which files were read from Shared\\\\Clients or establish the contents and size of c.zip.\"\n  ],\n  \"claims_not_established\": [\n    \"That c.zip, or any specific client files, were included in the 51 MB upload.\",\n    \"The contents or sensitivity of the uploaded data, the exact upload endpoint or account used on bigsend-drop.net, or whether the transfer was authorized.\",\n    \"Whether mia.santos knowingly initiated the compression and upload, or whether another person or process controlled the session.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and preserve c.zip if available; record its hash, inspect its contents, and compare its size and contents with the transfer.\",\n    \"Review FILE-BLU-01 share and file-access auditing for WS-MSANTOS-01 and mia.santos around 13:44\u201313:46 UTC.\",\n    \"Obtain proxy, TLS, browser, and endpoint artifacts that could identify the upload request, target account, filename, or payload.\",\n    \"Confirm with mia.santos and the relevant data owner whether this transfer was requested or approved; investigate the destination domain and account.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:26 UTC, help-desk user ruth.moss launched msra.exe targeting WS-MSANTOS-01 and used explicit credentials for mia.santos. This is separate from the alerted transfer; remote administration is documented as occurring only from WS-KITO-01. Review separately, without treating it as proof about the 13:50 upload (T209-00047, T209-00048, T209-00049).\",\n    \"A WS-MSANTOS-01 UserAssist registry event at 14:17 contains an encoded path that appears to decode to C:\\\\Windows\\\\System32\\\\mstsc.exe. This is not linked by the supplied evidence to the alerted transfer and should be reviewed separately (T209-00287).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 45947,
+    "output": 2199
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "At 13:44:56 UTC, mia.santos launched PowerShell to compress \\\\FILE-BLU-01\\Shared\\Clients into C:\\Users\\mia.santos\\AppData\\Local\\Temp\\c.zip; a file-creation event records c.zip at 13:45:00 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T209-00189",
+     "T209-00190",
+     "T209-00191"
+    ]
+   },
+   {
+    "claim": "At 13:50:36 UTC, the proxy recorded a Chrome tunnel from WS-MSANTOS-01 to bigsend-drop.net with 51,000,000 client-to-server bytes; Zeek independently recorded 51,000,299 originating bytes for the same connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T209-00202",
+     "T209-00203"
+    ]
+   },
+   {
+    "claim": "The large transfer was made through Chrome running as BLUEFIN\\mia.santos and is outbound to a service not listed among the organization's approved services.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T209-00202",
+     "T209-00204",
+     "T209-00205"
+    ]
+   },
+   {
+    "claim": "The close sequence of compressing client-share data into c.zip and then sending about 51 MB to an unapproved file-transfer domain strongly supports an exfiltration interpretation, though the logs do not prove the uploaded bytes were c.zip.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T209-00189",
+     "T209-00191",
+     "T209-00202",
+     "T209-00203"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The large transfer is logged as a proxy tunnel, not an SSL-inspected request, so the destination path, uploaded filename, and payload contents are not visible in these records (T209-00202, T209-00203).",
+   "The provided sensor-status information reports winsec and Sysmon collection outages on WS-RMOSS-01 from 13:30 to 14:20 UTC; collection on other hosts was reported as OK. No record IDs are supplied for this sensor-status metadata.",
+   "The supplied evidence does not include file-server access or auditing records that would confirm which files were read from Shared\\Clients or establish the contents and size of c.zip."
+  ],
+  "claims_not_established": [
+   "That c.zip, or any specific client files, were included in the 51 MB upload.",
+   "The contents or sensitivity of the uploaded data, the exact upload endpoint or account used on bigsend-drop.net, or whether the transfer was authorized.",
+   "Whether mia.santos knowingly initiated the compression and upload, or whether another person or process controlled the session."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and preserve c.zip if available; record its hash, inspect its contents, and compare its size and contents with the transfer.",
+   "Review FILE-BLU-01 share and file-access auditing for WS-MSANTOS-01 and mia.santos around 13:44\u201313:46 UTC.",
+   "Obtain proxy, TLS, browser, and endpoint artifacts that could identify the upload request, target account, filename, or payload.",
+   "Confirm with mia.santos and the relevant data owner whether this transfer was requested or approved; investigate the destination domain and account."
+  ],
+  "unrelated_findings": [
+   "At 13:26 UTC, help-desk user ruth.moss launched msra.exe targeting WS-MSANTOS-01 and used explicit credentials for mia.santos. This is separate from the alerted transfer; remote administration is documented as occurring only from WS-KITO-01. Review separately, without treating it as proof about the 13:50 upload (T209-00047, T209-00048, T209-00049).",
+   "A WS-MSANTOS-01 UserAssist registry event at 14:17 contains an encoded path that appears to decode to C:\\Windows\\System32\\mstsc.exe. This is not linked by the supplied evidence to the alerted transfer and should be reviewed separately (T209-00287)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.1
+}

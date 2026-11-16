@@ -1,0 +1,76 @@
+{
+ "scenario_id": "T210",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"FILE-BLU-01 sent approximately 640 million client-side bytes through the proxy to ingest.cloudkeep-backup.com; Zeek records approximately the same outbound volume.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T210-00372\", \"T210-00374\"]\n    },\n    {\n      \"claim\": \"The transfer is attributed to C:\\\\Program Files\\\\Cloudkeep\\\\agent.exe running as BLUEFIN\\\\svc-arch, and the proxy records the Cloudkeep destination. The supplied inventory identifies this agent and offsite backup service as approved and notes that uploads of several hundred MB are expected.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T210-00363\", \"T210-00364\", \"T210-00366\", \"T210-00368\", \"T210-00373\"]\n    },\n    {\n      \"claim\": \"The large transfer began at 13:50:22 UTC, several minutes later than the alert\u2019s stated time around 13:46 UTC. The evidence supports a benign disposition for the observed large transfer, but does not precisely reconcile that timing difference.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T210-00372\", \"T210-00374\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and Zeek records provide byte counts and destination information, but do not show the transferred files or their contents (T210-00372, T210-00374).\",\n    \"The supplied records do not precisely match the alert\u2019s approximate 13:46 time; the large transfer is logged at 13:50:22 UTC (T210-00372, T210-00374).\",\n    \"The proxy records the client as user=-; process attribution comes from the endpoint records rather than an authenticated proxy identity (T210-00366, T210-00368, T210-00372, T210-00373).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the alert\u2019s reported 13:46 time reflects a different clock, an approximate alert time, or a separate transfer.\",\n    \"Which files were transferred, whether they contained sensitive data, and whether the backup completed successfully at the application level.\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [\n    \"If exact alert-to-event reconciliation is required, compare the original alert\u2019s flow timestamp and byte count with the proxy and endpoint records.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate ticket: a Kerberos service-ticket request for svc-arch is recorded from public IP 91.219.236.174, followed by a svc-arch service logon on FILE-BLU-01. This is anomalous in the stated no-VPN environment, but the records do not establish that it caused the Cloudkeep transfer (T210-00335, T210-00336, T210-00337).\",\n    \"Separate ticket: FILE-BLU-01 accessed receiver.citrix.com using python-requests; the supplied inventory does not list this service as approved (T210-00213, T210-00214).\",\n    \"Separate ticket: ruth.moss initiated an RDP session to FILE-BLU-01, although the supplied practice says remote administration is only done from WS-KITO-01 (T210-00446, T210-00454, T210-00458, T210-00459).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 95357,
+    "output": 3087
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "FILE-BLU-01 sent approximately 640 million client-side bytes through the proxy to ingest.cloudkeep-backup.com; Zeek records approximately the same outbound volume.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T210-00372",
+     "T210-00374"
+    ]
+   },
+   {
+    "claim": "The transfer is attributed to C:\\Program Files\\Cloudkeep\\agent.exe running as BLUEFIN\\svc-arch, and the proxy records the Cloudkeep destination. The supplied inventory identifies this agent and offsite backup service as approved and notes that uploads of several hundred MB are expected.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T210-00363",
+     "T210-00364",
+     "T210-00366",
+     "T210-00368",
+     "T210-00373"
+    ]
+   },
+   {
+    "claim": "The large transfer began at 13:50:22 UTC, several minutes later than the alert\u2019s stated time around 13:46 UTC. The evidence supports a benign disposition for the observed large transfer, but does not precisely reconcile that timing difference.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T210-00372",
+     "T210-00374"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and Zeek records provide byte counts and destination information, but do not show the transferred files or their contents (T210-00372, T210-00374).",
+   "The supplied records do not precisely match the alert\u2019s approximate 13:46 time; the large transfer is logged at 13:50:22 UTC (T210-00372, T210-00374).",
+   "The proxy records the client as user=-; process attribution comes from the endpoint records rather than an authenticated proxy identity (T210-00366, T210-00368, T210-00372, T210-00373)."
+  ],
+  "claims_not_established": [
+   "Whether the alert\u2019s reported 13:46 time reflects a different clock, an approximate alert time, or a separate transfer.",
+   "Which files were transferred, whether they contained sensitive data, and whether the backup completed successfully at the application level."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [
+   "If exact alert-to-event reconciliation is required, compare the original alert\u2019s flow timestamp and byte count with the proxy and endpoint records."
+  ],
+  "unrelated_findings": [
+   "Separate ticket: a Kerberos service-ticket request for svc-arch is recorded from public IP 91.219.236.174, followed by a svc-arch service logon on FILE-BLU-01. This is anomalous in the stated no-VPN environment, but the records do not establish that it caused the Cloudkeep transfer (T210-00335, T210-00336, T210-00337).",
+   "Separate ticket: FILE-BLU-01 accessed receiver.citrix.com using python-requests; the supplied inventory does not list this service as approved (T210-00213, T210-00214).",
+   "Separate ticket: ruth.moss initiated an RDP session to FILE-BLU-01, although the supplied practice says remote administration is only done from WS-KITO-01 (T210-00446, T210-00454, T210-00458, T210-00459)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 9,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 29.3
+}

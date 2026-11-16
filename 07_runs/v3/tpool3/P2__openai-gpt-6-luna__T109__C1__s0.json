@@ -1,0 +1,78 @@
+{
+ "scenario_id": "T109",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:40:56 UTC, dan.reyes ran PowerShell from Explorer to compress \\\\\\\\FILE-COP-01\\\\Shared\\\\Clients into C:\\\\Users\\\\dan.reyes\\\\AppData\\\\Local\\\\Temp\\\\c.zip; a file-creation event for c.zip followed at 13:41:00 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T109-00130\",\n        \"T109-00131\",\n        \"T109-00134\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:46:36 UTC, the proxy recorded a successful Chrome CONNECT tunnel from WS-DREYES-01, attributed to dan.reyes, to fastfile-share.io:443, with 51,000,000 client-to-server bytes over about 22 seconds. Zeek independently records approximately 51 MB of client-originated bytes to the proxy at that time.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T109-00152\",\n        \"T109-00153\",\n        \"T109-00154\",\n        \"T109-00155\"\n      ]\n    },\n    {\n      \"claim\": \"The archive was created shortly before the large outbound transfer, and the destination is an unapproved file-sharing service under the supplied inventory. Together, these facts strongly support that the alert reflects unauthorized data exfiltration.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T109-00130\",\n        \"T109-00134\",\n        \"T109-00152\",\n        \"T109-00153\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records a CONNECT tunnel and byte counts, while Zeek records the proxied connection; these records do not expose the encrypted application payload or identify the exact files transferred (T109-00152, T109-00153).\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish the contents or size of c.zip, or prove that this specific archive was the payload sent through the tunnel (T109-00130, T109-00134, T109-00152).\",\n    \"The evidence does not establish dan.reyes's intent, whether the transfer had any authorization, or who ultimately received the data (T109-00152, T109-00153).\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine c.zip, including its hash, contents, and source-file access history.\",\n    \"Collect browser history and endpoint/browser upload artifacts to determine which file or files were submitted.\",\n    \"Obtain any available proxy or TLS inspection records, and investigate the destination domain and transfer account or recipient.\",\n    \"Validate the activity with dan.reyes and the relevant data owner, including whether any approved business purpose existed.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox.exe started under dan.reyes at 14:05 UTC, after the alerted transfer; Dropbox is not an approved service in the supplied inventory and merits a separate review, but this record does not tie it to the alert (T109-00224, T109-00225, T109-00226).\",\n    \"At 14:05 UTC, a request identifying GoogleDriveFS was denied by the proxy with an authentication-required response; this is a separate service-use lead and does not establish a successful transfer or decide the alert (T109-00227, T109-00228).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 43421,
+    "output": 1590
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "At 13:40:56 UTC, dan.reyes ran PowerShell from Explorer to compress \\\\FILE-COP-01\\Shared\\Clients into C:\\Users\\dan.reyes\\AppData\\Local\\Temp\\c.zip; a file-creation event for c.zip followed at 13:41:00 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T109-00130",
+     "T109-00131",
+     "T109-00134"
+    ]
+   },
+   {
+    "claim": "At 13:46:36 UTC, the proxy recorded a successful Chrome CONNECT tunnel from WS-DREYES-01, attributed to dan.reyes, to fastfile-share.io:443, with 51,000,000 client-to-server bytes over about 22 seconds. Zeek independently records approximately 51 MB of client-originated bytes to the proxy at that time.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T109-00152",
+     "T109-00153",
+     "T109-00154",
+     "T109-00155"
+    ]
+   },
+   {
+    "claim": "The archive was created shortly before the large outbound transfer, and the destination is an unapproved file-sharing service under the supplied inventory. Together, these facts strongly support that the alert reflects unauthorized data exfiltration.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T109-00130",
+     "T109-00134",
+     "T109-00152",
+     "T109-00153"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records a CONNECT tunnel and byte counts, while Zeek records the proxied connection; these records do not expose the encrypted application payload or identify the exact files transferred (T109-00152, T109-00153)."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish the contents or size of c.zip, or prove that this specific archive was the payload sent through the tunnel (T109-00130, T109-00134, T109-00152).",
+   "The evidence does not establish dan.reyes's intent, whether the transfer had any authorization, or who ultimately received the data (T109-00152, T109-00153)."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine c.zip, including its hash, contents, and source-file access history.",
+   "Collect browser history and endpoint/browser upload artifacts to determine which file or files were submitted.",
+   "Obtain any available proxy or TLS inspection records, and investigate the destination domain and transfer account or recipient.",
+   "Validate the activity with dan.reyes and the relevant data owner, including whether any approved business purpose existed."
+  ],
+  "unrelated_findings": [
+   "Dropbox.exe started under dan.reyes at 14:05 UTC, after the alerted transfer; Dropbox is not an approved service in the supplied inventory and merits a separate review, but this record does not tie it to the alert (T109-00224, T109-00225, T109-00226).",
+   "At 14:05 UTC, a request identifying GoogleDriveFS was denied by the proxy with an authentication-required response; this is a separate service-use lead and does not establish a successful transfer or decide the alert (T109-00227, T109-00228)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 16.4
+}

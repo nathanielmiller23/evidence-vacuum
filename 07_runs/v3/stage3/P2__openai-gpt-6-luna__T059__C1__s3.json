@@ -1,0 +1,88 @@
+{
+ "scenario_id": "T059",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 3,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.93,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45:20 UTC, ivy.chen ran PowerShell to compress \\\\\\\\FILE-NWD-01\\\\Shared\\\\Clients into C:\\\\Users\\\\ivy.chen\\\\AppData\\\\Local\\\\Temp\\\\c.zip; Sysmon recorded creation of that archive four seconds later.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T059-00102\", \"T059-00104\"]\n    },\n    {\n      \"claim\": \"At 13:50:50 UTC, the proxy recorded 51,000,000 client-to-server bytes from WS-ICHEN-01 to quickshare-drop.net, and Zeek recorded 51,000,389 originating bytes for the corresponding proxy connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T059-00174\", \"T059-00175\"]\n    },\n    {\n      \"claim\": \"The transfer was made through Chrome running as ivy.chen; the endpoint network event identifies Chrome PID 4120 connecting to the proxy on the matching source port.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T059-00176\", \"T059-00177\"]\n    },\n    {\n      \"claim\": \"The archive creation and the large outbound transfer occurred about five minutes apart, and the transfer destination is not among the organization\u2019s approved sharing or cloud-storage services. This strongly supports suspected exfiltration of the archived client data, although the logs do not prove that c.zip was the exact uploaded payload.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T059-00102\", \"T059-00104\", \"T059-00174\", \"T059-00175\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and Zeek records establish destination and approximate transfer volume, but do not expose the uploaded filename or content. Records: T059-00174, T059-00175.\",\n    \"The process and file records show archive creation, while the network records show Chrome\u2019s proxy connection; the available records do not directly link the archive file to that connection. Records: T059-00102, T059-00104, T059-00177.\",\n    \"The supplied evidence does not establish whether the transfer had specific business authorization.\"\n  ],\n  \"claims_not_established\": [\n    \"That c.zip was definitively the file uploaded to quickshare-drop.net.\",\n    \"The content, sensitivity, or ownership of the transferred data.\",\n    \"Whether ivy.chen intended to exfiltrate data or had an undocumented exception or authorization.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and inspect c.zip, including its hash, size, and contents; preserve the endpoint and relevant browser artifacts.\",\n    \"Collect browser upload history, destination-side or proxy upload details, and DLP records that could identify the uploaded object and confirm whether it was c.zip.\",\n    \"Review FILE-NWD-01 share permissions and access auditing for the files under Shared\\\\Clients around 13:45 UTC.\",\n    \"Confirm with ivy.chen and the relevant data owner whether this transfer was authorized, and check for any documented exception.\"\n  ],\n  \"unrelated_findings\": [\n    \"A Dropbox updater service process ran on WS-ICHEN-01; Dropbox is not listed among approved services. This is separate from the alerted quickshare-drop.net transfer. Records: T059-00011, T059-00013.\",\n    \"The workstation accessed Google account sign-in pages in Chrome. This is outside the alerted transfer and should be reviewed separately if relevant. Records: T059-00139, T059-00140, T059-00152.\",\n    \"The workstation accessed the AWS console in Chrome, which is not listed among approved services. This is separate from the alerted transfer. Records: T059-00212, T059-00213, T059-00222.\",\n    \"DC-NWD-01 recorded a Kerberos ticket request for ivy.chen from WS-NBLAKE-01\u2019s address, followed by a successful network logon for ivy.chen on WS-NBLAKE-01. This is a separate cross-host account-use finding and does not establish a connection to the alerted upload. Records: T059-00248, T059-00249, T059-00250.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 60299,
+    "output": 1869
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.93,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45:20 UTC, ivy.chen ran PowerShell to compress \\\\FILE-NWD-01\\Shared\\Clients into C:\\Users\\ivy.chen\\AppData\\Local\\Temp\\c.zip; Sysmon recorded creation of that archive four seconds later.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00102",
+     "T059-00104"
+    ]
+   },
+   {
+    "claim": "At 13:50:50 UTC, the proxy recorded 51,000,000 client-to-server bytes from WS-ICHEN-01 to quickshare-drop.net, and Zeek recorded 51,000,389 originating bytes for the corresponding proxy connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00174",
+     "T059-00175"
+    ]
+   },
+   {
+    "claim": "The transfer was made through Chrome running as ivy.chen; the endpoint network event identifies Chrome PID 4120 connecting to the proxy on the matching source port.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00176",
+     "T059-00177"
+    ]
+   },
+   {
+    "claim": "The archive creation and the large outbound transfer occurred about five minutes apart, and the transfer destination is not among the organization\u2019s approved sharing or cloud-storage services. This strongly supports suspected exfiltration of the archived client data, although the logs do not prove that c.zip was the exact uploaded payload.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T059-00102",
+     "T059-00104",
+     "T059-00174",
+     "T059-00175"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and Zeek records establish destination and approximate transfer volume, but do not expose the uploaded filename or content. Records: T059-00174, T059-00175.",
+   "The process and file records show archive creation, while the network records show Chrome\u2019s proxy connection; the available records do not directly link the archive file to that connection. Records: T059-00102, T059-00104, T059-00177.",
+   "The supplied evidence does not establish whether the transfer had specific business authorization."
+  ],
+  "claims_not_established": [
+   "That c.zip was definitively the file uploaded to quickshare-drop.net.",
+   "The content, sensitivity, or ownership of the transferred data.",
+   "Whether ivy.chen intended to exfiltrate data or had an undocumented exception or authorization."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and inspect c.zip, including its hash, size, and contents; preserve the endpoint and relevant browser artifacts.",
+   "Collect browser upload history, destination-side or proxy upload details, and DLP records that could identify the uploaded object and confirm whether it was c.zip.",
+   "Review FILE-NWD-01 share permissions and access auditing for the files under Shared\\Clients around 13:45 UTC.",
+   "Confirm with ivy.chen and the relevant data owner whether this transfer was authorized, and check for any documented exception."
+  ],
+  "unrelated_findings": [
+   "A Dropbox updater service process ran on WS-ICHEN-01; Dropbox is not listed among approved services. This is separate from the alerted quickshare-drop.net transfer. Records: T059-00011, T059-00013.",
+   "The workstation accessed Google account sign-in pages in Chrome. This is outside the alerted transfer and should be reviewed separately if relevant. Records: T059-00139, T059-00140, T059-00152.",
+   "The workstation accessed the AWS console in Chrome, which is not listed among approved services. This is separate from the alerted transfer. Records: T059-00212, T059-00213, T059-00222.",
+   "DC-NWD-01 recorded a Kerberos ticket request for ivy.chen from WS-NBLAKE-01\u2019s address, followed by a successful network logon for ivy.chen on WS-NBLAKE-01. This is a separate cross-host account-use finding and does not establish a connection to the alerted upload. Records: T059-00248, T059-00249, T059-00250."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 19.3
+}

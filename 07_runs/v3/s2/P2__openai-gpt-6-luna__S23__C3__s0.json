@@ -1,0 +1,77 @@
+{
+ "scenario_id": "S23",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:41:43 UTC, WS-HITO-01 made an LDAP connection to DC-RB-01; the available records show the connection and its traffic, but do not identify a scheduled-task registration.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S23-00119\", \"S23-00120\", \"S23-00121\"]\n    },\n    {\n      \"claim\": \"At 14:15:37 UTC, a Sysmon event records msiexec.exe accessing services.exe. This is compatible with installer activity, but does not establish that the alerted task launched it or that the task was authorized.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S23-00205\"]\n    },\n    {\n      \"claim\": \"The supplied records do not establish the task's name, action, creator, or whether its registration was legitimate.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S23-00119\", \"S23-00120\", \"S23-00121\", \"S23-00205\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Winsec and Sysmon collection on WS-HITO-01 was unavailable from 13:30 through 14:15 UTC due to a collection outage; this includes the alert time around 13:41 UTC.\",\n    \"The available network and domain-controller records do not provide the endpoint task definition or its registration process.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether a scheduled task was actually registered, and its task path, name, trigger, and configured action.\",\n    \"Which account or process created the task.\",\n    \"Whether the task was the expected VetChart deployment task, ran an approved installer from the deployment share, or performed another action.\",\n    \"Whether the task executed successfully or caused subsequent changes.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover WS-HITO-01 Task Scheduler operational logs and Security event 4698 records for the alert period, including the task XML and registering account.\",\n    \"Obtain endpoint or EDR process-creation and file telemetry covering 13:30\u201314:15 UTC, including the task's parent process and any child processes.\",\n    \"Verify the deployment ticket and scheduled-task definition against the approved VetChart deployment procedure; obtain the installer path, signature, and hash.\",\n    \"Check retained or forwarded logs and backups for the missing WS-HITO-01 Winsec and Sysmon events.\"\n  ],\n  \"unrelated_findings\": [\n    \"Zoom.exe ran under hana.ito and the workstation connected to Zoom services. Zoom is not among the listed approved software; verify its authorization separately. This does not establish anything about the alerted scheduled task. Records: S23-00003, S23-00028, S23-00029.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 26898,
+    "output": 1958
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "At 13:41:43 UTC, WS-HITO-01 made an LDAP connection to DC-RB-01; the available records show the connection and its traffic, but do not identify a scheduled-task registration.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S23-00119",
+     "S23-00120",
+     "S23-00121"
+    ]
+   },
+   {
+    "claim": "At 14:15:37 UTC, a Sysmon event records msiexec.exe accessing services.exe. This is compatible with installer activity, but does not establish that the alerted task launched it or that the task was authorized.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S23-00205"
+    ]
+   },
+   {
+    "claim": "The supplied records do not establish the task's name, action, creator, or whether its registration was legitimate.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S23-00119",
+     "S23-00120",
+     "S23-00121",
+     "S23-00205"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Winsec and Sysmon collection on WS-HITO-01 was unavailable from 13:30 through 14:15 UTC due to a collection outage; this includes the alert time around 13:41 UTC.",
+   "The available network and domain-controller records do not provide the endpoint task definition or its registration process."
+  ],
+  "claims_not_established": [
+   "Whether a scheduled task was actually registered, and its task path, name, trigger, and configured action.",
+   "Which account or process created the task.",
+   "Whether the task was the expected VetChart deployment task, ran an approved installer from the deployment share, or performed another action.",
+   "Whether the task executed successfully or caused subsequent changes."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover WS-HITO-01 Task Scheduler operational logs and Security event 4698 records for the alert period, including the task XML and registering account.",
+   "Obtain endpoint or EDR process-creation and file telemetry covering 13:30\u201314:15 UTC, including the task's parent process and any child processes.",
+   "Verify the deployment ticket and scheduled-task definition against the approved VetChart deployment procedure; obtain the installer path, signature, and hash.",
+   "Check retained or forwarded logs and backups for the missing WS-HITO-01 Winsec and Sysmon events."
+  ],
+  "unrelated_findings": [
+   "Zoom.exe ran under hana.ito and the workstation connected to Zoom services. Zoom is not among the listed approved software; verify its authorization separately. This does not establish anything about the alerted scheduled task. Records: S23-00003, S23-00028, S23-00029."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 8,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.3
+}

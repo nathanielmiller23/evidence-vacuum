@@ -1,0 +1,86 @@
+{
+ "run_id": "A__S01__C1__20261115T030806Z",
+ "config": "A",
+ "scenario_id": "S01",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 90,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 45908,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.78,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Two network logon attempts for raj.iyer failed with an incorrect-password status, using NTLM, from 198.51.100.77 at 13:40:13 and 13:41:28 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S01-00046\", \"S01-00047\"]\n    },\n    {\n      \"claim\": \"At 13:42:52 UTC, the domain controller recorded a successful network logon for raj.iyer using Kerberos, with the same source IP address, 198.51.100.77.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S01-00048\"]\n    },\n    {\n      \"claim\": \"The successful logon from 198.51.100.77 is inconsistent with the supplied environment context: there is no VPN, and remote administration is only performed from WS-KORTEGA-01 inside the office. This makes the successful authentication concerning, though the record alone does not establish who initiated it.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S01-00048\"]\n    },\n    {\n      \"claim\": \"Earlier in the window, raj.iyer had a successful interactive logon on WS-RIYER-01 and Kerberos activity associated with internal address 10.20.10.23; this differs from the later authentication recorded from 198.51.100.77.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S01-00001\", \"S01-00009\", \"S01-00010\", \"S01-00048\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The successful authentication record identifies the source IP and a workstation name of DC-LV-01, but the available records do not independently validate the source or explain that attribution; treat the source identity as unconfirmed (S01-00048).\",\n    \"The supplied records show authentication events but do not provide the initiating client process or subsequent activity tied to the successful logon session (S01-00048).\",\n    \"The records establish that a successful logon followed the failures, but do not establish that the successful logon was caused by the same actor or attempt.\"\n  ],\n  \"claims_not_established\": [\n    \"The identity or location of the person or system that initiated the failed and successful logons (S01-00046, S01-00047, S01-00048).\",\n    \"Whether raj.iyer\u2019s credentials were compromised or the successful logon was authorized (S01-00048).\",\n    \"Whether the successful session accessed resources or performed further actions on the domain controller (S01-00048).\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate DC-LV-01 authentication and Kerberos ticket logs around 13:40\u201313:43 UTC, including any related 4768, 4769, and logon-session events.\",\n    \"Validate the source address and its network attribution using firewall, router, DHCP, and other available network records.\",\n    \"Review domain-controller and account activity after the successful logon, and confirm with raj.iyer and IT whether the authentication was expected.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 16373,
+    "output": 2489,
+    "reasoning": 1729
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.78,
+  "supporting_observations": [
+   {
+    "claim": "Two network logon attempts for raj.iyer failed with an incorrect-password status, using NTLM, from 198.51.100.77 at 13:40:13 and 13:41:28 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S01-00046",
+     "S01-00047"
+    ]
+   },
+   {
+    "claim": "At 13:42:52 UTC, the domain controller recorded a successful network logon for raj.iyer using Kerberos, with the same source IP address, 198.51.100.77.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S01-00048"
+    ]
+   },
+   {
+    "claim": "The successful logon from 198.51.100.77 is inconsistent with the supplied environment context: there is no VPN, and remote administration is only performed from WS-KORTEGA-01 inside the office. This makes the successful authentication concerning, though the record alone does not establish who initiated it.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S01-00048"
+    ]
+   },
+   {
+    "claim": "Earlier in the window, raj.iyer had a successful interactive logon on WS-RIYER-01 and Kerberos activity associated with internal address 10.20.10.23; this differs from the later authentication recorded from 198.51.100.77.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S01-00001",
+     "S01-00009",
+     "S01-00010",
+     "S01-00048"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The successful authentication record identifies the source IP and a workstation name of DC-LV-01, but the available records do not independently validate the source or explain that attribution; treat the source identity as unconfirmed (S01-00048).",
+   "The supplied records show authentication events but do not provide the initiating client process or subsequent activity tied to the successful logon session (S01-00048).",
+   "The records establish that a successful logon followed the failures, but do not establish that the successful logon was caused by the same actor or attempt."
+  ],
+  "claims_not_established": [
+   "The identity or location of the person or system that initiated the failed and successful logons (S01-00046, S01-00047, S01-00048).",
+   "Whether raj.iyer\u2019s credentials were compromised or the successful logon was authorized (S01-00048).",
+   "Whether the successful session accessed resources or performed further actions on the domain controller (S01-00048)."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate DC-LV-01 authentication and Kerberos ticket logs around 13:40\u201313:43 UTC, including any related 4768, 4769, and logon-session events.",
+   "Validate the source address and its network attribution using firewall, router, DHCP, and other available network records.",
+   "Review domain-controller and account activity after the successful logon, and confirm with raj.iyer and IT whether the authentication was expected."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 8,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 27.5
+}

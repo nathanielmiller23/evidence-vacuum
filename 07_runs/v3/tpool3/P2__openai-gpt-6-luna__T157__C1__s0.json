@@ -1,0 +1,99 @@
+{
+ "scenario_id": "T157",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted account helpdesk2 was created on DC-MAP-01 at 13:45:37, with ali.hassan recorded as the subject.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T157-00091\"]\n    },\n    {\n      \"claim\": \"About three seconds later, helpdesk2 was added to a group named Administrators; the record identifies its target SID as ending in 512, indicating privileged group membership.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T157-00092\"]\n    },\n    {\n      \"claim\": \"The account name and privileged membership conflict with the supplied practice that help-desk temporary accounts use the temp.<name> naming pattern, are added only to Externals, and never receive administrator rights.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T157-00091\", \"T157-00092\"]\n    },\n    {\n      \"claim\": \"Shortly before the account changes, ali.hassan logged on interactively to WS-NKIM-01 from 198.51.100.201, a non-internal address; the environment says remote administration is only done from WS-AHASSAN-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T157-00073\", \"T157-00076\", \"T157-00077\", \"T157-00078\"]\n    },\n    {\n      \"claim\": \"In that ali.hassan interactive session on WS-NKIM-01, a scheduled task named HealthCheck was created to run hidden, encoded PowerShell that invokes a web request to http://198.51.100.201/a.ps1. This is strongly suspicious and consistent with malicious activity, though the record does not establish that the task ran.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T157-00078\", \"T157-00093\"]\n    },\n    {\n      \"claim\": \"The account-management records use logon ID 0x8475f0d, while the observed interactive ali.hassan session and HealthCheck task use 0xf3a7831; the available records do not establish that the account changes came from that same session.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T157-00091\", \"T157-00092\", \"T157-00078\", \"T157-00093\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available records do not show whether the HealthCheck task executed or whether the referenced PowerShell content was retrieved.\",\n    \"The account-creation and group-addition records identify ali.hassan as the subject but do not, in the supplied evidence, map their logon ID to a host or to the observed interactive session.\",\n    \"The records do not establish who was physically or remotely operating the ali.hassan account.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether ali.hassan's credentials or session were compromised, or whether the activity was performed by ali.hassan.\",\n    \"Whether helpdesk2 was subsequently used or whether it retained privileged membership.\",\n    \"Whether the HealthCheck task executed and what the referenced script would do.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate DC logon ID 0x8475f0d with domain logon, authentication, and account-management records to identify the originating host and session.\",\n    \"Review ali.hassan authentication, remote-access, and endpoint records, including activity on WS-AHASSAN-01 and WS-NKIM-01, to determine whether the account or session was compromised.\",\n    \"Retrieve the HealthCheck task execution history and relevant PowerShell, network, proxy, and endpoint records; preserve or safely acquire the referenced script if available.\",\n    \"Verify helpdesk2's current group memberships, account use, creation authorization, and any subsequent account changes.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 27111,
+    "output": 2586
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "The alerted account helpdesk2 was created on DC-MAP-01 at 13:45:37, with ali.hassan recorded as the subject.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T157-00091"
+    ]
+   },
+   {
+    "claim": "About three seconds later, helpdesk2 was added to a group named Administrators; the record identifies its target SID as ending in 512, indicating privileged group membership.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T157-00092"
+    ]
+   },
+   {
+    "claim": "The account name and privileged membership conflict with the supplied practice that help-desk temporary accounts use the temp.<name> naming pattern, are added only to Externals, and never receive administrator rights.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T157-00091",
+     "T157-00092"
+    ]
+   },
+   {
+    "claim": "Shortly before the account changes, ali.hassan logged on interactively to WS-NKIM-01 from 198.51.100.201, a non-internal address; the environment says remote administration is only done from WS-AHASSAN-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T157-00073",
+     "T157-00076",
+     "T157-00077",
+     "T157-00078"
+    ]
+   },
+   {
+    "claim": "In that ali.hassan interactive session on WS-NKIM-01, a scheduled task named HealthCheck was created to run hidden, encoded PowerShell that invokes a web request to http://198.51.100.201/a.ps1. This is strongly suspicious and consistent with malicious activity, though the record does not establish that the task ran.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T157-00078",
+     "T157-00093"
+    ]
+   },
+   {
+    "claim": "The account-management records use logon ID 0x8475f0d, while the observed interactive ali.hassan session and HealthCheck task use 0xf3a7831; the available records do not establish that the account changes came from that same session.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T157-00091",
+     "T157-00092",
+     "T157-00078",
+     "T157-00093"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available records do not show whether the HealthCheck task executed or whether the referenced PowerShell content was retrieved.",
+   "The account-creation and group-addition records identify ali.hassan as the subject but do not, in the supplied evidence, map their logon ID to a host or to the observed interactive session.",
+   "The records do not establish who was physically or remotely operating the ali.hassan account."
+  ],
+  "claims_not_established": [
+   "Whether ali.hassan's credentials or session were compromised, or whether the activity was performed by ali.hassan.",
+   "Whether helpdesk2 was subsequently used or whether it retained privileged membership.",
+   "Whether the HealthCheck task executed and what the referenced script would do."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate DC logon ID 0x8475f0d with domain logon, authentication, and account-management records to identify the originating host and session.",
+   "Review ali.hassan authentication, remote-access, and endpoint records, including activity on WS-AHASSAN-01 and WS-NKIM-01, to determine whether the account or session was compromised.",
+   "Retrieve the HealthCheck task execution history and relevant PowerShell, network, proxy, and endpoint records; preserve or safely acquire the referenced script if available.",
+   "Verify helpdesk2's current group memberships, account use, creation authorization, and any subsequent account changes."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 14,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 29.2
+}

@@ -1,0 +1,93 @@
+{
+ "scenario_id": "T014",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6.1-sol",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:39:57 UTC, WS-MLOPEZ-01 recorded a network logon for omar.haddad from WS-OHADDAD-01 (10.30.10.23), with logon ID 0x14aa6a0f.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T014-00148\"]\n    },\n    {\n      \"claim\": \"At 13:41:49 UTC, PowerShell PID 4680 ran under omar.haddad using that same logon ID, executing powershell.exe -NoProfile -ExecutionPolicy Bypass -File \\\\\\\\FILE-HD-01\\\\IT\\\\Deploy-Patches.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T014-00177\", \"T014-00178\"]\n    },\n    {\n      \"claim\": \"PowerShell PID 4680 connected to the explicit proxy using source port 58208. Contemporaneous proxy telemetry records a download.windowsupdate.com tunnel receiving approximately 38.8 MB.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T014-00179\", \"T014-00180\", \"T014-00181\", \"T014-00183\"]\n    },\n    {\n      \"claim\": \"PowerShell spawned wusa.exe to process C:\\\\Windows\\\\Temp\\\\patches\\\\windows11-kb5047001-x64.msu with /quiet /norestart. PowerShell terminated at 13:42:39 UTC, approximately 50 seconds after starting.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T014-00182\", \"T014-00184\", \"T014-00187\", \"T014-00188\"]\n    },\n    {\n      \"claim\": \"The short-lived PowerShell execution near the reported time is consistent with the supplied business-hours patching practice: the designated administrator connected from the designated administration workstation and executed the documented patch script, followed by update-related network and child-process activity. This supports closing the alerted activity as benign.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T014-00148\", \"T014-00177\", \"T014-00179\", \"T014-00182\", \"T014-00188\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied coverage status reports a winsec and sysmon collection outage on WS-LPARK-01 from 13:30 through 14:10 UTC; it does not report an outage on the alerted workstation.\",\n    \"Process records identify the script path and installer arguments but do not provide script contents, package integrity verification, or installation results (T014-00177, T014-00182).\"\n  ],\n  \"claims_not_established\": [\n    \"The records do not prove that this process produced the exact window Maria saw, although its timing and short duration fit the report (T014-00177, T014-00188).\",\n    \"Successful patch installation and the integrity of the script and MSU package are not established by their execution records (T014-00177, T014-00182).\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [],\n  \"unrelated_findings\": [\n    \"Separate software-policy review: GlobalProtect PanGPA.exe launched under maria.lopez despite the supplied no-VPN environment context. This does not establish an active VPN session or a connection to the PowerShell alert (T014-00071, T014-00072, T014-00073).\",\n    \"Separate unapproved-service review: proxy tunnels to clients4.google.com with a GoogleDriveFS user agent and desktop.dropbox.com with a DropboxUpdate user agent conflict with the supplied approved-services inventory. These records alone do not establish file uploads or exfiltration (T014-00219, T014-00286).\",\n    \"Separate authentication review: ben.carter obtained Kerberos tickets from WS-MLOPEZ-01's address and authenticated to WS-BCARTER-01; later, maria.lopez authenticated to DC-HD-01 from WS-BCARTER-01. Authorization and purpose are not established, and these events are not linked to the alerted PowerShell process (T014-00089, T014-00090, T014-00092, T014-00112).\",\n    \"Separate SMB review: FILE-HD-01 recorded an anonymous network logon from WS-MLOPEZ-01 at 13:43:16 UTC. The record does not establish accessed resources, malicious use, or a connection to the earlier PowerShell process (T014-00217).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 61183,
+    "output": 1094
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "At 13:39:57 UTC, WS-MLOPEZ-01 recorded a network logon for omar.haddad from WS-OHADDAD-01 (10.30.10.23), with logon ID 0x14aa6a0f.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T014-00148"
+    ]
+   },
+   {
+    "claim": "At 13:41:49 UTC, PowerShell PID 4680 ran under omar.haddad using that same logon ID, executing powershell.exe -NoProfile -ExecutionPolicy Bypass -File \\\\FILE-HD-01\\IT\\Deploy-Patches.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T014-00177",
+     "T014-00178"
+    ]
+   },
+   {
+    "claim": "PowerShell PID 4680 connected to the explicit proxy using source port 58208. Contemporaneous proxy telemetry records a download.windowsupdate.com tunnel receiving approximately 38.8 MB.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T014-00179",
+     "T014-00180",
+     "T014-00181",
+     "T014-00183"
+    ]
+   },
+   {
+    "claim": "PowerShell spawned wusa.exe to process C:\\Windows\\Temp\\patches\\windows11-kb5047001-x64.msu with /quiet /norestart. PowerShell terminated at 13:42:39 UTC, approximately 50 seconds after starting.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T014-00182",
+     "T014-00184",
+     "T014-00187",
+     "T014-00188"
+    ]
+   },
+   {
+    "claim": "The short-lived PowerShell execution near the reported time is consistent with the supplied business-hours patching practice: the designated administrator connected from the designated administration workstation and executed the documented patch script, followed by update-related network and child-process activity. This supports closing the alerted activity as benign.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T014-00148",
+     "T014-00177",
+     "T014-00179",
+     "T014-00182",
+     "T014-00188"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied coverage status reports a winsec and sysmon collection outage on WS-LPARK-01 from 13:30 through 14:10 UTC; it does not report an outage on the alerted workstation.",
+   "Process records identify the script path and installer arguments but do not provide script contents, package integrity verification, or installation results (T014-00177, T014-00182)."
+  ],
+  "claims_not_established": [
+   "The records do not prove that this process produced the exact window Maria saw, although its timing and short duration fit the report (T014-00177, T014-00188).",
+   "Successful patch installation and the integrity of the script and MSU package are not established by their execution records (T014-00177, T014-00182)."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [],
+  "unrelated_findings": [
+   "Separate software-policy review: GlobalProtect PanGPA.exe launched under maria.lopez despite the supplied no-VPN environment context. This does not establish an active VPN session or a connection to the PowerShell alert (T014-00071, T014-00072, T014-00073).",
+   "Separate unapproved-service review: proxy tunnels to clients4.google.com with a GoogleDriveFS user agent and desktop.dropbox.com with a DropboxUpdate user agent conflict with the supplied approved-services inventory. These records alone do not establish file uploads or exfiltration (T014-00219, T014-00286).",
+   "Separate authentication review: ben.carter obtained Kerberos tickets from WS-MLOPEZ-01's address and authenticated to WS-BCARTER-01; later, maria.lopez authenticated to DC-HD-01 from WS-BCARTER-01. Authorization and purpose are not established, and these events are not linked to the alerted PowerShell process (T014-00089, T014-00090, T014-00092, T014-00112).",
+   "Separate SMB review: FILE-HD-01 recorded an anonymous network logon from WS-MLOPEZ-01 at 13:43:16 UTC. The record does not establish accessed resources, malicious use, or a connection to the earlier PowerShell process (T014-00217)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 16,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.1
+}

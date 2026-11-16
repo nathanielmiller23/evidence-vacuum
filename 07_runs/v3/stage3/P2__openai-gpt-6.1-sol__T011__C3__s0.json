@@ -1,0 +1,83 @@
+{
+ "scenario_id": "T011",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6.1-sol",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"DC-HD-01 recorded two failed network logons for HARBOR-DENTAL\\\\ben.carter at 13:41:55 and 13:43:20 UTC. Both used NTLM, originated from ::ffff:192.0.2.45, and reported SubStatus 0xc000006a, indicating an incorrect password.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T011-00003\",\n        \"T011-00004\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:44:45 UTC, DC-HD-01 recorded a successful Kerberos network logon for ben.carter from the same source IP, ::ffff:192.0.2.45.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T011-00005\"\n      ]\n    },\n    {\n      \"claim\": \"The failures followed by success warrant source and user validation, but do not distinguish legitimate password retries from unauthorized authentication. The successful logon used a different authentication package from the failures.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T011-00003\",\n        \"T011-00004\",\n        \"T011-00005\"\n      ]\n    },\n    {\n      \"claim\": \"Explorer wrote Chrome-related and Excel-related UserAssist entries under ben.carter on WS-BCARTER-01 before and after the authentication events. These records provide workstation context but do not attribute the source IP or establish that the domain logons were authorized.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T011-00001\",\n        \"T011-00006\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Collection-status metadata reports a proxy-log outage from 13:30 to 14:10 UTC, covering the authentication sequence; this limits web-activity corroboration, not the recorded authentication facts.\",\n    \"Although the listed Windows and network sensors are reported healthy, the supplied evidence contains only six records and provides no source-IP-to-host mapping or source-process telemetry for the logons in T011-00003 through T011-00005.\"\n  ],\n  \"claims_not_established\": [\n    \"Which device or user controlled 192.0.2.45 during T011-00003 through T011-00005, including whether it was WS-BCARTER-01.\",\n    \"Whether the failed logons were user mistakes, stale credentials, or deliberate password guessing.\",\n    \"Whether the successful logon in T011-00005 was authorized or resulted in subsequent resource access.\",\n    \"Neither malicious activity nor a benign explanation is established by the failure-to-success sequence alone.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Obtain historical DHCP, IPAM, or endpoint network records mapping 192.0.2.45 at 13:41\u201313:45 UTC.\",\n    \"Confirm with ben.carter whether he initiated these logons and experienced password-entry failures.\",\n    \"Retrieve source-endpoint process and authentication records, plus domain-controller authentication details, for 13:20\u201314:20 UTC to identify the initiating application and correlate the NTLM failures with the Kerberos success.\",\n    \"Correlate TargetLogonId 0x94fa7fa from T011-00005 with subsequent resource-access and session activity.\"\n  ],\n  \"unrelated_findings\": [\n    \"T011-00002 records explorer.exe setting ben.carter's ProxyEnable value to 0 on WS-BCARTER-01 at 13:39:30 UTC. Review separately whether disabling the explicit proxy was authorized; this record does not establish a causal connection to the alerted logons.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 2509,
+    "output": 893
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "DC-HD-01 recorded two failed network logons for HARBOR-DENTAL\\ben.carter at 13:41:55 and 13:43:20 UTC. Both used NTLM, originated from ::ffff:192.0.2.45, and reported SubStatus 0xc000006a, indicating an incorrect password.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T011-00003",
+     "T011-00004"
+    ]
+   },
+   {
+    "claim": "At 13:44:45 UTC, DC-HD-01 recorded a successful Kerberos network logon for ben.carter from the same source IP, ::ffff:192.0.2.45.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T011-00005"
+    ]
+   },
+   {
+    "claim": "The failures followed by success warrant source and user validation, but do not distinguish legitimate password retries from unauthorized authentication. The successful logon used a different authentication package from the failures.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T011-00003",
+     "T011-00004",
+     "T011-00005"
+    ]
+   },
+   {
+    "claim": "Explorer wrote Chrome-related and Excel-related UserAssist entries under ben.carter on WS-BCARTER-01 before and after the authentication events. These records provide workstation context but do not attribute the source IP or establish that the domain logons were authorized.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T011-00001",
+     "T011-00006"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Collection-status metadata reports a proxy-log outage from 13:30 to 14:10 UTC, covering the authentication sequence; this limits web-activity corroboration, not the recorded authentication facts.",
+   "Although the listed Windows and network sensors are reported healthy, the supplied evidence contains only six records and provides no source-IP-to-host mapping or source-process telemetry for the logons in T011-00003 through T011-00005."
+  ],
+  "claims_not_established": [
+   "Which device or user controlled 192.0.2.45 during T011-00003 through T011-00005, including whether it was WS-BCARTER-01.",
+   "Whether the failed logons were user mistakes, stale credentials, or deliberate password guessing.",
+   "Whether the successful logon in T011-00005 was authorized or resulted in subsequent resource access.",
+   "Neither malicious activity nor a benign explanation is established by the failure-to-success sequence alone."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Obtain historical DHCP, IPAM, or endpoint network records mapping 192.0.2.45 at 13:41\u201313:45 UTC.",
+   "Confirm with ben.carter whether he initiated these logons and experienced password-entry failures.",
+   "Retrieve source-endpoint process and authentication records, plus domain-controller authentication details, for 13:20\u201314:20 UTC to identify the initiating application and correlate the NTLM failures with the Kerberos success.",
+   "Correlate TargetLogonId 0x94fa7fa from T011-00005 with subsequent resource-access and session activity."
+  ],
+  "unrelated_findings": [
+   "T011-00002 records explorer.exe setting ben.carter's ProxyEnable value to 0 on WS-BCARTER-01 at 13:39:30 UTC. Review separately whether disabling the explicit proxy was authorized; this record does not establish a causal connection to the alerted logons."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 8,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 14.3
+}

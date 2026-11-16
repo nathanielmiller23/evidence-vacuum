@@ -1,0 +1,73 @@
+{
+ "scenario_id": "T080",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.9,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:44:41 UTC, FILE-PIN-01 sent 640,000,368 bytes to PROXY-PIN-01 on port 8080 in one connection. The record does not identify the ultimate destination or the process that initiated the transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T080-00228\"]\n    },\n    {\n      \"claim\": \"The transfer\u2019s size is consistent with the inventory description of Vaultline backup uploads, but the available record does not establish that this was a Vaultline transfer.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T080-00228\"]\n    },\n    {\n      \"claim\": \"At 13:43:34 UTC, a DC-PIN-01 Kerberos service-ticket event names svc-bkp as the target user and shows source IP 23.129.64.210. This is close in time to the transfer, but the evidence does not link that event to the transfer or establish who controlled the source IP.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T080-00214\", \"T080-00228\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied sensor status reports a collection outage on FILE-PIN-01 for winsec and Sysmon, and on PROXY-PIN-01 for proxy logs, from 13:20 through 14:15 UTC. This leaves no collected process attribution on the file server or proxy request details for the transfer.\",\n    \"Zeek connection telemetry is available, but the transfer record only shows the internal proxy as its destination; it does not reveal the ultimate external destination or the content transferred.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the transfer went to the approved vaultline-backup.com service or to an unapproved destination.\",\n    \"Whether the transfer was initiated by the approved Vaultline agent, another legitimate process, or malicious software.\",\n    \"Whether the svc-bkp ticket event from 23.129.64.210 is connected to the transfer.\",\n    \"What files or data were transferred, and whether the activity was authorized.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover PROXY-PIN-01 logs for the relevant time, including destination host or URL, authenticated client or account, request method, response status, and byte counts.\",\n    \"Obtain FILE-PIN-01 endpoint or backup-agent execution and job logs for the transfer, including destination, files selected, and job status.\",\n    \"Investigate the svc-bkp Kerberos event with DC and perimeter records to determine the source and whether the event was associated with the transfer.\"\n  ],\n  \"unrelated_findings\": [\n    \"A Tableau process on WS-ARUIZ-01 attempted a connection to FILE-PIN-01 on port 5432; the connection ended with RSTR. Review separately if that service or access is unexpected. (T080-00356, T080-00357)\",\n    \"A Kerberos service-ticket event names emma.stone and shows source IP 10.51.10.21, which the inventory maps to WS-ARUIZ-01. The available record does not explain this account/workstation combination; review separately. (T080-00370)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 55059,
+    "output": 3170
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.9,
+  "supporting_observations": [
+   {
+    "claim": "At 13:44:41 UTC, FILE-PIN-01 sent 640,000,368 bytes to PROXY-PIN-01 on port 8080 in one connection. The record does not identify the ultimate destination or the process that initiated the transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T080-00228"
+    ]
+   },
+   {
+    "claim": "The transfer\u2019s size is consistent with the inventory description of Vaultline backup uploads, but the available record does not establish that this was a Vaultline transfer.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T080-00228"
+    ]
+   },
+   {
+    "claim": "At 13:43:34 UTC, a DC-PIN-01 Kerberos service-ticket event names svc-bkp as the target user and shows source IP 23.129.64.210. This is close in time to the transfer, but the evidence does not link that event to the transfer or establish who controlled the source IP.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T080-00214",
+     "T080-00228"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied sensor status reports a collection outage on FILE-PIN-01 for winsec and Sysmon, and on PROXY-PIN-01 for proxy logs, from 13:20 through 14:15 UTC. This leaves no collected process attribution on the file server or proxy request details for the transfer.",
+   "Zeek connection telemetry is available, but the transfer record only shows the internal proxy as its destination; it does not reveal the ultimate external destination or the content transferred."
+  ],
+  "claims_not_established": [
+   "Whether the transfer went to the approved vaultline-backup.com service or to an unapproved destination.",
+   "Whether the transfer was initiated by the approved Vaultline agent, another legitimate process, or malicious software.",
+   "Whether the svc-bkp ticket event from 23.129.64.210 is connected to the transfer.",
+   "What files or data were transferred, and whether the activity was authorized."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover PROXY-PIN-01 logs for the relevant time, including destination host or URL, authenticated client or account, request method, response status, and byte counts.",
+   "Obtain FILE-PIN-01 endpoint or backup-agent execution and job logs for the transfer, including destination, files selected, and job status.",
+   "Investigate the svc-bkp Kerberos event with DC and perimeter records to determine the source and whether the event was associated with the transfer."
+  ],
+  "unrelated_findings": [
+   "A Tableau process on WS-ARUIZ-01 attempted a connection to FILE-PIN-01 on port 5432; the connection ended with RSTR. Review separately if that service or access is unexpected. (T080-00356, T080-00357)",
+   "A Kerberos service-ticket event names emma.stone and shows source IP 10.51.10.21, which the inventory maps to WS-ARUIZ-01. The available record does not explain this account/workstation combination; review separately. (T080-00370)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 4,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 34.8
+}

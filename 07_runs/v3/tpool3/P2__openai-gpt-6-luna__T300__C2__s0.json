@@ -1,0 +1,75 @@
+{
+ "scenario_id": "T300",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The large outbound transfer is recorded at 13:48 UTC, shortly after the alert's approximate 13:46 time: the proxy records a tunnel carrying about 640 MB outbound to ingest.keystone-backup.net, and Zeek records about 640 MB sent in the corresponding connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T300-00267\", \"T300-00269\"]\n    },\n    {\n      \"claim\": \"The process associated with the large transfer is C:\\\\Program Files\\\\Keystone\\\\agent.exe running as ORCHARD\\\\svc-safe; its network connection to the proxy uses the same source port as the large-transfer connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T300-00261\", \"T300-00264\", \"T300-00268\", \"T300-00270\", \"T300-00271\"]\n    },\n    {\n      \"claim\": \"The destination, Keystone's ingest endpoint, and the Keystone agent running as svc-safe match the inventory's approved offsite backup service and agent. The inventory also describes uploads of several hundred MB, consistent with the observed transfer size.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T300-00261\", \"T300-00262\", \"T300-00267\", \"T300-00269\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show destination and byte counts, but do not show the transferred files, backup manifest, or payload contents.\",\n    \"The reported alert time is approximate; the supplied bulk-transfer records are timestamped about 13:48 UTC, and the specific alert-triggering record or threshold is not provided.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not independently establish which files were uploaded or whether every item in the transfer was authorized for backup.\",\n    \"The records do not establish whether the alert's approximate 13:46 timestamp reflects a different event or a timing/reporting discrepancy.\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [],\n  \"unrelated_findings\": [\n    \"At 14:16 UTC, tess.hart initiated an RDP session to FILE-ORC-01 and successfully logged on. This is outside the alerted transfer activity and should be reviewed separately against the organization's remote-administration practice. (T300-00470, T300-00481, T300-00482)\",\n    \"At 14:01 UTC, WS-ACOLE-01 logged an explicit-credentials event targeting svc-safe on FILE-ORC-01. The record does not establish a successful authentication; investigate separately. (T300-00349)\",\n    \"FILE-ORC-01 made proxy connections associated with Zscaler Client Connector and GlobalProtect. These are separate from the Keystone transfer and may warrant review given the inventory's stated remote-access restrictions. (T300-00136, T300-00143)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 60027,
+    "output": 1757
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "The large outbound transfer is recorded at 13:48 UTC, shortly after the alert's approximate 13:46 time: the proxy records a tunnel carrying about 640 MB outbound to ingest.keystone-backup.net, and Zeek records about 640 MB sent in the corresponding connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T300-00267",
+     "T300-00269"
+    ]
+   },
+   {
+    "claim": "The process associated with the large transfer is C:\\Program Files\\Keystone\\agent.exe running as ORCHARD\\svc-safe; its network connection to the proxy uses the same source port as the large-transfer connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T300-00261",
+     "T300-00264",
+     "T300-00268",
+     "T300-00270",
+     "T300-00271"
+    ]
+   },
+   {
+    "claim": "The destination, Keystone's ingest endpoint, and the Keystone agent running as svc-safe match the inventory's approved offsite backup service and agent. The inventory also describes uploads of several hundred MB, consistent with the observed transfer size.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T300-00261",
+     "T300-00262",
+     "T300-00267",
+     "T300-00269"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show destination and byte counts, but do not show the transferred files, backup manifest, or payload contents.",
+   "The reported alert time is approximate; the supplied bulk-transfer records are timestamped about 13:48 UTC, and the specific alert-triggering record or threshold is not provided."
+  ],
+  "claims_not_established": [
+   "The evidence does not independently establish which files were uploaded or whether every item in the transfer was authorized for backup.",
+   "The records do not establish whether the alert's approximate 13:46 timestamp reflects a different event or a timing/reporting discrepancy."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [],
+  "unrelated_findings": [
+   "At 14:16 UTC, tess.hart initiated an RDP session to FILE-ORC-01 and successfully logged on. This is outside the alerted transfer activity and should be reviewed separately against the organization's remote-administration practice. (T300-00470, T300-00481, T300-00482)",
+   "At 14:01 UTC, WS-ACOLE-01 logged an explicit-credentials event targeting svc-safe on FILE-ORC-01. The record does not establish a successful authentication; investigate separately. (T300-00349)",
+   "FILE-ORC-01 made proxy connections associated with Zscaler Client Connector and GlobalProtect. These are separate from the Keystone transfer and may warrant review given the inventory's stated remote-access restrictions. (T300-00136, T300-00143)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 17.7
+}

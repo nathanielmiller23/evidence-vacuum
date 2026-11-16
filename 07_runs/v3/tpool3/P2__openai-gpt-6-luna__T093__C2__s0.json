@@ -1,0 +1,107 @@
+{
+ "scenario_id": "T093",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45:07, ana.ruiz opened a macro-enabled document, Statement.docm, from Downloads in Word.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T093-00163\", \"T093-00166\"]\n    },\n    {\n      \"claim\": \"One second later, Word spawned PowerShell with no profile, a hidden window, and an encoded command. Decoding the command yields an expression that downloads and executes a script from raw.githubusercontent.com.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T093-00167\", \"T093-00168\"]\n    },\n    {\n      \"claim\": \"PowerShell made network connections through the proxy shortly after launch; the available connection records show traffic volumes but do not identify the requested URL or response contents.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T093-00169\", \"T093-00173\", \"T093-00175\", \"T093-00176\", \"T093-00177\"]\n    },\n    {\n      \"claim\": \"PowerShell then spawned rundll32 with C:\\\\Users\\\\ana.ruiz\\\\AppData\\\\Roaming\\\\svchelper.dll,Init as its command. Word exited immediately afterward; rundll32 and PowerShell also exited shortly thereafter.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T093-00179\", \"T093-00180\", \"T093-00181\", \"T093-00182\", \"T093-00183\", \"T093-00184\", \"T093-00185\", \"T093-00186\"]\n    },\n    {\n      \"claim\": \"The document-to-hidden-PowerShell-to-downloaded-script-to-rundll32 sequence is strongly indicative of malicious execution on WS-ARUIZ-01.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T093-00163\", \"T093-00167\", \"T093-00179\", \"T093-00181\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The ticket reports a PowerShell window around 13:40 UTC, while the provided process records show the Word-to-PowerShell sequence at 13:45:07 UTC; the records do not establish the exact time the user saw the window.\",\n    \"The available network records show PowerShell connections and byte counts, but not the requested URL, downloaded script contents, or whether the download completed successfully.\",\n    \"The records show rundll32 invoked with a DLL path but do not provide the DLL contents, hash, signature, or evidence of what its Init export did.\",\n    \"The provided process records do not establish whether the user knowingly opened the document or whether additional persistence or data theft occurred.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the script at the encoded command's URL was retrieved and what its contents were.\",\n    \"Whether svchelper.dll was successfully loaded and what actions it performed.\",\n    \"Whether any data was accessed or exfiltrated, or whether persistence was established.\",\n    \"Whether the 13:45:07 execution is exactly the PowerShell window described in the ticket, given the reported approximate time of 13:40 UTC.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and analyze Statement.docm, including its source, macro content, and file metadata.\",\n    \"Collect the downloaded script and svchelper.dll from the endpoint or relevant caches; record hashes and analyze both.\",\n    \"Obtain detailed proxy records for the PowerShell connections, including request URLs, response metadata, and any retained content.\",\n    \"Review endpoint telemetry and persistence locations for follow-on activity, and check for related activity on other hosts and accounts.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate review: WS-ARUIZ-01 connected to desktop.dropbox.com using DropboxUpdate; Dropbox is not among the listed approved services. This observation does not determine the alerted activity. (T093-00018, T093-00019, T093-00022, T093-00023)\",\n    \"Separate review: DC-PIN-01 issued a Kerberos ticket for raj.patel from WS-ARUIZ-01's IP, followed by a network logon as raj.patel to WS-RPATEL-01 from that IP. The inventory says remote administration is only done from WS-RPATEL-01; investigate this separately. (T093-00121, T093-00123, T093-00126)\",\n    \"Separate review: Kerberos activity from WS-ARUIZ-01's IP authenticated tom.weber to WS-TWEBER-01, followed later by TLS connections from WS-ARUIZ-01 to that workstation. Investigate this separately; the records do not establish its relationship to the alerted execution. (T093-00265, T093-00266, T093-00269, T093-00382, T093-00384, T093-00395, T093-00399)\",\n    \"Separate review: ZSATunnel.exe ran on WS-ARUIZ-01, and the W32Time MaxPollInterval registry value was set shortly afterward. The supplied inventory does not explain these events; they do not determine the alerted activity. (T093-00132, T093-00133, T093-00134)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 56451,
+    "output": 3075
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45:07, ana.ruiz opened a macro-enabled document, Statement.docm, from Downloads in Word.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T093-00163",
+     "T093-00166"
+    ]
+   },
+   {
+    "claim": "One second later, Word spawned PowerShell with no profile, a hidden window, and an encoded command. Decoding the command yields an expression that downloads and executes a script from raw.githubusercontent.com.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T093-00167",
+     "T093-00168"
+    ]
+   },
+   {
+    "claim": "PowerShell made network connections through the proxy shortly after launch; the available connection records show traffic volumes but do not identify the requested URL or response contents.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T093-00169",
+     "T093-00173",
+     "T093-00175",
+     "T093-00176",
+     "T093-00177"
+    ]
+   },
+   {
+    "claim": "PowerShell then spawned rundll32 with C:\\Users\\ana.ruiz\\AppData\\Roaming\\svchelper.dll,Init as its command. Word exited immediately afterward; rundll32 and PowerShell also exited shortly thereafter.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T093-00179",
+     "T093-00180",
+     "T093-00181",
+     "T093-00182",
+     "T093-00183",
+     "T093-00184",
+     "T093-00185",
+     "T093-00186"
+    ]
+   },
+   {
+    "claim": "The document-to-hidden-PowerShell-to-downloaded-script-to-rundll32 sequence is strongly indicative of malicious execution on WS-ARUIZ-01.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T093-00163",
+     "T093-00167",
+     "T093-00179",
+     "T093-00181"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The ticket reports a PowerShell window around 13:40 UTC, while the provided process records show the Word-to-PowerShell sequence at 13:45:07 UTC; the records do not establish the exact time the user saw the window.",
+   "The available network records show PowerShell connections and byte counts, but not the requested URL, downloaded script contents, or whether the download completed successfully.",
+   "The records show rundll32 invoked with a DLL path but do not provide the DLL contents, hash, signature, or evidence of what its Init export did.",
+   "The provided process records do not establish whether the user knowingly opened the document or whether additional persistence or data theft occurred."
+  ],
+  "claims_not_established": [
+   "Whether the script at the encoded command's URL was retrieved and what its contents were.",
+   "Whether svchelper.dll was successfully loaded and what actions it performed.",
+   "Whether any data was accessed or exfiltrated, or whether persistence was established.",
+   "Whether the 13:45:07 execution is exactly the PowerShell window described in the ticket, given the reported approximate time of 13:40 UTC."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and analyze Statement.docm, including its source, macro content, and file metadata.",
+   "Collect the downloaded script and svchelper.dll from the endpoint or relevant caches; record hashes and analyze both.",
+   "Obtain detailed proxy records for the PowerShell connections, including request URLs, response metadata, and any retained content.",
+   "Review endpoint telemetry and persistence locations for follow-on activity, and check for related activity on other hosts and accounts."
+  ],
+  "unrelated_findings": [
+   "Separate review: WS-ARUIZ-01 connected to desktop.dropbox.com using DropboxUpdate; Dropbox is not among the listed approved services. This observation does not determine the alerted activity. (T093-00018, T093-00019, T093-00022, T093-00023)",
+   "Separate review: DC-PIN-01 issued a Kerberos ticket for raj.patel from WS-ARUIZ-01's IP, followed by a network logon as raj.patel to WS-RPATEL-01 from that IP. The inventory says remote administration is only done from WS-RPATEL-01; investigate this separately. (T093-00121, T093-00123, T093-00126)",
+   "Separate review: Kerberos activity from WS-ARUIZ-01's IP authenticated tom.weber to WS-TWEBER-01, followed later by TLS connections from WS-ARUIZ-01 to that workstation. Investigate this separately; the records do not establish its relationship to the alerted execution. (T093-00265, T093-00266, T093-00269, T093-00382, T093-00384, T093-00395, T093-00399)",
+   "Separate review: ZSATunnel.exe ran on WS-ARUIZ-01, and the W32Time MaxPollInterval registry value was set shortly afterward. The supplied inventory does not explain these events; they do not determine the alerted activity. (T093-00132, T093-00133, T093-00134)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 21,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 29.8
+}

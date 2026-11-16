@@ -1,0 +1,97 @@
+{
+ "scenario_id": "T090",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:46, FILE-PIN-01 ran the approved Vaultline agent as svc-bkp with the Nightly job and the inventory-listed Vaultline ingest destination.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T090-00325\",\n        \"T090-00326\"\n      ]\n    },\n    {\n      \"claim\": \"The proxy recorded approximately 640 MB sent to ingest.vaultline-backup.com, and Zeek recorded about 640 MB outbound from FILE-PIN-01 to the proxy during the same transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T090-00328\",\n        \"T090-00331\"\n      ]\n    },\n    {\n      \"claim\": \"The large transfer is consistent with the approved Vaultline backup activity described in the inventory, but the available records do not establish what files or data were uploaded.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T090-00325\",\n        \"T090-00328\",\n        \"T090-00331\"\n      ]\n    },\n    {\n      \"claim\": \"Just before the transfer, the domain controller recorded a service-ticket event for svc-bkp targeting FILE-PIN-01$ with source IP 45.79.19.196; FILE-PIN-01 then recorded a svc-bkp service logon, followed by the Vaultline agent running as svc-bkp.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T090-00310\",\n        \"T090-00311\",\n        \"T090-00325\"\n      ]\n    },\n    {\n      \"claim\": \"The external source IP for the svc-bkp ticket event is unexplained by the supplied environment context, which says there is no VPN. The evidence does not prove that this event caused or authorized the backup transfer, but it prevents confidently closing the alerted activity as benign.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T090-00310\",\n        \"T090-00311\",\n        \"T090-00325\",\n        \"T090-00328\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and Zeek records provide transfer sizes and destination, but not the contents or file names transferred.\",\n    \"The records do not establish whether the external-IP svc-bkp ticket event was legitimate, how it was generated, or whether it was connected to the local service logon and backup process.\",\n    \"The supplied evidence does not include Vaultline job-run records, expected schedule details, or validation of the agent binary.\"\n  ],\n  \"claims_not_established\": [\n    \"That the uploaded data was authorized backup data rather than other content.\",\n    \"That the svc-bkp ticket event from 45.79.19.196 was malicious or was causally related to the transfer.\",\n    \"That the Vaultline executable and its configuration are authentic and unmodified.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Validate 45.79.19.196 against authorized service-provider or organizational sources, and investigate the corresponding DC authentication details and any related network activity.\",\n    \"Obtain Vaultline job and audit records for this run, including the files or dataset selected, destination account, and whether the time and volume match expected operation.\",\n    \"Verify the Vaultline agent's signature, hash, installation history, service configuration, and scheduled-job configuration on FILE-PIN-01.\",\n    \"Correlate the svc-bkp ticket event, service logon, and agent process using available authentication, service, and endpoint telemetry.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-ESTONE-01 ran mstsc.exe to FILE-PIN-01 and emma.stone had an interactive remote logon there; this is separate from the alerted transfer and should be checked against help-desk authorization and practice. Records T090-00041, T090-00047, T090-00055.\",\n    \"FILE-PIN-01 made a proxy request to receiver.citrix.com using a python-requests user agent; Citrix is not among the listed approved services. Review separately. Record T090-00090.\",\n    \"FILE-PIN-01 later made a proxy request to www.bing.com using a python-requests user agent; review separately because the initiating process is not identified in the available record. Record T090-00667.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 98659,
+    "output": 3157
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "At 13:46, FILE-PIN-01 ran the approved Vaultline agent as svc-bkp with the Nightly job and the inventory-listed Vaultline ingest destination.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T090-00325",
+     "T090-00326"
+    ]
+   },
+   {
+    "claim": "The proxy recorded approximately 640 MB sent to ingest.vaultline-backup.com, and Zeek recorded about 640 MB outbound from FILE-PIN-01 to the proxy during the same transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T090-00328",
+     "T090-00331"
+    ]
+   },
+   {
+    "claim": "The large transfer is consistent with the approved Vaultline backup activity described in the inventory, but the available records do not establish what files or data were uploaded.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T090-00325",
+     "T090-00328",
+     "T090-00331"
+    ]
+   },
+   {
+    "claim": "Just before the transfer, the domain controller recorded a service-ticket event for svc-bkp targeting FILE-PIN-01$ with source IP 45.79.19.196; FILE-PIN-01 then recorded a svc-bkp service logon, followed by the Vaultline agent running as svc-bkp.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T090-00310",
+     "T090-00311",
+     "T090-00325"
+    ]
+   },
+   {
+    "claim": "The external source IP for the svc-bkp ticket event is unexplained by the supplied environment context, which says there is no VPN. The evidence does not prove that this event caused or authorized the backup transfer, but it prevents confidently closing the alerted activity as benign.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T090-00310",
+     "T090-00311",
+     "T090-00325",
+     "T090-00328"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and Zeek records provide transfer sizes and destination, but not the contents or file names transferred.",
+   "The records do not establish whether the external-IP svc-bkp ticket event was legitimate, how it was generated, or whether it was connected to the local service logon and backup process.",
+   "The supplied evidence does not include Vaultline job-run records, expected schedule details, or validation of the agent binary."
+  ],
+  "claims_not_established": [
+   "That the uploaded data was authorized backup data rather than other content.",
+   "That the svc-bkp ticket event from 45.79.19.196 was malicious or was causally related to the transfer.",
+   "That the Vaultline executable and its configuration are authentic and unmodified."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Validate 45.79.19.196 against authorized service-provider or organizational sources, and investigate the corresponding DC authentication details and any related network activity.",
+   "Obtain Vaultline job and audit records for this run, including the files or dataset selected, destination account, and whether the time and volume match expected operation.",
+   "Verify the Vaultline agent's signature, hash, installation history, service configuration, and scheduled-job configuration on FILE-PIN-01.",
+   "Correlate the svc-bkp ticket event, service logon, and agent process using available authentication, service, and endpoint telemetry."
+  ],
+  "unrelated_findings": [
+   "WS-ESTONE-01 ran mstsc.exe to FILE-PIN-01 and emma.stone had an interactive remote logon there; this is separate from the alerted transfer and should be checked against help-desk authorization and practice. Records T090-00041, T090-00047, T090-00055.",
+   "FILE-PIN-01 made a proxy request to receiver.citrix.com using a python-requests user agent; Citrix is not among the listed approved services. Review separately. Record T090-00090.",
+   "FILE-PIN-01 later made a proxy request to www.bing.com using a python-requests user agent; review separately because the initiating process is not identified in the available record. Record T090-00667."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 14,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 30.5
+}

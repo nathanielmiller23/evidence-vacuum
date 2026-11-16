@@ -1,0 +1,99 @@
+{
+ "run_id": "A__T033__C2__20261115T045028Z",
+ "config": "A",
+ "scenario_id": "T033",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 266,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 110721,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:40 UTC, the proxy recorded a successful request by ivy.chen for https://raw.githubusercontent.com/nwd-it/tools/main/u.ps1. The records identify the URL and HTTP 200 status, but do not show the script contents.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T033-00089\", \"T033-00090\", \"T033-00091\", \"T033-00093\", \"T033-00095\"]\n    },\n    {\n      \"claim\": \"At 13:27 UTC, the domain controller issued a Kerberos TGT for sam.okafor from WS-ICHEN-01's IP address, and WS-SOKAFOR-01 then recorded a network logon for sam.okafor from that same IP. This is inconsistent with the stated practice that remote administration is performed only from WS-SOKAFOR-01.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T033-00014\", \"T033-00015\", \"T033-00019\"]\n    },\n    {\n      \"claim\": \"At 14:13 UTC, WS-ICHEN-01's IP obtained Kerberos tickets for leo.martins, including a service ticket for WS-NBLAKE-01. WS-NBLAKE-01 then recorded a network logon for leo.martins from that IP.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T033-00237\", \"T033-00238\", \"T033-00249\"]\n    },\n    {\n      \"claim\": \"Firefox on WS-ICHEN-01 opened the AWS console, and the proxy recorded successful requests to the console and its assets. AWS is not among the services listed as approved in the supplied environment context; the records do not establish what actions, if any, were taken in the console.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T033-00212\", \"T033-00220\", \"T033-00222\", \"T033-00223\", \"T033-00225\", \"T033-00226\", \"T033-00232\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records show the request for u.ps1, but provide no script body, hash, or signature information (T033-00091).\",\n    \"The supplied records do not show a PowerShell process creation or a process explicitly linked to downloading or executing u.ps1; the proxy records alone do not establish execution (T033-00089, T033-00091).\",\n    \"The AWS proxy records establish console browsing, not whether data was accessed, changed, or transferred (T033-00223, T033-00226, T033-00232).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether u.ps1 was executed, and whether its contents were malicious or an authorized internal tool.\",\n    \"Whether the sam.okafor and leo.martins credentials or Kerberos tickets were stolen, supplied intentionally, or otherwise used with authorization.\",\n    \"What actions were performed in the AWS console or whether any data was transferred.\",\n    \"Whether the reported PowerShell window was caused by the u.ps1 request.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Retrieve u.ps1 and its repository history at the time of the request; determine its content, hash, signature, and whether it was approved or deployed by IT.\",\n    \"Collect endpoint process, PowerShell, script-block, command-line, and file-creation telemetry for WS-ICHEN-01 around 13:40 UTC to establish whether the script ran and what launched it.\",\n    \"Investigate the sam.okafor authentication from WS-ICHEN-01 to WS-SOKAFOR-01, including logon-session and endpoint telemetry on both workstations.\",\n    \"Investigate the leo.martins authentication from WS-ICHEN-01 to WS-NBLAKE-01, including the resulting session activity and whether the access was authorized.\",\n    \"Review AWS identity, console audit, and data-access logs for ivy.chen around 14:13 UTC.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 41045,
+    "output": 2356,
+    "reasoning": 1408
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "At 13:40 UTC, the proxy recorded a successful request by ivy.chen for https://raw.githubusercontent.com/nwd-it/tools/main/u.ps1. The records identify the URL and HTTP 200 status, but do not show the script contents.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T033-00089",
+     "T033-00090",
+     "T033-00091",
+     "T033-00093",
+     "T033-00095"
+    ]
+   },
+   {
+    "claim": "At 13:27 UTC, the domain controller issued a Kerberos TGT for sam.okafor from WS-ICHEN-01's IP address, and WS-SOKAFOR-01 then recorded a network logon for sam.okafor from that same IP. This is inconsistent with the stated practice that remote administration is performed only from WS-SOKAFOR-01.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T033-00014",
+     "T033-00015",
+     "T033-00019"
+    ]
+   },
+   {
+    "claim": "At 14:13 UTC, WS-ICHEN-01's IP obtained Kerberos tickets for leo.martins, including a service ticket for WS-NBLAKE-01. WS-NBLAKE-01 then recorded a network logon for leo.martins from that IP.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T033-00237",
+     "T033-00238",
+     "T033-00249"
+    ]
+   },
+   {
+    "claim": "Firefox on WS-ICHEN-01 opened the AWS console, and the proxy recorded successful requests to the console and its assets. AWS is not among the services listed as approved in the supplied environment context; the records do not establish what actions, if any, were taken in the console.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T033-00212",
+     "T033-00220",
+     "T033-00222",
+     "T033-00223",
+     "T033-00225",
+     "T033-00226",
+     "T033-00232"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records show the request for u.ps1, but provide no script body, hash, or signature information (T033-00091).",
+   "The supplied records do not show a PowerShell process creation or a process explicitly linked to downloading or executing u.ps1; the proxy records alone do not establish execution (T033-00089, T033-00091).",
+   "The AWS proxy records establish console browsing, not whether data was accessed, changed, or transferred (T033-00223, T033-00226, T033-00232)."
+  ],
+  "claims_not_established": [
+   "Whether u.ps1 was executed, and whether its contents were malicious or an authorized internal tool.",
+   "Whether the sam.okafor and leo.martins credentials or Kerberos tickets were stolen, supplied intentionally, or otherwise used with authorization.",
+   "What actions were performed in the AWS console or whether any data was transferred.",
+   "Whether the reported PowerShell window was caused by the u.ps1 request."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Retrieve u.ps1 and its repository history at the time of the request; determine its content, hash, signature, and whether it was approved or deployed by IT.",
+   "Collect endpoint process, PowerShell, script-block, command-line, and file-creation telemetry for WS-ICHEN-01 around 13:40 UTC to establish whether the script ran and what launched it.",
+   "Investigate the sam.okafor authentication from WS-ICHEN-01 to WS-SOKAFOR-01, including logon-session and endpoint telemetry on both workstations.",
+   "Investigate the leo.martins authentication from WS-ICHEN-01 to WS-NBLAKE-01, including the resulting session activity and whether the access was authorized.",
+   "Review AWS identity, console audit, and data-access logs for ivy.chen around 14:13 UTC."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 18,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.1
+}

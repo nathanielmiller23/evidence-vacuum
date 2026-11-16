@@ -1,0 +1,96 @@
+{
+ "scenario_id": "T243",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:42:40 UTC, zoe.adams opened C:\\\\Users\\\\zoe.adams\\\\Downloads\\\\Statement.docm in Microsoft Word. About 11 seconds later, Word spawned PowerShell.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T243-00216\", \"T243-00220\", \"T243-00221\"]\n    },\n    {\n      \"claim\": \"The PowerShell command used -nop, -w hidden, and -enc; decoding the encoded command yields an expression that downloads and executes a script using DownloadString from raw.githubusercontent.com.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T243-00220\", \"T243-00221\"]\n    },\n    {\n      \"claim\": \"The proxy recorded a successful GET for https://raw.githubusercontent.com/sunridge-it/tools/main/u.ps1, and network records associate the proxy connection with the PowerShell process.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T243-00223\", \"T243-00224\", \"T243-00225\", \"T243-00226\"]\n    },\n    {\n      \"claim\": \"PowerShell then launched rundll32.exe to invoke Init in C:\\\\Users\\\\zoe.adams\\\\AppData\\\\Roaming\\\\svchelper.dll.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T243-00231\", \"T243-00234\"]\n    },\n    {\n      \"claim\": \"The recorded PowerShell command specifies a hidden window, so the process records establish PowerShell execution but do not establish why the user briefly saw a window.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T243-00220\", \"T243-00221\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records show the script URL and a successful HTTP response, but do not include the downloaded script contents.\",\n    \"The records show rundll32 invoking the DLL entry point, but do not include the DLL contents, hash, signature, or subsequent behavior.\",\n    \"The records do not establish who authored or intentionally initiated the document or command.\"\n  ],\n  \"claims_not_established\": [\n    \"The contents or full behavior of the downloaded u.ps1 script and svchelper.dll.\",\n    \"Whether the user intentionally opened or enabled content in Statement.docm.\",\n    \"Whether the activity established persistence, accessed sensitive data, or caused data loss or exfiltration.\",\n    \"Whether the reported brief window was this PowerShell process; the recorded launch was at 13:42:52 UTC and included a hidden-window option.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire Statement.docm, u.ps1, and svchelper.dll, including hashes, timestamps, and source/provenance where available.\",\n    \"Review endpoint protection and EDR detections, PowerShell/script-block logs, and file-creation or modification telemetry around the execution.\",\n    \"Inspect the proxy response or network capture for the downloaded script content and any follow-on requests.\",\n    \"Interview zoe.adams about the document, the reported window, and any related activity.\"\n  ],\n  \"unrelated_findings\": [\n    \"Google Drive File Stream was launched on WS-ZADAMS-01; Google Drive is not listed as approved cloud storage in the supplied inventory. Handle separately; this does not determine the alerted activity. (T243-00171, T243-00172)\",\n    \"Chrome made a Dropbox sharing API request, while Dropbox is not listed as an approved file-sharing service. Handle separately; the record does not establish what data, if any, was shared. (T243-00275, T243-00276)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 67180,
+    "output": 1721
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:42:40 UTC, zoe.adams opened C:\\Users\\zoe.adams\\Downloads\\Statement.docm in Microsoft Word. About 11 seconds later, Word spawned PowerShell.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T243-00216",
+     "T243-00220",
+     "T243-00221"
+    ]
+   },
+   {
+    "claim": "The PowerShell command used -nop, -w hidden, and -enc; decoding the encoded command yields an expression that downloads and executes a script using DownloadString from raw.githubusercontent.com.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T243-00220",
+     "T243-00221"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a successful GET for https://raw.githubusercontent.com/sunridge-it/tools/main/u.ps1, and network records associate the proxy connection with the PowerShell process.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T243-00223",
+     "T243-00224",
+     "T243-00225",
+     "T243-00226"
+    ]
+   },
+   {
+    "claim": "PowerShell then launched rundll32.exe to invoke Init in C:\\Users\\zoe.adams\\AppData\\Roaming\\svchelper.dll.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T243-00231",
+     "T243-00234"
+    ]
+   },
+   {
+    "claim": "The recorded PowerShell command specifies a hidden window, so the process records establish PowerShell execution but do not establish why the user briefly saw a window.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T243-00220",
+     "T243-00221"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records show the script URL and a successful HTTP response, but do not include the downloaded script contents.",
+   "The records show rundll32 invoking the DLL entry point, but do not include the DLL contents, hash, signature, or subsequent behavior.",
+   "The records do not establish who authored or intentionally initiated the document or command."
+  ],
+  "claims_not_established": [
+   "The contents or full behavior of the downloaded u.ps1 script and svchelper.dll.",
+   "Whether the user intentionally opened or enabled content in Statement.docm.",
+   "Whether the activity established persistence, accessed sensitive data, or caused data loss or exfiltration.",
+   "Whether the reported brief window was this PowerShell process; the recorded launch was at 13:42:52 UTC and included a hidden-window option."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire Statement.docm, u.ps1, and svchelper.dll, including hashes, timestamps, and source/provenance where available.",
+   "Review endpoint protection and EDR detections, PowerShell/script-block logs, and file-creation or modification telemetry around the execution.",
+   "Inspect the proxy response or network capture for the downloaded script content and any follow-on requests.",
+   "Interview zoe.adams about the document, the reported window, and any related activity."
+  ],
+  "unrelated_findings": [
+   "Google Drive File Stream was launched on WS-ZADAMS-01; Google Drive is not listed as approved cloud storage in the supplied inventory. Handle separately; this does not determine the alerted activity. (T243-00171, T243-00172)",
+   "Chrome made a Dropbox sharing API request, while Dropbox is not listed as an approved file-sharing service. Handle separately; the record does not establish what data, if any, was shared. (T243-00275, T243-00276)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 17.3
+}

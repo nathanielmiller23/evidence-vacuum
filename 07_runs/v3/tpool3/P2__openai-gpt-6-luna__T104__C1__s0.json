@@ -1,0 +1,87 @@
+{
+ "scenario_id": "T104",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:40:45 UTC, PowerShell ran on WS-DREYES-01 as paul.becker with the command line for the organization's documented patch script, \\\\\\\\FILE-COP-01\\\\IT\\\\Patch-Workstations.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T104-00188\",\n        \"T104-00189\"\n      ]\n    },\n    {\n      \"claim\": \"A network logon for paul.becker was recorded shortly before the PowerShell process, and the process used the same logon ID as that logon.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T104-00175\",\n        \"T104-00176\",\n        \"T104-00188\",\n        \"T104-00189\"\n      ]\n    },\n    {\n      \"claim\": \"The PowerShell process launched wusa.exe to install a Windows 11 KB update from C:\\\\Windows\\\\Temp\\\\patches, consistent with the stated workstation-patching practice; both processes then exited.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T104-00194\",\n        \"T104-00195\",\n        \"T104-00196\",\n        \"T104-00197\",\n        \"T104-00198\",\n        \"T104-00199\"\n      ]\n    },\n    {\n      \"claim\": \"The PowerShell activity at 13:40 aligns with the documented business-hours workstation patching practice and the specific ticket timing, supporting a benign disposition for the alerted activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T104-00188\",\n        \"T104-00189\",\n        \"T104-00194\",\n        \"T104-00195\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Process-creation records establish that PowerShell ran, but do not establish whether a console window was visible to the user.\",\n    \"The logs show the script path and command line, but do not provide the script contents or an integrity check of the script.\",\n    \"The records show wusa.exe ran and exited, but do not establish whether the update installation succeeded.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the patch script's contents were unchanged or authorized beyond the documented path and command line.\",\n    \"Whether the Windows update completed successfully.\",\n    \"Whether dan.reyes actually saw the PowerShell window or whether the brief appearance was inferred from the process activity.\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [],\n  \"unrelated_findings\": [\n    \"Separate review: a different PowerShell process ran C:\\\\Scripts\\\\service-health.ps1 as SYSTEM under taskeng.exe at 13:42:59, after the alerted patch PowerShell had exited; it later made an explicit-credentials logon attempt using svc-routes to FILE-COP-01. Inventory describes svc-routes as a job on FILE-COP-01, so validate this workstation task and credential use separately. These records do not change the disposition of the 13:40 patch activity. (T104-00198, T104-00199, T104-00215, T104-00216, T104-00222, T104-00223, T104-00224)\",\n    \"Separate review: Dropbox ran on WS-DREYES-01, and Google Drive File Stream was also present; these are cloud-storage services not listed as approved in the supplied environment context. The records establish process activity, not file transfers or data exposure. (T104-00071, T104-00072, T104-00073, T104-00310, T104-00314)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 60386,
+    "output": 2551
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "At 13:40:45 UTC, PowerShell ran on WS-DREYES-01 as paul.becker with the command line for the organization's documented patch script, \\\\FILE-COP-01\\IT\\Patch-Workstations.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T104-00188",
+     "T104-00189"
+    ]
+   },
+   {
+    "claim": "A network logon for paul.becker was recorded shortly before the PowerShell process, and the process used the same logon ID as that logon.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T104-00175",
+     "T104-00176",
+     "T104-00188",
+     "T104-00189"
+    ]
+   },
+   {
+    "claim": "The PowerShell process launched wusa.exe to install a Windows 11 KB update from C:\\Windows\\Temp\\patches, consistent with the stated workstation-patching practice; both processes then exited.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T104-00194",
+     "T104-00195",
+     "T104-00196",
+     "T104-00197",
+     "T104-00198",
+     "T104-00199"
+    ]
+   },
+   {
+    "claim": "The PowerShell activity at 13:40 aligns with the documented business-hours workstation patching practice and the specific ticket timing, supporting a benign disposition for the alerted activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T104-00188",
+     "T104-00189",
+     "T104-00194",
+     "T104-00195"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Process-creation records establish that PowerShell ran, but do not establish whether a console window was visible to the user.",
+   "The logs show the script path and command line, but do not provide the script contents or an integrity check of the script.",
+   "The records show wusa.exe ran and exited, but do not establish whether the update installation succeeded."
+  ],
+  "claims_not_established": [
+   "Whether the patch script's contents were unchanged or authorized beyond the documented path and command line.",
+   "Whether the Windows update completed successfully.",
+   "Whether dan.reyes actually saw the PowerShell window or whether the brief appearance was inferred from the process activity."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [],
+  "unrelated_findings": [
+   "Separate review: a different PowerShell process ran C:\\Scripts\\service-health.ps1 as SYSTEM under taskeng.exe at 13:42:59, after the alerted patch PowerShell had exited; it later made an explicit-credentials logon attempt using svc-routes to FILE-COP-01. Inventory describes svc-routes as a job on FILE-COP-01, so validate this workstation task and credential use separately. These records do not change the disposition of the 13:40 patch activity. (T104-00198, T104-00199, T104-00215, T104-00216, T104-00222, T104-00223, T104-00224)",
+   "Separate review: Dropbox ran on WS-DREYES-01, and Google Drive File Stream was also present; these are cloud-storage services not listed as approved in the supplied environment context. The records establish process activity, not file transfers or data exposure. (T104-00071, T104-00072, T104-00073, T104-00310, T104-00314)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 16,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 24.7
+}

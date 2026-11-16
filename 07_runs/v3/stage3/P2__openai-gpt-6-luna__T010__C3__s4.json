@@ -1,0 +1,73 @@
+{
+ "scenario_id": "T010",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 4,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The records closest to the alerted time show FILE-HD-01 communicating with the domain controller over LDAP and Kerberos; they do not identify an outbound transfer or its destination.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T010-00338\",\n        \"T010-00341\",\n        \"T010-00342\",\n        \"T010-00343\",\n        \"T010-00346\",\n        \"T010-00347\",\n        \"T010-00349\",\n        \"T010-00351\"\n      ]\n    },\n    {\n      \"claim\": \"FILE-HD-01 has recorded connections to the proxy shortly before and after the alert time, but these individual records show only modest byte counts and do not establish whether the alerted transfer used the proxy.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T010-00325\",\n        \"T010-00362\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"FILE-HD-01 winsec and Sysmon collection was unavailable from 13:30 to 14:10 UTC, so process-level attribution for the alert window is missing.\",\n    \"PROXY-HD-01 proxy-log collection was unavailable from 13:30 to 14:10 UTC, preventing confirmation of proxy destination, URL, and transaction byte counts.\",\n    \"The supplied records do not include a flow or transaction record that independently confirms the hundreds-of-MB transfer described by the alert.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the reported large transfer occurred as described, and its exact start time, duration, destination, and byte count.\",\n    \"Whether the transfer was made by the approved CobaltVault agent or by another process.\",\n    \"Whether the transfer contained authorized backup data or data being exfiltrated.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover or obtain PROXY-HD-01 transaction logs for 13:30\u201314:10 UTC, including destination, URL or service, byte counts, and client identity.\",\n    \"Obtain the network-monitoring alert's underlying flow/session details and correlate them with Zeek records for FILE-HD-01.\",\n    \"Collect CobaltVault agent logs and FILE-HD-01 process, service, and file-access telemetry for the transfer period; restore missing host logs if possible.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 14:05 UTC, FILE-HD-01 initiated an RPC connection to WS-OHADDAD-01 on port 135. This is worth checking separately against the stated remote-administration practice; it does not establish the cause of the alerted transfer. (T010-00528, T010-00529, T010-00530)\",\n    \"PROXY-HD-01 made an SMB connection to FILE-HD-01 on port 445 at 13:39 UTC. This is unusual for the listed proxy role and should be reviewed separately; it does not determine whether the alerted outbound transfer was malicious. (T010-00248, T010-00251)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 78284,
+    "output": 2125
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "The records closest to the alerted time show FILE-HD-01 communicating with the domain controller over LDAP and Kerberos; they do not identify an outbound transfer or its destination.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T010-00338",
+     "T010-00341",
+     "T010-00342",
+     "T010-00343",
+     "T010-00346",
+     "T010-00347",
+     "T010-00349",
+     "T010-00351"
+    ]
+   },
+   {
+    "claim": "FILE-HD-01 has recorded connections to the proxy shortly before and after the alert time, but these individual records show only modest byte counts and do not establish whether the alerted transfer used the proxy.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T010-00325",
+     "T010-00362"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "FILE-HD-01 winsec and Sysmon collection was unavailable from 13:30 to 14:10 UTC, so process-level attribution for the alert window is missing.",
+   "PROXY-HD-01 proxy-log collection was unavailable from 13:30 to 14:10 UTC, preventing confirmation of proxy destination, URL, and transaction byte counts.",
+   "The supplied records do not include a flow or transaction record that independently confirms the hundreds-of-MB transfer described by the alert."
+  ],
+  "claims_not_established": [
+   "Whether the reported large transfer occurred as described, and its exact start time, duration, destination, and byte count.",
+   "Whether the transfer was made by the approved CobaltVault agent or by another process.",
+   "Whether the transfer contained authorized backup data or data being exfiltrated."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover or obtain PROXY-HD-01 transaction logs for 13:30\u201314:10 UTC, including destination, URL or service, byte counts, and client identity.",
+   "Obtain the network-monitoring alert's underlying flow/session details and correlate them with Zeek records for FILE-HD-01.",
+   "Collect CobaltVault agent logs and FILE-HD-01 process, service, and file-access telemetry for the transfer period; restore missing host logs if possible."
+  ],
+  "unrelated_findings": [
+   "At 14:05 UTC, FILE-HD-01 initiated an RPC connection to WS-OHADDAD-01 on port 135. This is worth checking separately against the stated remote-administration practice; it does not establish the cause of the alerted transfer. (T010-00528, T010-00529, T010-00530)",
+   "PROXY-HD-01 made an SMB connection to FILE-HD-01 on port 445 at 13:39 UTC. This is unusual for the listed proxy role and should be reviewed separately; it does not determine whether the alerted outbound transfer was malicious. (T010-00248, T010-00251)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 22.5
+}

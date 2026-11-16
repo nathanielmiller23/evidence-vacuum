@@ -1,0 +1,95 @@
+{
+ "scenario_id": "T207",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"DC-BLU-01 recorded creation of the alerted account svc_update at 13:47:06 UTC, with ken.ito as the subject.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T207-00099\"]\n    },\n    {\n      \"claim\": \"About 12 seconds later, DC-BLU-01 recorded svc_update being added to the BLUEFIN Administrators group by ken.ito. This grants the account administrator membership, contrary to the supplied help-desk temporary-account practice.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T207-00103\"]\n    },\n    {\n      \"claim\": \"Shortly before the account creation, WS-EBROOKS-01 received an inbound RDP connection from 203.0.113.133, and a type-10 Kerberos logon for ken.ito was recorded from that address. The supplied environment says remote administration is only done from WS-KITO-01 and there is no VPN.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T207-00075\", \"T207-00077\", \"T207-00078\", \"T207-00080\"]\n    },\n    {\n      \"claim\": \"The account creation/group-add events have subject logon ID 0xf893ff4, whereas the recorded RDP logon for ken.ito has logon ID 0x506c1c2. The available records therefore do not establish that the account actions occurred in that RDP session.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T207-00099\", \"T207-00103\", \"T207-00080\"]\n    },\n    {\n      \"claim\": \"A separate scheduled task was created on WS-EBROOKS-01 by ken.ito in the recorded RDP session. Its hidden, encoded PowerShell action decodes to a command that retrieves and executes a script from http://203.0.113.133/a.ps1. This is suspicious contemporaneous context, but the records do not show it created or used svc_update.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T207-00080\", \"T207-00104\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records identify ken.ito as the subject of the account and group events, but do not establish who was operating the session or whether the account actions were authorized.\",\n    \"The account events' logon ID differs from the RDP session's logon ID, so those events cannot be directly attributed to that session from the available evidence.\",\n    \"The logs show account creation and administrator-group membership, but do not show subsequent authentication or use of svc_update.\",\n    \"The scheduled-task record shows its configured action, not whether the task ran or what the remote script contained.\"\n  ],\n  \"claims_not_established\": [\n    \"That the account creation and administrator-group addition were performed through the recorded inbound RDP session.\",\n    \"That svc_update was used after creation, or what its intended purpose was.\",\n    \"That the scheduled task executed successfully or that its remote script was downloaded.\",\n    \"The identity of the person controlling the ken.ito credentials or the source represented by 203.0.113.133.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate DC-BLU-01 logon ID 0xf893ff4 with authentication and session records to determine the source and context of the account creation and group addition.\",\n    \"Verify with the account owner and change records whether svc_update creation and administrator membership were authorized; inspect the account's current status and subsequent logons.\",\n    \"Collect WS-EBROOKS-01 task execution history, PowerShell logs, and network/proxy records for the scheduled task and the URL at 203.0.113.133.\",\n    \"Investigate the inbound RDP source and validate whether ken.ito's credentials or session were compromised.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox updater processes were observed on WS-EBROOKS-01. Dropbox is not among the approved software/services supplied in the environment context; validate this separately. Records: T207-00004, T207-00005, T207-00042, T207-00073, T207-00074.\",\n    \"WS-EBROOKS-01 made an SMB connection to FILE-BLU-01 that generated an ANONYMOUS LOGON network logon. This is separate from the alerted account activity and should be validated independently. Records: T207-00176, T207-00177, T207-00178.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 27085,
+    "output": 2450
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "DC-BLU-01 recorded creation of the alerted account svc_update at 13:47:06 UTC, with ken.ito as the subject.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T207-00099"
+    ]
+   },
+   {
+    "claim": "About 12 seconds later, DC-BLU-01 recorded svc_update being added to the BLUEFIN Administrators group by ken.ito. This grants the account administrator membership, contrary to the supplied help-desk temporary-account practice.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T207-00103"
+    ]
+   },
+   {
+    "claim": "Shortly before the account creation, WS-EBROOKS-01 received an inbound RDP connection from 203.0.113.133, and a type-10 Kerberos logon for ken.ito was recorded from that address. The supplied environment says remote administration is only done from WS-KITO-01 and there is no VPN.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T207-00075",
+     "T207-00077",
+     "T207-00078",
+     "T207-00080"
+    ]
+   },
+   {
+    "claim": "The account creation/group-add events have subject logon ID 0xf893ff4, whereas the recorded RDP logon for ken.ito has logon ID 0x506c1c2. The available records therefore do not establish that the account actions occurred in that RDP session.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T207-00099",
+     "T207-00103",
+     "T207-00080"
+    ]
+   },
+   {
+    "claim": "A separate scheduled task was created on WS-EBROOKS-01 by ken.ito in the recorded RDP session. Its hidden, encoded PowerShell action decodes to a command that retrieves and executes a script from http://203.0.113.133/a.ps1. This is suspicious contemporaneous context, but the records do not show it created or used svc_update.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T207-00080",
+     "T207-00104"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records identify ken.ito as the subject of the account and group events, but do not establish who was operating the session or whether the account actions were authorized.",
+   "The account events' logon ID differs from the RDP session's logon ID, so those events cannot be directly attributed to that session from the available evidence.",
+   "The logs show account creation and administrator-group membership, but do not show subsequent authentication or use of svc_update.",
+   "The scheduled-task record shows its configured action, not whether the task ran or what the remote script contained."
+  ],
+  "claims_not_established": [
+   "That the account creation and administrator-group addition were performed through the recorded inbound RDP session.",
+   "That svc_update was used after creation, or what its intended purpose was.",
+   "That the scheduled task executed successfully or that its remote script was downloaded.",
+   "The identity of the person controlling the ken.ito credentials or the source represented by 203.0.113.133."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate DC-BLU-01 logon ID 0xf893ff4 with authentication and session records to determine the source and context of the account creation and group addition.",
+   "Verify with the account owner and change records whether svc_update creation and administrator membership were authorized; inspect the account's current status and subsequent logons.",
+   "Collect WS-EBROOKS-01 task execution history, PowerShell logs, and network/proxy records for the scheduled task and the URL at 203.0.113.133.",
+   "Investigate the inbound RDP source and validate whether ken.ito's credentials or session were compromised."
+  ],
+  "unrelated_findings": [
+   "Dropbox updater processes were observed on WS-EBROOKS-01. Dropbox is not among the approved software/services supplied in the environment context; validate this separately. Records: T207-00004, T207-00005, T207-00042, T207-00073, T207-00074.",
+   "WS-EBROOKS-01 made an SMB connection to FILE-BLU-01 that generated an ANONYMOUS LOGON network logon. This is separate from the alerted account activity and should be validated independently. Records: T207-00176, T207-00177, T207-00178."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 28.3
+}

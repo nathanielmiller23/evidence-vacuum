@@ -1,0 +1,94 @@
+{
+ "scenario_id": "T297",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted account was created at 13:45:16 UTC, rather than around 13:42; the creation event names sean.byrne as the subject.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T297-00078\"]\n    },\n    {\n      \"claim\": \"About one second after creation, sysops was added to the domain Administrators group by sean.byrne, making this a privileged account rather than an ordinary temporary account.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T297-00079\"]\n    },\n    {\n      \"claim\": \"Just after the account-management events, sean.byrne registered a scheduled task on WS-RDIAZ-01. It runs hidden PowerShell with an encoded command that decodes to a web request for a.ps1 from 198.51.100.77; the task event uses logon ID 0xbcc70dc.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T297-00080\"]\n    },\n    {\n      \"claim\": \"Minutes before the account and task events, WS-RDIAZ-01 accepted an RDP connection from 198.51.100.77, and a type-10 logon for sean.byrne was recorded from that address. This session has logon ID 0xbcc70dc, matching the scheduled-task event. The inventory says remote administration is only done from WS-SBYRNE-01 and there is no VPN, so this activity is inconsistent with the stated practice.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T297-00051\", \"T297-00052\", \"T297-00053\", \"T297-00080\"]\n    },\n    {\n      \"claim\": \"The account creation and Administrators-group addition use DC logon ID 0x9eaf594, which differs from the RDP session and task logon ID 0xbcc70dc. The evidence therefore does not directly establish that the RDP session performed the account changes, but the privileged account creation occurs in the same short interval as the unauthorized-looking RDP activity and suspicious task registration.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T297-00078\", \"T297-00079\", \"T297-00053\", \"T297-00080\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy logs for the proxy host were not collected from 13:25 to 14:00 UTC due to an outage, overlapping the alerted activity; proxy evidence cannot establish destinations or transfer details during that period.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish who controlled the sean.byrne credentials or whether the named user personally performed the activity.\",\n    \"The different logon IDs mean the evidence does not directly tie the DC account-management events to the RDP logon session.\",\n    \"The task registration is observed, but whether it ran, successfully retrieved the script, or what the script did is not established.\",\n    \"The records do not establish whether sysops was subsequently used, what access it exercised, or whether there was an authorized change request.\",\n    \"The records do not establish attribution or routability of 198.51.100.77.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Investigate the sean.byrne authentication and logon associated with DC logon ID 0x9eaf594, and determine why it differs from the WS-RDIAZ-01 session logon ID.\",\n    \"Verify the account-creation and privilege-change events against approved change records; review sysops group membership, subsequent logons, and activity.\",\n    \"Examine WS-RDIAZ-01 for scheduled-task execution, PowerShell logs, downloaded content, and related persistence or follow-on activity.\",\n    \"Correlate network and identity records for the RDP source and determine whether the connection was authorized.\",\n    \"Recover proxy or other network telemetry for the 13:25\u201314:00 UTC collection gap if available.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox was launched under raul.diaz on WS-RDIAZ-01, although Dropbox is not listed as approved; track separately as an unapproved cloud-storage service. Records: T297-00149, T297-00150, T297-00151.\",\n    \"Chrome was launched to files.slack.com under raul.diaz, and the proxy recorded a successful connection; Slack is not listed as an approved service. Track separately. Records: T297-00267, T297-00272, T297-00273, T297-00274, T297-00275.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 38368,
+    "output": 2273
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "The alerted account was created at 13:45:16 UTC, rather than around 13:42; the creation event names sean.byrne as the subject.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T297-00078"
+    ]
+   },
+   {
+    "claim": "About one second after creation, sysops was added to the domain Administrators group by sean.byrne, making this a privileged account rather than an ordinary temporary account.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T297-00079"
+    ]
+   },
+   {
+    "claim": "Just after the account-management events, sean.byrne registered a scheduled task on WS-RDIAZ-01. It runs hidden PowerShell with an encoded command that decodes to a web request for a.ps1 from 198.51.100.77; the task event uses logon ID 0xbcc70dc.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T297-00080"
+    ]
+   },
+   {
+    "claim": "Minutes before the account and task events, WS-RDIAZ-01 accepted an RDP connection from 198.51.100.77, and a type-10 logon for sean.byrne was recorded from that address. This session has logon ID 0xbcc70dc, matching the scheduled-task event. The inventory says remote administration is only done from WS-SBYRNE-01 and there is no VPN, so this activity is inconsistent with the stated practice.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T297-00051",
+     "T297-00052",
+     "T297-00053",
+     "T297-00080"
+    ]
+   },
+   {
+    "claim": "The account creation and Administrators-group addition use DC logon ID 0x9eaf594, which differs from the RDP session and task logon ID 0xbcc70dc. The evidence therefore does not directly establish that the RDP session performed the account changes, but the privileged account creation occurs in the same short interval as the unauthorized-looking RDP activity and suspicious task registration.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T297-00078",
+     "T297-00079",
+     "T297-00053",
+     "T297-00080"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy logs for the proxy host were not collected from 13:25 to 14:00 UTC due to an outage, overlapping the alerted activity; proxy evidence cannot establish destinations or transfer details during that period."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish who controlled the sean.byrne credentials or whether the named user personally performed the activity.",
+   "The different logon IDs mean the evidence does not directly tie the DC account-management events to the RDP logon session.",
+   "The task registration is observed, but whether it ran, successfully retrieved the script, or what the script did is not established.",
+   "The records do not establish whether sysops was subsequently used, what access it exercised, or whether there was an authorized change request.",
+   "The records do not establish attribution or routability of 198.51.100.77."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Investigate the sean.byrne authentication and logon associated with DC logon ID 0x9eaf594, and determine why it differs from the WS-RDIAZ-01 session logon ID.",
+   "Verify the account-creation and privilege-change events against approved change records; review sysops group membership, subsequent logons, and activity.",
+   "Examine WS-RDIAZ-01 for scheduled-task execution, PowerShell logs, downloaded content, and related persistence or follow-on activity.",
+   "Correlate network and identity records for the RDP source and determine whether the connection was authorized.",
+   "Recover proxy or other network telemetry for the 13:25\u201314:00 UTC collection gap if available."
+  ],
+  "unrelated_findings": [
+   "Dropbox was launched under raul.diaz on WS-RDIAZ-01, although Dropbox is not listed as approved; track separately as an unapproved cloud-storage service. Records: T297-00149, T297-00150, T297-00151.",
+   "Chrome was launched to files.slack.com under raul.diaz, and the proxy recorded a successful connection; Slack is not listed as an approved service. Track separately. Records: T297-00267, T297-00272, T297-00273, T297-00274, T297-00275."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 22.3
+}

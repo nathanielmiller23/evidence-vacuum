@@ -1,0 +1,81 @@
+{
+ "scenario_id": "T024",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 1,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The supplied records do not identify a PowerShell process at the reported time. Nearby records show Kerberos activity from WS-MLOPEZ-01 at 13:37\u201313:41 UTC, but do not establish what caused the reported window.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T024-00047\",\n        \"T024-00050\",\n        \"T024-00053\",\n        \"T024-00057\",\n        \"T024-00076\",\n        \"T024-00079\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:44 UTC, WS-MLOPEZ-01 made a proxy connection to download.windowsupdate.com; the logged tunnel transferred about 38.8 MB from the server. This is compatible with business-hours patching, but does not show that the reported PowerShell window was part of patching.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T024-00113\",\n        \"T024-00115\"\n      ]\n    },\n    {\n      \"claim\": \"The records show Kerberos tickets for FILE-HD-01$ from WS-MLOPEZ-01 at 13:38 and 13:39, but do not show that the workstation accessed the patch script or that an administrator initiated the activity.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T024-00067\",\n        \"T024-00072\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not include PowerShell operational logs, shell transcripts, or a process-creation record identifying PowerShell around 13:40 UTC.\",\n    \"The records provided may be incomplete; absence of a PowerShell event in this evidence does not establish that PowerShell did not run.\",\n    \"The proxy records show a Windows Update download but do not identify the process that initiated it or connect it to the reported window.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether PowerShell actually executed on WS-MLOPEZ-01 around 13:40 UTC.\",\n    \"If it executed, its command line, parent process, user context, and whether it was interactive or automated.\",\n    \"Whether the activity was part of authorized workstation patching or was malicious.\",\n    \"Whether any commands ran or caused changes, access, or data transfer.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Collect endpoint process-creation and EDR telemetry for WS-MLOPEZ-01 covering at least 13:35\u201313:50 UTC, including process ancestry, command lines, and user context.\",\n    \"Collect PowerShell Operational logs, including script-block and module logging if enabled, and any available console or session records for the same period.\",\n    \"Check FILE-HD-01 share-access and file-audit logs, plus WS-OHADDAD-01 activity, for evidence of the authorized patch script being run and by whom.\",\n    \"Confirm with Maria Lopez whether she saw a command window and what else was happening immediately before and after it appeared.\"\n  ],\n  \"unrelated_findings\": [\n    \"Google Drive File Stream started under maria.lopez at 14:11 UTC and contacted dl.google.com. The inventory approves OneDrive but no other cloud-storage service; handle this as a separate finding, not evidence deciding this alert. (T024-00278, T024-00280, T024-00281)\",\n    \"A svchost.exe process opened handles to LSASS at 14:11\u201314:12 UTC; the supplied records do not identify that svchost service or connect this activity to the reported 13:40 window. Review separately if warranted. (T024-00283, T024-00284, T024-00289)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 32327,
+    "output": 2138
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "The supplied records do not identify a PowerShell process at the reported time. Nearby records show Kerberos activity from WS-MLOPEZ-01 at 13:37\u201313:41 UTC, but do not establish what caused the reported window.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T024-00047",
+     "T024-00050",
+     "T024-00053",
+     "T024-00057",
+     "T024-00076",
+     "T024-00079"
+    ]
+   },
+   {
+    "claim": "At 13:44 UTC, WS-MLOPEZ-01 made a proxy connection to download.windowsupdate.com; the logged tunnel transferred about 38.8 MB from the server. This is compatible with business-hours patching, but does not show that the reported PowerShell window was part of patching.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T024-00113",
+     "T024-00115"
+    ]
+   },
+   {
+    "claim": "The records show Kerberos tickets for FILE-HD-01$ from WS-MLOPEZ-01 at 13:38 and 13:39, but do not show that the workstation accessed the patch script or that an administrator initiated the activity.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T024-00067",
+     "T024-00072"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not include PowerShell operational logs, shell transcripts, or a process-creation record identifying PowerShell around 13:40 UTC.",
+   "The records provided may be incomplete; absence of a PowerShell event in this evidence does not establish that PowerShell did not run.",
+   "The proxy records show a Windows Update download but do not identify the process that initiated it or connect it to the reported window."
+  ],
+  "claims_not_established": [
+   "Whether PowerShell actually executed on WS-MLOPEZ-01 around 13:40 UTC.",
+   "If it executed, its command line, parent process, user context, and whether it was interactive or automated.",
+   "Whether the activity was part of authorized workstation patching or was malicious.",
+   "Whether any commands ran or caused changes, access, or data transfer."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Collect endpoint process-creation and EDR telemetry for WS-MLOPEZ-01 covering at least 13:35\u201313:50 UTC, including process ancestry, command lines, and user context.",
+   "Collect PowerShell Operational logs, including script-block and module logging if enabled, and any available console or session records for the same period.",
+   "Check FILE-HD-01 share-access and file-audit logs, plus WS-OHADDAD-01 activity, for evidence of the authorized patch script being run and by whom.",
+   "Confirm with Maria Lopez whether she saw a command window and what else was happening immediately before and after it appeared."
+  ],
+  "unrelated_findings": [
+   "Google Drive File Stream started under maria.lopez at 14:11 UTC and contacted dl.google.com. The inventory approves OneDrive but no other cloud-storage service; handle this as a separate finding, not evidence deciding this alert. (T024-00278, T024-00280, T024-00281)",
+   "A svchost.exe process opened handles to LSASS at 14:11\u201314:12 UTC; the supplied records do not identify that svchost service or connect this activity to the reported 13:40 window. Review separately if warranted. (T024-00283, T024-00284, T024-00289)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.5
+}

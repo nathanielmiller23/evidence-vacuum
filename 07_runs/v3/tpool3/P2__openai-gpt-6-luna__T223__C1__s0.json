@@ -1,0 +1,102 @@
+{
+ "scenario_id": "T223",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45:20 UTC, zoe.adams opened Downloads\\\\Statement.docm in Word. About two seconds later, Word was the parent of PowerShell running as zoe.adams with hidden-window, no-profile, and encoded-command options.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T223-00194\",\n        \"T223-00198\",\n        \"T223-00199\"\n      ]\n    },\n    {\n      \"claim\": \"The encoded PowerShell command decodes to an expression that downloads and executes a script from raw.githubusercontent.com/sunridge-it/tools/main/u.ps1; the proxy records a successful GET for that URL shortly afterward.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T223-00198\",\n        \"T223-00199\",\n        \"T223-00200\",\n        \"T223-00201\"\n      ]\n    },\n    {\n      \"claim\": \"The PowerShell process made a proxy connection associated with a response of about 52 KB, created a temporary file, and then spawned rundll32 to invoke C:\\\\Users\\\\zoe.adams\\\\AppData\\\\Roaming\\\\svchelper.dll,Init. This sequence strongly supports execution of downloaded follow-on code.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T223-00206\",\n        \"T223-00207\",\n        \"T223-00209\",\n        \"T223-00210\",\n        \"T223-00211\"\n      ]\n    },\n    {\n      \"claim\": \"The PowerShell process ran at medium integrity under zoe.adams; the available process records do not show it running elevated.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T223-00198\",\n        \"T223-00199\"\n      ]\n    },\n    {\n      \"claim\": \"The logged PowerShell execution occurred at 13:45:23 UTC, not at exactly 13:40 UTC. It is within the reviewed interval and may match the user's approximate report, but the records do not establish that it was the specific window seen at 13:40.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T223-00198\",\n        \"T223-00199\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available process records show the relevant PowerShell launch at 13:45:23 UTC; they do not show a PowerShell launch at exactly 13:40 UTC (T223-00198, T223-00199).\",\n    \"The proxy records the script URL and transfer metadata, but the supplied evidence does not include the downloaded script contents (T223-00201, T223-00206).\",\n    \"The supplied records identify the rundll32 command and DLL path but do not include the DLL contents or a hash, nor do they establish the DLL's subsequent behavior (T223-00210, T223-00211).\",\n    \"The evidence does not establish whether the document was intentionally opened by Zoe or whether the activity was initiated by someone else.\"\n  ],\n  \"claims_not_established\": [\n    \"That the user-reported window at approximately 13:40 was the PowerShell process logged at 13:45:23.\",\n    \"The contents, provenance, or authorization status of the downloaded script and DLL.\",\n    \"Whether the activity achieved persistence, credential theft, data access, or exfiltration.\",\n    \"Who initiated the activity or whether zoe.adams knowingly opened a malicious document.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine Statement.docm, the downloaded u.ps1, the temporary file, and svchelper.dll; collect hashes, timestamps, and any available file-origin metadata.\",\n    \"Recover the PowerShell script and DLL contents, then validate the repository and download against an authorized source.\",\n    \"Collect endpoint protection, AMSI, PowerShell operational/script-block, and file-system telemetry for WS-ZADAMS-01 around the reviewed interval.\",\n    \"Confirm with Zoe whether and when she opened Statement.docm and whether she saw the PowerShell window.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate follow-up: WS-ZADAMS-01 obtained Kerberos tickets for max.fischer, and WS-MFISCHER-01 recorded a network logon for max.fischer sourced from 10.55.10.21; authorization and cause are not established (T223-00273, T223-00274, T223-00279).\",\n    \"Separate follow-up: WS-LWARD-01 recorded lena.ward logons sourced from 10.55.10.21; shortly afterward, lena.ward launched msra.exe targeting WS-ZADAMS-01 and the process recorded explicit credentials for zoe.adams. Whether this was an authorized help-desk response is not established (T223-00321, T223-00323, T223-00324, T223-00326).\",\n    \"Separate follow-up: GlobalProtect PanGPS.exe started on WS-ZADAMS-01, although the inventory states there is no VPN and remote administration is only done from WS-IDOYLE-01 (T223-00365, T223-00366).\",\n    \"Separate follow-up: PROXY-SUN-01 records inbound connection attempts to WS-ZADAMS-01 on ports 135, 445, and 80; each record has conn_state=S0, so these records do not show an established connection (T223-00362, T223-00363, T223-00364).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 82268,
+    "output": 3527
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45:20 UTC, zoe.adams opened Downloads\\Statement.docm in Word. About two seconds later, Word was the parent of PowerShell running as zoe.adams with hidden-window, no-profile, and encoded-command options.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T223-00194",
+     "T223-00198",
+     "T223-00199"
+    ]
+   },
+   {
+    "claim": "The encoded PowerShell command decodes to an expression that downloads and executes a script from raw.githubusercontent.com/sunridge-it/tools/main/u.ps1; the proxy records a successful GET for that URL shortly afterward.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T223-00198",
+     "T223-00199",
+     "T223-00200",
+     "T223-00201"
+    ]
+   },
+   {
+    "claim": "The PowerShell process made a proxy connection associated with a response of about 52 KB, created a temporary file, and then spawned rundll32 to invoke C:\\Users\\zoe.adams\\AppData\\Roaming\\svchelper.dll,Init. This sequence strongly supports execution of downloaded follow-on code.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T223-00206",
+     "T223-00207",
+     "T223-00209",
+     "T223-00210",
+     "T223-00211"
+    ]
+   },
+   {
+    "claim": "The PowerShell process ran at medium integrity under zoe.adams; the available process records do not show it running elevated.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T223-00198",
+     "T223-00199"
+    ]
+   },
+   {
+    "claim": "The logged PowerShell execution occurred at 13:45:23 UTC, not at exactly 13:40 UTC. It is within the reviewed interval and may match the user's approximate report, but the records do not establish that it was the specific window seen at 13:40.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T223-00198",
+     "T223-00199"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available process records show the relevant PowerShell launch at 13:45:23 UTC; they do not show a PowerShell launch at exactly 13:40 UTC (T223-00198, T223-00199).",
+   "The proxy records the script URL and transfer metadata, but the supplied evidence does not include the downloaded script contents (T223-00201, T223-00206).",
+   "The supplied records identify the rundll32 command and DLL path but do not include the DLL contents or a hash, nor do they establish the DLL's subsequent behavior (T223-00210, T223-00211).",
+   "The evidence does not establish whether the document was intentionally opened by Zoe or whether the activity was initiated by someone else."
+  ],
+  "claims_not_established": [
+   "That the user-reported window at approximately 13:40 was the PowerShell process logged at 13:45:23.",
+   "The contents, provenance, or authorization status of the downloaded script and DLL.",
+   "Whether the activity achieved persistence, credential theft, data access, or exfiltration.",
+   "Who initiated the activity or whether zoe.adams knowingly opened a malicious document."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine Statement.docm, the downloaded u.ps1, the temporary file, and svchelper.dll; collect hashes, timestamps, and any available file-origin metadata.",
+   "Recover the PowerShell script and DLL contents, then validate the repository and download against an authorized source.",
+   "Collect endpoint protection, AMSI, PowerShell operational/script-block, and file-system telemetry for WS-ZADAMS-01 around the reviewed interval.",
+   "Confirm with Zoe whether and when she opened Statement.docm and whether she saw the PowerShell window."
+  ],
+  "unrelated_findings": [
+   "Separate follow-up: WS-ZADAMS-01 obtained Kerberos tickets for max.fischer, and WS-MFISCHER-01 recorded a network logon for max.fischer sourced from 10.55.10.21; authorization and cause are not established (T223-00273, T223-00274, T223-00279).",
+   "Separate follow-up: WS-LWARD-01 recorded lena.ward logons sourced from 10.55.10.21; shortly afterward, lena.ward launched msra.exe targeting WS-ZADAMS-01 and the process recorded explicit credentials for zoe.adams. Whether this was an authorized help-desk response is not established (T223-00321, T223-00323, T223-00324, T223-00326).",
+   "Separate follow-up: GlobalProtect PanGPS.exe started on WS-ZADAMS-01, although the inventory states there is no VPN and remote administration is only done from WS-IDOYLE-01 (T223-00365, T223-00366).",
+   "Separate follow-up: PROXY-SUN-01 records inbound connection attempts to WS-ZADAMS-01 on ports 135, 445, and 80; each record has conn_state=S0, so these records do not show an established connection (T223-00362, T223-00363, T223-00364)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 16,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 35.2
+}

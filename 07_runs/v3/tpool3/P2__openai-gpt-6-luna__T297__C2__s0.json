@@ -1,0 +1,76 @@
+{
+ "scenario_id": "T297",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The account was created at 13:45:16 UTC, later than the alert's approximate 13:42 time. The domain controller event records sean.byrne as the subject and sysops as the new account.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T297-00078\"]\n    },\n    {\n      \"claim\": \"About one second after creation, sysops was added to the ORCHARD Administrators group by a subject recorded as sean.byrne. This conflicts with the stated practice that temporary help-desk accounts use guest.<name>, join only Volunteers, and never receive administrator rights.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T297-00078\", \"T297-00079\"]\n    },\n    {\n      \"claim\": \"Shortly before the account actions, a remote interactive logon as sean.byrne was recorded on WS-RDIAZ-01 from 198.51.100.77. The inventory says remote administration is only done from WS-SBYRNE-01 and there is no VPN, making this access inconsistent with the stated environment.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T297-00051\", \"T297-00052\", \"T297-00053\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The account creation and group-membership events use logon ID 0x9eaf594, while the recorded sean.byrne interactive session on WS-RDIAZ-01 uses 0xbcc70dc; the supplied records do not establish that these are the same session.\",\n    \"The logs identify the account subject as sean.byrne but do not establish which person or process actually performed the actions.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether sean.byrne personally authorized or performed the account creation and group change.\",\n    \"Whether sysops was subsequently used, whether its credentials were compromised, or what access it obtained.\",\n    \"Whether there was an unrecorded authorization or change approval for this account.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate the account-change logon ID 0x9eaf594 with DC-ORC-01 authentication and session records, including source host and address.\",\n    \"Verify the account and group change with sean.byrne and check change-approval records.\",\n    \"Review sysops account attributes, password-setting events, group memberships over time, and authentication or resource-access activity after creation.\",\n    \"Preserve and examine WS-RDIAZ-01 and DC-ORC-01 authentication and endpoint telemetry around the event.\"\n  ],\n  \"unrelated_findings\": [\n    \"A scheduled task named HealthCheck was registered on WS-RDIAZ-01 under sean.byrne shortly after the account events; its hidden PowerShell command fetches and executes content from 198.51.100.77. Investigate separately; it is not needed to support this alert finding. Record: T297-00080.\",\n    \"Dropbox was launched for raul.diaz on WS-RDIAZ-01, although Dropbox is not among the listed approved services. Investigate separately; it does not determine this account alert. Records: T297-00149, T297-00150.\",\n    \"The same workstation accessed files.slack.com using Chrome, although Slack is not among the listed approved services. Investigate separately; it does not determine this account alert. Records: T297-00267, T297-00272.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 38105,
+    "output": 1804
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "The account was created at 13:45:16 UTC, later than the alert's approximate 13:42 time. The domain controller event records sean.byrne as the subject and sysops as the new account.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T297-00078"
+    ]
+   },
+   {
+    "claim": "About one second after creation, sysops was added to the ORCHARD Administrators group by a subject recorded as sean.byrne. This conflicts with the stated practice that temporary help-desk accounts use guest.<name>, join only Volunteers, and never receive administrator rights.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T297-00078",
+     "T297-00079"
+    ]
+   },
+   {
+    "claim": "Shortly before the account actions, a remote interactive logon as sean.byrne was recorded on WS-RDIAZ-01 from 198.51.100.77. The inventory says remote administration is only done from WS-SBYRNE-01 and there is no VPN, making this access inconsistent with the stated environment.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T297-00051",
+     "T297-00052",
+     "T297-00053"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The account creation and group-membership events use logon ID 0x9eaf594, while the recorded sean.byrne interactive session on WS-RDIAZ-01 uses 0xbcc70dc; the supplied records do not establish that these are the same session.",
+   "The logs identify the account subject as sean.byrne but do not establish which person or process actually performed the actions."
+  ],
+  "claims_not_established": [
+   "Whether sean.byrne personally authorized or performed the account creation and group change.",
+   "Whether sysops was subsequently used, whether its credentials were compromised, or what access it obtained.",
+   "Whether there was an unrecorded authorization or change approval for this account."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate the account-change logon ID 0x9eaf594 with DC-ORC-01 authentication and session records, including source host and address.",
+   "Verify the account and group change with sean.byrne and check change-approval records.",
+   "Review sysops account attributes, password-setting events, group memberships over time, and authentication or resource-access activity after creation.",
+   "Preserve and examine WS-RDIAZ-01 and DC-ORC-01 authentication and endpoint telemetry around the event."
+  ],
+  "unrelated_findings": [
+   "A scheduled task named HealthCheck was registered on WS-RDIAZ-01 under sean.byrne shortly after the account events; its hidden PowerShell command fetches and executes content from 198.51.100.77. Investigate separately; it is not needed to support this alert finding. Record: T297-00080.",
+   "Dropbox was launched for raul.diaz on WS-RDIAZ-01, although Dropbox is not among the listed approved services. Investigate separately; it does not determine this account alert. Records: T297-00149, T297-00150.",
+   "The same workstation accessed files.slack.com using Chrome, although Slack is not among the listed approved services. Investigate separately; it does not determine this account alert. Records: T297-00267, T297-00272."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 6,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.0
+}

@@ -1,0 +1,74 @@
+{
+ "scenario_id": "T037",
+ "condition": "C1",
+ "variant": "P3",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:41:49 UTC, the domain controller recorded creation of the NWD account sysmaint by sam.okafor.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T037-00109\"]\n    },\n    {\n      \"claim\": \"About two seconds later, sysmaint was added to the domain Administrators group by sam.okafor. This is inconsistent with the stated temporary-account practice, and the account was given administrative membership.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T037-00110\"]\n    },\n    {\n      \"claim\": \"Shortly before the account changes, sam.okafor logged on to WS-LMARTINS-01 remotely from 203.0.113.250 and received special privileges. The environment states remote administration is only performed from WS-SOKAFOR-01 and there is no VPN, making this a significant inconsistency surrounding the alerted activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T037-00073\", \"T037-00075\", \"T037-00076\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The provided records do not establish a direct correlation between the domain controller's SubjectLogonId for the account changes and the workstation's sam.okafor session LogonId; these are different recorded values. Records: T037-00109, T037-00075.\",\n    \"The evidence shows account creation and administrator-group addition, but does not show the password value, subsequent sign-ins as sysmaint, or what the account was used for. Records: T037-00109, T037-00110.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish who controlled the sam.okafor session or whether the recorded remote source address was spoofed.\",\n    \"The evidence does not establish whether sysmaint was subsequently used or whether additional unauthorized changes were made.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate the domain controller account-change SubjectLogonId with domain-controller authentication and logon records to identify the originating session and host.\",\n    \"Verify with sam.okafor whether they authorized creating sysmaint and adding it to Administrators; review any associated change approval.\",\n    \"Review sysmaint's subsequent authentication, group membership changes, and activity across domain resources.\",\n    \"Investigate the unexpected remote session to WS-LMARTINS-01, including source attribution and endpoint session details.\"\n  ],\n  \"unrelated_findings\": [\n    \"A scheduled task named HealthCheck was registered on WS-LMARTINS-01 under sam.okafor's session; it runs hidden encoded PowerShell that fetches a script from 203.0.113.250. Triage separately; this finding is not needed to support the account-management disposition. Record: T037-00111.\",\n    \"Dropbox was running on WS-LMARTINS-01, although the environment lists no approved Dropbox or other file-sharing service. Triage separately. Records: T037-00048, T037-00050.\",\n    \"Meridian OpsAgent ran on WS-LMARTINS-01 and attempted to use svc-render against the proxy, while the inventory describes svc-render as a RenderQueue job on FILE-NWD-01. Triage separately. Records: T037-00117, T037-00119.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 29979,
+    "output": 2033
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "At 13:41:49 UTC, the domain controller recorded creation of the NWD account sysmaint by sam.okafor.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00109"
+    ]
+   },
+   {
+    "claim": "About two seconds later, sysmaint was added to the domain Administrators group by sam.okafor. This is inconsistent with the stated temporary-account practice, and the account was given administrative membership.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00110"
+    ]
+   },
+   {
+    "claim": "Shortly before the account changes, sam.okafor logged on to WS-LMARTINS-01 remotely from 203.0.113.250 and received special privileges. The environment states remote administration is only performed from WS-SOKAFOR-01 and there is no VPN, making this a significant inconsistency surrounding the alerted activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T037-00073",
+     "T037-00075",
+     "T037-00076"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The provided records do not establish a direct correlation between the domain controller's SubjectLogonId for the account changes and the workstation's sam.okafor session LogonId; these are different recorded values. Records: T037-00109, T037-00075.",
+   "The evidence shows account creation and administrator-group addition, but does not show the password value, subsequent sign-ins as sysmaint, or what the account was used for. Records: T037-00109, T037-00110."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish who controlled the sam.okafor session or whether the recorded remote source address was spoofed.",
+   "The evidence does not establish whether sysmaint was subsequently used or whether additional unauthorized changes were made."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate the domain controller account-change SubjectLogonId with domain-controller authentication and logon records to identify the originating session and host.",
+   "Verify with sam.okafor whether they authorized creating sysmaint and adding it to Administrators; review any associated change approval.",
+   "Review sysmaint's subsequent authentication, group membership changes, and activity across domain resources.",
+   "Investigate the unexpected remote session to WS-LMARTINS-01, including source attribution and endpoint session details."
+  ],
+  "unrelated_findings": [
+   "A scheduled task named HealthCheck was registered on WS-LMARTINS-01 under sam.okafor's session; it runs hidden encoded PowerShell that fetches a script from 203.0.113.250. Triage separately; this finding is not needed to support the account-management disposition. Record: T037-00111.",
+   "Dropbox was running on WS-LMARTINS-01, although the environment lists no approved Dropbox or other file-sharing service. Triage separately. Records: T037-00048, T037-00050.",
+   "Meridian OpsAgent ran on WS-LMARTINS-01 and attempted to use svc-render against the proxy, while the inventory describes svc-render as a RenderQueue job on FILE-NWD-01. Triage separately. Records: T037-00117, T037-00119."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 5,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 19.8
+}

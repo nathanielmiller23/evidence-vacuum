@@ -1,0 +1,90 @@
+{
+ "scenario_id": "T210",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.82,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The largest observed outbound transfer is timestamped 13:50:22 UTC, later than the alert's approximate 13:46 time. Proxy and Zeek records show about 640 MB sent from FILE-BLU-01 to the approved Cloudkeep backup endpoint.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T210-00372\", \"T210-00374\"]\n    },\n    {\n      \"claim\": \"The transfer is attributable to C:\\\\Program Files\\\\Cloudkeep\\\\agent.exe running as BLUEFIN\\\\svc-arch with a Nightly job argument; its connection to the proxy is also recorded under that process.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T210-00363\", \"T210-00365\", \"T210-00368\", \"T210-00373\"]\n    },\n    {\n      \"claim\": \"The observed binary, account, and destination match the inventory's approved Cloudkeep backup setup, which is expected to upload several hundred MB. This supports a benign explanation for the transfer, but does not establish that this particular run was authorized.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T210-00363\", \"T210-00366\", \"T210-00372\", \"T210-00374\"]\n    },\n    {\n      \"claim\": \"Shortly before the transfer, a Kerberos service-ticket record for svc-arch lists public IP 91.219.236.174; svc-arch then logs on as a service on FILE-BLU-01 before the Cloudkeep agent starts. This is an unexplained, temporally associated anomaly, not proof that the ticket or transfer was malicious.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T210-00335\", \"T210-00336\", \"T210-00363\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and Zeek records report tunnel or connection byte counts, but do not reveal the uploaded files or their contents (T210-00372, T210-00374).\",\n    \"The evidence timestamps the large transfer at 13:50:22, not around 13:46; it does not establish whether the alert time refers to an earlier event or a different timing basis (T210-00372, T210-00374).\",\n    \"The records do not establish whether the svc-arch ticket request from 91.219.236.174 was legitimate or related to the Cloudkeep job (T210-00335, T210-00336, T210-00363).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the 13:50 Cloudkeep job was scheduled or otherwise authorized at that time.\",\n    \"Whether the svc-arch ticket associated with 91.219.236.174 was legitimate, and whether that event is connected to the backup run.\",\n    \"What data was uploaded and whether it was within the expected backup scope.\",\n    \"Whether the alert's approximate 13:46 time corresponds to the observed 13:50:22 transfer.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Validate the 91.219.236.174 svc-arch ticket request against DC/KDC, network, and identity-provider records; determine whether the source is expected.\",\n    \"Check Cloudkeep job schedules, agent logs, and backup-console records for this Nightly run, its trigger, and the data set uploaded.\",\n    \"Obtain file-level or destination-side audit records sufficient to verify the transfer contents and whether the upload completed as expected.\",\n    \"Reconcile the alert's 13:46 timestamp with proxy and endpoint timelines around 13:50:22.\"\n  ],\n  \"unrelated_findings\": [\n    \"FILE-BLU-01 made a proxy request to receiver.citrix.com using python-requests; the inventory does not list this service as approved. Investigate separately (T210-00213, T210-00214).\",\n    \"ruth.moss established an RDP session to FILE-BLU-01 from WS-RMOSS-01. The environment says remote administration is only done from WS-KITO-01; investigate separately, without treating this as evidence about the Cloudkeep transfer (T210-00454, T210-00457, T210-00459).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 94603,
+    "output": 3035
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.82,
+  "supporting_observations": [
+   {
+    "claim": "The largest observed outbound transfer is timestamped 13:50:22 UTC, later than the alert's approximate 13:46 time. Proxy and Zeek records show about 640 MB sent from FILE-BLU-01 to the approved Cloudkeep backup endpoint.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T210-00372",
+     "T210-00374"
+    ]
+   },
+   {
+    "claim": "The transfer is attributable to C:\\Program Files\\Cloudkeep\\agent.exe running as BLUEFIN\\svc-arch with a Nightly job argument; its connection to the proxy is also recorded under that process.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T210-00363",
+     "T210-00365",
+     "T210-00368",
+     "T210-00373"
+    ]
+   },
+   {
+    "claim": "The observed binary, account, and destination match the inventory's approved Cloudkeep backup setup, which is expected to upload several hundred MB. This supports a benign explanation for the transfer, but does not establish that this particular run was authorized.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T210-00363",
+     "T210-00366",
+     "T210-00372",
+     "T210-00374"
+    ]
+   },
+   {
+    "claim": "Shortly before the transfer, a Kerberos service-ticket record for svc-arch lists public IP 91.219.236.174; svc-arch then logs on as a service on FILE-BLU-01 before the Cloudkeep agent starts. This is an unexplained, temporally associated anomaly, not proof that the ticket or transfer was malicious.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T210-00335",
+     "T210-00336",
+     "T210-00363"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and Zeek records report tunnel or connection byte counts, but do not reveal the uploaded files or their contents (T210-00372, T210-00374).",
+   "The evidence timestamps the large transfer at 13:50:22, not around 13:46; it does not establish whether the alert time refers to an earlier event or a different timing basis (T210-00372, T210-00374).",
+   "The records do not establish whether the svc-arch ticket request from 91.219.236.174 was legitimate or related to the Cloudkeep job (T210-00335, T210-00336, T210-00363)."
+  ],
+  "claims_not_established": [
+   "Whether the 13:50 Cloudkeep job was scheduled or otherwise authorized at that time.",
+   "Whether the svc-arch ticket associated with 91.219.236.174 was legitimate, and whether that event is connected to the backup run.",
+   "What data was uploaded and whether it was within the expected backup scope.",
+   "Whether the alert's approximate 13:46 time corresponds to the observed 13:50:22 transfer."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Validate the 91.219.236.174 svc-arch ticket request against DC/KDC, network, and identity-provider records; determine whether the source is expected.",
+   "Check Cloudkeep job schedules, agent logs, and backup-console records for this Nightly run, its trigger, and the data set uploaded.",
+   "Obtain file-level or destination-side audit records sufficient to verify the transfer contents and whether the upload completed as expected.",
+   "Reconcile the alert's 13:46 timestamp with proxy and endpoint timelines around 13:50:22."
+  ],
+  "unrelated_findings": [
+   "FILE-BLU-01 made a proxy request to receiver.citrix.com using python-requests; the inventory does not list this service as approved. Investigate separately (T210-00213, T210-00214).",
+   "ruth.moss established an RDP session to FILE-BLU-01 from WS-RMOSS-01. The environment says remote administration is only done from WS-KITO-01; investigate separately, without treating this as evidence about the Cloudkeep transfer (T210-00454, T210-00457, T210-00459)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 29.2
+}

@@ -1,0 +1,82 @@
+{
+ "run_id": "A__T020__C2__20261115T044240Z",
+ "config": "A",
+ "scenario_id": "T020",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 515,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 206730,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.78,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The large outbound transfer is strongly consistent with the approved backup activity: cvagent.exe ran on FILE-HD-01 as svc-bkp with a Nightly job targeting ingest.cobaltvault.net, and the proxy recorded approximately 640 MB sent to that approved destination.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T020-00278\", \"T020-00279\", \"T020-00285\", \"T020-00286\", \"T020-00288\"]\n    },\n    {\n      \"claim\": \"The domain controller recorded a Kerberos service-ticket event for svc-bkp targeting FILE-HD-01$ from 23.129.64.210, a public IP address. This source is unexplained by the supplied environment context, which states there is no VPN.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T020-00264\"]\n    },\n    {\n      \"claim\": \"Lucy Park connected by RDP from WS-LPARK-01 to FILE-HD-01 and logged on interactively. This conflicts with the stated practice that remote administration is only done from WS-OHADDAD-01; the records do not show what Lucy did after logging on.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T020-00342\", \"T020-00344\", \"T020-00349\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records associate the large transfer with cvagent.exe and the approved backup destination, but do not show the transferred files or their contents (T020-00278, T020-00285, T020-00286, T020-00288).\",\n    \"The Kerberos event identifies the source IP and account but does not identify the device or person behind that address, or establish how the request reached the domain controller (T020-00264).\",\n    \"The RDP and logon records establish a session but do not provide Lucy Park's subsequent interactive commands or actions (T020-00342, T020-00349).\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish that the 640 MB transfer contained stolen or otherwise unauthorized data.\",\n    \"The evidence does not establish who controlled 23.129.64.210, why it requested a ticket for svc-bkp, or whether that event was connected to the backup transfer.\",\n    \"The evidence does not establish that Lucy Park's RDP session was malicious, or that she performed any unauthorized actions during it.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate the 13:45:53 Kerberos event with firewall, network-edge, and domain-controller telemetry to identify the source and determine how the request reached the internal domain controller.\",\n    \"Review svc-bkp account authentication and service-logon history, including any credential use from external or otherwise unapproved sources.\",\n    \"Obtain FILE-HD-01 RDP session details and activity for lucy.park, including commands, file access, account changes, and session recording if available.\",\n    \"Review CobaltVault job logs and backup manifests to confirm the files and data volume uploaded during the Nightly job.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 75915,
+    "output": 2505,
+    "reasoning": 1763
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.78,
+  "supporting_observations": [
+   {
+    "claim": "The large outbound transfer is strongly consistent with the approved backup activity: cvagent.exe ran on FILE-HD-01 as svc-bkp with a Nightly job targeting ingest.cobaltvault.net, and the proxy recorded approximately 640 MB sent to that approved destination.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T020-00278",
+     "T020-00279",
+     "T020-00285",
+     "T020-00286",
+     "T020-00288"
+    ]
+   },
+   {
+    "claim": "The domain controller recorded a Kerberos service-ticket event for svc-bkp targeting FILE-HD-01$ from 23.129.64.210, a public IP address. This source is unexplained by the supplied environment context, which states there is no VPN.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00264"
+    ]
+   },
+   {
+    "claim": "Lucy Park connected by RDP from WS-LPARK-01 to FILE-HD-01 and logged on interactively. This conflicts with the stated practice that remote administration is only done from WS-OHADDAD-01; the records do not show what Lucy did after logging on.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T020-00342",
+     "T020-00344",
+     "T020-00349"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records associate the large transfer with cvagent.exe and the approved backup destination, but do not show the transferred files or their contents (T020-00278, T020-00285, T020-00286, T020-00288).",
+   "The Kerberos event identifies the source IP and account but does not identify the device or person behind that address, or establish how the request reached the domain controller (T020-00264).",
+   "The RDP and logon records establish a session but do not provide Lucy Park's subsequent interactive commands or actions (T020-00342, T020-00349)."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish that the 640 MB transfer contained stolen or otherwise unauthorized data.",
+   "The evidence does not establish who controlled 23.129.64.210, why it requested a ticket for svc-bkp, or whether that event was connected to the backup transfer.",
+   "The evidence does not establish that Lucy Park's RDP session was malicious, or that she performed any unauthorized actions during it."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate the 13:45:53 Kerberos event with firewall, network-edge, and domain-controller telemetry to identify the source and determine how the request reached the internal domain controller.",
+   "Review svc-bkp account authentication and service-logon history, including any credential use from external or otherwise unapproved sources.",
+   "Obtain FILE-HD-01 RDP session details and activity for lucy.park, including commands, file access, account changes, and session recording if available.",
+   "Review CobaltVault job logs and backup manifests to confirm the files and data volume uploaded during the Nightly job."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 9,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 25.1
+}

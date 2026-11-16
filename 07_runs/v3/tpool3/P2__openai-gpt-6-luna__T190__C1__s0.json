@@ -1,0 +1,94 @@
+{
+ "scenario_id": "T190",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.9,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The records near 13:46 show FILE-BLU-01 communicating with DC-BLU-01 over Kerberos, SMB, and LDAP; the supplied records do not identify a hundreds-of-megabytes external transfer at that time.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T190-00220\",\n        \"T190-00222\",\n        \"T190-00225\",\n        \"T190-00226\",\n        \"T190-00229\",\n        \"T190-00230\",\n        \"T190-00232\",\n        \"T190-00235\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:47, a Kerberos service-ticket record for svc-arch lists the source IP as 139.162.174.124, followed by a service logon for svc-arch on FILE-BLU-01. This external-source authentication is unexplained by the available evidence and merits investigation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T190-00236\",\n        \"T190-00237\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:48, the approved Cloudkeep agent ran from its inventoried path as svc-arch and specified the approved Cloudkeep backup endpoint.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T190-00263\",\n        \"T190-00265\"\n      ]\n    },\n    {\n      \"claim\": \"Proxy and Zeek records around the Cloudkeep process show only small recorded byte counts, and the proxy records a CONNECT setup, a denied CONNECT, and an inspected GET. These records do not establish that the alerted large transfer was the expected backup upload or that it completed.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T190-00266\",\n        \"T190-00267\",\n        \"T190-00268\",\n        \"T190-00272\",\n        \"T190-00274\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied evidence does not include a network-flow or transfer record identifying the alerted transfer's destination, exact byte volume, or completion.\",\n    \"The available proxy and Zeek records around the Cloudkeep process show only small recorded byte counts; they do not establish whether other egress paths or unprovided telemetry captured the alert.\",\n    \"The records do not explain why the svc-arch ticket at 13:47 lists a public source IP.\"\n  ],\n  \"claims_not_established\": [\n    \"That the alerted transfer was the Cloudkeep backup upload.\",\n    \"That hundreds of megabytes were successfully transferred to Cloudkeep or any other destination.\",\n    \"That the svc-arch ticket from 139.162.174.124 was legitimate, or that it was causally related to the alerted transfer.\",\n    \"That data was exfiltrated or that the activity was malicious.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Obtain the alert's underlying flow or network-monitor record, including exact timestamps, destination, byte counts, and connection outcome.\",\n    \"Collect firewall, proxy, and network-flow telemetry for FILE-BLU-01 around 13:40\u201313:55 UTC to identify any large egress transfer and its destination.\",\n    \"Validate the svc-arch authentication from 139.162.174.124 using domain-controller and service authentication logs, and determine whether the source is expected.\",\n    \"Review Cloudkeep job and agent logs for the run, including upload outcome, transferred bytes, and whether that run was scheduled.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:49, FILE-BLU-01 made a proxy request to updates.paloaltonetworks.com with a GlobalProtect user-agent. The inventory says there is no VPN and no other remote-access service is approved; validate this separately.\",\n    \"The records show a remote WMI/RPC connection from FILE-BLU-01 to WS-MSANTOS-01 during the scheduled workstation-patching period, but the stated IT practice is to initiate patching from WS-KITO-01. Validate separately; this does not establish the alerted transfer's nature.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 101070,
+    "output": 2775
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.9,
+  "supporting_observations": [
+   {
+    "claim": "The records near 13:46 show FILE-BLU-01 communicating with DC-BLU-01 over Kerberos, SMB, and LDAP; the supplied records do not identify a hundreds-of-megabytes external transfer at that time.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T190-00220",
+     "T190-00222",
+     "T190-00225",
+     "T190-00226",
+     "T190-00229",
+     "T190-00230",
+     "T190-00232",
+     "T190-00235"
+    ]
+   },
+   {
+    "claim": "At 13:47, a Kerberos service-ticket record for svc-arch lists the source IP as 139.162.174.124, followed by a service logon for svc-arch on FILE-BLU-01. This external-source authentication is unexplained by the available evidence and merits investigation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T190-00236",
+     "T190-00237"
+    ]
+   },
+   {
+    "claim": "At 13:48, the approved Cloudkeep agent ran from its inventoried path as svc-arch and specified the approved Cloudkeep backup endpoint.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T190-00263",
+     "T190-00265"
+    ]
+   },
+   {
+    "claim": "Proxy and Zeek records around the Cloudkeep process show only small recorded byte counts, and the proxy records a CONNECT setup, a denied CONNECT, and an inspected GET. These records do not establish that the alerted large transfer was the expected backup upload or that it completed.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T190-00266",
+     "T190-00267",
+     "T190-00268",
+     "T190-00272",
+     "T190-00274"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied evidence does not include a network-flow or transfer record identifying the alerted transfer's destination, exact byte volume, or completion.",
+   "The available proxy and Zeek records around the Cloudkeep process show only small recorded byte counts; they do not establish whether other egress paths or unprovided telemetry captured the alert.",
+   "The records do not explain why the svc-arch ticket at 13:47 lists a public source IP."
+  ],
+  "claims_not_established": [
+   "That the alerted transfer was the Cloudkeep backup upload.",
+   "That hundreds of megabytes were successfully transferred to Cloudkeep or any other destination.",
+   "That the svc-arch ticket from 139.162.174.124 was legitimate, or that it was causally related to the alerted transfer.",
+   "That data was exfiltrated or that the activity was malicious."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Obtain the alert's underlying flow or network-monitor record, including exact timestamps, destination, byte counts, and connection outcome.",
+   "Collect firewall, proxy, and network-flow telemetry for FILE-BLU-01 around 13:40\u201313:55 UTC to identify any large egress transfer and its destination.",
+   "Validate the svc-arch authentication from 139.162.174.124 using domain-controller and service authentication logs, and determine whether the source is expected.",
+   "Review Cloudkeep job and agent logs for the run, including upload outcome, transferred bytes, and whether that run was scheduled."
+  ],
+  "unrelated_findings": [
+   "At 13:49, FILE-BLU-01 made a proxy request to updates.paloaltonetworks.com with a GlobalProtect user-agent. The inventory says there is no VPN and no other remote-access service is approved; validate this separately.",
+   "The records show a remote WMI/RPC connection from FILE-BLU-01 to WS-MSANTOS-01 during the scheduled workstation-patching period, but the stated IT practice is to initiate patching from WS-KITO-01. Validate separately; this does not establish the alerted transfer's nature."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 17,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 29.3
+}

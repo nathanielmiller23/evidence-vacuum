@@ -1,0 +1,86 @@
+{
+ "run_id": "A__S02__C2__20261115T025839Z",
+ "config": "A",
+ "scenario_id": "S02",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 232,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 94904,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:39:49 UTC, a proxy request from dana.wells's workstation successfully fetched https://raw.githubusercontent.com/nb-tools/ps-utils/main/upd.ps1. The request used a tunnel associated with a raw.githubusercontent.com connection from the workstation.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S02-00106\", \"S02-00108\", \"S02-00109\"]\n    },\n    {\n      \"claim\": \"The retrieved script's contents and whether it was executed are not shown in the available records; the successful HTTP status establishes a response, not script execution.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S02-00108\"]\n    },\n    {\n      \"claim\": \"At 13:40:19 UTC, the workstation made an LDAP connection to DC-LV-01 with 219 bytes sent and 33,147 bytes received. The associated Windows filtering record identifies LSASS as the application for that connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S02-00135\", \"S02-00137\"]\n    },\n    {\n      \"claim\": \"The timing of the script request shortly before the reported PowerShell window is suspicious, but the available records do not establish that the request caused the reported window or that the script was malicious.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S02-00108\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not include the contents of upd.ps1, a file write or download artifact on the workstation, or a process-creation record showing PowerShell starting or executing the script.\",\n    \"The supplied records are non-contiguous, so they do not establish that all relevant endpoint or network events from the review window are represented.\",\n    \"The LDAP connection records show connection metadata and byte counts, not the LDAP query or response contents.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether dana.wells or another process executed upd.ps1.\",\n    \"Whether the script or any resulting activity was malicious.\",\n    \"What caused the reported brief PowerShell window.\",\n    \"Whether the LDAP traffic was related to the script or to normal workstation activity.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Full endpoint process telemetry for WS-DWELLS-01 around 13:39\u201313:42 UTC, including PowerShell command lines, parent processes, script-block or AMSI logs, and process termination events.\",\n    \"The response body or a preserved copy and hash of upd.ps1, plus workstation file and browser/download artifacts that could establish whether it was saved or executed.\",\n    \"Detailed LDAP or directory-service audit data for the 13:40:19 connection to identify the query and determine whether it is associated with the suspected script.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 35494,
+    "output": 1670,
+    "reasoning": 1012
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "At 13:39:49 UTC, a proxy request from dana.wells's workstation successfully fetched https://raw.githubusercontent.com/nb-tools/ps-utils/main/upd.ps1. The request used a tunnel associated with a raw.githubusercontent.com connection from the workstation.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S02-00106",
+     "S02-00108",
+     "S02-00109"
+    ]
+   },
+   {
+    "claim": "The retrieved script's contents and whether it was executed are not shown in the available records; the successful HTTP status establishes a response, not script execution.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S02-00108"
+    ]
+   },
+   {
+    "claim": "At 13:40:19 UTC, the workstation made an LDAP connection to DC-LV-01 with 219 bytes sent and 33,147 bytes received. The associated Windows filtering record identifies LSASS as the application for that connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S02-00135",
+     "S02-00137"
+    ]
+   },
+   {
+    "claim": "The timing of the script request shortly before the reported PowerShell window is suspicious, but the available records do not establish that the request caused the reported window or that the script was malicious.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S02-00108"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not include the contents of upd.ps1, a file write or download artifact on the workstation, or a process-creation record showing PowerShell starting or executing the script.",
+   "The supplied records are non-contiguous, so they do not establish that all relevant endpoint or network events from the review window are represented.",
+   "The LDAP connection records show connection metadata and byte counts, not the LDAP query or response contents."
+  ],
+  "claims_not_established": [
+   "Whether dana.wells or another process executed upd.ps1.",
+   "Whether the script or any resulting activity was malicious.",
+   "What caused the reported brief PowerShell window.",
+   "Whether the LDAP traffic was related to the script or to normal workstation activity."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Full endpoint process telemetry for WS-DWELLS-01 around 13:39\u201313:42 UTC, including PowerShell command lines, parent processes, script-block or AMSI logs, and process termination events.",
+   "The response body or a preserved copy and hash of upd.ps1, plus workstation file and browser/download artifacts that could establish whether it was saved or executed.",
+   "Detailed LDAP or directory-service audit data for the 13:40:19 connection to identify the query and determine whether it is associated with the suspected script."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 7,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 19.9
+}

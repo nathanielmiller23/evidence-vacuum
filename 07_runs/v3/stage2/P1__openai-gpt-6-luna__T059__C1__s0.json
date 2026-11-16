@@ -1,0 +1,86 @@
+{
+ "scenario_id": "T059",
+ "condition": "C1",
+ "variant": "P1",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45:20 UTC, ivy.chen ran PowerShell to compress \\\\\\\\FILE-NWD-01\\\\Shared\\\\Clients into C:\\\\Users\\\\ivy.chen\\\\AppData\\\\Local\\\\Temp\\\\c.zip; the same PowerShell process created the archive shortly afterward.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T059-00102\", \"T059-00103\", \"T059-00104\"]\n    },\n    {\n      \"claim\": \"At 13:50:50 UTC, WS-ICHEN-01 sent approximately 51 MB outbound through the proxy to quickshare-drop.net:443. The proxy records 51,000,000 client-to-server bytes, and Zeek records 51,000,389 originating bytes; Chrome was the process connecting to the proxy.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T059-00174\", \"T059-00175\", \"T059-00176\", \"T059-00177\"]\n    },\n    {\n      \"claim\": \"The transfer is consistent with exfiltration: a client-files archive was created shortly before a large upload to a file-sharing domain, and the supplied environment context says no non-approved file-sharing services are approved.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T059-00102\", \"T059-00104\", \"T059-00174\", \"T059-00175\"]\n    },\n    {\n      \"claim\": \"The large transfer occurred at 13:50:50 UTC, not around 13:46 UTC; the logs show Kerberos activity at approximately 13:46, but no large transfer at that time.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T059-00113\", \"T059-00118\", \"T059-00174\", \"T059-00175\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available records establish that an archive was created and a large outbound transfer followed, but do not directly link c.zip to the bytes sent to quickshare-drop.net.\",\n    \"The proxy records the destination and byte counts but the provided evidence does not show the upload request path, server-side receipt, or contents of the transferred data.\"\n  ],\n  \"claims_not_established\": [\n    \"That the 51 MB transfer contained c.zip or the Clients data.\",\n    \"Which specific files or client information were transmitted, or whether the transfer was authorized by Ivy Chen.\",\n    \"Who controlled or received the data at quickshare-drop.net.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Proxy request-level logs and any available TLS inspection or upload metadata for the quickshare-drop.net session.\",\n    \"Endpoint file-access and archive contents evidence for c.zip, plus file-hash or telemetry linking it to the outbound transfer.\",\n    \"Browser history, download/upload artifacts, and relevant user or business authorization records for the transfer.\",\n    \"Reputation, ownership, and hosting information for quickshare-drop.net, and corroborating egress or server-side records if available.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 60165,
+    "output": 1219
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45:20 UTC, ivy.chen ran PowerShell to compress \\\\FILE-NWD-01\\Shared\\Clients into C:\\Users\\ivy.chen\\AppData\\Local\\Temp\\c.zip; the same PowerShell process created the archive shortly afterward.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00102",
+     "T059-00103",
+     "T059-00104"
+    ]
+   },
+   {
+    "claim": "At 13:50:50 UTC, WS-ICHEN-01 sent approximately 51 MB outbound through the proxy to quickshare-drop.net:443. The proxy records 51,000,000 client-to-server bytes, and Zeek records 51,000,389 originating bytes; Chrome was the process connecting to the proxy.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00174",
+     "T059-00175",
+     "T059-00176",
+     "T059-00177"
+    ]
+   },
+   {
+    "claim": "The transfer is consistent with exfiltration: a client-files archive was created shortly before a large upload to a file-sharing domain, and the supplied environment context says no non-approved file-sharing services are approved.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T059-00102",
+     "T059-00104",
+     "T059-00174",
+     "T059-00175"
+    ]
+   },
+   {
+    "claim": "The large transfer occurred at 13:50:50 UTC, not around 13:46 UTC; the logs show Kerberos activity at approximately 13:46, but no large transfer at that time.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00113",
+     "T059-00118",
+     "T059-00174",
+     "T059-00175"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available records establish that an archive was created and a large outbound transfer followed, but do not directly link c.zip to the bytes sent to quickshare-drop.net.",
+   "The proxy records the destination and byte counts but the provided evidence does not show the upload request path, server-side receipt, or contents of the transferred data."
+  ],
+  "claims_not_established": [
+   "That the 51 MB transfer contained c.zip or the Clients data.",
+   "Which specific files or client information were transmitted, or whether the transfer was authorized by Ivy Chen.",
+   "Who controlled or received the data at quickshare-drop.net."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Proxy request-level logs and any available TLS inspection or upload metadata for the quickshare-drop.net session.",
+   "Endpoint file-access and archive contents evidence for c.zip, plus file-hash or telemetry linking it to the outbound transfer.",
+   "Browser history, download/upload artifacts, and relevant user or business authorization records for the transfer.",
+   "Reputation, ownership, and hosting information for quickshare-drop.net, and corroborating egress or server-side records if available."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 11.9
+}

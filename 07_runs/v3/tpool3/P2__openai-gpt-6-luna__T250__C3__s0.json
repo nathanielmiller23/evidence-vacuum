@@ -1,0 +1,101 @@
+{
+ "scenario_id": "T250",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted-scale transfer is recorded at 13:47:45 UTC: the proxy reports 640,000,000 client-to-server bytes in a CONNECT tunnel to ingest.arcvault-backup.com, and Zeek records 640,000,346 originating bytes to the proxy.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T250-00295\", \"T250-00297\"]\n    },\n    {\n      \"claim\": \"Immediately before the transfer, FILE-SUN-01 launched the approved Arcvault agent as svc-store with the command line specifying the Nightly job and the approved ingest.arcvault-backup.com target; network events identify that same process as the proxy client.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T250-00286\", \"T250-00287\", \"T250-00290\", \"T250-00292\", \"T250-00298\"]\n    },\n    {\n      \"claim\": \"The agent, account, destination, and several-hundred-megabyte transfer are consistent with the organization\u2019s stated approved backup setup, which weighs in favor of a benign backup. This does not establish that the data or authentication were legitimate.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T250-00286\", \"T250-00287\", \"T250-00295\", \"T250-00297\"]\n    },\n    {\n      \"claim\": \"At 13:46:51 UTC, a Kerberos service-ticket record for svc-store targeting FILE-SUN-01 reports source IP 45.79.19.196. This is a material unresolved concern given the stated absence of VPN and the shortly following svc-store agent run and large transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T250-00273\", \"T250-00274\", \"T250-00286\", \"T250-00295\"]\n    },\n    {\n      \"claim\": \"The logs show a local service logon for svc-store before the agent launch, but do not explain why the preceding ticket record lists an external source address or prove that the ticket and transfer were authorized.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T250-00273\", \"T250-00274\", \"T250-00286\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Winsec and Sysmon collection from WS-LWARD-01 was unavailable for the entire 13:20\u201314:20 UTC window, according to the supplied sensor-coverage status.\",\n    \"The proxy and Zeek records establish a large transfer through the proxy to the named destination, but do not reveal the transferred content or identify which files were included.\",\n    \"The available records do not establish the origin or legitimacy of the external IP shown in the svc-store Kerberos record.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether 45.79.19.196 is an authorized Arcvault endpoint, a proxy/NAT artifact, or an unauthorized source.\",\n    \"Whether the svc-store ticket request was legitimate and directly associated with the local Arcvault service execution.\",\n    \"Whether the uploaded data was an expected backup set or included unauthorized data.\",\n    \"Whether the transfer was an expected scheduled run; the command line labels the job Nightly, but the supplied evidence does not include a backup schedule or job-run record.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Verify the source address and authentication context for the svc-store Kerberos event using DC/KDC logs and network routing, firewall, or NAT records.\",\n    \"Obtain Arcvault job history and upload manifests for the run, and verify the endpoint, account, and transfer volume with the backup service.\",\n    \"Review FILE-SUN-01 service configuration, process execution details, and file-access/audit records to validate the agent run and identify the uploaded data.\",\n    \"Check for other svc-store authentication or use from external addresses around this event.\"\n  ],\n  \"unrelated_findings\": [\n    \"FILE-SUN-01 records a logoff for lena.ward with LogonType=10 at 13:47:18, and her Explorer process exits at about the same time. This remote-interactive-session activity merits a separate review; the available records do not link it to the Arcvault process or transfer. (T250-00281, T250-00282, T250-00285)\",\n    \"FILE-SUN-01 made a connection attempt to WS-MFISCHER-01 on port 9997 that was reset. No evidence provided links it to the alerted transfer. (T250-00320, T250-00322)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 87374,
+    "output": 3450
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "The alerted-scale transfer is recorded at 13:47:45 UTC: the proxy reports 640,000,000 client-to-server bytes in a CONNECT tunnel to ingest.arcvault-backup.com, and Zeek records 640,000,346 originating bytes to the proxy.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T250-00295",
+     "T250-00297"
+    ]
+   },
+   {
+    "claim": "Immediately before the transfer, FILE-SUN-01 launched the approved Arcvault agent as svc-store with the command line specifying the Nightly job and the approved ingest.arcvault-backup.com target; network events identify that same process as the proxy client.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T250-00286",
+     "T250-00287",
+     "T250-00290",
+     "T250-00292",
+     "T250-00298"
+    ]
+   },
+   {
+    "claim": "The agent, account, destination, and several-hundred-megabyte transfer are consistent with the organization\u2019s stated approved backup setup, which weighs in favor of a benign backup. This does not establish that the data or authentication were legitimate.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T250-00286",
+     "T250-00287",
+     "T250-00295",
+     "T250-00297"
+    ]
+   },
+   {
+    "claim": "At 13:46:51 UTC, a Kerberos service-ticket record for svc-store targeting FILE-SUN-01 reports source IP 45.79.19.196. This is a material unresolved concern given the stated absence of VPN and the shortly following svc-store agent run and large transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T250-00273",
+     "T250-00274",
+     "T250-00286",
+     "T250-00295"
+    ]
+   },
+   {
+    "claim": "The logs show a local service logon for svc-store before the agent launch, but do not explain why the preceding ticket record lists an external source address or prove that the ticket and transfer were authorized.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T250-00273",
+     "T250-00274",
+     "T250-00286"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Winsec and Sysmon collection from WS-LWARD-01 was unavailable for the entire 13:20\u201314:20 UTC window, according to the supplied sensor-coverage status.",
+   "The proxy and Zeek records establish a large transfer through the proxy to the named destination, but do not reveal the transferred content or identify which files were included.",
+   "The available records do not establish the origin or legitimacy of the external IP shown in the svc-store Kerberos record."
+  ],
+  "claims_not_established": [
+   "Whether 45.79.19.196 is an authorized Arcvault endpoint, a proxy/NAT artifact, or an unauthorized source.",
+   "Whether the svc-store ticket request was legitimate and directly associated with the local Arcvault service execution.",
+   "Whether the uploaded data was an expected backup set or included unauthorized data.",
+   "Whether the transfer was an expected scheduled run; the command line labels the job Nightly, but the supplied evidence does not include a backup schedule or job-run record."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Verify the source address and authentication context for the svc-store Kerberos event using DC/KDC logs and network routing, firewall, or NAT records.",
+   "Obtain Arcvault job history and upload manifests for the run, and verify the endpoint, account, and transfer volume with the backup service.",
+   "Review FILE-SUN-01 service configuration, process execution details, and file-access/audit records to validate the agent run and identify the uploaded data.",
+   "Check for other svc-store authentication or use from external addresses around this event."
+  ],
+  "unrelated_findings": [
+   "FILE-SUN-01 records a logoff for lena.ward with LogonType=10 at 13:47:18, and her Explorer process exits at about the same time. This remote-interactive-session activity merits a separate review; the available records do not link it to the Arcvault process or transfer. (T250-00281, T250-00282, T250-00285)",
+   "FILE-SUN-01 made a connection attempt to WS-MFISCHER-01 on port 9997 that was reset. No evidence provided links it to the alerted transfer. (T250-00320, T250-00322)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 18,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 33.7
+}

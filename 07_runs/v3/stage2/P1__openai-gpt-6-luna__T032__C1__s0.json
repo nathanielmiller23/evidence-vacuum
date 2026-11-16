@@ -1,0 +1,126 @@
+{
+ "scenario_id": "T032",
+ "condition": "C1",
+ "variant": "P1",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The supplied records show repeated failed network logons for svc-render on FILE-NWD-01 from 13:31:03 through 13:46:04 UTC, at roughly one-minute intervals.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T032-00001\", \"T032-00003\", \"T032-00005\", \"T032-00008\", \"T032-00010\", \"T032-00012\", \"T032-00014\", \"T032-00017\", \"T032-00019\", \"T032-00021\", \"T032-00023\", \"T032-00025\", \"T032-00027\", \"T032-00029\", \"T032-00031\", \"T032-00033\"]\n    },\n    {\n      \"claim\": \"The failures consistently identify WorkstationName=FILE-NWD-01, source IP 10.40.20.20, LogonType=3, and ProcessId 0xa5c with ProcessName lsass.exe.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T032-00001\", \"T032-00003\", \"T032-00012\", \"T032-00021\", \"T032-00033\"]\n    },\n    {\n      \"claim\": \"The domain-controller records report bad-password status 0xc000006a for svc-render and Kerberos pre-authentication failure status 0x18, consistent with rejected credentials rather than evidence of successful authentication.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T032-00002\", \"T032-00004\", \"T032-00006\", \"T032-00007\", \"T032-00009\", \"T032-00011\", \"T032-00013\", \"T032-00016\", \"T032-00018\", \"T032-00020\", \"T032-00022\", \"T032-00024\", \"T032-00026\", \"T032-00028\", \"T032-00030\", \"T032-00032\", \"T032-00034\"]\n    },\n    {\n      \"claim\": \"The timing and near-minute cadence are consistent with the documented svc-render password rotation at 13:30 UTC followed by a scheduled job continuing to use outdated credentials; the inventory says that job runs and re-authenticates every minute.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T032-00001\", \"T032-00003\", \"T032-00005\", \"T032-00008\", \"T032-00010\", \"T032-00012\", \"T032-00014\", \"T032-00017\", \"T032-00019\", \"T032-00021\", \"T032-00023\", \"T032-00025\", \"T032-00027\", \"T032-00029\", \"T032-00031\", \"T032-00033\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records stop at 13:46:04 UTC (T032-00033); they do not cover the remainder of the requested window through 14:20 UTC.\",\n    \"The records show the authentication subsystem process lsass.exe, but do not identify the application or job that initiated each attempt.\",\n    \"These records show failures; they do not establish whether the password rotation occurred or whether any later authentication succeeded.\"\n  ],\n  \"claims_not_established\": [\n    \"That the scheduled password rotation was completed at 13:30 UTC.\",\n    \"That the RenderQueue job's stored credentials were or were not updated.\",\n    \"That no successful logon or other activity occurred elsewhere in the requested 13:20\u201314:20 UTC window.\",\n    \"That the failures were caused by an attacker rather than stale service credentials.\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [\n    \"For corroboration, check the password-rotation change record and domain-controller account-change audit around 13:30 UTC.\",\n    \"If the cause remains uncertain, inspect RenderQueue/service configuration and application logs on FILE-NWD-01 around the failure period.\",\n    \"Review authentication records from 13:46 through 14:20 UTC to complete the requested window.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 5750,
+    "output": 2200
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "The supplied records show repeated failed network logons for svc-render on FILE-NWD-01 from 13:31:03 through 13:46:04 UTC, at roughly one-minute intervals.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T032-00001",
+     "T032-00003",
+     "T032-00005",
+     "T032-00008",
+     "T032-00010",
+     "T032-00012",
+     "T032-00014",
+     "T032-00017",
+     "T032-00019",
+     "T032-00021",
+     "T032-00023",
+     "T032-00025",
+     "T032-00027",
+     "T032-00029",
+     "T032-00031",
+     "T032-00033"
+    ]
+   },
+   {
+    "claim": "The failures consistently identify WorkstationName=FILE-NWD-01, source IP 10.40.20.20, LogonType=3, and ProcessId 0xa5c with ProcessName lsass.exe.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T032-00001",
+     "T032-00003",
+     "T032-00012",
+     "T032-00021",
+     "T032-00033"
+    ]
+   },
+   {
+    "claim": "The domain-controller records report bad-password status 0xc000006a for svc-render and Kerberos pre-authentication failure status 0x18, consistent with rejected credentials rather than evidence of successful authentication.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T032-00002",
+     "T032-00004",
+     "T032-00006",
+     "T032-00007",
+     "T032-00009",
+     "T032-00011",
+     "T032-00013",
+     "T032-00016",
+     "T032-00018",
+     "T032-00020",
+     "T032-00022",
+     "T032-00024",
+     "T032-00026",
+     "T032-00028",
+     "T032-00030",
+     "T032-00032",
+     "T032-00034"
+    ]
+   },
+   {
+    "claim": "The timing and near-minute cadence are consistent with the documented svc-render password rotation at 13:30 UTC followed by a scheduled job continuing to use outdated credentials; the inventory says that job runs and re-authenticates every minute.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T032-00001",
+     "T032-00003",
+     "T032-00005",
+     "T032-00008",
+     "T032-00010",
+     "T032-00012",
+     "T032-00014",
+     "T032-00017",
+     "T032-00019",
+     "T032-00021",
+     "T032-00023",
+     "T032-00025",
+     "T032-00027",
+     "T032-00029",
+     "T032-00031",
+     "T032-00033"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records stop at 13:46:04 UTC (T032-00033); they do not cover the remainder of the requested window through 14:20 UTC.",
+   "The records show the authentication subsystem process lsass.exe, but do not identify the application or job that initiated each attempt.",
+   "These records show failures; they do not establish whether the password rotation occurred or whether any later authentication succeeded."
+  ],
+  "claims_not_established": [
+   "That the scheduled password rotation was completed at 13:30 UTC.",
+   "That the RenderQueue job's stored credentials were or were not updated.",
+   "That no successful logon or other activity occurred elsewhere in the requested 13:20\u201314:20 UTC window.",
+   "That the failures were caused by an attacker rather than stale service credentials."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [
+   "For corroboration, check the password-rotation change record and domain-controller account-change audit around 13:30 UTC.",
+   "If the cause remains uncertain, inspect RenderQueue/service configuration and application logs on FILE-NWD-01 around the failure period.",
+   "Review authentication records from 13:46 through 14:20 UTC to complete the requested window."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 54,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 25.5
+}

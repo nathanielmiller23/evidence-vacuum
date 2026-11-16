@@ -1,0 +1,91 @@
+{
+ "scenario_id": "T120",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.84,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The provided records documenting the large outbound transfer place it at 13:49:52 UTC, rather than around 13:46 UTC. The proxy reports 640,000,000 client-to-server bytes, and Zeek records 640,000,409 outbound bytes in the corresponding connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T120-00307\", \"T120-00311\"]\n    },\n    {\n      \"claim\": \"The transfer went to ingest.ironvault-cloud.com. The associated process was C:\\\\Program Files\\\\Ironvault\\\\agent.exe, running as COPPERLINE\\\\svc-backup with a Nightly job command targeting that same Ironvault host. The inventory identifies Ironvault as an approved backup service whose agent uploads several hundred MB.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T120-00305\", \"T120-00306\", \"T120-00307\", \"T120-00311\", \"T120-00314\", \"T120-00315\"]\n    },\n    {\n      \"claim\": \"Shortly before the agent ran, the domain controller recorded a service-ticket event for svc-backup from 91.219.236.174; a local service logon for svc-backup followed, then the Ironvault process started. The external source is anomalous given the provided environment context, which states there is no VPN.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T120-00298\", \"T120-00299\", \"T120-00305\", \"T120-00306\"]\n    },\n    {\n      \"claim\": \"The proxy records the transfer with user agent Wget/1.21.3, while endpoint network telemetry attributes the proxy connections to Ironvault agent.exe. The records do not explain this difference.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T120-00307\", \"T120-00311\", \"T120-00314\", \"T120-00315\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and Zeek records establish destination and transfer volume, but the provided records do not expose the transferred files or their contents (T120-00307, T120-00309, T120-00311).\",\n    \"The records show an external source IP in a svc-backup service-ticket event and a subsequent local service logon, but do not establish who controlled that source or whether the ticket event caused the local logon or upload (T120-00298, T120-00299, T120-00305).\",\n    \"The provided evidence does not show the Ironvault job schedule or establish whether this Nightly upload was expected at this time (T120-00305, T120-00306).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the svc-backup authentication from 91.219.236.174 was authorized, spoofed, or evidence of credential compromise (T120-00298, T120-00299).\",\n    \"Whether the 640 MB upload contained only expected backup data or included unauthorized data (T120-00307, T120-00311).\",\n    \"Whether the Wget user-agent value reflects normal Ironvault behavior or a different execution path (T120-00307, T120-00314, T120-00315).\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Correlate the 13:49:14 svc-backup ticket event with domain-controller authentication details, source-network ownership, and any relevant service-account authentication records.\",\n    \"Review Ironvault job history and audit records for the 13:49 Nightly run, including the backup set, file manifest, and destination-side receipt.\",\n    \"Verify the Ironvault agent binary and its execution provenance, and determine why the proxy logged a Wget user agent.\",\n    \"Check whether the alert's original network-flow telemetry independently confirms the transfer time and destination.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate ticket: sara.ali, identified in the inventory as help desk and not an administrator, initiated RDP to FILE-COP-01 and obtained an interactive logon. This is outside the alerted upload activity and should not determine this alert's disposition (T120-00422, T120-00427, T120-00434).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 86908,
+    "output": 2985
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.84,
+  "supporting_observations": [
+   {
+    "claim": "The provided records documenting the large outbound transfer place it at 13:49:52 UTC, rather than around 13:46 UTC. The proxy reports 640,000,000 client-to-server bytes, and Zeek records 640,000,409 outbound bytes in the corresponding connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T120-00307",
+     "T120-00311"
+    ]
+   },
+   {
+    "claim": "The transfer went to ingest.ironvault-cloud.com. The associated process was C:\\Program Files\\Ironvault\\agent.exe, running as COPPERLINE\\svc-backup with a Nightly job command targeting that same Ironvault host. The inventory identifies Ironvault as an approved backup service whose agent uploads several hundred MB.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T120-00305",
+     "T120-00306",
+     "T120-00307",
+     "T120-00311",
+     "T120-00314",
+     "T120-00315"
+    ]
+   },
+   {
+    "claim": "Shortly before the agent ran, the domain controller recorded a service-ticket event for svc-backup from 91.219.236.174; a local service logon for svc-backup followed, then the Ironvault process started. The external source is anomalous given the provided environment context, which states there is no VPN.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T120-00298",
+     "T120-00299",
+     "T120-00305",
+     "T120-00306"
+    ]
+   },
+   {
+    "claim": "The proxy records the transfer with user agent Wget/1.21.3, while endpoint network telemetry attributes the proxy connections to Ironvault agent.exe. The records do not explain this difference.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T120-00307",
+     "T120-00311",
+     "T120-00314",
+     "T120-00315"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and Zeek records establish destination and transfer volume, but the provided records do not expose the transferred files or their contents (T120-00307, T120-00309, T120-00311).",
+   "The records show an external source IP in a svc-backup service-ticket event and a subsequent local service logon, but do not establish who controlled that source or whether the ticket event caused the local logon or upload (T120-00298, T120-00299, T120-00305).",
+   "The provided evidence does not show the Ironvault job schedule or establish whether this Nightly upload was expected at this time (T120-00305, T120-00306)."
+  ],
+  "claims_not_established": [
+   "Whether the svc-backup authentication from 91.219.236.174 was authorized, spoofed, or evidence of credential compromise (T120-00298, T120-00299).",
+   "Whether the 640 MB upload contained only expected backup data or included unauthorized data (T120-00307, T120-00311).",
+   "Whether the Wget user-agent value reflects normal Ironvault behavior or a different execution path (T120-00307, T120-00314, T120-00315)."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Correlate the 13:49:14 svc-backup ticket event with domain-controller authentication details, source-network ownership, and any relevant service-account authentication records.",
+   "Review Ironvault job history and audit records for the 13:49 Nightly run, including the backup set, file manifest, and destination-side receipt.",
+   "Verify the Ironvault agent binary and its execution provenance, and determine why the proxy logged a Wget user agent.",
+   "Check whether the alert's original network-flow telemetry independently confirms the transfer time and destination."
+  ],
+  "unrelated_findings": [
+   "Separate ticket: sara.ali, identified in the inventory as help desk and not an administrator, initiated RDP to FILE-COP-01 and obtained an interactive logon. This is outside the alerted upload activity and should not determine this alert's disposition (T120-00422, T120-00427, T120-00434)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 16,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 26.9
+}

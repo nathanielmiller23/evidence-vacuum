@@ -1,0 +1,82 @@
+{
+ "scenario_id": "T161",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.83,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded two failed network logons for noah.kim from 198.51.100.201, about 90 seconds apart; both failures had substatus 0xc000006a, indicating an incorrect password.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T161-00036\",\n        \"T161-00037\"\n      ]\n    },\n    {\n      \"claim\": \"About 75 seconds after the second failure, the domain controller recorded a successful Kerberos network logon for noah.kim from the same IP address.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T161-00037\",\n        \"T161-00040\"\n      ]\n    },\n    {\n      \"claim\": \"The rapid sequence of wrong-password failures followed by a successful network logon from an address not identified as an organizational host is suspicious for attempted credential guessing followed by successful authentication.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T161-00036\",\n        \"T161-00037\",\n        \"T161-00040\"\n      ]\n    },\n    {\n      \"claim\": \"Noah's workstation was locked at 13:39 and unlocked at 13:48 under the same logon ID, but these local workstation events do not identify the source of the domain-controller logons.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T161-00035\",\n        \"T161-00038\",\n        \"T161-00039\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not identify a host or device associated with source IP 198.51.100.201.\",\n    \"The address 198.51.100.201 is in a documentation-only range, so these records cannot establish the real source address or its location; it may be sanitized or placeholder data.\",\n    \"The evidence contains no source-side authentication or network telemetry to show what client generated the attempts or what activity followed the successful logon.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish whether the failures were deliberate password guessing or ordinary incorrect-password attempts.\",\n    \"The evidence does not establish who controlled the source client or whether the successful authentication was unauthorized.\",\n    \"The evidence does not establish that the successful logon led to access to data, persistence, or other post-authentication activity.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Identify the real source address and client using DHCP, firewall, VPN, proxy, or other network records around 13:46\u201313:50 UTC.\",\n    \"Review domain-controller authentication records and account activity for noah.kim before and after the successful logon, including any subsequent access to systems or resources.\",\n    \"Confirm with the account owner whether they initiated a network logon at that time, and review available MFA or credential-risk records.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 4500,
+    "output": 1965
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.83,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded two failed network logons for noah.kim from 198.51.100.201, about 90 seconds apart; both failures had substatus 0xc000006a, indicating an incorrect password.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T161-00036",
+     "T161-00037"
+    ]
+   },
+   {
+    "claim": "About 75 seconds after the second failure, the domain controller recorded a successful Kerberos network logon for noah.kim from the same IP address.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T161-00037",
+     "T161-00040"
+    ]
+   },
+   {
+    "claim": "The rapid sequence of wrong-password failures followed by a successful network logon from an address not identified as an organizational host is suspicious for attempted credential guessing followed by successful authentication.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T161-00036",
+     "T161-00037",
+     "T161-00040"
+    ]
+   },
+   {
+    "claim": "Noah's workstation was locked at 13:39 and unlocked at 13:48 under the same logon ID, but these local workstation events do not identify the source of the domain-controller logons.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T161-00035",
+     "T161-00038",
+     "T161-00039"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not identify a host or device associated with source IP 198.51.100.201.",
+   "The address 198.51.100.201 is in a documentation-only range, so these records cannot establish the real source address or its location; it may be sanitized or placeholder data.",
+   "The evidence contains no source-side authentication or network telemetry to show what client generated the attempts or what activity followed the successful logon."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish whether the failures were deliberate password guessing or ordinary incorrect-password attempts.",
+   "The evidence does not establish who controlled the source client or whether the successful authentication was unauthorized.",
+   "The evidence does not establish that the successful logon led to access to data, persistence, or other post-authentication activity."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Identify the real source address and client using DHCP, firewall, VPN, proxy, or other network records around 13:46\u201313:50 UTC.",
+   "Review domain-controller authentication records and account activity for noah.kim before and after the successful logon, including any subsequent access to systems or resources.",
+   "Confirm with the account owner whether they initiated a network logon at that time, and review available MFA or credential-risk records."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.1
+}

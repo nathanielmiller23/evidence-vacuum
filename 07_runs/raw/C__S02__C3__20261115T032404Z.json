@@ -1,0 +1,761 @@
+{
+ "run_id": "C__S02__C3__20261115T032404Z",
+ "config": "C",
+ "scenario_id": "S02",
+ "condition": "C3",
+ "model": "gpt-6-luna",
+ "agent_setting_config": "settings.ev.toml",
+ "settings_sha": "d164a225cec03452",
+ "cuga_commit": "f6e2335aa326e1cfdeb6e80a350394f6ab8b7b72",
+ "max_tool_calls": 30,
+ "timeout_s": 400,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task": "Alert: Help desk ticket: dana.wells (WS-DWELLS-01) reports that a PowerShell window briefly appeared around 13:40 UTC on 2026-11-10 and asks whether her PC is OK. Review activity between 13:20 and 14:20 UTC.\n\nEnvironment context (from the organization's asset and service inventory):\nOrganization: Lakeview Accounting (domain LAKEVIEW-ACCT / lakeview-acct.local), a small accounting office.\nHosts: workstations WS-DWELLS-01 (dana.wells, accountant), WS-RIYER-01 (raj.iyer, analyst), WS-KORTEGA-01 (kim.ortega, IT administrator), WS-TNGUYEN-01 (tara.nguyen, help desk); servers DC-LV-01 (domain controller, DNS), FILE-LV-01 (file server, finance shares, scheduled jobs), PROXY-LV-01 (explicit web proxy, port 8080; all web egress goes through it). There is no VPN; remote administration is only done from WS-KORTEGA-01 inside the office.\nAccounts: kim.ortega is the only IT administrator. tara.nguyen (help desk) can create domain accounts but is not an administrator. Service accounts: svc-backup (Vaultline backup agent on FILE-LV-01) and svc-reporting (ReportSync job on FILE-LV-01, runs every minute and re-authenticates on each run).\nChange calendar for 2026-11-10: the svc-reporting password is scheduled to be rotated by IT at 13:30 UTC (CHG-2291); the ReportSync job on FILE-LV-01 must then be updated manually with the new password. Monthly workstation patching by IT is scheduled during business hours.\nIT practices: kim.ortega patches workstations by remotely running \\\\FILE-LV-01\\IT\\scripts\\Install-MonthlyPatches.ps1 with PowerShell from WS-KORTEGA-01. The help desk creates temporary contractor accounts on request, always named temp.<name>, added only to the Contractors domain group; temporary accounts never receive administrator rights. No other account creation is expected.\nApproved software and services: Microsoft 365 / OneDrive; Vaultline (vaultline-backup.com) offsite backup; DataGrid Analytics desktop (installed in C:\\Program Files\\DataGrid\\Analytics\\ on analyst workstations), whose updater dgupdate.exe checks update.datagrid-analytics.com over HTTPS about every 5 minutes. No other file-sharing, cloud-storage or remote-access services are approved.\n\nObjective: Determine whether the available security evidence supports a malicious-activity finding, a benign disposition, or an insufficient-evidence determination.\n\nEvidence is available only through these tools: list_sources, query, get_record, get_coverage. Retrieve evidence with the tools before answering. You may make at most 30 tool calls.\n\nRespond with a single JSON object (no prose, no code fences) that conforms to this JSON schema. Output only the instance, not the schema:\n{\n \"type\": \"object\",\n \"additionalProperties\": false,\n \"required\": [\n  \"assessment\",\n  \"confidence\",\n  \"supporting_observations\",\n  \"known_telemetry_limitations\",\n  \"claims_not_established\",\n  \"recommended_action\",\n  \"additional_evidence_needed\"\n ],\n \"properties\": {\n  \"assessment\": {\n   \"type\": \"string\",\n   \"enum\": [\n    \"malicious\",\n    \"benign\",\n    \"insufficient_evidence\"\n   ]\n  },\n  \"confidence\": {\n   \"type\": \"number\",\n   \"minimum\": 0,\n   \"maximum\": 1,\n   \"description\": \"Probability that the assessment is correct.\"\n  },\n  \"supporting_observations\": {\n   \"type\": \"array\",\n   \"items\": {\n    \"type\": \"object\",\n    \"additionalProperties\": false,\n    \"required\": [\n     \"claim\",\n     \"claim_type\",\n     \"record_ids\"\n    ],\n    \"properties\": {\n     \"claim\": {\n      \"type\": \"string\"\n     },\n     \"claim_type\": {\n      \"type\": \"string\",\n      \"enum\": [\n       \"observed_fact\",\n       \"inferred_claim\"\n      ]\n     },\n     \"record_ids\": {\n      \"type\": \"array\",\n      \"items\": {\n       \"type\": \"string\"\n      }\n     }\n    }\n   }\n  },\n  \"known_telemetry_limitations\": {\n   \"type\": \"array\",\n   \"items\": {\n    \"type\": \"string\"\n   }\n  },\n  \"claims_not_established\": {\n   \"type\": \"array\",\n   \"items\": {\n    \"type\": \"string\"\n   },\n   \"description\": \"Material questions the available evidence cannot answer.\"\n  },\n  \"recommended_action\": {\n   \"type\": \"string\",\n   \"enum\": [\n    \"close\",\n    \"escalate\",\n    \"collect_more\"\n   ]\n  },\n  \"additional_evidence_needed\": {\n   \"type\": \"array\",\n   \"items\": {\n    \"type\": \"string\"\n   }\n  }\n }\n}",
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:39:49 UTC, the proxy recorded a successful GET for https://raw.githubusercontent.com/nb-tools/ps-utils/main/upd.ps1 from WS-DWELLS-01 under dana.wells\u2019s account. This is an unapproved source and a PowerShell script download, but the record does not establish that the script was executed or what it contained.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S02-00108\"]\n    },\n    {\n      \"claim\": \"The proxy recorded a connection to raw.githubusercontent.com on the same workstation at the same timestamp as the script GET; its setup record shares the tunnel ID and client source port with the GET.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S02-00106\", \"S02-00108\"]\n    },\n    {\n      \"claim\": \"Network-flow records show SMB connections from WS-DWELLS-01 to DC-LV-01 at 13:35 and 13:49 UTC. These records do not identify the accessed share or the purpose of the sessions.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S02-00075\", \"S02-00185\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Coverage reports that Windows Event Forwarding stopped on WS-DWELLS-01 from 13:30 to 14:10 UTC, so Security and Sysmon events were not ingested during the interval containing the download and reported PowerShell activity. The coverage result has no record ID.\",\n    \"The proxy record establishes a successful request for the script URL but does not provide the script contents or a file hash.\",\n    \"The SMB flow records identify endpoints and timing, but not the accessed share, files, or actions.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether upd.ps1 was downloaded to disk, launched, or otherwise executed.\",\n    \"Whether the downloaded script was malicious, benign, or what behavior it would perform.\",\n    \"Whether Dana initiated or authorized the download.\",\n    \"What resource or share was accessed in the SMB sessions to DC-LV-01, and whether those sessions were related to the script.\",\n    \"Whether the workstation was compromised or remains compromised.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover endpoint data from WS-DWELLS-01 for 13:30\u201314:10 UTC, including PowerShell operational/script-block logs, process-creation events, download and browser history, and relevant files or memory.\",\n    \"Retrieve the response body or a preserved copy and hash of upd.ps1, then validate its contents and provenance.\",\n    \"Review domain-controller SMB/share-access auditing and relevant FILE-LV-01 records to identify the resource accessed from WS-DWELLS-01.\",\n    \"Confirm with Dana and IT whether the download or related activity was expected or authorized.\"\n  ]\n}",
+   "cuga_error": null,
+   "valid": true,
+   "validation_errors": [],
+   "cuga_tool_calls": [
+    {
+     "name": "list_sources",
+     "arguments": {},
+     "result": "{\"sources\": [\"proxy\", \"sysmon\", \"winsec\", \"zeek_conn\", \"zeek_dns\", \"zeek_ssl\"], \"known_hosts\": [\"DC-LV-01\", \"WS-DWELLS-01\"]}",
+     "app_name": "runtime_tools",
+     "operation_id": "list_sources",
+     "timestamp": "2026-11-14T21:24:22.551325",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "sysmon",
+      "host": "WS-DWELLS-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z"
+     },
+     "result": "{\"total_matches\": 15, \"offset\": 0, \"returned\": 15, \"rows\": [{\"record_id\": \"S02-00022\", \"ts\": \"2026-11-10T13:23:54.228Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=5968 Image=C:\\\\Program Files\\\\Zscaler\\\\ZSATray\\\\ZSATray.exe CommandLine=\\\"C:\\\\Program Files\\\\Zscaler\\\\ZSATray\\\\ZSATray.exe\\\" CurrentDirectory=C:\\\\Program Files\\\\Zscaler\\\\ZSATray\\\\ User=LAKEVIEW-ACCT\\\\dana.wells LogonId=0x12475073 IntegrityLevel=Medium ParentProcessId=5956 ParentImage=C:\\\\Windows\\\\explorer.exe ParentCommandLine=explorer.exe ParentUser=LAKEVIEW-ACCT\\\\dana.wells\"}, {\"record_id\": \"S02-00023\", \"ts\": \"2026-11-10T13:23:54.321Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"sysmon\", \"event_type\": \"7\", \"raw\": \"EventID=7 ProcessId=5968 Image=C:\\\\Program Files\\\\Zscaler\\\\ZSATray\\\\ZSATray.exe ImageLoaded=C:\\\\Program Files\\\\Zscaler\\\\ZSATray\\\\ZSACommon.dll Signed=true Signature=Zscaler, Inc. SignatureStatus=Valid User=LAKEVIEW-ACCT\\\\dana.wells\"}, {\"record_id\": \"S02-00048\", \"ts\": \"2026-11-10T13:28:57.127Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"sysmon\", \"event_type\": \"22\", \"raw\": \"EventID=22 ProcessId=5604 QueryName=DC-LV-01.lakeview-acct.local QueryStatus=0 QueryResults=10.20.20.10; Image=C:\\\\Windows\\\\System32\\\\lsass.exe User=NT AUTHORITY\\\\SYSTEM\"}, {\"record_id\": \"S02-00244\", \"ts\": \"2026-11-10T14:13:57.718Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=6312 Image=C:\\\\Windows\\\\System32\\\\svchost.exe CommandLine=svchost.exe -k netsvcs -p -s Schedule CurrentDirectory=C:\\\\Windows\\\\System32\\\\ User=NT AUTHORITY\\\\SYSTEM LogonId=0x3e7 IntegrityLevel=System ParentProcessId=5600 ParentImage=C:\\\\Windows\\\\System32\\\\services.exe ParentCommandLine=services.exe ParentUser=NT AUTHORITY\\\\SYSTEM\"}, {\"record_id\": \"S02-00262\", \"ts\": \"2026-11-10T14:16:19.789Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"sysmon\", \"event_type\": \"22\", \"raw\": \"EventID=22 ProcessId=5648 QueryName=DC-LV-01.lakeview-acct.local QueryStatus=0 QueryResults=10.20.20.10; Image=C:\\\\Windows\\\\System32\\\\svchost.exe User=NT AUTHORITY\\\\LOCAL SERVICE\"}, {\"record_id\": \"S02-00273\", \"ts\": \"2026-11-10T14:17:23.946Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"sysmon\", \"event_type\": \"22\", \"raw\": \"EventID=22 ProcessId=5604 QueryName=_kerberos._tcp.lakeview-acct.local QueryStatus=0 QueryResults=0 100 88 DC-LV-01.lakeview-acct.local; Image=C:\\\\Windows\\\\System32\\\\lsass.exe User=NT AUTHORITY\\\\SYSTEM\"}, {\"record_id\": \"S02-00279\", \"ts\": \"2026-11-10T14:17:24.292Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"sysmon\", \"event_type\": \"22\", \"raw\": \"EventID=22 ProcessId=5604 QueryName=_ldap._tcp.lakeview-acct.local QueryStatus=0 QueryResults=0 100 389 DC-LV-01.lakeview-acct.local; Image=C:\\\\Windows\\\\System32\\\\lsass.exe User=NT AUTHORITY\\\\SYSTEM\"}, {\"record_id\": \"S02-00285\", \"ts\": \"2026-11-10T14:17:26.157Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"sysmon\", \"event_type\": \"22\", \"raw\": \"EventID=22 ProcessId=5604 QueryName=DC-LV-01.lakeview-acct.local QueryStatus=0 QueryResults=10.20.20.10; Image=C:\\\\Windows\\\\System32\\\\lsass.exe User=NT AUTHORITY\\\\SYSTEM\"}, {\"record_id\": \"S02-00287\", \"ts\": \"2026-11-10T14:17:26.373Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=5648 Image=C:\\\\Windows\\\\System32\\\\svchost.exe User=NT AUTHORITY\\\\LOCAL SERVICE Protocol=udp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.21 SourceHostname=WS-DWELLS-01.lakeview-acct.local SourcePort=58670 DestinationIsIpv6=false DestinationIp=10.20.20.10 DestinationPort=53 DestinationPortName=domain\"}, {\"record_id\": \"S02-00292\", \"ts\": \"2026-11-10T14:18:02.203Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=6224 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe CommandLine=\\\"C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\\\" --single-argument https://outlook.office365.com/ CurrentDirectory=C:\\\\Users\\\\dana.wells\\\\ User=LAKEVIEW-ACCT\\\\dana.wells LogonId=0x12475073 IntegrityLevel=Medium ParentProcessId=5956 ParentImage=C:\\\\Windows\\\\explorer.exe ParentCommandLine=explorer.exe ParentUser=LAKEVIEW-ACCT\\\\dana.wells\"}, {\"record_id\": \"S02-00294\", \"ts\": \"2026-11-10T14:18:02.355Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"sysmon\", \"event_type\": \"7\", \"raw\": \"EventID=7 ProcessId=6224 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe ImageLoaded=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome_elf.dll Signed=true Signature=Google LLC SignatureStatus=Valid User=LAKEVIEW-ACCT\\\\dana.wells\"}, {\"record_id\": \"S02-00295\", \"ts\": \"2026-11-10T14:18:02.369Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"sysmon\", \"event_type\": \"7\", \"raw\": \"EventID=7 ProcessId=6224 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe ImageLoaded=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\libEGL.dll Signed=true Signature=Google LLC SignatureStatus=Valid User=LAKEVIEW-ACCT\\\\dana.wells\"}, {\"record_id\": \"S02-00296\", \"ts\": \"2026-11-10T14:18:02.384Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"sysmon\", \"event_type\": \"7\", \"raw\": \"EventID=7 ProcessId=6224 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe ImageLoaded=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\libGLESv2.dll Signed=true Signature=Google LLC SignatureStatus=Valid User=LAKEVIEW-ACCT\\\\dana.wells\"}, {\"record_id\": \"S02-00300\", \"ts\": \"2026-11-10T14:18:04.715Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=6224 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe User=LAKEVIEW-ACCT\\\\dana.wells Protocol=tcp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.21 SourceHostname=WS-DWELLS-01.lakeview-acct.local SourcePort=60400 DestinationIsIpv6=false DestinationIp=10.20.20.30 DestinationPort=8080 DestinationPortName=http-alt\"}, {\"record_id\": \"S02-00308\", \"ts\": \"2026-11-10T14:19:18.279Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=5960 Image=C:\\\\Program Files (x86)\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe User=LAKEVIEW-ACCT\\\\dana.wells Protocol=tcp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.21 SourceHostname=WS-DWELLS-01.lakeview-acct.local SourcePort=50568 DestinationIsIpv6=false DestinationIp=10.20.20.30 DestinationPort=8080 DestinationPortName=http-alt\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:24:25.252248",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "sysmon",
+      "host": "WS-DWELLS-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z",
+      "contains": "powershell"
+     },
+     "result": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:24:28.530782",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "winsec",
+      "host": "WS-DWELLS-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z"
+     },
+     "result": "{\"total_matches\": 26, \"offset\": 0, \"returned\": 25, \"rows\": [{\"record_id\": \"S02-00004\", \"ts\": \"2026-11-10T13:23:08.014Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5604 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14593 SourceAddress=10.20.10.21 SourcePort=57718 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=30459 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00008\", \"ts\": \"2026-11-10T13:23:09.391Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5604 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14593 SourceAddress=10.20.10.21 SourcePort=53012 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=30459 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00015\", \"ts\": \"2026-11-10T13:23:41.797Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5604 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14593 SourceAddress=10.20.10.21 SourcePort=56537 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=30459 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00019\", \"ts\": \"2026-11-10T13:23:43.870Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5604 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14593 SourceAddress=10.20.10.21 SourcePort=60198 DestAddress=10.20.20.10 DestPort=389 Protocol=6 FilterRTID=30472 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00024\", \"ts\": \"2026-11-10T13:23:54.754Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"winsec\", \"event_type\": \"4688\", \"raw\": \"EventID=4688 SubjectUserName=dana.wells SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x12475073 NewProcessId=0x1750 NewProcessName=C:\\\\Program Files\\\\Zscaler\\\\ZSATray\\\\ZSATray.exe TokenElevationType=%%1938 ProcessId=0x1744 CommandLine=\\\"C:\\\\Program Files\\\\Zscaler\\\\ZSATray\\\\ZSATray.exe\\\" ParentProcessName=C:\\\\Windows\\\\explorer.exe MandatoryLabel=S-1-16-8192\"}, {\"record_id\": \"S02-00030\", \"ts\": \"2026-11-10T13:25:08.731Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5604 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14593 SourceAddress=10.20.10.21 SourcePort=57909 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=30459 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00036\", \"ts\": \"2026-11-10T13:26:47.612Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5604 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14593 SourceAddress=10.20.10.21 SourcePort=61282 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=30459 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00041\", \"ts\": \"2026-11-10T13:26:50.258Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5604 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14593 SourceAddress=10.20.10.21 SourcePort=61261 DestAddress=10.20.20.10 DestPort=88 Protocol=6 FilterRTID=30456 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00045\", \"ts\": \"2026-11-10T13:28:57.008Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5648 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\svchost.exe Direction=%%14593 SourceAddress=10.20.10.21 SourcePort=55848 DestAddress=10.20.20.10 DestPort=53 Protocol=17 FilterRTID=30440 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00051\", \"ts\": \"2026-11-10T13:28:57.752Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5604 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14593 SourceAddress=10.20.10.21 SourcePort=60966 DestAddress=10.20.20.10 DestPort=389 Protocol=6 FilterRTID=30472 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00240\", \"ts\": \"2026-11-10T14:11:43.038Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5604 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14593 SourceAddress=10.20.10.21 SourcePort=64081 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=30459 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00245\", \"ts\": \"2026-11-10T14:13:58.009Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"winsec\", \"event_type\": \"4688\", \"raw\": \"EventID=4688 SubjectUserName=SYSTEM SubjectDomainName=NT AUTHORITY SubjectLogonId=0x3e7 NewProcessId=0x18a8 NewProcessName=C:\\\\Windows\\\\System32\\\\svchost.exe TokenElevationType=%%1936 ProcessId=0x15e0 CommandLine=svchost.exe -k netsvcs -p -s Schedule ParentProcessName=C:\\\\Windows\\\\System32\\\\services.exe MandatoryLabel=S-1-16-16384\"}, {\"record_id\": \"S02-00247\", \"ts\": \"2026-11-10T14:15:46.138Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5604 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14593 SourceAddress=10.20.10.21 SourcePort=64870 DestAddress=10.20.20.10 DestPort=88 Protocol=6 FilterRTID=30456 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00253\", \"ts\": \"2026-11-10T14:15:47.733Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5604 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14593 SourceAddress=10.20.10.21 SourcePort=52720 DestAddress=10.20.20.10 DestPort=389 Protocol=6 FilterRTID=30472 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00259\", \"ts\": \"2026-11-10T14:16:19.761Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5648 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\svchost.exe Direction=%%14593 SourceAddress=10.20.10.21 SourcePort=58056 DestAddress=10.20.20.10 DestPort=53 Protocol=17 FilterRTID=30440 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00265\", \"ts\": \"2026-11-10T14:17:07.085Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5604 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14593 SourceAddress=10.20.10.21 SourcePort=62422 DestAddress=10.20.20.10 DestPort=88 Protocol=6 FilterRTID=30456 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00270\", \"ts\": \"2026-11-10T14:17:23.917Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5648 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\svchost.exe Direction=%%14593 SourceAddress=10.20.10.21 SourcePort=53553 DestAddress=10.20.20.10 DestPort=53 Protocol=17 FilterRTID=30440 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00276\", \"ts\": \"2026-11-10T14:17:24.263Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5648 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\svchost.exe Direction=%%14593 SourceAddress=10.20.10.21 SourcePort=57765 DestAddress=10.20.20.10 DestPort=53 Protocol=17 FilterRTID=30440 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00284\", \"ts\": \"2026-11-10T14:17:26.136Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5648 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\svchost.exe Direction=%%14593 SourceAddress=10.20.10.21 SourcePort=58670 DestAddress=10.20.20.10 DestPort=53 Protocol=17 FilterRTID=30440 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00289\", \"ts\": \"2026-11-10T14:17:27.795Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5604 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14593 SourceAddress=10.20.10.21 SourcePort=50696 DestAddress=10.20.20.10 DestPort=389 Protocol=6 FilterRTID=30472 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00293\", \"ts\": \"2026-11-10T14:18:02.245Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"winsec\", \"event_type\": \"4688\", \"raw\": \"EventID=4688 SubjectUserName=dana.wells SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x12475073 NewProcessId=0x1850 NewProcessName=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe TokenElevationType=%%1938 ProcessId=0x1744 CommandLine=\\\"C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\\\" --single-argument https://outlook.office365.com/ ParentProcessName=C:\\\\Windows\\\\explorer.exe MandatoryLabel=S-1-16-8192\"}, {\"record_id\": \"S02-00299\", \"ts\": \"2026-11-10T14:18:04.477Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=6224 Application=\\\\device\\\\harddiskvolume7\\\\program files\\\\google\\\\chrome\\\\application\\\\chrome.exe Direction=%%14593 SourceAddress=10.20.10.21 SourcePort=60400 DestAddress=10.20.20.30 DestPort=8080 Protocol=6 FilterRTID=30520 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00302\", \"ts\": \"2026-11-10T14:18:13.867Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5604 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14593 SourceAddress=10.20.10.21 SourcePort=49218 DestAddress=10.20.20.10 DestPort=389 Protocol=6 FilterRTID=30472 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00307\", \"ts\": \"2026-11-10T14:19:18.028Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5960 Application=\\\\device\\\\harddiskvolume7\\\\program files (x86)\\\\microsoft\\\\edge\\\\application\\\\msedge.exe Direction=%%14593 SourceAddress=10.20.10.21 SourcePort=50568 DestAddress=10.20.20.30 DestPort=8080 Protocol=6 FilterRTID=30520 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00310\", \"ts\": \"2026-11-10T14:19:52.141Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5604 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14593 SourceAddress=10.20.10.21 SourcePort=52253 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=30459 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:24:31.264266",
+     "duration_ms": 13.096094131469727,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "sysmon",
+      "host": "WS-KORTEGA-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z"
+     },
+     "result": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:24:34.713826",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "sysmon",
+      "host": "FILE-LV-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z"
+     },
+     "result": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:24:38.427143",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "proxy",
+      "host": "WS-DWELLS-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z"
+     },
+     "result": "{\"total_matches\": 7, \"offset\": 0, \"returned\": 7, \"rows\": [{\"record_id\": \"S02-00025\", \"ts\": \"2026-11-10T13:23:56.000Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.21 user=- CONNECT armmf.adobe.com:443 status=200 ua=\\\"Adobe Application Manager 2.0\\\" proxy_action=tunnel tunnel_cs_bytes=6582 tunnel_sc_bytes=50016 tunnel_duration_ms=7734\"}, {\"record_id\": \"S02-00106\", \"ts\": \"2026-11-10T13:39:49.000Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.21 user=LAKEVIEW-ACCT\\\\dana.wells CONNECT raw.githubusercontent.com:443 status=200 ua=\\\"-\\\" proxy_action=tunnel-setup ssl_bump=peek tunnel_id=PT-e7fdb067bfa3443d client_src_port=54734 tunnel_cs_bytes=980 tunnel_sc_bytes=3937 tunnel_duration_ms=1854\"}, {\"record_id\": \"S02-00107\", \"ts\": \"2026-11-10T13:39:49.000Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.21 user=LAKEVIEW-ACCT\\\\dana.wells CONNECT raw.githubusercontent.com:443 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\\" proxy_action=tunnel tunnel_cs_bytes=1400 tunnel_sc_bytes=48200 tunnel_duration_ms=16420\"}, {\"record_id\": \"S02-00108\", \"ts\": \"2026-11-10T13:39:49.000Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"proxy\", \"event_type\": \"GET\", \"raw\": \"client=10.20.10.21 user=LAKEVIEW-ACCT\\\\dana.wells GET https://raw.githubusercontent.com/nb-tools/ps-utils/main/upd.ps1 status=200 ua=\\\"-\\\" proxy_action=ssl-inspect ssl_bump=bump tunnel_id=PT-e7fdb067bfa3443d client_src_port=54734\"}, {\"record_id\": \"S02-00235\", \"ts\": \"2026-11-10T14:09:59.000Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.21 user=LAKEVIEW-ACCT\\\\dana.wells CONNECT www.office.com:443 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\\" proxy_action=tunnel tunnel_cs_bytes=1752 tunnel_sc_bytes=17900 tunnel_duration_ms=1315\"}, {\"record_id\": \"S02-00297\", \"ts\": \"2026-11-10T14:18:04.000Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.21 user=LAKEVIEW-ACCT\\\\dana.wells CONNECT outlook.office365.com:443 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\\" proxy_action=tunnel tunnel_cs_bytes=1866 tunnel_sc_bytes=2285 tunnel_duration_ms=1616\"}, {\"record_id\": \"S02-00305\", \"ts\": \"2026-11-10T14:19:18.000Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.21 user=LAKEVIEW-ACCT\\\\dana.wells CONNECT r1.res.office365.com:443 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0\\\" proxy_action=tunnel tunnel_cs_bytes=2563 tunnel_sc_bytes=35209 tunnel_duration_ms=3155\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:24:43.072466",
+     "duration_ms": 2.004861831665039,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "sysmon",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z",
+      "contains": "powershell"
+     },
+     "result": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:24:46.497852",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "get_record",
+     "arguments": {
+      "record_id": "S02-00108"
+     },
+     "result": "{\"record_id\": \"S02-00108\", \"ts\": \"2026-11-10T13:39:49.000Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"proxy\", \"event_type\": \"GET\", \"raw\": \"client=10.20.10.21 user=LAKEVIEW-ACCT\\\\dana.wells GET https://raw.githubusercontent.com/nb-tools/ps-utils/main/upd.ps1 status=200 ua=\\\"-\\\" proxy_action=ssl-inspect ssl_bump=bump tunnel_id=PT-e7fdb067bfa3443d client_src_port=54734\"}",
+     "app_name": "runtime_tools",
+     "operation_id": "get_record",
+     "timestamp": "2026-11-14T21:24:50.832735",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "get_coverage",
+     "arguments": {},
+     "result": "{\"sensors\": [{\"sensor\": \"winsec\", \"host\": \"WS-DWELLS-01\", \"window\": [\"2026-11-10T13:30:00Z\", \"2026-11-10T14:10:00Z\"], \"status\": \"not_collected\", \"reason\": \"Windows Event Forwarding stopped on WS-DWELLS-01 (Security and Sysmon not ingested)\"}, {\"sensor\": \"winsec\", \"host\": \"all other hosts, and the hosts above outside the listed window\", \"status\": \"ok\"}, {\"sensor\": \"sysmon\", \"host\": \"WS-DWELLS-01\", \"window\": [\"2026-11-10T13:30:00Z\", \"2026-11-10T14:10:00Z\"], \"status\": \"not_collected\", \"reason\": \"Windows Event Forwarding stopped on WS-DWELLS-01 (Security and Sysmon not ingested)\"}, {\"sensor\": \"sysmon\", \"host\": \"all other hosts, and the hosts above outside the listed window\", \"status\": \"ok\"}, {\"sensor\": \"proxy\", \"host\": \"all hosts\", \"status\": \"ok\"}, {\"sensor\": \"zeek_conn\", \"host\": \"core SPAN (workstations, servers)\", \"status\": \"ok\"}, {\"sensor\": \"zeek_dns\", \"host\": \"core SPAN (workstations, servers)\", \"status\": \"ok\"}, {\"sensor\": \"zeek_ssl\", \"host\": \"core SPAN (workstations, servers)\", \"status\": \"ok\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "get_coverage",
+     "timestamp": "2026-11-14T21:24:52.905804",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "zeek_conn",
+      "host": "WS-DWELLS-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z"
+     },
+     "result": "{\"total_matches\": 50, \"offset\": 0, \"returned\": 25, \"rows\": [{\"record_id\": \"S02-00001\", \"ts\": \"2026-11-10T13:23:07.995Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=57718 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.028613 orig_bytes=1204 resp_bytes=1139 conn_state=SF\"}, {\"record_id\": \"S02-00006\", \"ts\": \"2026-11-10T13:23:09.385Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=53012 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.021636 orig_bytes=1073 resp_bytes=1482 conn_state=SF\"}, {\"record_id\": \"S02-00011\", \"ts\": \"2026-11-10T13:23:41.785Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=56537 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.017529 orig_bytes=778 resp_bytes=1380 conn_state=SF\"}, {\"record_id\": \"S02-00017\", \"ts\": \"2026-11-10T13:23:43.849Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"ldap\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=60198 id.resp_h=10.20.20.10 id.resp_p=389 proto=tcp service=ldap duration=1.469605 orig_bytes=6474 resp_bytes=7308 conn_state=SF\"}, {\"record_id\": \"S02-00026\", \"ts\": \"2026-11-10T13:23:56.325Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=52761 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=7.813755 orig_bytes=7014 resp_bytes=50137 conn_state=SF\"}, {\"record_id\": \"S02-00028\", \"ts\": \"2026-11-10T13:25:08.725Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=57909 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.013351 orig_bytes=684 resp_bytes=1283 conn_state=SF\"}, {\"record_id\": \"S02-00033\", \"ts\": \"2026-11-10T13:26:47.605Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=61282 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.018531 orig_bytes=1052 resp_bytes=491 conn_state=SF\"}, {\"record_id\": \"S02-00038\", \"ts\": \"2026-11-10T13:26:50.233Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=61261 id.resp_h=10.20.20.10 id.resp_p=88 proto=tcp service=krb duration=0.040498 orig_bytes=972 resp_bytes=1543 conn_state=SF\"}, {\"record_id\": \"S02-00043\", \"ts\": \"2026-11-10T13:28:57.005Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"dns\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=55848 id.resp_h=10.20.20.10 id.resp_p=53 proto=udp service=dns duration=0.009468 orig_bytes=57 resp_bytes=73 conn_state=SF\"}, {\"record_id\": \"S02-00049\", \"ts\": \"2026-11-10T13:28:57.723Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"ldap\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=60966 id.resp_h=10.20.20.10 id.resp_p=389 proto=tcp service=ldap duration=2.444995 orig_bytes=4665 resp_bytes=7237 conn_state=SF\"}, {\"record_id\": \"S02-00057\", \"ts\": \"2026-11-10T13:31:46.514Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"dns\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=59272 id.resp_h=10.20.20.10 id.resp_p=53 proto=udp service=dns duration=0.056155 orig_bytes=57 resp_bytes=73 conn_state=SF\"}, {\"record_id\": \"S02-00068\", \"ts\": \"2026-11-10T13:35:04.046Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=51045 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.024659 orig_bytes=761 resp_bytes=1285 conn_state=SF\"}, {\"record_id\": \"S02-00075\", \"ts\": \"2026-11-10T13:35:06.356Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"smb\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=64193 id.resp_h=10.20.20.10 id.resp_p=445 proto=tcp service=smb duration=6.422732 orig_bytes=2812 resp_bytes=11499 conn_state=SF\"}, {\"record_id\": \"S02-00084\", \"ts\": \"2026-11-10T13:38:58.738Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=57566 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.020508 orig_bytes=548 resp_bytes=490 conn_state=SF\"}, {\"record_id\": \"S02-00090\", \"ts\": \"2026-11-10T13:39:04.490Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=63594 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.013299 orig_bytes=359 resp_bytes=1022 conn_state=SF\"}, {\"record_id\": \"S02-00095\", \"ts\": \"2026-11-10T13:39:39.564Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=55108 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.014804 orig_bytes=804 resp_bytes=427 conn_state=SF\"}, {\"record_id\": \"S02-00109\", \"ts\": \"2026-11-10T13:39:49.708Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=54734 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=2.327027 orig_bytes=1440 resp_bytes=4065 conn_state=SF\"}, {\"record_id\": \"S02-00112\", \"ts\": \"2026-11-10T13:39:49.873Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=50946 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=16.515471 orig_bytes=1831 resp_bytes=48428 conn_state=SF\"}, {\"record_id\": \"S02-00124\", \"ts\": \"2026-11-10T13:40:17.621Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"dns\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=63848 id.resp_h=10.20.20.10 id.resp_p=53 proto=udp service=dns duration=0.044285 orig_bytes=57 resp_bytes=73 conn_state=SF\"}, {\"record_id\": \"S02-00129\", \"ts\": \"2026-11-10T13:40:17.668Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=61180 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.035927 orig_bytes=862 resp_bytes=1222 conn_state=SF\"}, {\"record_id\": \"S02-00135\", \"ts\": \"2026-11-10T13:40:19.399Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"ldap\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=56621 id.resp_h=10.20.20.10 id.resp_p=389 proto=tcp service=ldap duration=1.977423 orig_bytes=219 resp_bytes=33147 conn_state=SF\"}, {\"record_id\": \"S02-00139\", \"ts\": \"2026-11-10T13:41:26.899Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=59029 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.016441 orig_bytes=907 resp_bytes=1331 conn_state=SF\"}, {\"record_id\": \"S02-00144\", \"ts\": \"2026-11-10T13:42:30.235Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=60928 id.resp_h=10.20.20.10 id.resp_p=88 proto=tcp service=krb duration=0.02829 orig_bytes=1479 resp_bytes=17042 conn_state=SF\"}, {\"record_id\": \"S02-00153\", \"ts\": \"2026-11-10T13:46:06.296Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"dns\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=64979 id.resp_h=10.20.20.10 id.resp_p=53 proto=udp service=dns duration=0.001644 orig_bytes=57 resp_bytes=73 conn_state=SF\"}, {\"record_id\": \"S02-00157\", \"ts\": \"2026-11-10T13:46:24.753Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=51418 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.012636 orig_bytes=718 resp_bytes=1149 conn_state=SF\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:24:56.405263",
+     "duration_ms": 2.077817916870117,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "zeek_conn",
+      "host": "WS-DWELLS-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z",
+      "offset": 25
+     },
+     "result": "{\"total_matches\": 50, \"offset\": 25, \"returned\": 25, \"rows\": [{\"record_id\": \"S02-00162\", \"ts\": \"2026-11-10T13:46:25.454Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=49599 id.resp_h=10.20.20.10 id.resp_p=88 proto=tcp service=krb duration=0.024379 orig_bytes=387 resp_bytes=1779 conn_state=SF\"}, {\"record_id\": \"S02-00167\", \"ts\": \"2026-11-10T13:46:29.801Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=58642 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.014352 orig_bytes=670 resp_bytes=784 conn_state=SF\"}, {\"record_id\": \"S02-00173\", \"ts\": \"2026-11-10T13:46:31.023Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=59331 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.031287 orig_bytes=500 resp_bytes=1034 conn_state=SF\"}, {\"record_id\": \"S02-00179\", \"ts\": \"2026-11-10T13:49:41.222Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=51958 id.resp_h=10.20.20.10 id.resp_p=88 proto=tcp service=krb duration=0.035923 orig_bytes=1478 resp_bytes=4479 conn_state=SF\"}, {\"record_id\": \"S02-00185\", \"ts\": \"2026-11-10T13:49:43.151Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"smb\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=64805 id.resp_h=10.20.20.10 id.resp_p=445 proto=tcp service=smb duration=4.005388 orig_bytes=5796 resp_bytes=4913 conn_state=SF\"}, {\"record_id\": \"S02-00195\", \"ts\": \"2026-11-10T13:51:07.595Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"ldap\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=58306 id.resp_h=10.20.20.10 id.resp_p=389 proto=tcp service=ldap duration=0.167266 orig_bytes=1226 resp_bytes=2154 conn_state=RSTO\"}, {\"record_id\": \"S02-00204\", \"ts\": \"2026-11-10T13:56:10.735Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"dns\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=61393 id.resp_h=10.20.20.10 id.resp_p=53 proto=udp service=dns duration=0.001269 orig_bytes=57 resp_bytes=73 conn_state=SF\"}, {\"record_id\": \"S02-00208\", \"ts\": \"2026-11-10T13:56:11.500Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"conn\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=55104 id.resp_h=10.20.20.10 id.resp_p=389 proto=tcp duration=0.766549 orig_bytes=0 resp_bytes=0 conn_state=RSTO\"}, {\"record_id\": \"S02-00217\", \"ts\": \"2026-11-10T14:01:27.412Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"dns\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=55590 id.resp_h=10.20.20.10 id.resp_p=53 proto=udp service=dns duration=0.002989 orig_bytes=57 resp_bytes=73 conn_state=SF\"}, {\"record_id\": \"S02-00223\", \"ts\": \"2026-11-10T14:07:56.277Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=59122 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.016498 orig_bytes=1059 resp_bytes=1198 conn_state=SF\"}, {\"record_id\": \"S02-00236\", \"ts\": \"2026-11-10T14:09:59.169Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=60314 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=1.45757 orig_bytes=2083 resp_bytes=18123 conn_state=SF\"}, {\"record_id\": \"S02-00239\", \"ts\": \"2026-11-10T14:11:43.032Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=64081 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.02924 orig_bytes=832 resp_bytes=1360 conn_state=SF\"}, {\"record_id\": \"S02-00246\", \"ts\": \"2026-11-10T14:15:46.134Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=64870 id.resp_h=10.20.20.10 id.resp_p=88 proto=tcp service=krb duration=0.033669 orig_bytes=1200 resp_bytes=1369 conn_state=SF\"}, {\"record_id\": \"S02-00252\", \"ts\": \"2026-11-10T14:15:47.729Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"ldap\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=52720 id.resp_h=10.20.20.10 id.resp_p=389 proto=tcp service=ldap duration=5.658289 orig_bytes=5861 resp_bytes=5015 conn_state=SF\"}, {\"record_id\": \"S02-00260\", \"ts\": \"2026-11-10T14:16:19.764Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"dns\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=58056 id.resp_h=10.20.20.10 id.resp_p=53 proto=udp service=dns duration=0.000275 orig_bytes=57 resp_bytes=73 conn_state=SF\"}, {\"record_id\": \"S02-00264\", \"ts\": \"2026-11-10T14:17:07.080Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=62422 id.resp_h=10.20.20.10 id.resp_p=88 proto=tcp service=krb duration=0.034918 orig_bytes=3206 resp_bytes=27787 conn_state=SF\"}, {\"record_id\": \"S02-00271\", \"ts\": \"2026-11-10T14:17:23.920Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"dns\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=53553 id.resp_h=10.20.20.10 id.resp_p=53 proto=udp service=dns duration=0.001211 orig_bytes=63 resp_bytes=100 conn_state=SF\"}, {\"record_id\": \"S02-00277\", \"ts\": \"2026-11-10T14:17:24.266Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"dns\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=57765 id.resp_h=10.20.20.10 id.resp_p=53 proto=udp service=dns duration=0.001012 orig_bytes=71 resp_bytes=107 conn_state=SF\"}, {\"record_id\": \"S02-00281\", \"ts\": \"2026-11-10T14:17:26.133Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"dns\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=58670 id.resp_h=10.20.20.10 id.resp_p=53 proto=udp service=dns duration=0.007432 orig_bytes=57 resp_bytes=73 conn_state=SF\"}, {\"record_id\": \"S02-00288\", \"ts\": \"2026-11-10T14:17:27.791Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"ldap\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=50696 id.resp_h=10.20.20.10 id.resp_p=389 proto=tcp service=ldap duration=3.141141 orig_bytes=979 resp_bytes=23788 conn_state=SF\"}, {\"record_id\": \"S02-00298\", \"ts\": \"2026-11-10T14:18:04.472Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=60400 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=1.733435 orig_bytes=2195 resp_bytes=2471 conn_state=SF\"}, {\"record_id\": \"S02-00301\", \"ts\": \"2026-11-10T14:18:13.862Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"ldap\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=49218 id.resp_h=10.20.20.10 id.resp_p=389 proto=tcp service=ldap duration=0.77516 orig_bytes=4619 resp_bytes=6292 conn_state=SF\"}, {\"record_id\": \"S02-00306\", \"ts\": \"2026-11-10T14:19:18.024Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"http\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=50568 id.resp_h=10.20.20.30 id.resp_p=8080 proto=tcp service=http duration=3.165408 orig_bytes=3062 resp_bytes=35381 conn_state=SF\"}, {\"record_id\": \"S02-00309\", \"ts\": \"2026-11-10T14:19:52.137Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=52253 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.01595 orig_bytes=1226 resp_bytes=1170 conn_state=SF\"}, {\"record_id\": \"S02-00314\", \"ts\": \"2026-11-10T14:19:54.104Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"ldap\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=56505 id.resp_h=10.20.20.10 id.resp_p=389 proto=tcp service=ldap duration=0.190718 orig_bytes=2970 resp_bytes=0 conn_state=RSTO\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:24:58.357502",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "winsec",
+      "host": "DC-LV-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z"
+     },
+     "result": "{\"total_matches\": 80, \"offset\": 0, \"returned\": 25, \"rows\": [{\"record_id\": \"S02-00002\", \"ts\": \"2026-11-10T13:23:08.001Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=57718 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=48287 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00003\", \"ts\": \"2026-11-10T13:23:08.009Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-1558827515-1136099784-3236759349-1009 TicketOptions=0x40810000 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.21 IpPort=57718\"}, {\"record_id\": \"S02-00007\", \"ts\": \"2026-11-10T13:23:09.391Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=53012 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=48287 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00009\", \"ts\": \"2026-11-10T13:23:09.398Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-1558827515-1136099784-3236759349-1009 TicketOptions=0x40810010 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.21 IpPort=53012\"}, {\"record_id\": \"S02-00012\", \"ts\": \"2026-11-10T13:23:41.791Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=56537 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=48287 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00013\", \"ts\": \"2026-11-10T13:23:41.795Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4768\", \"raw\": \"EventID=4768 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL TargetSid=S-1-5-21-1558827515-1136099784-3236759349-1005 ServiceName=krbtgt ServiceSid=S-1-5-21-1558827515-1136099784-3236759349-502 TicketOptions=0x40810010 TicketEncryptionType=0x12 PreAuthType=2 IpAddress=::ffff:10.20.10.21 IpPort=56537\"}, {\"record_id\": \"S02-00014\", \"ts\": \"2026-11-10T13:23:41.795Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-1558827515-1136099784-3236759349-1009 TicketOptions=0x40810010 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.21 IpPort=56537\"}, {\"record_id\": \"S02-00018\", \"ts\": \"2026-11-10T13:23:43.854Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=60198 DestAddress=10.20.20.10 DestPort=389 Protocol=6 FilterRTID=48302 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00020\", \"ts\": \"2026-11-10T13:23:43.873Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4624\", \"raw\": \"EventID=4624 SubjectUserName=SYSTEM SubjectDomainName=NT AUTHORITY SubjectLogonId=0x3e7 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x1570c6a3 LogonType=3 LogonProcessName=Kerberos AuthenticationPackageName=Kerberos WorkstationName=WS-DWELLS-01 IpAddress=::ffff:10.20.10.21 IpPort=60198\"}, {\"record_id\": \"S02-00027\", \"ts\": \"2026-11-10T13:24:00.084Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4634\", \"raw\": \"EventID=4634 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x1570c6a3 LogonType=3\"}, {\"record_id\": \"S02-00029\", \"ts\": \"2026-11-10T13:25:08.730Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=57909 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=48287 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00031\", \"ts\": \"2026-11-10T13:25:08.732Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4768\", \"raw\": \"EventID=4768 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL TargetSid=S-1-5-21-1558827515-1136099784-3236759349-1005 ServiceName=krbtgt ServiceSid=S-1-5-21-1558827515-1136099784-3236759349-502 TicketOptions=0x40000010 TicketEncryptionType=0x12 PreAuthType=2 IpAddress=::ffff:10.20.10.21 IpPort=57909\"}, {\"record_id\": \"S02-00034\", \"ts\": \"2026-11-10T13:26:47.610Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=61282 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=48287 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00035\", \"ts\": \"2026-11-10T13:26:47.611Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=FILE-LV-01$ ServiceSid=S-1-5-21-1558827515-1136099784-3236759349-1010 TicketOptions=0x40000000 TicketEncryptionType=0x11 IpAddress=::ffff:10.20.10.21 IpPort=61282\"}, {\"record_id\": \"S02-00039\", \"ts\": \"2026-11-10T13:26:50.238Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=61261 DestAddress=10.20.20.10 DestPort=88 Protocol=6 FilterRTID=48285 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00040\", \"ts\": \"2026-11-10T13:26:50.244Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-1558827515-1136099784-3236759349-1009 TicketOptions=0x40810010 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.21 IpPort=61261\"}, {\"record_id\": \"S02-00046\", \"ts\": \"2026-11-10T13:28:57.010Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5460 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\dns.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=55848 DestAddress=10.20.20.10 DestPort=53 Protocol=17 FilterRTID=48269 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00050\", \"ts\": \"2026-11-10T13:28:57.728Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=60966 DestAddress=10.20.20.10 DestPort=389 Protocol=6 FilterRTID=48302 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00059\", \"ts\": \"2026-11-10T13:31:46.520Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5460 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\dns.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=59272 DestAddress=10.20.20.10 DestPort=53 Protocol=17 FilterRTID=48269 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00069\", \"ts\": \"2026-11-10T13:35:04.055Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=51045 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=48287 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00070\", \"ts\": \"2026-11-10T13:35:04.056Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-1558827515-1136099784-3236759349-1009 TicketOptions=0x40810000 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.21 IpPort=51045\"}, {\"record_id\": \"S02-00071\", \"ts\": \"2026-11-10T13:35:04.058Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4768\", \"raw\": \"EventID=4768 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL TargetSid=S-1-5-21-1558827515-1136099784-3236759349-1005 ServiceName=krbtgt ServiceSid=S-1-5-21-1558827515-1136099784-3236759349-502 TicketOptions=0x40810010 TicketEncryptionType=0x12 PreAuthType=2 IpAddress=::ffff:10.20.10.21 IpPort=51045\"}, {\"record_id\": \"S02-00076\", \"ts\": \"2026-11-10T13:35:06.366Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=4 Application=System Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=64193 DestAddress=10.20.20.10 DestPort=445 Protocol=6 FilterRTID=48317 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00078\", \"ts\": \"2026-11-10T13:35:06.381Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4624\", \"raw\": \"EventID=4624 SubjectUserName=SYSTEM SubjectDomainName=NT AUTHORITY SubjectLogonId=0x3e7 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x15723ea2 LogonType=3 LogonProcessName=Kerberos AuthenticationPackageName=Kerberos WorkstationName=WS-DWELLS-01 IpAddress=::ffff:10.20.10.21 IpPort=64193\"}, {\"record_id\": \"S02-00080\", \"ts\": \"2026-11-10T13:35:13.060Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4634\", \"raw\": \"EventID=4634 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x15723ea2 LogonType=3\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:25:00.964411",
+     "duration_ms": 2.0036697387695312,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "winsec",
+      "host": "DC-LV-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z",
+      "contains": "4720"
+     },
+     "result": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:25:05.149996",
+     "duration_ms": 4.065513610839844,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "winsec",
+      "host": "DC-LV-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z",
+      "offset": 25
+     },
+     "result": "{\"total_matches\": 80, \"offset\": 25, \"returned\": 25, \"rows\": [{\"record_id\": \"S02-00083\", \"ts\": \"2026-11-10T13:38:32.853Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4776\", \"raw\": \"EventID=4776 PackageName=MICROSOFT_AUTHENTICATION_PACKAGE_V1_0 TargetUserName=WS-DWELLS-01$ Workstation=WS-DWELLS-01\"}, {\"record_id\": \"S02-00085\", \"ts\": \"2026-11-10T13:38:58.740Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=57566 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=48287 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00086\", \"ts\": \"2026-11-10T13:38:58.743Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4768\", \"raw\": \"EventID=4768 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL TargetSid=S-1-5-21-1558827515-1136099784-3236759349-1005 ServiceName=krbtgt ServiceSid=S-1-5-21-1558827515-1136099784-3236759349-502 TicketOptions=0x40810010 TicketEncryptionType=0x17 PreAuthType=2 IpAddress=::ffff:10.20.10.21 IpPort=57566\"}, {\"record_id\": \"S02-00091\", \"ts\": \"2026-11-10T13:39:04.499Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=63594 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=48287 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00092\", \"ts\": \"2026-11-10T13:39:04.501Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-1558827515-1136099784-3236759349-1009 TicketOptions=0x10 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.21 IpPort=63594\"}, {\"record_id\": \"S02-00096\", \"ts\": \"2026-11-10T13:39:39.571Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=55108 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=48287 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00098\", \"ts\": \"2026-11-10T13:39:39.575Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=FILE-LV-01$ ServiceSid=S-1-5-21-1558827515-1136099784-3236759349-1010 TicketOptions=0x40810000 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.21 IpPort=55108\"}, {\"record_id\": \"S02-00127\", \"ts\": \"2026-11-10T13:40:17.640Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5460 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\dns.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=63848 DestAddress=10.20.20.10 DestPort=53 Protocol=17 FilterRTID=48269 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00131\", \"ts\": \"2026-11-10T13:40:17.689Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=61180 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=48287 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00132\", \"ts\": \"2026-11-10T13:40:17.699Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-1558827515-1136099784-3236759349-1009 TicketOptions=0x40810000 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.21 IpPort=61180\"}, {\"record_id\": \"S02-00137\", \"ts\": \"2026-11-10T13:40:19.419Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=56621 DestAddress=10.20.20.10 DestPort=389 Protocol=6 FilterRTID=48302 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00140\", \"ts\": \"2026-11-10T13:41:26.906Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=59029 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=48287 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00142\", \"ts\": \"2026-11-10T13:41:26.911Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-1558827515-1136099784-3236759349-1009 TicketOptions=0x40810010 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.21 IpPort=59029\"}, {\"record_id\": \"S02-00146\", \"ts\": \"2026-11-10T13:42:30.258Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=60928 DestAddress=10.20.20.10 DestPort=88 Protocol=6 FilterRTID=48285 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00147\", \"ts\": \"2026-11-10T13:42:30.259Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-1558827515-1136099784-3236759349-1009 TicketOptions=0x40810000 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.21 IpPort=60928\"}, {\"record_id\": \"S02-00151\", \"ts\": \"2026-11-10T13:46:06.295Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5460 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\dns.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=64979 DestAddress=10.20.20.10 DestPort=53 Protocol=17 FilterRTID=48269 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00159\", \"ts\": \"2026-11-10T13:46:24.758Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=51418 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=48287 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00160\", \"ts\": \"2026-11-10T13:46:24.759Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4768\", \"raw\": \"EventID=4768 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL TargetSid=S-1-5-21-1558827515-1136099784-3236759349-1005 ServiceName=krbtgt ServiceSid=S-1-5-21-1558827515-1136099784-3236759349-502 TicketOptions=0x40810010 TicketEncryptionType=0x12 PreAuthType=2 IpAddress=::ffff:10.20.10.21 IpPort=51418\"}, {\"record_id\": \"S02-00164\", \"ts\": \"2026-11-10T13:46:25.460Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=49599 DestAddress=10.20.20.10 DestPort=88 Protocol=6 FilterRTID=48285 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00165\", \"ts\": \"2026-11-10T13:46:25.466Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=FILE-LV-01$ ServiceSid=S-1-5-21-1558827515-1136099784-3236759349-1010 TicketOptions=0x40810010 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.21 IpPort=49599\"}, {\"record_id\": \"S02-00168\", \"ts\": \"2026-11-10T13:46:29.805Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=58642 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=48287 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00170\", \"ts\": \"2026-11-10T13:46:29.813Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=FILE-LV-01$ ServiceSid=S-1-5-21-1558827515-1136099784-3236759349-1010 TicketOptions=0x10 TicketEncryptionType=0x11 IpAddress=::ffff:10.20.10.21 IpPort=58642\"}, {\"record_id\": \"S02-00175\", \"ts\": \"2026-11-10T13:46:31.049Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=59331 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=48287 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00176\", \"ts\": \"2026-11-10T13:46:31.050Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-1558827515-1136099784-3236759349-1009 TicketOptions=0x40810010 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.21 IpPort=59331\"}, {\"record_id\": \"S02-00181\", \"ts\": \"2026-11-10T13:49:41.245Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=51958 DestAddress=10.20.20.10 DestPort=88 Protocol=6 FilterRTID=48285 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:25:08.686562",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "winsec",
+      "host": "DC-LV-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z",
+      "offset": 50
+     },
+     "result": "{\"total_matches\": 80, \"offset\": 50, \"returned\": 25, \"rows\": [{\"record_id\": \"S02-00182\", \"ts\": \"2026-11-10T13:49:41.247Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-1558827515-1136099784-3236759349-1009 TicketOptions=0x40000000 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.21 IpPort=51958\"}, {\"record_id\": \"S02-00183\", \"ts\": \"2026-11-10T13:49:41.250Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4768\", \"raw\": \"EventID=4768 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL TargetSid=S-1-5-21-1558827515-1136099784-3236759349-1005 ServiceName=krbtgt ServiceSid=S-1-5-21-1558827515-1136099784-3236759349-502 TicketOptions=0x40810010 TicketEncryptionType=0x11 PreAuthType=2 IpAddress=::ffff:10.20.10.21 IpPort=51958\"}, {\"record_id\": \"S02-00187\", \"ts\": \"2026-11-10T13:49:43.174Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=4 Application=System Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=64805 DestAddress=10.20.20.10 DestPort=445 Protocol=6 FilterRTID=48317 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00189\", \"ts\": \"2026-11-10T13:49:43.245Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4624\", \"raw\": \"EventID=4624 SubjectUserName=SYSTEM SubjectDomainName=NT AUTHORITY SubjectLogonId=0x3e7 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x15740aaf LogonType=3 LogonProcessName=Kerberos AuthenticationPackageName=Kerberos WorkstationName=WS-DWELLS-01 IpAddress=::ffff:10.20.10.21 IpPort=64805\"}, {\"record_id\": \"S02-00190\", \"ts\": \"2026-11-10T13:49:44.978Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4634\", \"raw\": \"EventID=4634 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x15740aaf LogonType=3\"}, {\"record_id\": \"S02-00197\", \"ts\": \"2026-11-10T13:51:07.616Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=58306 DestAddress=10.20.20.10 DestPort=389 Protocol=6 FilterRTID=48302 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00202\", \"ts\": \"2026-11-10T13:56:10.734Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5460 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\dns.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=61393 DestAddress=10.20.20.10 DestPort=53 Protocol=17 FilterRTID=48269 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00210\", \"ts\": \"2026-11-10T13:56:11.514Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=55104 DestAddress=10.20.20.10 DestPort=389 Protocol=6 FilterRTID=48302 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00216\", \"ts\": \"2026-11-10T14:01:27.409Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5460 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\dns.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=55590 DestAddress=10.20.20.10 DestPort=53 Protocol=17 FilterRTID=48269 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00224\", \"ts\": \"2026-11-10T14:07:56.284Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=59122 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=48287 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00225\", \"ts\": \"2026-11-10T14:07:56.288Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-1558827515-1136099784-3236759349-1009 TicketOptions=0x40810000 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.21 IpPort=59122\"}, {\"record_id\": \"S02-00241\", \"ts\": \"2026-11-10T14:11:43.046Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=64081 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=48287 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00242\", \"ts\": \"2026-11-10T14:11:43.050Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-1558827515-1136099784-3236759349-1009 TicketOptions=0x40000000 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.21 IpPort=64081\"}, {\"record_id\": \"S02-00248\", \"ts\": \"2026-11-10T14:15:46.148Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=64870 DestAddress=10.20.20.10 DestPort=88 Protocol=6 FilterRTID=48285 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00249\", \"ts\": \"2026-11-10T14:15:46.152Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-1558827515-1136099784-3236759349-1009 TicketOptions=0x40810010 TicketEncryptionType=0x11 IpAddress=::ffff:10.20.10.21 IpPort=64870\"}, {\"record_id\": \"S02-00250\", \"ts\": \"2026-11-10T14:15:46.154Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4768\", \"raw\": \"EventID=4768 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL TargetSid=S-1-5-21-1558827515-1136099784-3236759349-1005 ServiceName=krbtgt ServiceSid=S-1-5-21-1558827515-1136099784-3236759349-502 TicketOptions=0x40810010 TicketEncryptionType=0x12 PreAuthType=2 IpAddress=::ffff:10.20.10.21 IpPort=64870\"}, {\"record_id\": \"S02-00254\", \"ts\": \"2026-11-10T14:15:47.743Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=52720 DestAddress=10.20.20.10 DestPort=389 Protocol=6 FilterRTID=48302 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00255\", \"ts\": \"2026-11-10T14:15:47.755Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4624\", \"raw\": \"EventID=4624 SubjectUserName=SYSTEM SubjectDomainName=NT AUTHORITY SubjectLogonId=0x3e7 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x15774cf2 LogonType=3 LogonProcessName=Kerberos AuthenticationPackageName=Kerberos WorkstationName=WS-DWELLS-01 IpAddress=::ffff:10.20.10.21 IpPort=52720\"}, {\"record_id\": \"S02-00257\", \"ts\": \"2026-11-10T14:15:53.460Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4634\", \"raw\": \"EventID=4634 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x15774cf2 LogonType=3\"}, {\"record_id\": \"S02-00258\", \"ts\": \"2026-11-10T14:16:19.761Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5460 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\dns.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=58056 DestAddress=10.20.20.10 DestPort=53 Protocol=17 FilterRTID=48269 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00266\", \"ts\": \"2026-11-10T14:17:07.094Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=62422 DestAddress=10.20.20.10 DestPort=88 Protocol=6 FilterRTID=48285 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00267\", \"ts\": \"2026-11-10T14:17:07.096Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-1558827515-1136099784-3236759349-1009 TicketOptions=0x40810000 TicketEncryptionType=0x17 IpAddress=::ffff:10.20.10.21 IpPort=62422\"}, {\"record_id\": \"S02-00269\", \"ts\": \"2026-11-10T14:17:23.917Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5460 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\dns.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=53553 DestAddress=10.20.20.10 DestPort=53 Protocol=17 FilterRTID=48269 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00275\", \"ts\": \"2026-11-10T14:17:24.263Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5460 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\dns.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=57765 DestAddress=10.20.20.10 DestPort=53 Protocol=17 FilterRTID=48269 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00283\", \"ts\": \"2026-11-10T14:17:26.135Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5460 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\dns.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=58670 DestAddress=10.20.20.10 DestPort=53 Protocol=17 FilterRTID=48269 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:25:13.122919",
+     "duration_ms": 4.723072052001953,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "zeek_dns",
+      "host": "WS-DWELLS-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z"
+     },
+     "result": "{\"total_matches\": 10, \"offset\": 0, \"returned\": 10, \"rows\": [{\"record_id\": \"S02-00044\", \"ts\": \"2026-11-10T13:28:57.005Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_dns\", \"event_type\": \"dns\", \"raw\": \"id.orig_h=10.20.10.21 id.resp_h=10.20.20.10 query=DC-LV-01.lakeview-acct.local qtype_name=A rcode_name=NOERROR answers=['10.20.20.10']\"}, {\"record_id\": \"S02-00058\", \"ts\": \"2026-11-10T13:31:46.516Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_dns\", \"event_type\": \"dns\", \"raw\": \"id.orig_h=10.20.10.21 id.resp_h=10.20.20.10 query=DC-LV-01.lakeview-acct.local qtype_name=A rcode_name=NOERROR answers=['10.20.20.10']\"}, {\"record_id\": \"S02-00125\", \"ts\": \"2026-11-10T13:40:17.621Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_dns\", \"event_type\": \"dns\", \"raw\": \"id.orig_h=10.20.10.21 id.resp_h=10.20.20.10 query=DC-LV-01.lakeview-acct.local qtype_name=A rcode_name=NOERROR answers=['10.20.20.10']\"}, {\"record_id\": \"S02-00154\", \"ts\": \"2026-11-10T13:46:06.296Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_dns\", \"event_type\": \"dns\", \"raw\": \"id.orig_h=10.20.10.21 id.resp_h=10.20.20.10 query=DC-LV-01.lakeview-acct.local qtype_name=A rcode_name=NOERROR answers=['10.20.20.10']\"}, {\"record_id\": \"S02-00205\", \"ts\": \"2026-11-10T13:56:10.735Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_dns\", \"event_type\": \"dns\", \"raw\": \"id.orig_h=10.20.10.21 id.resp_h=10.20.20.10 query=DC-LV-01.lakeview-acct.local qtype_name=A rcode_name=NOERROR answers=['10.20.20.10']\"}, {\"record_id\": \"S02-00218\", \"ts\": \"2026-11-10T14:01:27.412Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_dns\", \"event_type\": \"dns\", \"raw\": \"id.orig_h=10.20.10.21 id.resp_h=10.20.20.10 query=DC-LV-01.lakeview-acct.local qtype_name=A rcode_name=NOERROR answers=['10.20.20.10']\"}, {\"record_id\": \"S02-00261\", \"ts\": \"2026-11-10T14:16:19.764Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_dns\", \"event_type\": \"dns\", \"raw\": \"id.orig_h=10.20.10.21 id.resp_h=10.20.20.10 query=DC-LV-01.lakeview-acct.local qtype_name=A rcode_name=NOERROR answers=['10.20.20.10']\"}, {\"record_id\": \"S02-00272\", \"ts\": \"2026-11-10T14:17:23.920Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_dns\", \"event_type\": \"dns\", \"raw\": \"id.orig_h=10.20.10.21 id.resp_h=10.20.20.10 query=_kerberos._tcp.lakeview-acct.local qtype_name=SRV rcode_name=NOERROR answers=['0 100 88 DC-LV-01.lakeview-acct.local']\"}, {\"record_id\": \"S02-00278\", \"ts\": \"2026-11-10T14:17:24.266Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_dns\", \"event_type\": \"dns\", \"raw\": \"id.orig_h=10.20.10.21 id.resp_h=10.20.20.10 query=_ldap._tcp.lakeview-acct.local qtype_name=SRV rcode_name=NOERROR answers=['0 100 389 DC-LV-01.lakeview-acct.local']\"}, {\"record_id\": \"S02-00282\", \"ts\": \"2026-11-10T14:17:26.133Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_dns\", \"event_type\": \"dns\", \"raw\": \"id.orig_h=10.20.10.21 id.resp_h=10.20.20.10 query=DC-LV-01.lakeview-acct.local qtype_name=A rcode_name=NOERROR answers=['10.20.20.10']\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:25:15.518676",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "zeek_ssl",
+      "host": "WS-DWELLS-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z"
+     },
+     "result": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:25:24.537541",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "winsec",
+      "host": "DC-LV-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z",
+      "offset": 75
+     },
+     "result": "{\"total_matches\": 80, \"offset\": 75, \"returned\": 5, \"rows\": [{\"record_id\": \"S02-00290\", \"ts\": \"2026-11-10T14:17:27.804Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=50696 DestAddress=10.20.20.10 DestPort=389 Protocol=6 FilterRTID=48302 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00303\", \"ts\": \"2026-11-10T14:18:13.875Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=49218 DestAddress=10.20.20.10 DestPort=389 Protocol=6 FilterRTID=48302 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00311\", \"ts\": \"2026-11-10T14:19:52.142Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=52253 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=48287 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S02-00312\", \"ts\": \"2026-11-10T14:19:52.146Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-1558827515-1136099784-3236759349-1009 TicketOptions=0x40810010 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.21 IpPort=52253\"}, {\"record_id\": \"S02-00316\", \"ts\": \"2026-11-10T14:19:54.116Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=56505 DestAddress=10.20.20.10 DestPort=389 Protocol=6 FilterRTID=48302 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:25:27.788774",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "winsec",
+      "host": "DC-LV-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z",
+      "contains": "5145"
+     },
+     "result": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:25:34.566644",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "winsec",
+      "host": "FILE-LV-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z"
+     },
+     "result": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:25:52.021221",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "proxy",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z",
+      "contains": "upd.ps1"
+     },
+     "result": "{\"total_matches\": 1, \"offset\": 0, \"returned\": 1, \"rows\": [{\"record_id\": \"S02-00108\", \"ts\": \"2026-11-10T13:39:49.000Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"proxy\", \"event_type\": \"GET\", \"raw\": \"client=10.20.10.21 user=LAKEVIEW-ACCT\\\\dana.wells GET https://raw.githubusercontent.com/nb-tools/ps-utils/main/upd.ps1 status=200 ua=\\\"-\\\" proxy_action=ssl-inspect ssl_bump=bump tunnel_id=PT-e7fdb067bfa3443d client_src_port=54734\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:26:00.880582",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    }
+   ]
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "At 13:39:49 UTC, the proxy recorded a successful GET for https://raw.githubusercontent.com/nb-tools/ps-utils/main/upd.ps1 from WS-DWELLS-01 under dana.wells\u2019s account. This is an unapproved source and a PowerShell script download, but the record does not establish that the script was executed or what it contained.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S02-00108"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a connection to raw.githubusercontent.com on the same workstation at the same timestamp as the script GET; its setup record shares the tunnel ID and client source port with the GET.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S02-00106",
+     "S02-00108"
+    ]
+   },
+   {
+    "claim": "Network-flow records show SMB connections from WS-DWELLS-01 to DC-LV-01 at 13:35 and 13:49 UTC. These records do not identify the accessed share or the purpose of the sessions.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S02-00075",
+     "S02-00185"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Coverage reports that Windows Event Forwarding stopped on WS-DWELLS-01 from 13:30 to 14:10 UTC, so Security and Sysmon events were not ingested during the interval containing the download and reported PowerShell activity. The coverage result has no record ID.",
+   "The proxy record establishes a successful request for the script URL but does not provide the script contents or a file hash.",
+   "The SMB flow records identify endpoints and timing, but not the accessed share, files, or actions."
+  ],
+  "claims_not_established": [
+   "Whether upd.ps1 was downloaded to disk, launched, or otherwise executed.",
+   "Whether the downloaded script was malicious, benign, or what behavior it would perform.",
+   "Whether Dana initiated or authorized the download.",
+   "What resource or share was accessed in the SMB sessions to DC-LV-01, and whether those sessions were related to the script.",
+   "Whether the workstation was compromised or remains compromised."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover endpoint data from WS-DWELLS-01 for 13:30\u201314:10 UTC, including PowerShell operational/script-block logs, process-creation events, download and browser history, and relevant files or memory.",
+   "Retrieve the response body or a preserved copy and hash of upd.ps1, then validate its contents and provenance.",
+   "Review domain-controller SMB/share-access auditing and relevant FILE-LV-01 records to identify the resource accessed from WS-DWELLS-01.",
+   "Confirm with Dana and IT whether the download or related activity was expected or authorized."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 5,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 134.9,
+ "our_tool_calls": [
+  {
+   "i": 1,
+   "t": 1794713062.5513258,
+   "tool": "list_sources",
+   "args": {},
+   "n_chars": 124,
+   "result_preview": "{\"sources\": [\"proxy\", \"sysmon\", \"winsec\", \"zeek_conn\", \"zeek_dns\", \"zeek_ssl\"], \"known_hosts\": [\"DC-LV-01\", \"WS-DWELLS-01\"]}"
+  },
+  {
+   "i": 2,
+   "t": 1794713065.2522483,
+   "tool": "query",
+   "args": {
+    "source": "sysmon",
+    "host": "WS-DWELLS-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 0
+   },
+   "n_chars": 6237,
+   "result_preview": "{\"total_matches\": 15, \"offset\": 0, \"returned\": 15, \"rows\": [{\"record_id\": \"S02-00022\", \"ts\": \"2026-11-10T13:23:54.228Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=5968 Image=C:\\\\Program Files\\\\Zscaler\\\\ZSATray\\\\ZSATray.exe CommandLine=\\\"C:\\\\Program Files\\\\Zscaler\\\\ZSATray\\\\ZSATray.exe\\\" CurrentDirectory=C:\\\\Program Files\\\\Zscaler\\\\ZSATray\\\\ User=LAKEVIEW-ACCT\\\\dana.wells LogonId=0x12475073 IntegrityLevel=Medium ParentProcessId=5956 ParentImage=C:\\"
+  },
+  {
+   "i": 3,
+   "t": 1794713068.5307827,
+   "tool": "query",
+   "args": {
+    "source": "sysmon",
+    "host": "WS-DWELLS-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "powershell",
+    "offset": 0
+   },
+   "n_chars": 60,
+   "result_preview": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}"
+  },
+  {
+   "i": 4,
+   "t": 1794713071.2511702,
+   "tool": "query",
+   "args": {
+    "source": "winsec",
+    "host": "WS-DWELLS-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 0
+   },
+   "n_chars": 11258,
+   "result_preview": "{\"total_matches\": 26, \"offset\": 0, \"returned\": 25, \"rows\": [{\"record_id\": \"S02-00004\", \"ts\": \"2026-11-10T13:23:08.014Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5604 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14593 SourceAddress=10.20.10.21 SourcePort=57718 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=30459 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"re"
+  },
+  {
+   "i": 5,
+   "t": 1794713074.7138267,
+   "tool": "query",
+   "args": {
+    "source": "sysmon",
+    "host": "WS-KORTEGA-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 0
+   },
+   "n_chars": 60,
+   "result_preview": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}"
+  },
+  {
+   "i": 6,
+   "t": 1794713078.4271429,
+   "tool": "query",
+   "args": {
+    "source": "sysmon",
+    "host": "FILE-LV-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 0
+   },
+   "n_chars": 60,
+   "result_preview": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}"
+  },
+  {
+   "i": 7,
+   "t": 1794713083.0704613,
+   "tool": "query",
+   "args": {
+    "source": "proxy",
+    "host": "WS-DWELLS-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 0
+   },
+   "n_chars": 2932,
+   "result_preview": "{\"total_matches\": 7, \"offset\": 0, \"returned\": 7, \"rows\": [{\"record_id\": \"S02-00025\", \"ts\": \"2026-11-10T13:23:56.000Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.21 user=- CONNECT armmf.adobe.com:443 status=200 ua=\\\"Adobe Application Manager 2.0\\\" proxy_action=tunnel tunnel_cs_bytes=6582 tunnel_sc_bytes=50016 tunnel_duration_ms=7734\"}, {\"record_id\": \"S02-00106\", \"ts\": \"2026-11-10T13:39:49.000Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"proxy\", \"event_ty"
+  },
+  {
+   "i": 8,
+   "t": 1794713086.4978518,
+   "tool": "query",
+   "args": {
+    "source": "sysmon",
+    "host": "",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "powershell",
+    "offset": 0
+   },
+   "n_chars": 60,
+   "result_preview": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}"
+  },
+  {
+   "i": 9,
+   "t": 1794713090.8327355,
+   "tool": "get_record",
+   "args": {
+    "record_id": "S02-00108"
+   },
+   "n_chars": 364,
+   "result_preview": "{\"record_id\": \"S02-00108\", \"ts\": \"2026-11-10T13:39:49.000Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"proxy\", \"event_type\": \"GET\", \"raw\": \"client=10.20.10.21 user=LAKEVIEW-ACCT\\\\dana.wells GET https://raw.githubusercontent.com/nb-tools/ps-utils/main/upd.ps1 status=200 ua=\\\"-\\\" proxy_action=ssl-inspect ssl_bump=bump tunnel_id=PT-e7fdb067bfa3443d client_src_port=54734\"}"
+  },
+  {
+   "i": 10,
+   "t": 1794713092.9058049,
+   "tool": "get_coverage",
+   "args": {},
+   "n_chars": 1011,
+   "result_preview": "{\"sensors\": [{\"sensor\": \"winsec\", \"host\": \"WS-DWELLS-01\", \"window\": [\"2026-11-10T13:30:00Z\", \"2026-11-10T14:10:00Z\"], \"status\": \"not_collected\", \"reason\": \"Windows Event Forwarding stopped on WS-DWELLS-01 (Security and Sysmon not ingested)\"}, {\"sensor\": \"winsec\", \"host\": \"all other hosts, and the hosts above outside the listed window\", \"status\": \"ok\"}, {\"sensor\": \"sysmon\", \"host\": \"WS-DWELLS-01\", \"window\": [\"2026-11-10T13:30:00Z\", \"2026-11-10T14:10:00Z\"], \"status\": \"not_collected\", \"reason\": \"Wi"
+  },
+  {
+   "i": 11,
+   "t": 1794713096.4031858,
+   "tool": "query",
+   "args": {
+    "source": "zeek_conn",
+    "host": "WS-DWELLS-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 0
+   },
+   "n_chars": 7532,
+   "result_preview": "{\"total_matches\": 50, \"offset\": 0, \"returned\": 25, \"rows\": [{\"record_id\": \"S02-00001\", \"ts\": \"2026-11-10T13:23:07.995Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=57718 id.resp_h=10.20.20.10 id.resp_p=88 proto=udp service=krb duration=0.028613 orig_bytes=1204 resp_bytes=1139 conn_state=SF\"}, {\"record_id\": \"S02-00006\", \"ts\": \"2026-11-10T13:23:09.385Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.o"
+  },
+  {
+   "i": 12,
+   "t": 1794713098.355499,
+   "tool": "query",
+   "args": {
+    "source": "zeek_conn",
+    "host": "WS-DWELLS-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 25
+   },
+   "n_chars": 7523,
+   "result_preview": "{\"total_matches\": 50, \"offset\": 25, \"returned\": 25, \"rows\": [{\"record_id\": \"S02-00162\", \"ts\": \"2026-11-10T13:46:25.454Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.orig_h=10.20.10.21 id.orig_p=49599 id.resp_h=10.20.20.10 id.resp_p=88 proto=tcp service=krb duration=0.024379 orig_bytes=387 resp_bytes=1779 conn_state=SF\"}, {\"record_id\": \"S02-00167\", \"ts\": \"2026-11-10T13:46:29.801Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_conn\", \"event_type\": \"krb\", \"raw\": \"id.o"
+  },
+  {
+   "i": 13,
+   "t": 1794713100.9624083,
+   "tool": "query",
+   "args": {
+    "source": "winsec",
+    "host": "DC-LV-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 0
+   },
+   "n_chars": 10254,
+   "result_preview": "{\"total_matches\": 80, \"offset\": 0, \"returned\": 25, \"rows\": [{\"record_id\": \"S02-00002\", \"ts\": \"2026-11-10T13:23:08.001Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=57718 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=48287 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record"
+  },
+  {
+   "i": 14,
+   "t": 1794713105.145931,
+   "tool": "query",
+   "args": {
+    "source": "winsec",
+    "host": "DC-LV-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "4720",
+    "offset": 0
+   },
+   "n_chars": 60,
+   "result_preview": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}"
+  },
+  {
+   "i": 15,
+   "t": 1794713108.6865623,
+   "tool": "query",
+   "args": {
+    "source": "winsec",
+    "host": "DC-LV-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 25
+   },
+   "n_chars": 10341,
+   "result_preview": "{\"total_matches\": 80, \"offset\": 25, \"returned\": 25, \"rows\": [{\"record_id\": \"S02-00083\", \"ts\": \"2026-11-10T13:38:32.853Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4776\", \"raw\": \"EventID=4776 PackageName=MICROSOFT_AUTHENTICATION_PACKAGE_V1_0 TargetUserName=WS-DWELLS-01$ Workstation=WS-DWELLS-01\"}, {\"record_id\": \"S02-00085\", \"ts\": \"2026-11-10T13:38:58.740Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddis"
+  },
+  {
+   "i": 16,
+   "t": 1794713113.1229188,
+   "tool": "query",
+   "args": {
+    "source": "winsec",
+    "host": "DC-LV-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 50
+   },
+   "n_chars": 10269,
+   "result_preview": "{\"total_matches\": 80, \"offset\": 50, \"returned\": 25, \"rows\": [{\"record_id\": \"S02-00182\", \"ts\": \"2026-11-10T13:49:41.247Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-DWELLS-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-1558827515-1136099784-3236759349-1009 TicketOptions=0x40000000 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.21 IpPort=51958\"}, {\"record_id\": \"S02-00183\", \"ts\": \"2026-11-10T13:49:41"
+  },
+  {
+   "i": 17,
+   "t": 1794713115.5186768,
+   "tool": "query",
+   "args": {
+    "source": "zeek_dns",
+    "host": "WS-DWELLS-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 0
+   },
+   "n_chars": 2865,
+   "result_preview": "{\"total_matches\": 10, \"offset\": 0, \"returned\": 10, \"rows\": [{\"record_id\": \"S02-00044\", \"ts\": \"2026-11-10T13:28:57.005Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_dns\", \"event_type\": \"dns\", \"raw\": \"id.orig_h=10.20.10.21 id.resp_h=10.20.20.10 query=DC-LV-01.lakeview-acct.local qtype_name=A rcode_name=NOERROR answers=['10.20.20.10']\"}, {\"record_id\": \"S02-00058\", \"ts\": \"2026-11-10T13:31:46.516Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"zeek_dns\", \"event_type\": \"dns\", \"raw\": \"id.orig_h=10.20.10.21 id.resp_"
+  },
+  {
+   "i": 18,
+   "t": 1794713124.5375416,
+   "tool": "query",
+   "args": {
+    "source": "zeek_ssl",
+    "host": "WS-DWELLS-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 0
+   },
+   "n_chars": 60,
+   "result_preview": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}"
+  },
+  {
+   "i": 19,
+   "t": 1794713127.7887745,
+   "tool": "query",
+   "args": {
+    "source": "winsec",
+    "host": "DC-LV-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 75
+   },
+   "n_chars": 2174,
+   "result_preview": "{\"total_matches\": 80, \"offset\": 75, \"returned\": 5, \"rows\": [{\"record_id\": \"S02-00290\", \"ts\": \"2026-11-10T14:17:27.804Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=5312 Application=\\\\device\\\\harddiskvolume7\\\\windows\\\\system32\\\\lsass.exe Direction=%%14592 SourceAddress=10.20.10.21 SourcePort=50696 DestAddress=10.20.20.10 DestPort=389 Protocol=6 FilterRTID=48302 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record"
+  },
+  {
+   "i": 20,
+   "t": 1794713134.5666444,
+   "tool": "query",
+   "args": {
+    "source": "winsec",
+    "host": "DC-LV-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "5145",
+    "offset": 0
+   },
+   "n_chars": 60,
+   "result_preview": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}"
+  },
+  {
+   "i": 21,
+   "t": 1794713152.0212212,
+   "tool": "query",
+   "args": {
+    "source": "winsec",
+    "host": "FILE-LV-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 0
+   },
+   "n_chars": 60,
+   "result_preview": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}"
+  },
+  {
+   "i": 22,
+   "t": 1794713160.8805823,
+   "tool": "query",
+   "args": {
+    "source": "proxy",
+    "host": "",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "upd.ps1",
+    "offset": 0
+   },
+   "n_chars": 424,
+   "result_preview": "{\"total_matches\": 1, \"offset\": 0, \"returned\": 1, \"rows\": [{\"record_id\": \"S02-00108\", \"ts\": \"2026-11-10T13:39:49.000Z\", \"host\": \"WS-DWELLS-01\", \"source\": \"proxy\", \"event_type\": \"GET\", \"raw\": \"client=10.20.10.21 user=LAKEVIEW-ACCT\\\\dana.wells GET https://raw.githubusercontent.com/nb-tools/ps-utils/main/upd.ps1 status=200 ua=\\\"-\\\" proxy_action=ssl-inspect ssl_bump=bump tunnel_id=PT-e7fdb067bfa3443d client_src_port=54734\"}]}"
+  }
+ ]
+}

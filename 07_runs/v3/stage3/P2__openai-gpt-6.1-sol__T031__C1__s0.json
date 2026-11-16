@@ -1,0 +1,87 @@
+{
+ "scenario_id": "T031",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6.1-sol",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.89,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded two failed network logons for NWD\\\\leo.martins at 13:40:30 and 13:42:01 UTC. Both used NTLM, reported source address ::ffff:203.0.113.250, and had substatus 0xc000006a, indicating an incorrect password.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T031-00002\",\n        \"T031-00003\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:43:21 UTC, the domain controller recorded a successful Kerberos network logon for the same account from the same reported source address. The authentication package differed from the preceding failures.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T031-00005\"\n      ]\n    },\n    {\n      \"claim\": \"The failures followed by a successful logon warrant investigation for possible unauthorized account access, but this sequence alone does not distinguish credential misuse from legitimate authentication retries.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T031-00002\",\n        \"T031-00003\",\n        \"T031-00005\"\n      ]\n    },\n    {\n      \"claim\": \"Explorer UserAssist registry updates under leo.martins on WS-LMARTINS-01 occurred before, during, and after the authentication sequence. These records do not identify the originator of the domain-controller logons or establish that those logons were authorized.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T031-00001\",\n        \"T031-00004\",\n        \"T031-00006\",\n        \"T031-00002\",\n        \"T031-00003\",\n        \"T031-00005\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied authentication evidence consists of two failures and one success; it does not establish a broader attempt rate or account-targeting pattern across the requested hour (T031-00002, T031-00003, T031-00005).\",\n    \"The reported source address is not mapped to an originating endpoint or user by the supplied records. The workstation fields do not independently resolve that attribution (T031-00002, T031-00003, T031-00005).\",\n    \"The successful logon record does not identify the accessed resource or subsequent session activity (T031-00005).\",\n    \"The workstation records are registry-value updates, not process-creation or network-connection evidence linking workstation activity to these authentications (T031-00001, T031-00004, T031-00006).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether leo.martins initiated or authorized the failed attempts and successful logon (T031-00002, T031-00003, T031-00005).\",\n    \"Whether the failures and success were one continuous authentication workflow despite their shared account and source address (T031-00002, T031-00003, T031-00005).\",\n    \"Whether the activity represents password guessing, credential compromise, or legitimate retries (T031-00002, T031-00003, T031-00005).\",\n    \"Whether any unauthorized resource access or other harmful action followed the successful authentication (T031-00005).\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Resolve the reported source address using contemporaneous network, address-translation, and endpoint records; identify the originating device and process for T031-00002, T031-00003, and T031-00005.\",\n    \"Obtain complete domain-controller authentication records for 13:20\u201314:20 UTC, including Kerberos ticket events and NTLM validation events, to correlate the failures and success in T031-00002, T031-00003, and T031-00005.\",\n    \"Correlate target logon ID 0x14a82d29 with resource-access, privilege, and session events to determine what followed T031-00005.\",\n    \"Ask leo.martins to verify the timing, device, and intended resource associated with T031-00002, T031-00003, and T031-00005; corroborate the response with endpoint telemetry.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 2291,
+    "output": 1101
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.89,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded two failed network logons for NWD\\leo.martins at 13:40:30 and 13:42:01 UTC. Both used NTLM, reported source address ::ffff:203.0.113.250, and had substatus 0xc000006a, indicating an incorrect password.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T031-00002",
+     "T031-00003"
+    ]
+   },
+   {
+    "claim": "At 13:43:21 UTC, the domain controller recorded a successful Kerberos network logon for the same account from the same reported source address. The authentication package differed from the preceding failures.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T031-00005"
+    ]
+   },
+   {
+    "claim": "The failures followed by a successful logon warrant investigation for possible unauthorized account access, but this sequence alone does not distinguish credential misuse from legitimate authentication retries.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T031-00002",
+     "T031-00003",
+     "T031-00005"
+    ]
+   },
+   {
+    "claim": "Explorer UserAssist registry updates under leo.martins on WS-LMARTINS-01 occurred before, during, and after the authentication sequence. These records do not identify the originator of the domain-controller logons or establish that those logons were authorized.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T031-00001",
+     "T031-00004",
+     "T031-00006",
+     "T031-00002",
+     "T031-00003",
+     "T031-00005"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied authentication evidence consists of two failures and one success; it does not establish a broader attempt rate or account-targeting pattern across the requested hour (T031-00002, T031-00003, T031-00005).",
+   "The reported source address is not mapped to an originating endpoint or user by the supplied records. The workstation fields do not independently resolve that attribution (T031-00002, T031-00003, T031-00005).",
+   "The successful logon record does not identify the accessed resource or subsequent session activity (T031-00005).",
+   "The workstation records are registry-value updates, not process-creation or network-connection evidence linking workstation activity to these authentications (T031-00001, T031-00004, T031-00006)."
+  ],
+  "claims_not_established": [
+   "Whether leo.martins initiated or authorized the failed attempts and successful logon (T031-00002, T031-00003, T031-00005).",
+   "Whether the failures and success were one continuous authentication workflow despite their shared account and source address (T031-00002, T031-00003, T031-00005).",
+   "Whether the activity represents password guessing, credential compromise, or legitimate retries (T031-00002, T031-00003, T031-00005).",
+   "Whether any unauthorized resource access or other harmful action followed the successful authentication (T031-00005)."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Resolve the reported source address using contemporaneous network, address-translation, and endpoint records; identify the originating device and process for T031-00002, T031-00003, and T031-00005.",
+   "Obtain complete domain-controller authentication records for 13:20\u201314:20 UTC, including Kerberos ticket events and NTLM validation events, to correlate the failures and success in T031-00002, T031-00003, and T031-00005.",
+   "Correlate target logon ID 0x14a82d29 with resource-access, privilege, and session events to determine what followed T031-00005.",
+   "Ask leo.martins to verify the timing, device, and intended resource associated with T031-00002, T031-00003, and T031-00005; corroborate the response with endpoint telemetry."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 17.4
+}

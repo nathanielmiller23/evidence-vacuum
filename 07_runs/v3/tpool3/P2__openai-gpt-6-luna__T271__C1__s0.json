@@ -1,0 +1,83 @@
+{
+ "scenario_id": "T271",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded two failed network logons for raul.diaz from 198.51.100.77; both report an incorrect-password substatus.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T271-00015\",\n        \"T271-00016\"\n      ]\n    },\n    {\n      \"claim\": \"About 81 seconds after the second failure, the domain controller recorded a successful NTLM network logon for raul.diaz from the same source address.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T271-00016\",\n        \"T271-00018\"\n      ]\n    },\n    {\n      \"claim\": \"The successful network logon from that source is inconsistent with the inventory's stated remote-administration practice: no VPN, and remote administration only from WS-SBYRNE-01.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T271-00015\",\n        \"T271-00016\",\n        \"T271-00018\"\n      ]\n    },\n    {\n      \"claim\": \"Raul also had a separate interactive logon on WS-RDIAZ-01 earlier in the review window; its logon ID differs from the later network logon, so it does not establish that the network authentication was part of that local session.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T271-00001\",\n        \"T271-00018\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The domain-controller records identify the source as 198.51.100.77 but do not identify the device or person behind that address. (T271-00015, T271-00016, T271-00018)\",\n    \"The successful logon record does not show what resource was accessed or what actions followed. (T271-00018)\",\n    \"The available records do not establish whether the successful authentication was authorized or whether the password was compromised.\"\n  ],\n  \"claims_not_established\": [\n    \"The identity, location, or ownership of the source represented by 198.51.100.77 is not established by these records. (T271-00015, T271-00016, T271-00018)\",\n    \"The records do not establish what the successful network logon accessed or whether it led to further activity. (T271-00018)\",\n    \"The records do not establish whether raul.diaz or an authorized operator initiated the authentication.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate 198.51.100.77 with network, firewall, DHCP, and endpoint records to identify the originating device and determine whether the address is expected.\",\n    \"Review domain-controller and target-resource logs associated with the successful logon ID 0x149f03dc for accessed services, resources, and subsequent activity.\",\n    \"Confirm with raul.diaz and IT whether this authentication was expected; review relevant account and password-change history.\"\n  ],\n  \"unrelated_findings\": [\n    \"Firefox on WS-RDIAZ-01 accessed Facebook and established a proxy tunnel to slack.com; Slack is not listed among approved services. These observations do not determine whether the alerted authentication was malicious. (T271-00023, T271-00028, T271-00031, T271-00032)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 6431,
+    "output": 1575
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded two failed network logons for raul.diaz from 198.51.100.77; both report an incorrect-password substatus.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T271-00015",
+     "T271-00016"
+    ]
+   },
+   {
+    "claim": "About 81 seconds after the second failure, the domain controller recorded a successful NTLM network logon for raul.diaz from the same source address.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T271-00016",
+     "T271-00018"
+    ]
+   },
+   {
+    "claim": "The successful network logon from that source is inconsistent with the inventory's stated remote-administration practice: no VPN, and remote administration only from WS-SBYRNE-01.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T271-00015",
+     "T271-00016",
+     "T271-00018"
+    ]
+   },
+   {
+    "claim": "Raul also had a separate interactive logon on WS-RDIAZ-01 earlier in the review window; its logon ID differs from the later network logon, so it does not establish that the network authentication was part of that local session.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T271-00001",
+     "T271-00018"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The domain-controller records identify the source as 198.51.100.77 but do not identify the device or person behind that address. (T271-00015, T271-00016, T271-00018)",
+   "The successful logon record does not show what resource was accessed or what actions followed. (T271-00018)",
+   "The available records do not establish whether the successful authentication was authorized or whether the password was compromised."
+  ],
+  "claims_not_established": [
+   "The identity, location, or ownership of the source represented by 198.51.100.77 is not established by these records. (T271-00015, T271-00016, T271-00018)",
+   "The records do not establish what the successful network logon accessed or whether it led to further activity. (T271-00018)",
+   "The records do not establish whether raul.diaz or an authorized operator initiated the authentication."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate 198.51.100.77 with network, firewall, DHCP, and endpoint records to identify the originating device and determine whether the address is expected.",
+   "Review domain-controller and target-resource logs associated with the successful logon ID 0x149f03dc for accessed services, resources, and subsequent activity.",
+   "Confirm with raul.diaz and IT whether this authentication was expected; review relevant account and password-change history."
+  ],
+  "unrelated_findings": [
+   "Firefox on WS-RDIAZ-01 accessed Facebook and established a proxy tunnel to slack.com; Slack is not listed among approved services. These observations do not determine whether the alerted authentication was malicious. (T271-00023, T271-00028, T271-00031, T271-00032)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 9,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 17.4
+}

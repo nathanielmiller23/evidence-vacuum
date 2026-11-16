@@ -1,0 +1,88 @@
+{
+ "scenario_id": "T059",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:50:50 UTC, WS-ICHEN-01 sent approximately 51 MB of client-side data through the explicit proxy in a CONNECT tunnel to quickshare-drop.net; the proxy record reports 51,000,000 client-to-server bytes and Zeek records 51,000,389 originating bytes.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T059-00174\",\n        \"T059-00175\"\n      ]\n    },\n    {\n      \"claim\": \"The transfer was made by Chrome running as ivy.chen; endpoint network telemetry ties the proxy connection to Chrome process 4120.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T059-00176\",\n        \"T059-00177\"\n      ]\n    },\n    {\n      \"claim\": \"About five minutes before the transfer, ivy.chen ran PowerShell to compress \\\\\\\\FILE-NWD-01\\\\Shared\\\\Clients into a ZIP file in her temporary directory, and telemetry recorded creation of that ZIP.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T059-00102\",\n        \"T059-00104\"\n      ]\n    },\n    {\n      \"claim\": \"The close timing between the client-share archive creation and the large upload to an unapproved file-sharing destination is consistent with potential data exfiltration.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T059-00102\",\n        \"T059-00104\",\n        \"T059-00174\",\n        \"T059-00175\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and Zeek records establish a large client-to-server transfer in a tunnel to quickshare-drop.net, but do not expose the uploaded payload contents. (T059-00174, T059-00175)\",\n    \"The archive creation and upload are close in time, but the available records do not directly link the ZIP file to the bytes sent in the tunnel. (T059-00102, T059-00104, T059-00174, T059-00175)\",\n    \"The records identify the account and Chrome process associated with the transfer, but do not establish who was physically operating the workstation or whether the account was compromised. (T059-00176, T059-00177)\"\n  ],\n  \"claims_not_established\": [\n    \"That the uploaded data was the ZIP file or contained data from the Clients share.\",\n    \"That ivy.chen knowingly initiated or authorized the upload.\",\n    \"That malware, rather than user activity, caused or facilitated the transfer.\",\n    \"The identity of the recipient or what happened to the uploaded data after transfer.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze C:\\\\Users\\\\ivy.chen\\\\AppData\\\\Local\\\\Temp\\\\c.zip, including its contents, creation metadata, and any available file hash.\",\n    \"Collect browser history, upload-page artifacts, and endpoint file-access telemetry to determine whether the archive or other client data was selected for upload.\",\n    \"Obtain proxy inspection or destination-side records, if available, to identify the request path, upload object, recipient, and resulting account activity.\",\n    \"Interview ivy.chen and verify whether the transfer was authorized for a business purpose.\",\n    \"Review endpoint security and process telemetry around the transfer for evidence of browser compromise or other tooling.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox Update.exe ran briefly as SYSTEM on WS-ICHEN-01; Dropbox is not listed among approved software or services. This is separate from the alerted transfer. (T059-00011, T059-00013)\",\n    \"Chrome accessed Google account sign-in pages and the AWS console during the review window; these services are not listed as approved. These observations do not establish a connection to the alerted upload. (T059-00139, T059-00140, T059-00212, T059-00213)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 60299,
+    "output": 1924
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "At 13:50:50 UTC, WS-ICHEN-01 sent approximately 51 MB of client-side data through the explicit proxy in a CONNECT tunnel to quickshare-drop.net; the proxy record reports 51,000,000 client-to-server bytes and Zeek records 51,000,389 originating bytes.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00174",
+     "T059-00175"
+    ]
+   },
+   {
+    "claim": "The transfer was made by Chrome running as ivy.chen; endpoint network telemetry ties the proxy connection to Chrome process 4120.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00176",
+     "T059-00177"
+    ]
+   },
+   {
+    "claim": "About five minutes before the transfer, ivy.chen ran PowerShell to compress \\\\FILE-NWD-01\\Shared\\Clients into a ZIP file in her temporary directory, and telemetry recorded creation of that ZIP.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00102",
+     "T059-00104"
+    ]
+   },
+   {
+    "claim": "The close timing between the client-share archive creation and the large upload to an unapproved file-sharing destination is consistent with potential data exfiltration.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T059-00102",
+     "T059-00104",
+     "T059-00174",
+     "T059-00175"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and Zeek records establish a large client-to-server transfer in a tunnel to quickshare-drop.net, but do not expose the uploaded payload contents. (T059-00174, T059-00175)",
+   "The archive creation and upload are close in time, but the available records do not directly link the ZIP file to the bytes sent in the tunnel. (T059-00102, T059-00104, T059-00174, T059-00175)",
+   "The records identify the account and Chrome process associated with the transfer, but do not establish who was physically operating the workstation or whether the account was compromised. (T059-00176, T059-00177)"
+  ],
+  "claims_not_established": [
+   "That the uploaded data was the ZIP file or contained data from the Clients share.",
+   "That ivy.chen knowingly initiated or authorized the upload.",
+   "That malware, rather than user activity, caused or facilitated the transfer.",
+   "The identity of the recipient or what happened to the uploaded data after transfer."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze C:\\Users\\ivy.chen\\AppData\\Local\\Temp\\c.zip, including its contents, creation metadata, and any available file hash.",
+   "Collect browser history, upload-page artifacts, and endpoint file-access telemetry to determine whether the archive or other client data was selected for upload.",
+   "Obtain proxy inspection or destination-side records, if available, to identify the request path, upload object, recipient, and resulting account activity.",
+   "Interview ivy.chen and verify whether the transfer was authorized for a business purpose.",
+   "Review endpoint security and process telemetry around the transfer for evidence of browser compromise or other tooling."
+  ],
+  "unrelated_findings": [
+   "Dropbox Update.exe ran briefly as SYSTEM on WS-ICHEN-01; Dropbox is not listed among approved software or services. This is separate from the alerted transfer. (T059-00011, T059-00013)",
+   "Chrome accessed Google account sign-in pages and the AWS console during the review window; these services are not listed as approved. These observations do not establish a connection to the alerted upload. (T059-00139, T059-00140, T059-00212, T059-00213)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.7
+}

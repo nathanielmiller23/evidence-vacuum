@@ -1,0 +1,88 @@
+{
+ "scenario_id": "T059",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 1,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45:20, ivy.chen ran PowerShell to compress \\\\\\\\FILE-NWD-01\\\\Shared\\\\Clients into C:\\\\Users\\\\ivy.chen\\\\AppData\\\\Local\\\\Temp\\\\c.zip; the archive file was created at 13:45:24.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T059-00102\", \"T059-00104\"]\n    },\n    {\n      \"claim\": \"At 13:50:50, WS-ICHEN-01 sent approximately 51 MB through the explicit proxy to quickshare-drop.net, with only about 8.8 KB returned. The proxy records 51,000,000 client-to-server bytes and Zeek records 51,000,389 originating bytes.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T059-00174\", \"T059-00175\"]\n    },\n    {\n      \"claim\": \"The large transfer was made by Chrome running as NWD\\\\ivy.chen, and its destination was a file-sharing service not listed as approved in the supplied inventory.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T059-00175\", \"T059-00176\", \"T059-00177\"]\n    },\n    {\n      \"claim\": \"The close timing between archiving client files and sending a similarly large outbound transfer to an unapproved sharing domain supports suspected exfiltration. The available records do not directly prove that c.zip was the uploaded payload.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T059-00102\", \"T059-00104\", \"T059-00174\", \"T059-00175\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and Zeek records establish the destination and transfer volume, but do not expose the uploaded content.\",\n    \"The evidence does not directly link c.zip, or any specific file, to the 51 MB transfer.\",\n    \"The records identify Chrome and the user account, but do not establish the user's intent or whether another person was operating the session.\"\n  ],\n  \"claims_not_established\": [\n    \"That c.zip was the file uploaded, or that the transfer contained the archived client data.\",\n    \"What data was transferred, who controlled or received it, or whether the transfer was authorized for a business purpose.\",\n    \"Whether the account holder personally initiated or knowingly approved the transfer.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Proxy/DLP upload metadata or content inspection, including any request-level details available for the quickshare-drop.net transfer.\",\n    \"The c.zip file's size, hash, contents, creation and access records, and relevant file-server access auditing.\",\n    \"Browser history or other endpoint artifacts that can associate the upload with a selected file or user action.\",\n    \"Business-owner or user confirmation of whether this destination and transfer were authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"A Dropbox updater ran under SYSTEM on WS-ICHEN-01; the supplied inventory does not list Dropbox as approved. Validate separately whether Dropbox is installed or used, without treating this updater activity as proof of the alerted transfer. (T059-00011, T059-00012, T059-00013, T059-00014)\",\n    \"Chrome accessed Google account sign-in pages shortly before the large transfer; this is separate browsing activity and does not establish the transfer's payload or intent. (T059-00139, T059-00140, T059-00149, T059-00152)\",\n    \"Chrome accessed the AWS console and its assets; AWS is not listed among approved services, so review separately. This activity does not by itself determine the alerted transfer. (T059-00212, T059-00213, T059-00214, T059-00215, T059-00222)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 60299,
+    "output": 1905
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45:20, ivy.chen ran PowerShell to compress \\\\FILE-NWD-01\\Shared\\Clients into C:\\Users\\ivy.chen\\AppData\\Local\\Temp\\c.zip; the archive file was created at 13:45:24.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00102",
+     "T059-00104"
+    ]
+   },
+   {
+    "claim": "At 13:50:50, WS-ICHEN-01 sent approximately 51 MB through the explicit proxy to quickshare-drop.net, with only about 8.8 KB returned. The proxy records 51,000,000 client-to-server bytes and Zeek records 51,000,389 originating bytes.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00174",
+     "T059-00175"
+    ]
+   },
+   {
+    "claim": "The large transfer was made by Chrome running as NWD\\ivy.chen, and its destination was a file-sharing service not listed as approved in the supplied inventory.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00175",
+     "T059-00176",
+     "T059-00177"
+    ]
+   },
+   {
+    "claim": "The close timing between archiving client files and sending a similarly large outbound transfer to an unapproved sharing domain supports suspected exfiltration. The available records do not directly prove that c.zip was the uploaded payload.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T059-00102",
+     "T059-00104",
+     "T059-00174",
+     "T059-00175"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and Zeek records establish the destination and transfer volume, but do not expose the uploaded content.",
+   "The evidence does not directly link c.zip, or any specific file, to the 51 MB transfer.",
+   "The records identify Chrome and the user account, but do not establish the user's intent or whether another person was operating the session."
+  ],
+  "claims_not_established": [
+   "That c.zip was the file uploaded, or that the transfer contained the archived client data.",
+   "What data was transferred, who controlled or received it, or whether the transfer was authorized for a business purpose.",
+   "Whether the account holder personally initiated or knowingly approved the transfer."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Proxy/DLP upload metadata or content inspection, including any request-level details available for the quickshare-drop.net transfer.",
+   "The c.zip file's size, hash, contents, creation and access records, and relevant file-server access auditing.",
+   "Browser history or other endpoint artifacts that can associate the upload with a selected file or user action.",
+   "Business-owner or user confirmation of whether this destination and transfer were authorized."
+  ],
+  "unrelated_findings": [
+   "A Dropbox updater ran under SYSTEM on WS-ICHEN-01; the supplied inventory does not list Dropbox as approved. Validate separately whether Dropbox is installed or used, without treating this updater activity as proof of the alerted transfer. (T059-00011, T059-00012, T059-00013, T059-00014)",
+   "Chrome accessed Google account sign-in pages shortly before the large transfer; this is separate browsing activity and does not establish the transfer's payload or intent. (T059-00139, T059-00140, T059-00149, T059-00152)",
+   "Chrome accessed the AWS console and its assets; AWS is not listed among approved services, so review separately. This activity does not by itself determine the alerted transfer. (T059-00212, T059-00213, T059-00214, T059-00215, T059-00222)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.4
+}

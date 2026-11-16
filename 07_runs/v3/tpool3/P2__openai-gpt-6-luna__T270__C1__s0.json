@@ -1,0 +1,83 @@
+{
+ "scenario_id": "T270",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"FILE-ORC-01 ran the Keystone backup agent as ORCHARD\\\\svc-safe with a Nightly job targeting ingest.keystone-backup.net.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T270-00251\", \"T270-00252\"]\n    },\n    {\n      \"claim\": \"The proxy recorded a 640,000,000-byte client-to-server transfer through a successful CONNECT tunnel to ingest.keystone-backup.net; the corresponding connection was made by Keystone agent.exe running as svc-safe.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T270-00253\", \"T270-00260\", \"T270-00261\"]\n    },\n    {\n      \"claim\": \"The observed destination, agent, service account, and transfer size match the inventory\u2019s approved Keystone offsite backup activity, which is expected to upload several hundred MB.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T270-00251\", \"T270-00252\", \"T270-00253\", \"T270-00260\"]\n    },\n    {\n      \"claim\": \"The transfer records are timestamped 13:49:51 UTC, rather than around 13:46 UTC as described in the alert.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T270-00253\", \"T270-00260\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records show the large transfer at 13:49:51 UTC, not at approximately 13:46 UTC; they do not establish whether the alert timestamp reflects a different event time or clock.\",\n    \"The proxy records transfer volume and destination, but the supplied logs do not expose the contents of the encrypted transfer.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the alert timestamp of approximately 13:46 UTC is a reporting or clock discrepancy.\",\n    \"Whether the backed-up data included any particular files or sensitive information.\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [\n    \"If exact timestamp reconciliation is required before closure, compare the original alert\u2019s event-time basis with proxy and endpoint clock synchronization.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-THART-01 (help desk) established an RDP session to FILE-ORC-01; the inventory says remote administration is only performed from WS-SBYRNE-01. Review separately; this does not establish that the backup transfer was malicious. Records: T270-00010, T270-00017, T270-00021.\",\n    \"FILE-ORC-01 made an SSH connection to PROXY-ORC-01, a remote-access service not listed as approved. Investigate separately; this occurs after the observed backup transfer and does not decide this alert. Record: T270-00450.\",\n    \"A network log shows a failed SMB authentication attempt for disabled account svc_mgmt from DC-ORC-01 to FILE-ORC-01. Investigate separately; it is unrelated to the observed backup transfer. Records: T270-00447, T270-00449.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 70857,
+    "output": 1226
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "FILE-ORC-01 ran the Keystone backup agent as ORCHARD\\svc-safe with a Nightly job targeting ingest.keystone-backup.net.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T270-00251",
+     "T270-00252"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a 640,000,000-byte client-to-server transfer through a successful CONNECT tunnel to ingest.keystone-backup.net; the corresponding connection was made by Keystone agent.exe running as svc-safe.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T270-00253",
+     "T270-00260",
+     "T270-00261"
+    ]
+   },
+   {
+    "claim": "The observed destination, agent, service account, and transfer size match the inventory\u2019s approved Keystone offsite backup activity, which is expected to upload several hundred MB.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T270-00251",
+     "T270-00252",
+     "T270-00253",
+     "T270-00260"
+    ]
+   },
+   {
+    "claim": "The transfer records are timestamped 13:49:51 UTC, rather than around 13:46 UTC as described in the alert.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T270-00253",
+     "T270-00260"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records show the large transfer at 13:49:51 UTC, not at approximately 13:46 UTC; they do not establish whether the alert timestamp reflects a different event time or clock.",
+   "The proxy records transfer volume and destination, but the supplied logs do not expose the contents of the encrypted transfer."
+  ],
+  "claims_not_established": [
+   "Whether the alert timestamp of approximately 13:46 UTC is a reporting or clock discrepancy.",
+   "Whether the backed-up data included any particular files or sensitive information."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [
+   "If exact timestamp reconciliation is required before closure, compare the original alert\u2019s event-time basis with proxy and endpoint clock synchronization."
+  ],
+  "unrelated_findings": [
+   "WS-THART-01 (help desk) established an RDP session to FILE-ORC-01; the inventory says remote administration is only performed from WS-SBYRNE-01. Review separately; this does not establish that the backup transfer was malicious. Records: T270-00010, T270-00017, T270-00021.",
+   "FILE-ORC-01 made an SSH connection to PROXY-ORC-01, a remote-access service not listed as approved. Investigate separately; this occurs after the observed backup transfer and does not decide this alert. Record: T270-00450.",
+   "A network log shows a failed SMB authentication attempt for disabled account svc_mgmt from DC-ORC-01 to FILE-ORC-01. Investigate separately; it is unrelated to the observed backup transfer. Records: T270-00447, T270-00449."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 13.4
+}

@@ -1,0 +1,85 @@
+{
+ "scenario_id": "S26",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.84,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The process associated with the dump alert was the VetChart vendor dump tool, launched with arguments targeting vetchart.exe and writing vetchart_hang.dmp to the VetChart dump directory.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S26-00186\", \"S26-00187\"]\n    },\n    {\n      \"claim\": \"The tool ran as cole.price, at medium integrity, with cmd.exe as its parent; the available records do not show it being launched by the IT administrator.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S26-00186\", \"S26-00187\"]\n    },\n    {\n      \"claim\": \"The tool exited at 13:43:43 UTC, shortly before the alert's approximate 13:44 UTC time, but the supplied records do not directly document creation of the alerted file.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S26-00192\", \"S26-00193\"]\n    },\n    {\n      \"claim\": \"The tool path, target process, and dump filename are consistent with the documented VetChart crash-dump practice, while the recorded user and launch context leave authorization unresolved.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S26-00186\", \"S26-00187\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not include a file-creation event confirming the dump's creation, exact timestamp, size, or contents.\",\n    \"No hash, signature validation, or other verification of the vcdump.exe binary is included.\",\n    \"The records do not establish who requested or authorized cole.price to run the tool, or whether this execution corresponds to the open VetChart ticket.\"\n  ],\n  \"claims_not_established\": [\n    \"That the alerted dump was actually created by the recorded vcdump.exe execution.\",\n    \"That the dump contained sensitive data or was transferred or accessed by another process or person.\",\n    \"That cole.price's execution of the tool was authorized under the open ticket.\",\n    \"That this activity was malicious, or that it was a routine and authorized crash-dump collection.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Retrieve file-system or EDR file telemetry for the alerted .dmp, including creation time, path, size, hash, and process attribution.\",\n    \"Validate the vcdump.exe binary and confirm the dump target and output against the VetChart ticket.\",\n    \"Confirm with the ticket owner or IT whether cole.price was asked or authorized to run the dump tool, and review the tool's full process ancestry.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate review: cole.price ran hidden PowerShell to export recent Security events to C:\\\\Reports\\\\audit.csv; the supplied records establish the command, not whether the export succeeded. (S26-00157, S26-00158)\",\n    \"Separate review: cole.price ran WMIC to enumerate running services, followed shortly by a workstation-to-domain-controller SMB connection using the workstation machine account. The records do not establish that this was remote administration. (S26-00027, S26-00028, S26-00035, S26-00038, S26-00039)\",\n    \"Separate review: Explorer registry values for hidden-file display settings were changed during the review window. (S26-00154, S26-00166)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 44577,
+    "output": 2498
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.84,
+  "supporting_observations": [
+   {
+    "claim": "The process associated with the dump alert was the VetChart vendor dump tool, launched with arguments targeting vetchart.exe and writing vetchart_hang.dmp to the VetChart dump directory.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S26-00186",
+     "S26-00187"
+    ]
+   },
+   {
+    "claim": "The tool ran as cole.price, at medium integrity, with cmd.exe as its parent; the available records do not show it being launched by the IT administrator.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S26-00186",
+     "S26-00187"
+    ]
+   },
+   {
+    "claim": "The tool exited at 13:43:43 UTC, shortly before the alert's approximate 13:44 UTC time, but the supplied records do not directly document creation of the alerted file.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S26-00192",
+     "S26-00193"
+    ]
+   },
+   {
+    "claim": "The tool path, target process, and dump filename are consistent with the documented VetChart crash-dump practice, while the recorded user and launch context leave authorization unresolved.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S26-00186",
+     "S26-00187"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not include a file-creation event confirming the dump's creation, exact timestamp, size, or contents.",
+   "No hash, signature validation, or other verification of the vcdump.exe binary is included.",
+   "The records do not establish who requested or authorized cole.price to run the tool, or whether this execution corresponds to the open VetChart ticket."
+  ],
+  "claims_not_established": [
+   "That the alerted dump was actually created by the recorded vcdump.exe execution.",
+   "That the dump contained sensitive data or was transferred or accessed by another process or person.",
+   "That cole.price's execution of the tool was authorized under the open ticket.",
+   "That this activity was malicious, or that it was a routine and authorized crash-dump collection."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Retrieve file-system or EDR file telemetry for the alerted .dmp, including creation time, path, size, hash, and process attribution.",
+   "Validate the vcdump.exe binary and confirm the dump target and output against the VetChart ticket.",
+   "Confirm with the ticket owner or IT whether cole.price was asked or authorized to run the dump tool, and review the tool's full process ancestry."
+  ],
+  "unrelated_findings": [
+   "Separate review: cole.price ran hidden PowerShell to export recent Security events to C:\\Reports\\audit.csv; the supplied records establish the command, not whether the export succeeded. (S26-00157, S26-00158)",
+   "Separate review: cole.price ran WMIC to enumerate running services, followed shortly by a workstation-to-domain-controller SMB connection using the workstation machine account. The records do not establish that this was remote administration. (S26-00027, S26-00028, S26-00035, S26-00038, S26-00039)",
+   "Separate review: Explorer registry values for hidden-file display settings were changed during the review window. (S26-00154, S26-00166)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 8,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 28.0
+}

@@ -1,0 +1,99 @@
+{
+ "scenario_id": "T014",
+ "condition": "C3",
+ "variant": "P1",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.93,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:41:49 UTC, PowerShell ran on WS-MLOPEZ-01 under omar.haddad's logon, using the documented patch command and path \\\\\\\\FILE-HD-01\\\\IT\\\\Deploy-Patches.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T014-00177\", \"T014-00178\"]\n    },\n    {\n      \"claim\": \"The PowerShell process launched wusa to install a Windows 11 update, and the proxy recorded a large Windows Update download shortly afterward; this is consistent with the scheduled workstation patching practice.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T014-00179\", \"T014-00182\", \"T014-00184\"]\n    },\n    {\n      \"claim\": \"Kerberos records show WS-MLOPEZ-01 requesting a ticket for ben.carter to access WS-BCARTER-01, followed by a network logon for ben.carter on that workstation from WS-MLOPEZ-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T014-00089\", \"T014-00090\", \"T014-00092\"]\n    },\n    {\n      \"claim\": \"A later domain-controller record shows maria.lopez logging on from WS-BCARTER-01; the provided evidence does not explain the cross-workstation, cross-account authentication activity.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T014-00112\"]\n    },\n    {\n      \"claim\": \"The proxy recorded connections identified by their user agents as Google Drive and Dropbox Update. The inventory says no file-sharing or cloud-storage services other than Microsoft 365/OneDrive and CobaltVault are approved, so these connections warrant investigation; the records do not establish that data was uploaded.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T014-00219\", \"T014-00286\"]\n    },\n    {\n      \"claim\": \"WS-MLOPEZ-01 made an SMB connection to FILE-HD-01, where a network logon was recorded as ANONYMOUS LOGON. These records do not establish what resource, if any, was accessed.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T014-00213\", \"T014-00217\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Winsec and Sysmon records for WS-LPARK-01 are unavailable from 13:30 to 14:10 UTC due to a collection outage; other hosts and listed network sensors are reported as covered.\",\n    \"The provided records do not include enough process or file-access detail to identify which process initiated the Google Drive and Dropbox connections, what content moved, or whether the anonymous SMB session accessed a share.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish whether the cross-workstation authentication involving ben.carter and maria.lopez was authorized or malicious.\",\n    \"The evidence does not establish whether the Google Drive or Dropbox connections transferred organizational data or were initiated by a user, installed software, or another process.\",\n    \"The anonymous SMB logon does not establish that any files or shares were accessed.\",\n    \"The patching evidence is consistent with authorized activity, but does not independently establish who operated the session or whether the user saw the reported window.\",\n    \"The available evidence does not prove malicious execution, nor does it explain all potentially concerning activity well enough to support a benign disposition.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Validate with Omar Haddad and change-management records that he initiated the patching session, and review the patch script, its integrity, and related FILE-HD-01 access logs.\",\n    \"Review DC-HD-01 and WS-BCARTER-01 authentication and logon details around 13:30\u201313:34 UTC, and confirm with the affected users whether the cross-workstation activity was expected.\",\n    \"Identify the processes and software responsible for the Google Drive and Dropbox connections, and review endpoint and proxy records for associated transfers or files.\",\n    \"Review FILE-HD-01 SMB share-access auditing for the anonymous session at 13:43 UTC.\",\n    \"Recover or otherwise review WS-LPARK-01 records for the collection-outage window, including any account creation or group-membership changes.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 61049,
+    "output": 2511
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.93,
+  "supporting_observations": [
+   {
+    "claim": "At 13:41:49 UTC, PowerShell ran on WS-MLOPEZ-01 under omar.haddad's logon, using the documented patch command and path \\\\FILE-HD-01\\IT\\Deploy-Patches.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T014-00177",
+     "T014-00178"
+    ]
+   },
+   {
+    "claim": "The PowerShell process launched wusa to install a Windows 11 update, and the proxy recorded a large Windows Update download shortly afterward; this is consistent with the scheduled workstation patching practice.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T014-00179",
+     "T014-00182",
+     "T014-00184"
+    ]
+   },
+   {
+    "claim": "Kerberos records show WS-MLOPEZ-01 requesting a ticket for ben.carter to access WS-BCARTER-01, followed by a network logon for ben.carter on that workstation from WS-MLOPEZ-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T014-00089",
+     "T014-00090",
+     "T014-00092"
+    ]
+   },
+   {
+    "claim": "A later domain-controller record shows maria.lopez logging on from WS-BCARTER-01; the provided evidence does not explain the cross-workstation, cross-account authentication activity.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T014-00112"
+    ]
+   },
+   {
+    "claim": "The proxy recorded connections identified by their user agents as Google Drive and Dropbox Update. The inventory says no file-sharing or cloud-storage services other than Microsoft 365/OneDrive and CobaltVault are approved, so these connections warrant investigation; the records do not establish that data was uploaded.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T014-00219",
+     "T014-00286"
+    ]
+   },
+   {
+    "claim": "WS-MLOPEZ-01 made an SMB connection to FILE-HD-01, where a network logon was recorded as ANONYMOUS LOGON. These records do not establish what resource, if any, was accessed.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T014-00213",
+     "T014-00217"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Winsec and Sysmon records for WS-LPARK-01 are unavailable from 13:30 to 14:10 UTC due to a collection outage; other hosts and listed network sensors are reported as covered.",
+   "The provided records do not include enough process or file-access detail to identify which process initiated the Google Drive and Dropbox connections, what content moved, or whether the anonymous SMB session accessed a share."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish whether the cross-workstation authentication involving ben.carter and maria.lopez was authorized or malicious.",
+   "The evidence does not establish whether the Google Drive or Dropbox connections transferred organizational data or were initiated by a user, installed software, or another process.",
+   "The anonymous SMB logon does not establish that any files or shares were accessed.",
+   "The patching evidence is consistent with authorized activity, but does not independently establish who operated the session or whether the user saw the reported window.",
+   "The available evidence does not prove malicious execution, nor does it explain all potentially concerning activity well enough to support a benign disposition."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Validate with Omar Haddad and change-management records that he initiated the patching session, and review the patch script, its integrity, and related FILE-HD-01 access logs.",
+   "Review DC-HD-01 and WS-BCARTER-01 authentication and logon details around 13:30\u201313:34 UTC, and confirm with the affected users whether the cross-workstation activity was expected.",
+   "Identify the processes and software responsible for the Google Drive and Dropbox connections, and review endpoint and proxy records for associated transfers or files.",
+   "Review FILE-HD-01 SMB share-access auditing for the anonymous session at 13:43 UTC.",
+   "Recover or otherwise review WS-LPARK-01 records for the collection-outage window, including any account creation or group-membership changes."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 31.2
+}

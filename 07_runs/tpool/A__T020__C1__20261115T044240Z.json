@@ -1,0 +1,114 @@
+{
+ "run_id": "A__T020__C1__20261115T044240Z",
+ "config": "A",
+ "scenario_id": "T020",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 519,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 208551,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:46:45 UTC, FILE-HD-01 launched the installed CobaltVault agent as svc-bkp with the Nightly job targeting ingest.cobaltvault.net; its parent was the Windows services process.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T020-00278\", \"T020-00279\"]\n    },\n    {\n      \"claim\": \"The CobaltVault agent connected through the proxy, and a subsequent tunnel carried 640,000,000 client bytes to ingest.cobaltvault.net. Sysmon attributes the proxy connections to the same agent process.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T020-00281\", \"T020-00282\", \"T020-00283\", \"T020-00284\", \"T020-00285\", \"T020-00286\", \"T020-00287\", \"T020-00288\"]\n    },\n    {\n      \"claim\": \"The transfer\u2019s executable, account, destination, and approximate volume are consistent with the organization\u2019s stated approved CobaltVault backup activity, so the large transfer alone does not establish malicious exfiltration.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T020-00278\", \"T020-00279\", \"T020-00285\", \"T020-00286\", \"T020-00288\"]\n    },\n    {\n      \"claim\": \"Before the transfer, a Kerberos service-ticket event for svc-bkp and FILE-HD-01$ recorded source IP 23.129.64.210; the available environment context says there is no VPN.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T020-00264\"]\n    },\n    {\n      \"claim\": \"PowerShell on WS-OHADDAD-01 used explicit credentials targeting svc-bkp on FILE-HD-01 earlier in the review window. This could be authorized activity, but the supplied evidence does not explain it.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T020-00147\"]\n    },\n    {\n      \"claim\": \"After the backup transfer, lucy.park initiated an RDP connection from WS-LPARK-01 and established a type-10 logon to FILE-HD-01. This is notable against the stated practice that remote administration is done only from WS-OHADDAD-01, but the records do not establish the session\u2019s purpose or connection to the transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T020-00339\", \"T020-00342\", \"T020-00349\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records the destination and tunnel byte counts, but the supplied records do not expose the contents of the large transfer or identify which files were uploaded (T020-00285, T020-00286).\",\n    \"The svc-bkp Kerberos event records a source IP but does not identify the person or device behind that address or explain why it requested the ticket (T020-00264).\",\n    \"The explicit-credential event identifies PowerShell and the target account, but supplies no command line or stated purpose (T020-00147).\",\n    \"The RDP records establish a session by lucy.park but do not show what actions, if any, occurred within it (T020-00342, T020-00349).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the svc-bkp ticket request from 23.129.64.210 was authorized, misattributed, or malicious (T020-00264).\",\n    \"Whether the CobaltVault agent uploaded expected backup data or data selected for unauthorized exfiltration (T020-00278, T020-00285, T020-00286).\",\n    \"Whether the earlier explicit use of svc-bkp credentials was part of authorized administration or related to the unusual ticket request (T020-00147, T020-00264).\",\n    \"Whether lucy.park\u2019s RDP session was authorized and whether it was related to the alert (T020-00342, T020-00349).\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Correlate the 13:45:53 UTC svc-bkp Kerberos event with DC, firewall, and network records to identify the originating system and determine whether the source IP is expected.\",\n    \"Review CobaltVault job, audit, and upload logs to identify the uploaded files, backup scope, job authorization, and destination account; compare with prior backup runs.\",\n    \"Verify the CobaltVault agent\u2019s signature, hash, service configuration, and scheduled-job history against the approved installation.\",\n    \"Retrieve the PowerShell command history or script and administrative audit trail for the svc-bkp explicit-credential use on WS-OHADDAD-01.\",\n    \"Confirm the authorization and activity for lucy.park\u2019s RDP session, including session actions and any related help-desk ticket.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 76572,
+    "output": 2852,
+    "reasoning": 1717
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "At 13:46:45 UTC, FILE-HD-01 launched the installed CobaltVault agent as svc-bkp with the Nightly job targeting ingest.cobaltvault.net; its parent was the Windows services process.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00278",
+     "T020-00279"
+    ]
+   },
+   {
+    "claim": "The CobaltVault agent connected through the proxy, and a subsequent tunnel carried 640,000,000 client bytes to ingest.cobaltvault.net. Sysmon attributes the proxy connections to the same agent process.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00281",
+     "T020-00282",
+     "T020-00283",
+     "T020-00284",
+     "T020-00285",
+     "T020-00286",
+     "T020-00287",
+     "T020-00288"
+    ]
+   },
+   {
+    "claim": "The transfer\u2019s executable, account, destination, and approximate volume are consistent with the organization\u2019s stated approved CobaltVault backup activity, so the large transfer alone does not establish malicious exfiltration.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T020-00278",
+     "T020-00279",
+     "T020-00285",
+     "T020-00286",
+     "T020-00288"
+    ]
+   },
+   {
+    "claim": "Before the transfer, a Kerberos service-ticket event for svc-bkp and FILE-HD-01$ recorded source IP 23.129.64.210; the available environment context says there is no VPN.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00264"
+    ]
+   },
+   {
+    "claim": "PowerShell on WS-OHADDAD-01 used explicit credentials targeting svc-bkp on FILE-HD-01 earlier in the review window. This could be authorized activity, but the supplied evidence does not explain it.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00147"
+    ]
+   },
+   {
+    "claim": "After the backup transfer, lucy.park initiated an RDP connection from WS-LPARK-01 and established a type-10 logon to FILE-HD-01. This is notable against the stated practice that remote administration is done only from WS-OHADDAD-01, but the records do not establish the session\u2019s purpose or connection to the transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00339",
+     "T020-00342",
+     "T020-00349"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records the destination and tunnel byte counts, but the supplied records do not expose the contents of the large transfer or identify which files were uploaded (T020-00285, T020-00286).",
+   "The svc-bkp Kerberos event records a source IP but does not identify the person or device behind that address or explain why it requested the ticket (T020-00264).",
+   "The explicit-credential event identifies PowerShell and the target account, but supplies no command line or stated purpose (T020-00147).",
+   "The RDP records establish a session by lucy.park but do not show what actions, if any, occurred within it (T020-00342, T020-00349)."
+  ],
+  "claims_not_established": [
+   "Whether the svc-bkp ticket request from 23.129.64.210 was authorized, misattributed, or malicious (T020-00264).",
+   "Whether the CobaltVault agent uploaded expected backup data or data selected for unauthorized exfiltration (T020-00278, T020-00285, T020-00286).",
+   "Whether the earlier explicit use of svc-bkp credentials was part of authorized administration or related to the unusual ticket request (T020-00147, T020-00264).",
+   "Whether lucy.park\u2019s RDP session was authorized and whether it was related to the alert (T020-00342, T020-00349)."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Correlate the 13:45:53 UTC svc-bkp Kerberos event with DC, firewall, and network records to identify the originating system and determine whether the source IP is expected.",
+   "Review CobaltVault job, audit, and upload logs to identify the uploaded files, backup scope, job authorization, and destination account; compare with prior backup runs.",
+   "Verify the CobaltVault agent\u2019s signature, hash, service configuration, and scheduled-job history against the approved installation.",
+   "Retrieve the PowerShell command history or script and administrative audit trail for the svc-bkp explicit-credential use on WS-OHADDAD-01.",
+   "Confirm the authorization and activity for lucy.park\u2019s RDP session, including session actions and any related help-desk ticket."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 20,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 27.3
+}

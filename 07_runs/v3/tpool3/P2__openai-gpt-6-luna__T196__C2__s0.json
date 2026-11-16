@@ -1,0 +1,90 @@
+{
+ "scenario_id": "T196",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"During the alerted period, WS-EBROOKS-01 made repeated connections to the internal proxy at 10.54.20.30:8080. The records show connections at 13:39:11, 13:41:11, 13:43:58, 13:48:59, 13:53:54, 13:59:21, 14:04:10, and 14:08:46 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T196-00191\",\n        \"T196-00210\",\n        \"T196-00228\",\n        \"T196-00321\",\n        \"T196-00354\",\n        \"T196-00374\",\n        \"T196-00383\",\n        \"T196-00403\"\n      ]\n    },\n    {\n      \"claim\": \"From 13:48:59 through 14:08:46 UTC, the proxy connections recur at roughly five-minute intervals; the recorded response sizes are consistently about 46 KB. This pattern is compatible with a periodic update check, but does not identify the application or destination.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T196-00321\",\n        \"T196-00354\",\n        \"T196-00374\",\n        \"T196-00383\",\n        \"T196-00403\"\n      ]\n    },\n    {\n      \"claim\": \"The available connection records identify the internal proxy as the destination, not the external HTTPS destination or the process that initiated the requests.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T196-00191\",\n        \"T196-00210\",\n        \"T196-00228\",\n        \"T196-00321\",\n        \"T196-00354\",\n        \"T196-00374\",\n        \"T196-00383\",\n        \"T196-00403\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"These records show connections to the explicit proxy over port 8080, but contain no URL, CONNECT target, SNI, or other external destination detail.\",\n    \"The connection records do not identify the originating process, executable, user context, or request content.\",\n    \"The records support a recurring pattern, but do not establish whether the traffic was encrypted HTTPS or what it carried.\"\n  ],\n  \"claims_not_established\": [\n    \"That the requests were made by the approved StockPilot updater or were destined for update.stockpilot.com.\",\n    \"That the requests reached an unapproved or malicious service, or that they carried command-and-control or exfiltrated data.\",\n    \"That the alerted traffic was malicious or benign based solely on the available network connection records.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Proxy access logs for the cited times, including CONNECT targets, URLs or hostnames, response status, and user-agent/request metadata.\",\n    \"Endpoint process and network telemetry for WS-EBROOKS-01 that attributes these connections to an executable and user.\",\n    \"StockPilot updater logs and executable details (path, version, signature, and hash) to compare with the observed timing and response sizes.\"\n  ],\n  \"unrelated_findings\": [\n    \"Investigate separately: Kerberos records show ken.ito authentication for the WS-KITO-01 service originating from WS-EBROOKS-01's IP, followed by a network logon for ken.ito on WS-KITO-01 from that same IP. This is inconsistent with the stated practice that remote administration is done only from WS-KITO-01; it does not establish that the alerted proxy traffic is malicious. (T196-00087, T196-00088, T196-00090)\",\n    \"Investigate separately: WS-EBROOKS-01 connected to FILE-BLU-01 over SMB and the server recorded an ANONYMOUS LOGON using NTLM. This occurred after the alerted interval and does not decide this alert. (T196-00415, T196-00419)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 35264,
+    "output": 2568
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "During the alerted period, WS-EBROOKS-01 made repeated connections to the internal proxy at 10.54.20.30:8080. The records show connections at 13:39:11, 13:41:11, 13:43:58, 13:48:59, 13:53:54, 13:59:21, 14:04:10, and 14:08:46 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T196-00191",
+     "T196-00210",
+     "T196-00228",
+     "T196-00321",
+     "T196-00354",
+     "T196-00374",
+     "T196-00383",
+     "T196-00403"
+    ]
+   },
+   {
+    "claim": "From 13:48:59 through 14:08:46 UTC, the proxy connections recur at roughly five-minute intervals; the recorded response sizes are consistently about 46 KB. This pattern is compatible with a periodic update check, but does not identify the application or destination.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T196-00321",
+     "T196-00354",
+     "T196-00374",
+     "T196-00383",
+     "T196-00403"
+    ]
+   },
+   {
+    "claim": "The available connection records identify the internal proxy as the destination, not the external HTTPS destination or the process that initiated the requests.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T196-00191",
+     "T196-00210",
+     "T196-00228",
+     "T196-00321",
+     "T196-00354",
+     "T196-00374",
+     "T196-00383",
+     "T196-00403"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "These records show connections to the explicit proxy over port 8080, but contain no URL, CONNECT target, SNI, or other external destination detail.",
+   "The connection records do not identify the originating process, executable, user context, or request content.",
+   "The records support a recurring pattern, but do not establish whether the traffic was encrypted HTTPS or what it carried."
+  ],
+  "claims_not_established": [
+   "That the requests were made by the approved StockPilot updater or were destined for update.stockpilot.com.",
+   "That the requests reached an unapproved or malicious service, or that they carried command-and-control or exfiltrated data.",
+   "That the alerted traffic was malicious or benign based solely on the available network connection records."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Proxy access logs for the cited times, including CONNECT targets, URLs or hostnames, response status, and user-agent/request metadata.",
+   "Endpoint process and network telemetry for WS-EBROOKS-01 that attributes these connections to an executable and user.",
+   "StockPilot updater logs and executable details (path, version, signature, and hash) to compare with the observed timing and response sizes."
+  ],
+  "unrelated_findings": [
+   "Investigate separately: Kerberos records show ken.ito authentication for the WS-KITO-01 service originating from WS-EBROOKS-01's IP, followed by a network logon for ken.ito on WS-KITO-01 from that same IP. This is inconsistent with the stated practice that remote administration is done only from WS-KITO-01; it does not establish that the alerted proxy traffic is malicious. (T196-00087, T196-00088, T196-00090)",
+   "Investigate separately: WS-EBROOKS-01 connected to FILE-BLU-01 over SMB and the server recorded an ANONYMOUS LOGON using NTLM. This occurred after the alerted interval and does not decide this alert. (T196-00415, T196-00419)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 21,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 25.6
+}

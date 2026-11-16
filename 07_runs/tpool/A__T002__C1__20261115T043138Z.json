@@ -1,0 +1,134 @@
+{
+ "run_id": "A__T002__C1__20261115T043138Z",
+ "config": "A",
+ "scenario_id": "T002",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 35,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 17504,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Repeated failures for svc-claimsync occur on FILE-HD-01 at roughly one-minute intervals, with bad-password status (0xc000006a); the failures shown span 13:31\u201313:46 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T002-00001\", \"T002-00003\", \"T002-00006\", \"T002-00007\", \"T002-00009\", \"T002-00011\", \"T002-00013\", \"T002-00015\", \"T002-00017\", \"T002-00020\", \"T002-00023\", \"T002-00025\", \"T002-00028\", \"T002-00030\", \"T002-00032\", \"T002-00034\"]\n    },\n    {\n      \"claim\": \"Domain-controller records also show failed authentication for svc-claimsync, including Kerberos pre-authentication failures (status 0x18) and NTLM bad-password failures (status 0xc000006a).\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T002-00002\", \"T002-00010\", \"T002-00012\", \"T002-00016\", \"T002-00018\", \"T002-00021\", \"T002-00022\", \"T002-00026\", \"T002-00027\", \"T002-00029\", \"T002-00031\", \"T002-00033\", \"T002-00035\"]\n    },\n    {\n      \"claim\": \"The repeated failures are consistent with a stale password after the scheduled 13:30 UTC rotation: the inventory says ClaimSync re-authenticates every minute and requires a manual job update after rotation. This explains the pattern but does not establish that every event in the window is benign.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T002-00001\", \"T002-00003\", \"T002-00006\", \"T002-00007\", \"T002-00009\", \"T002-00011\", \"T002-00013\", \"T002-00015\", \"T002-00017\", \"T002-00020\", \"T002-00023\", \"T002-00025\", \"T002-00028\", \"T002-00030\", \"T002-00032\", \"T002-00034\"]\n    },\n    {\n      \"claim\": \"At 13:39:31 UTC, WS-LPARK-01 recorded a SYSTEM process, C:\\\\Program Files\\\\Commvault\\\\ContentStore\\\\Base\\\\GxCVD.exe, using explicit credentials for svc-claimsync with PROXY-HD-01 as the target. The supplied inventory places ClaimSync on FILE-HD-01 and does not list this Commvault software among approved products, making this a significant anomaly.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T002-00019\"]\n    },\n    {\n      \"claim\": \"The explicit-credential event is suspicious and warrants investigation, but the available record does not show whether the proxy authentication succeeded or why the process used svc-claimsync.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T002-00019\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records stop at 13:46:09 UTC, so they do not cover the remainder of the requested 13:20\u201314:20 UTC window.\",\n    \"The explicit-credential event does not establish authentication success; no corresponding proxy access or authentication outcome is provided (T002-00019).\",\n    \"The failed-logon records identify LSASS as the process and do not identify the originating ClaimSync job or the user or process that initiated the explicit-credential use (T002-00001, T002-00019).\",\n    \"No process execution, file provenance, network-flow, or endpoint investigation evidence is included for WS-LPARK-01 or PROXY-HD-01.\"\n  ],\n  \"claims_not_established\": [\n    \"That the repeated failures were caused by anything other than the scheduled password rotation and a delayed manual job update.\",\n    \"That the explicit-credential use on WS-LPARK-01 was successful, malicious, or initiated by a human rather than the named process.\",\n    \"That svc-claimsync credentials were compromised, or that the account was used to access any resource beyond the attempted proxy-targeted event.\",\n    \"Whether further successful or failed authentication activity occurred between 13:46 and 14:20 UTC.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Proxy-HD-01 authentication and access logs around 13:39 UTC to determine whether the svc-claimsync attempt succeeded and what it accessed.\",\n    \"WS-LPARK-01 process-creation, service, file, and security telemetry for GxCVD.exe, including executable hash, signer, installation history, parent process, and network activity.\",\n    \"FILE-HD-01 ClaimSync job and service logs, password-rotation records, and evidence of when the job configuration was updated.\",\n    \"Authentication records for svc-claimsync and relevant host/network telemetry covering the remainder of 13:20\u201314:20 UTC.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 6226,
+    "output": 2837,
+    "reasoning": 1644
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "Repeated failures for svc-claimsync occur on FILE-HD-01 at roughly one-minute intervals, with bad-password status (0xc000006a); the failures shown span 13:31\u201313:46 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T002-00001",
+     "T002-00003",
+     "T002-00006",
+     "T002-00007",
+     "T002-00009",
+     "T002-00011",
+     "T002-00013",
+     "T002-00015",
+     "T002-00017",
+     "T002-00020",
+     "T002-00023",
+     "T002-00025",
+     "T002-00028",
+     "T002-00030",
+     "T002-00032",
+     "T002-00034"
+    ]
+   },
+   {
+    "claim": "Domain-controller records also show failed authentication for svc-claimsync, including Kerberos pre-authentication failures (status 0x18) and NTLM bad-password failures (status 0xc000006a).",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T002-00002",
+     "T002-00010",
+     "T002-00012",
+     "T002-00016",
+     "T002-00018",
+     "T002-00021",
+     "T002-00022",
+     "T002-00026",
+     "T002-00027",
+     "T002-00029",
+     "T002-00031",
+     "T002-00033",
+     "T002-00035"
+    ]
+   },
+   {
+    "claim": "The repeated failures are consistent with a stale password after the scheduled 13:30 UTC rotation: the inventory says ClaimSync re-authenticates every minute and requires a manual job update after rotation. This explains the pattern but does not establish that every event in the window is benign.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T002-00001",
+     "T002-00003",
+     "T002-00006",
+     "T002-00007",
+     "T002-00009",
+     "T002-00011",
+     "T002-00013",
+     "T002-00015",
+     "T002-00017",
+     "T002-00020",
+     "T002-00023",
+     "T002-00025",
+     "T002-00028",
+     "T002-00030",
+     "T002-00032",
+     "T002-00034"
+    ]
+   },
+   {
+    "claim": "At 13:39:31 UTC, WS-LPARK-01 recorded a SYSTEM process, C:\\Program Files\\Commvault\\ContentStore\\Base\\GxCVD.exe, using explicit credentials for svc-claimsync with PROXY-HD-01 as the target. The supplied inventory places ClaimSync on FILE-HD-01 and does not list this Commvault software among approved products, making this a significant anomaly.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T002-00019"
+    ]
+   },
+   {
+    "claim": "The explicit-credential event is suspicious and warrants investigation, but the available record does not show whether the proxy authentication succeeded or why the process used svc-claimsync.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T002-00019"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records stop at 13:46:09 UTC, so they do not cover the remainder of the requested 13:20\u201314:20 UTC window.",
+   "The explicit-credential event does not establish authentication success; no corresponding proxy access or authentication outcome is provided (T002-00019).",
+   "The failed-logon records identify LSASS as the process and do not identify the originating ClaimSync job or the user or process that initiated the explicit-credential use (T002-00001, T002-00019).",
+   "No process execution, file provenance, network-flow, or endpoint investigation evidence is included for WS-LPARK-01 or PROXY-HD-01."
+  ],
+  "claims_not_established": [
+   "That the repeated failures were caused by anything other than the scheduled password rotation and a delayed manual job update.",
+   "That the explicit-credential use on WS-LPARK-01 was successful, malicious, or initiated by a human rather than the named process.",
+   "That svc-claimsync credentials were compromised, or that the account was used to access any resource beyond the attempted proxy-targeted event.",
+   "Whether further successful or failed authentication activity occurred between 13:46 and 14:20 UTC."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Proxy-HD-01 authentication and access logs around 13:39 UTC to determine whether the svc-claimsync attempt succeeded and what it accessed.",
+   "WS-LPARK-01 process-creation, service, file, and security telemetry for GxCVD.exe, including executable hash, signer, installation history, parent process, and network activity.",
+   "FILE-HD-01 ClaimSync job and service logs, password-rotation records, and evidence of when the job configuration was updated.",
+   "Authentication records for svc-claimsync and relevant host/network telemetry covering the remainder of 13:20\u201314:20 UTC."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 47,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 28.4
+}

@@ -1,0 +1,89 @@
+{
+ "scenario_id": "T203",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:44:59 UTC, Mia's WINWORD.EXE opened C:\\\\Users\\\\mia.santos\\\\Downloads\\\\Statement.docm; at 13:45:01, Word spawned PowerShell under Mia's account with hidden-window, no-profile, and encoded-command options.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T203-00204\",\n        \"T203-00208\",\n        \"T203-00209\"\n      ]\n    },\n    {\n      \"claim\": \"The encoded PowerShell command decodes to an expression that uses Net.WebClient.DownloadString to retrieve and execute a script from raw.githubusercontent.com/bluefin-it/tools/main/u.ps1. The proxy logged a successful GET for that URL.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T203-00208\",\n        \"T203-00212\"\n      ]\n    },\n    {\n      \"claim\": \"PowerShell then launched rundll32.exe to call Init in C:\\\\Users\\\\mia.santos\\\\AppData\\\\Roaming\\\\svchelper.dll. The PowerShell and rundll32 processes ended shortly afterward.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T203-00219\",\n        \"T203-00222\",\n        \"T203-00223\",\n        \"T203-00224\",\n        \"T203-00225\",\n        \"T203-00226\"\n      ]\n    },\n    {\n      \"claim\": \"The observed PowerShell execution was at 13:45 UTC, within the review window but later than the reported appearance around 13:40 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T203-00208\",\n        \"T203-00209\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available records show the PowerShell command and a successful proxy GET, but do not include the retrieved script's contents or hash.\",\n    \"The reported time is approximate; the records establish PowerShell execution at 13:45 UTC, not at exactly 13:40 UTC.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish who authored or delivered Statement.docm, or whether Mia knowingly opened it.\",\n    \"The contents and full behavior of u.ps1 and svchelper.dll are not established by these records.\",\n    \"The records do not establish whether the activity created persistence, accessed or exfiltrated data, or affected other systems.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and analyze Statement.docm, including its source, metadata, and macro contents.\",\n    \"Retrieve or otherwise obtain the exact u.ps1 content served at the time, and determine its hash and behavior.\",\n    \"Acquire and analyze svchelper.dll and relevant endpoint artifacts, including file creation, persistence, and execution evidence.\",\n    \"Investigate whether the same document, script, or DLL appeared on other endpoints or was accessed by other accounts.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate review: DC records show ken.ito authentication activity originating from WS-MSANTOS-01, including a network logon to WS-KITO-01. The inventory says remote administration is only done from WS-KITO-01; this activity predates the observed Word-to-PowerShell chain and is not used to determine this alert. (T203-00070, T203-00071, T203-00073, T203-00139, T203-00140, T203-00142)\",\n    \"Separate review: Mia's Chrome process connected to www.dropbox.com through the proxy; Dropbox is not listed as approved. (T203-00315, T203-00316, T203-00317)\",\n    \"Separate review: msi_update.exe ran from Mia's Temp directory after the observed PowerShell activity. The available records do not establish whether it is connected to the alert. (T203-00241, T203-00242)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 68565,
+    "output": 2384
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:44:59 UTC, Mia's WINWORD.EXE opened C:\\Users\\mia.santos\\Downloads\\Statement.docm; at 13:45:01, Word spawned PowerShell under Mia's account with hidden-window, no-profile, and encoded-command options.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T203-00204",
+     "T203-00208",
+     "T203-00209"
+    ]
+   },
+   {
+    "claim": "The encoded PowerShell command decodes to an expression that uses Net.WebClient.DownloadString to retrieve and execute a script from raw.githubusercontent.com/bluefin-it/tools/main/u.ps1. The proxy logged a successful GET for that URL.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T203-00208",
+     "T203-00212"
+    ]
+   },
+   {
+    "claim": "PowerShell then launched rundll32.exe to call Init in C:\\Users\\mia.santos\\AppData\\Roaming\\svchelper.dll. The PowerShell and rundll32 processes ended shortly afterward.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T203-00219",
+     "T203-00222",
+     "T203-00223",
+     "T203-00224",
+     "T203-00225",
+     "T203-00226"
+    ]
+   },
+   {
+    "claim": "The observed PowerShell execution was at 13:45 UTC, within the review window but later than the reported appearance around 13:40 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T203-00208",
+     "T203-00209"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available records show the PowerShell command and a successful proxy GET, but do not include the retrieved script's contents or hash.",
+   "The reported time is approximate; the records establish PowerShell execution at 13:45 UTC, not at exactly 13:40 UTC."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish who authored or delivered Statement.docm, or whether Mia knowingly opened it.",
+   "The contents and full behavior of u.ps1 and svchelper.dll are not established by these records.",
+   "The records do not establish whether the activity created persistence, accessed or exfiltrated data, or affected other systems."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and analyze Statement.docm, including its source, metadata, and macro contents.",
+   "Retrieve or otherwise obtain the exact u.ps1 content served at the time, and determine its hash and behavior.",
+   "Acquire and analyze svchelper.dll and relevant endpoint artifacts, including file creation, persistence, and execution evidence.",
+   "Investigate whether the same document, script, or DLL appeared on other endpoints or was accessed by other accounts."
+  ],
+  "unrelated_findings": [
+   "Separate review: DC records show ken.ito authentication activity originating from WS-MSANTOS-01, including a network logon to WS-KITO-01. The inventory says remote administration is only done from WS-KITO-01; this activity predates the observed Word-to-PowerShell chain and is not used to determine this alert. (T203-00070, T203-00071, T203-00073, T203-00139, T203-00140, T203-00142)",
+   "Separate review: Mia's Chrome process connected to www.dropbox.com through the proxy; Dropbox is not listed as approved. (T203-00315, T203-00316, T203-00317)",
+   "Separate review: msi_update.exe ran from Mia's Temp directory after the observed PowerShell activity. The available records do not establish whether it is connected to the alert. (T203-00241, T203-00242)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.5
+}

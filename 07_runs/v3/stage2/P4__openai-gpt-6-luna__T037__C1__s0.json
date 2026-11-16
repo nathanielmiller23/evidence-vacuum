@@ -1,0 +1,93 @@
+{
+ "scenario_id": "T037",
+ "condition": "C1",
+ "variant": "P4",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted account was created on DC-NWD-01 at 13:41:49 UTC by NWD\\\\sam.okafor.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T037-00109\"]\n    },\n    {\n      \"claim\": \"About three seconds later, sysmaint was added to the domain Administrators group by NWD\\\\sam.okafor, using the same subject logon ID as the account creation event.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T037-00109\", \"T037-00110\"]\n    },\n    {\n      \"claim\": \"The account name and administrator-group membership conflict with the documented help-desk temporary-account practice: those accounts use the ext.<name> format and are added only to Freelancers.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T037-00109\", \"T037-00110\"]\n    },\n    {\n      \"claim\": \"Shortly before the account changes, sam.okafor logged on to WS-LMARTINS-01 via RDP from 203.0.113.250 and received special privileges. This is inconsistent with the documented remote-administration path, which is only from WS-SOKAFOR-01.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T037-00073\", \"T037-00074\", \"T037-00075\", \"T037-00076\"]\n    },\n    {\n      \"claim\": \"A task created on WS-LMARTINS-01 under sam.okafor shortly after the account changes runs hidden, encoded PowerShell that decodes to a command to retrieve and execute a script from http://203.0.113.250/a.ps1. This is strong evidence of suspicious activity in the same time window, although the record alone does not prove the task executed or that this logon session performed the DC account changes.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T037-00111\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The account-creation and group-membership records identify sam.okafor and logon ID 0x11d4adcd but do not give the originating host or IP; the RDP record shows a different logon ID, 0x3fdf003. The available records therefore do not establish that the DC changes came from that RDP session. (T037-00109, T037-00110, T037-00075)\",\n    \"The provided records do not show whether sysmaint subsequently authenticated, was used, or retained other privileges beyond the recorded Administrators membership. (T037-00109, T037-00110)\",\n    \"The task record shows its configured command, but the provided evidence does not show task execution, script contents, or the result of any download. (T037-00111)\"\n  ],\n  \"claims_not_established\": [\n    \"The identity of the person or process that actually initiated the DC account changes.\",\n    \"Whether the RDP source address represents an actual external actor or a controlled/test source.\",\n    \"Whether the scheduled task executed or whether sysmaint was subsequently used.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Retrieve DC and endpoint logon/session records around 13:41 UTC to correlate logon ID 0x11d4adcd with its source host, address, and authentication.\",\n    \"Collect task execution history, PowerShell operational logs, process and network telemetry, and the retrieved script (if any) for WS-LMARTINS-01.\",\n    \"Review sysmaint's full account attributes, group memberships, password-setting audit trail, and subsequent authentication and activity.\",\n    \"Verify sam.okafor's activity and authorization for the account and task changes, including any change ticket or approval.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox was running from WS-LMARTINS-01; Dropbox is not among the approved services listed in the environment context. The records show execution, not that files were uploaded. (T037-00048, T037-00049, T037-00050)\",\n    \"WS-LMARTINS-01 accessed go.pstmn.io through Chrome; this is separate from the alerted account creation and does not establish file transfer. (T037-00027, T037-00051, T037-00052, T037-00053, T037-00054)\",\n    \"An unlisted Meridian OpsAgent process ran on WS-LMARTINS-01 and attempted explicit authentication to PROXY-NWD-01 as svc-render. This should be reviewed separately; the supplied records do not establish that it caused the alerted account changes. (T037-00117, T037-00118, T037-00119)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 30019,
+    "output": 2523
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "The alerted account was created on DC-NWD-01 at 13:41:49 UTC by NWD\\sam.okafor.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00109"
+    ]
+   },
+   {
+    "claim": "About three seconds later, sysmaint was added to the domain Administrators group by NWD\\sam.okafor, using the same subject logon ID as the account creation event.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00109",
+     "T037-00110"
+    ]
+   },
+   {
+    "claim": "The account name and administrator-group membership conflict with the documented help-desk temporary-account practice: those accounts use the ext.<name> format and are added only to Freelancers.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T037-00109",
+     "T037-00110"
+    ]
+   },
+   {
+    "claim": "Shortly before the account changes, sam.okafor logged on to WS-LMARTINS-01 via RDP from 203.0.113.250 and received special privileges. This is inconsistent with the documented remote-administration path, which is only from WS-SOKAFOR-01.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T037-00073",
+     "T037-00074",
+     "T037-00075",
+     "T037-00076"
+    ]
+   },
+   {
+    "claim": "A task created on WS-LMARTINS-01 under sam.okafor shortly after the account changes runs hidden, encoded PowerShell that decodes to a command to retrieve and execute a script from http://203.0.113.250/a.ps1. This is strong evidence of suspicious activity in the same time window, although the record alone does not prove the task executed or that this logon session performed the DC account changes.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00111"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The account-creation and group-membership records identify sam.okafor and logon ID 0x11d4adcd but do not give the originating host or IP; the RDP record shows a different logon ID, 0x3fdf003. The available records therefore do not establish that the DC changes came from that RDP session. (T037-00109, T037-00110, T037-00075)",
+   "The provided records do not show whether sysmaint subsequently authenticated, was used, or retained other privileges beyond the recorded Administrators membership. (T037-00109, T037-00110)",
+   "The task record shows its configured command, but the provided evidence does not show task execution, script contents, or the result of any download. (T037-00111)"
+  ],
+  "claims_not_established": [
+   "The identity of the person or process that actually initiated the DC account changes.",
+   "Whether the RDP source address represents an actual external actor or a controlled/test source.",
+   "Whether the scheduled task executed or whether sysmaint was subsequently used."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Retrieve DC and endpoint logon/session records around 13:41 UTC to correlate logon ID 0x11d4adcd with its source host, address, and authentication.",
+   "Collect task execution history, PowerShell operational logs, process and network telemetry, and the retrieved script (if any) for WS-LMARTINS-01.",
+   "Review sysmaint's full account attributes, group memberships, password-setting audit trail, and subsequent authentication and activity.",
+   "Verify sam.okafor's activity and authorization for the account and task changes, including any change ticket or approval."
+  ],
+  "unrelated_findings": [
+   "Dropbox was running from WS-LMARTINS-01; Dropbox is not among the approved services listed in the environment context. The records show execution, not that files were uploaded. (T037-00048, T037-00049, T037-00050)",
+   "WS-LMARTINS-01 accessed go.pstmn.io through Chrome; this is separate from the alerted account creation and does not establish file transfer. (T037-00027, T037-00051, T037-00052, T037-00053, T037-00054)",
+   "An unlisted Meridian OpsAgent process ran on WS-LMARTINS-01 and attempted explicit authentication to PROXY-NWD-01 as svc-render. This should be reviewed separately; the supplied records do not establish that it caused the alerted account changes. (T037-00117, T037-00118, T037-00119)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.0
+}

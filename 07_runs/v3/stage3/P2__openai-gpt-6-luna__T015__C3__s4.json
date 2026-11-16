@@ -1,0 +1,91 @@
+{
+ "scenario_id": "T015",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 4,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.84,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted outbound HTTPS activity is attributed to ChartMate's updater process running from ben.carter's user-writable AppData directory, rather than the inventory-listed approved path under Program Files.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T015-00108\", \"T015-00109\", \"T015-00112\", \"T015-00113\"]\n    },\n    {\n      \"claim\": \"The process connected to update.chartmate-imaging.net, whereas the inventory identifies update.chartmate-imaging.com as the approved update host. This domain and executable-path mismatch is consistent with possible impersonation of the approved updater.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T015-00110\", \"T015-00108\", \"T015-00109\"]\n    },\n    {\n      \"claim\": \"The same process made repeated proxy connections to update.chartmate-imaging.net at roughly five-minute intervals; records show successful tunnels as well as proxy authentication and gateway errors.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T015-00110\", \"T015-00152\", \"T015-00209\", \"T015-00234\", \"T015-00264\", \"T015-00269\", \"T015-00281\"]\n    },\n    {\n      \"claim\": \"The updater process wrote to its own executable path shortly after starting. This could be an update operation, but in combination with the unapproved path and mismatched domain it warrants investigation.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T015-00108\", \"T015-00114\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records show CONNECT tunnels and hostnames, but do not expose the HTTPS request paths, response contents, or downloaded payload.\",\n    \"The provided records do not include the executable's hash, signature, provenance, or a malware verdict.\",\n    \"The stated winsec and Sysmon collection outage applies to WS-LPARK-01, not the alerted WS-BCARTER-01; proxy and Zeek collection are reported as available.\"\n  ],\n  \"claims_not_established\": [\n    \"The records do not establish what content, if any, was downloaded or executed through the HTTPS connections.\",\n    \"The records do not establish whether the AppData executable is malicious, unsigned, or an unauthorized per-user installation.\",\n    \"The records do not establish whether the .net hostname is controlled by an attacker or could reflect a legitimate but undocumented ChartMate endpoint.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze the cmupdate.exe file, including hash, digital signature, version metadata, and provenance; compare it with a trusted ChartMate installer.\",\n    \"Review endpoint file and process telemetry for files created or executed by PID 3416 and determine what changed after the executable wrote to its own path.\",\n    \"Obtain proxy or TLS inspection details and DNS/reputation data for update.chartmate-imaging.net, including any accessible request or response metadata.\",\n    \"Confirm with ChartMate or the software owner whether this hostname and per-user installation path are legitimate.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-BCARTER-01 connected to FILE-HD-01 over SMB, followed by a successful network logon recorded as ANONYMOUS LOGON. Investigate separately; this is not the alerted outbound HTTPS activity. (T015-00253, T015-00255, T015-00257)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 54916,
+    "output": 2218
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.84,
+  "supporting_observations": [
+   {
+    "claim": "The alerted outbound HTTPS activity is attributed to ChartMate's updater process running from ben.carter's user-writable AppData directory, rather than the inventory-listed approved path under Program Files.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T015-00108",
+     "T015-00109",
+     "T015-00112",
+     "T015-00113"
+    ]
+   },
+   {
+    "claim": "The process connected to update.chartmate-imaging.net, whereas the inventory identifies update.chartmate-imaging.com as the approved update host. This domain and executable-path mismatch is consistent with possible impersonation of the approved updater.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T015-00110",
+     "T015-00108",
+     "T015-00109"
+    ]
+   },
+   {
+    "claim": "The same process made repeated proxy connections to update.chartmate-imaging.net at roughly five-minute intervals; records show successful tunnels as well as proxy authentication and gateway errors.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T015-00110",
+     "T015-00152",
+     "T015-00209",
+     "T015-00234",
+     "T015-00264",
+     "T015-00269",
+     "T015-00281"
+    ]
+   },
+   {
+    "claim": "The updater process wrote to its own executable path shortly after starting. This could be an update operation, but in combination with the unapproved path and mismatched domain it warrants investigation.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T015-00108",
+     "T015-00114"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records show CONNECT tunnels and hostnames, but do not expose the HTTPS request paths, response contents, or downloaded payload.",
+   "The provided records do not include the executable's hash, signature, provenance, or a malware verdict.",
+   "The stated winsec and Sysmon collection outage applies to WS-LPARK-01, not the alerted WS-BCARTER-01; proxy and Zeek collection are reported as available."
+  ],
+  "claims_not_established": [
+   "The records do not establish what content, if any, was downloaded or executed through the HTTPS connections.",
+   "The records do not establish whether the AppData executable is malicious, unsigned, or an unauthorized per-user installation.",
+   "The records do not establish whether the .net hostname is controlled by an attacker or could reflect a legitimate but undocumented ChartMate endpoint."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze the cmupdate.exe file, including hash, digital signature, version metadata, and provenance; compare it with a trusted ChartMate installer.",
+   "Review endpoint file and process telemetry for files created or executed by PID 3416 and determine what changed after the executable wrote to its own path.",
+   "Obtain proxy or TLS inspection details and DNS/reputation data for update.chartmate-imaging.net, including any accessible request or response metadata.",
+   "Confirm with ChartMate or the software owner whether this hostname and per-user installation path are legitimate."
+  ],
+  "unrelated_findings": [
+   "WS-BCARTER-01 connected to FILE-HD-01 over SMB, followed by a successful network logon recorded as ANONYMOUS LOGON. Investigate separately; this is not the alerted outbound HTTPS activity. (T015-00253, T015-00255, T015-00257)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 16,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.5
+}

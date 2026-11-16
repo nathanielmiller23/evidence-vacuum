@@ -1,0 +1,91 @@
+{
+ "run_id": "A__T037__C1__20261115T045259Z",
+ "config": "A",
+ "scenario_id": "T037",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 194,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 80456,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"An inbound RDP connection to WS-LMARTINS-01 from 203.0.113.250 was followed by an interactive remote logon as sam.okafor.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T037-00073\", \"T037-00074\", \"T037-00075\"]\n    },\n    {\n      \"claim\": \"The domain account sysmaint was created by sam.okafor, then added to the Administrators group under the same recorded domain logon ID.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T037-00109\", \"T037-00110\"]\n    },\n    {\n      \"claim\": \"The same sam.okafor session on WS-LMARTINS-01 created a scheduled task that launches hidden PowerShell with an encoded command. Decoded, the command downloads and invokes a script from http://203.0.113.250/a.ps1.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T037-00111\"]\n    },\n    {\n      \"claim\": \"The observed activity conflicts with the supplied environment context: remote administration is only done from WS-SOKAFOR-01, and temporary help-desk accounts use the ext.<name> pattern and do not receive administrator rights.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T037-00073\", \"T037-00075\", \"T037-00109\", \"T037-00110\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show the scheduled task definition, but do not show whether it ran or what the downloaded script contained or did.\",\n    \"The records do not directly establish who controlled the RDP source address or whether sam.okafor's credentials were compromised.\",\n    \"The provided activity is a limited time window and does not establish the full scope or duration of any compromise.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the sysmaint account was subsequently used or remains enabled.\",\n    \"Whether the scheduled task executed successfully or the remote script was retrieved.\",\n    \"Whether sam.okafor performed these actions, or an unauthorized actor used that account.\",\n    \"Whether other hosts or accounts were affected.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Retrieve task execution history and the task's current state, including any process and network events associated with its PowerShell action.\",\n    \"Preserve and examine the downloaded script if available, and search proxy, DNS, and endpoint telemetry for requests to 203.0.113.250.\",\n    \"Review DC account and group-change auditing, including sysmaint's current status, group memberships, and subsequent authentication activity.\",\n    \"Investigate the RDP session and source address; correlate available authentication records with sam.okafor's activity and confirm with the administrator through a trusted channel.\",\n    \"Collect endpoint and authentication telemetry from WS-LMARTINS-01, WS-SOKAFOR-01, and the domain controller to determine scope.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 29734,
+    "output": 1614,
+    "reasoning": 917
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "An inbound RDP connection to WS-LMARTINS-01 from 203.0.113.250 was followed by an interactive remote logon as sam.okafor.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00073",
+     "T037-00074",
+     "T037-00075"
+    ]
+   },
+   {
+    "claim": "The domain account sysmaint was created by sam.okafor, then added to the Administrators group under the same recorded domain logon ID.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00109",
+     "T037-00110"
+    ]
+   },
+   {
+    "claim": "The same sam.okafor session on WS-LMARTINS-01 created a scheduled task that launches hidden PowerShell with an encoded command. Decoded, the command downloads and invokes a script from http://203.0.113.250/a.ps1.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T037-00111"
+    ]
+   },
+   {
+    "claim": "The observed activity conflicts with the supplied environment context: remote administration is only done from WS-SOKAFOR-01, and temporary help-desk accounts use the ext.<name> pattern and do not receive administrator rights.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T037-00073",
+     "T037-00075",
+     "T037-00109",
+     "T037-00110"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show the scheduled task definition, but do not show whether it ran or what the downloaded script contained or did.",
+   "The records do not directly establish who controlled the RDP source address or whether sam.okafor's credentials were compromised.",
+   "The provided activity is a limited time window and does not establish the full scope or duration of any compromise."
+  ],
+  "claims_not_established": [
+   "Whether the sysmaint account was subsequently used or remains enabled.",
+   "Whether the scheduled task executed successfully or the remote script was retrieved.",
+   "Whether sam.okafor performed these actions, or an unauthorized actor used that account.",
+   "Whether other hosts or accounts were affected."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Retrieve task execution history and the task's current state, including any process and network events associated with its PowerShell action.",
+   "Preserve and examine the downloaded script if available, and search proxy, DNS, and endpoint telemetry for requests to 203.0.113.250.",
+   "Review DC account and group-change auditing, including sysmaint's current status, group memberships, and subsequent authentication activity.",
+   "Investigate the RDP session and source address; correlate available authentication records with sam.okafor's activity and confirm with the administrator through a trusted channel.",
+   "Collect endpoint and authentication telemetry from WS-LMARTINS-01, WS-SOKAFOR-01, and the domain controller to determine scope."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 16.2
+}

@@ -1,0 +1,111 @@
+{
+ "scenario_id": "T175",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.84,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"WS-NKIM-01 repeatedly made proxy-mediated HTTPS CONNECT connections to update.casebinder.co at approximately five-minute intervals: 13:39:24, 13:44:34, 13:48:54, 13:53:51, 13:59:44, 14:04:49, and 14:09:02. The 13:44 attempt returned 503; the other listed CONNECTs returned 200.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T175-00091\",\n        \"T175-00122\",\n        \"T175-00161\",\n        \"T175-00183\",\n        \"T175-00195\",\n        \"T175-00204\",\n        \"T175-00237\"\n      ]\n    },\n    {\n      \"claim\": \"The connections are attributed by endpoint network events to casebinderupd.exe running as noah.kim, from C:\\\\Users\\\\noah.kim\\\\AppData\\\\Local\\\\CaseBinder\\\\casebinderupd.exe.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T175-00088\",\n        \"T175-00092\",\n        \"T175-00094\",\n        \"T175-00123\",\n        \"T175-00125\",\n        \"T175-00162\",\n        \"T175-00164\",\n        \"T175-00184\",\n        \"T175-00186\",\n        \"T175-00196\",\n        \"T175-00198\",\n        \"T175-00205\",\n        \"T175-00207\",\n        \"T175-00238\",\n        \"T175-00240\"\n      ]\n    },\n    {\n      \"claim\": \"The alerted destination differs from the inventory-listed CaseBinder update host: the logs show update.casebinder.co, while the inventory lists update.casebinder.com. The observed executable is also in a user AppData location, rather than the inventory-listed C:\\\\Program Files\\\\CaseBinder\\\\casebinderupd.exe. Together, these discrepancies make the updater-like activity suspicious and support treating it as potentially masquerading software or a misdirected update channel.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T175-00088\",\n        \"T175-00091\",\n        \"T175-00092\",\n        \"T175-00122\",\n        \"T175-00161\",\n        \"T175-00183\",\n        \"T175-00195\",\n        \"T175-00204\",\n        \"T175-00237\"\n      ]\n    },\n    {\n      \"claim\": \"A file-creation event records casebinderupd.exe being created at the same AppData path shortly after the process started. This is consistent with a newly written or replaced executable, but the record alone does not establish how or by whom it was installed.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T175-00088\",\n        \"T175-00090\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records show CONNECT tunnels and byte counts, not the encrypted HTTPS contents, requested paths, downloaded update contents, or server certificate details (T175-00091, T175-00122, T175-00161, T175-00183, T175-00195, T175-00204, T175-00237).\",\n    \"The supplied process records identify the executable path and process ID but do not provide its hash, signature status, or trusted provenance (T175-00088, T175-00089).\",\n    \"The records establish repeated connections to the logged hostname, but do not independently establish the hostname's ownership, legitimacy, or relationship to the approved CaseBinder service.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether update.casebinder.co is controlled by CaseBinder or is malicious; the available records show the hostname but provide no ownership or reputation evidence (T175-00091, T175-00237).\",\n    \"Whether the executable is signed, authentic, or tampered with; the process records do not include a hash or signature validation result (T175-00088, T175-00089).\",\n    \"Whether the tunnels transferred malicious content, exposed data, or resulted in a successful software update; the proxy records provide tunnel metadata rather than HTTPS content (T175-00091, T175-00161, T175-00237).\",\n    \"Whether the apparent .co versus .com discrepancy reflects a legitimate inventory error or malicious impersonation.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze the AppData casebinderupd.exe; record its hash, signature status, creation provenance, and any related update files.\",\n    \"Obtain proxy, DNS, and TLS inspection details for update.casebinder.co, including certificate data, resolved addresses, and full request or response metadata where available.\",\n    \"Validate with the CaseBinder vendor or an authoritative internal source whether update.casebinder.co is an authorized update endpoint and whether this AppData installation is expected.\",\n    \"Review endpoint download, file-write, persistence, and execution activity associated with process 4724 and the period following the connections.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox updater and Dropbox client activity is present on WS-NKIM-01, although the inventory says no file-sharing or cloud-storage services other than approved services are approved. Track separately; it does not determine this alert (T175-00179, T175-00180, T175-00214, T175-00215, T175-00216).\",\n    \"A network logon for ali.hassan is recorded from WS-NKIM-01, despite the stated practice that remote administration is done only from WS-AHASSAN-01. Investigate separately; this does not determine the alerted HTTPS activity (T175-00181, T175-00182).\",\n    \"Explorer set the user's ProxyEnable value to 0 during the review window. Investigate separately as a possible proxy-configuration change; it does not by itself establish the nature of the alerted connections (T175-00194).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 47847,
+    "output": 2992
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.84,
+  "supporting_observations": [
+   {
+    "claim": "WS-NKIM-01 repeatedly made proxy-mediated HTTPS CONNECT connections to update.casebinder.co at approximately five-minute intervals: 13:39:24, 13:44:34, 13:48:54, 13:53:51, 13:59:44, 14:04:49, and 14:09:02. The 13:44 attempt returned 503; the other listed CONNECTs returned 200.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T175-00091",
+     "T175-00122",
+     "T175-00161",
+     "T175-00183",
+     "T175-00195",
+     "T175-00204",
+     "T175-00237"
+    ]
+   },
+   {
+    "claim": "The connections are attributed by endpoint network events to casebinderupd.exe running as noah.kim, from C:\\Users\\noah.kim\\AppData\\Local\\CaseBinder\\casebinderupd.exe.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T175-00088",
+     "T175-00092",
+     "T175-00094",
+     "T175-00123",
+     "T175-00125",
+     "T175-00162",
+     "T175-00164",
+     "T175-00184",
+     "T175-00186",
+     "T175-00196",
+     "T175-00198",
+     "T175-00205",
+     "T175-00207",
+     "T175-00238",
+     "T175-00240"
+    ]
+   },
+   {
+    "claim": "The alerted destination differs from the inventory-listed CaseBinder update host: the logs show update.casebinder.co, while the inventory lists update.casebinder.com. The observed executable is also in a user AppData location, rather than the inventory-listed C:\\Program Files\\CaseBinder\\casebinderupd.exe. Together, these discrepancies make the updater-like activity suspicious and support treating it as potentially masquerading software or a misdirected update channel.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T175-00088",
+     "T175-00091",
+     "T175-00092",
+     "T175-00122",
+     "T175-00161",
+     "T175-00183",
+     "T175-00195",
+     "T175-00204",
+     "T175-00237"
+    ]
+   },
+   {
+    "claim": "A file-creation event records casebinderupd.exe being created at the same AppData path shortly after the process started. This is consistent with a newly written or replaced executable, but the record alone does not establish how or by whom it was installed.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T175-00088",
+     "T175-00090"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records show CONNECT tunnels and byte counts, not the encrypted HTTPS contents, requested paths, downloaded update contents, or server certificate details (T175-00091, T175-00122, T175-00161, T175-00183, T175-00195, T175-00204, T175-00237).",
+   "The supplied process records identify the executable path and process ID but do not provide its hash, signature status, or trusted provenance (T175-00088, T175-00089).",
+   "The records establish repeated connections to the logged hostname, but do not independently establish the hostname's ownership, legitimacy, or relationship to the approved CaseBinder service."
+  ],
+  "claims_not_established": [
+   "Whether update.casebinder.co is controlled by CaseBinder or is malicious; the available records show the hostname but provide no ownership or reputation evidence (T175-00091, T175-00237).",
+   "Whether the executable is signed, authentic, or tampered with; the process records do not include a hash or signature validation result (T175-00088, T175-00089).",
+   "Whether the tunnels transferred malicious content, exposed data, or resulted in a successful software update; the proxy records provide tunnel metadata rather than HTTPS content (T175-00091, T175-00161, T175-00237).",
+   "Whether the apparent .co versus .com discrepancy reflects a legitimate inventory error or malicious impersonation."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze the AppData casebinderupd.exe; record its hash, signature status, creation provenance, and any related update files.",
+   "Obtain proxy, DNS, and TLS inspection details for update.casebinder.co, including certificate data, resolved addresses, and full request or response metadata where available.",
+   "Validate with the CaseBinder vendor or an authoritative internal source whether update.casebinder.co is an authorized update endpoint and whether this AppData installation is expected.",
+   "Review endpoint download, file-write, persistence, and execution activity associated with process 4724 and the period following the connections."
+  ],
+  "unrelated_findings": [
+   "Dropbox updater and Dropbox client activity is present on WS-NKIM-01, although the inventory says no file-sharing or cloud-storage services other than approved services are approved. Track separately; it does not determine this alert (T175-00179, T175-00180, T175-00214, T175-00215, T175-00216).",
+   "A network logon for ali.hassan is recorded from WS-NKIM-01, despite the stated practice that remote administration is done only from WS-AHASSAN-01. Investigate separately; this does not determine the alerted HTTPS activity (T175-00181, T175-00182).",
+   "Explorer set the user's ProxyEnable value to 0 during the review window. Investigate separately as a possible proxy-configuration change; it does not by itself establish the nature of the alerted connections (T175-00194)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 33,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 33.9
+}

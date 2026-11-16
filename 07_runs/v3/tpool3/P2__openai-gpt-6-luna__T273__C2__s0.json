@@ -1,0 +1,81 @@
+{
+ "scenario_id": "T273",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.87,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The available process records show a PowerShell process on WS-ACOLE-01 at 13:20:26, running C:\\\\Scripts\\\\service-health.ps1 as SYSTEM from taskeng; it exited at 13:21:50. This is earlier than the reported 13:40 appearance and does not establish what appeared then.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T273-00002\", \"T273-00003\", \"T273-00006\", \"T273-00007\"]\n    },\n    {\n      \"claim\": \"At 13:42, proxy records show amy.cole's workstation first had a denied CONNECT to raw.githubusercontent.com, then a successful tunnel and a 200 GET for https://raw.githubusercontent.com/orchard-it/tools/main/u.ps1. This occurred shortly after the reported time, but the records do not identify the requesting process or establish that the script was executed.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T273-00142\", \"T273-00147\", \"T273-00148\", \"T273-00149\"]\n    },\n    {\n      \"claim\": \"The available records are insufficient to determine whether the reported PowerShell window was benign or malicious: the nearby script download is relevant, but there is no supplied evidence connecting it to a PowerShell process or to execution of u.ps1.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T273-00142\", \"T273-00147\", \"T273-00148\", \"T273-00149\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records include no process-creation or PowerShell-specific event around the reported 13:40 time; the available PowerShell process records instead show activity at 13:20 (T273-00002, T273-00003).\",\n    \"The proxy records show a request and successful response for u.ps1, but provide no file contents, hash, download destination, or process attribution (T273-00147, T273-00148).\",\n    \"The proxy's initial denied request followed by a successful tunnel is visible, but the records do not explain the change in outcome or establish why amy.cole requested the file (T273-00142, T273-00147).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether a PowerShell window actually appeared at approximately 13:40; this is reported in the help desk alert but is not corroborated by the supplied process records.\",\n    \"Whether u.ps1 was saved, opened, or executed, and what its contents or behavior were.\",\n    \"Whether the GitHub request was initiated by amy.cole, an application running on her session, or another process using her proxy identity.\",\n    \"Whether the alerted activity caused any compromise or other impact.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Collect endpoint process, EDR, and PowerShell Operational logs for WS-ACOLE-01 around 13:35\u201313:50 UTC, including command lines, parent processes, script-block logging, and transcription if available.\",\n    \"Identify whether u.ps1 was downloaded or executed; collect the file, browser/download history, relevant file-system timestamps, and a hash, then inspect its contents.\",\n    \"Obtain proxy details that could attribute the 13:42 request to a process or browser session, and confirm with amy.cole or IT whether the download was expected.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:21, the SYSTEM PowerShell process running service-health.ps1 made an explicit-credentials event targeting svc-safe at PROXY-ORC-01. This predates the alerted time and should be reviewed separately; the supplied records do not establish whether it was authorized or harmful (T273-00002, T273-00005).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 29676,
+    "output": 2259
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.87,
+  "supporting_observations": [
+   {
+    "claim": "The available process records show a PowerShell process on WS-ACOLE-01 at 13:20:26, running C:\\Scripts\\service-health.ps1 as SYSTEM from taskeng; it exited at 13:21:50. This is earlier than the reported 13:40 appearance and does not establish what appeared then.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T273-00002",
+     "T273-00003",
+     "T273-00006",
+     "T273-00007"
+    ]
+   },
+   {
+    "claim": "At 13:42, proxy records show amy.cole's workstation first had a denied CONNECT to raw.githubusercontent.com, then a successful tunnel and a 200 GET for https://raw.githubusercontent.com/orchard-it/tools/main/u.ps1. This occurred shortly after the reported time, but the records do not identify the requesting process or establish that the script was executed.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T273-00142",
+     "T273-00147",
+     "T273-00148",
+     "T273-00149"
+    ]
+   },
+   {
+    "claim": "The available records are insufficient to determine whether the reported PowerShell window was benign or malicious: the nearby script download is relevant, but there is no supplied evidence connecting it to a PowerShell process or to execution of u.ps1.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T273-00142",
+     "T273-00147",
+     "T273-00148",
+     "T273-00149"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records include no process-creation or PowerShell-specific event around the reported 13:40 time; the available PowerShell process records instead show activity at 13:20 (T273-00002, T273-00003).",
+   "The proxy records show a request and successful response for u.ps1, but provide no file contents, hash, download destination, or process attribution (T273-00147, T273-00148).",
+   "The proxy's initial denied request followed by a successful tunnel is visible, but the records do not explain the change in outcome or establish why amy.cole requested the file (T273-00142, T273-00147)."
+  ],
+  "claims_not_established": [
+   "Whether a PowerShell window actually appeared at approximately 13:40; this is reported in the help desk alert but is not corroborated by the supplied process records.",
+   "Whether u.ps1 was saved, opened, or executed, and what its contents or behavior were.",
+   "Whether the GitHub request was initiated by amy.cole, an application running on her session, or another process using her proxy identity.",
+   "Whether the alerted activity caused any compromise or other impact."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Collect endpoint process, EDR, and PowerShell Operational logs for WS-ACOLE-01 around 13:35\u201313:50 UTC, including command lines, parent processes, script-block logging, and transcription if available.",
+   "Identify whether u.ps1 was downloaded or executed; collect the file, browser/download history, relevant file-system timestamps, and a hash, then inspect its contents.",
+   "Obtain proxy details that could attribute the 13:42 request to a process or browser session, and confirm with amy.cole or IT whether the download was expected."
+  ],
+  "unrelated_findings": [
+   "At 13:21, the SYSTEM PowerShell process running service-health.ps1 made an explicit-credentials event targeting svc-safe at PROXY-ORC-01. This predates the alerted time and should be reviewed separately; the supplied records do not establish whether it was authorized or harmful (T273-00002, T273-00005)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 24.0
+}

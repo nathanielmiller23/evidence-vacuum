@@ -1,0 +1,98 @@
+{
+ "scenario_id": "T015",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 2,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted HTTPS activity is associated with ChartMate-named updater process cmupdate.exe running from Ben Carter's AppData\\\\Local\\\\ChartMate directory, rather than the inventory-listed Program Files location. The process started at 13:37:57 UTC and made an outbound connection through the proxy at 13:38 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T015-00108\",\n        \"T015-00110\",\n        \"T015-00113\"\n      ]\n    },\n    {\n      \"claim\": \"The proxy records repeated HTTPS CONNECT attempts to update.chartmate-imaging.net, with successful tunnels around five-minute intervals from 13:38 through 14:08 UTC; some intervening attempts returned 407 or 502. The inventory lists update.chartmate-imaging.com as the expected ChartMate update host, so the observed hostname differs.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T015-00110\",\n        \"T015-00152\",\n        \"T015-00209\",\n        \"T015-00234\",\n        \"T015-00264\",\n        \"T015-00269\",\n        \"T015-00281\"\n      ]\n    },\n    {\n      \"claim\": \"Sysmon network events attribute several of these proxy connections to the same cmupdate.exe process running as ben.carter, linking the periodic activity to that process rather than merely to the workstation.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T015-00113\",\n        \"T015-00212\",\n        \"T015-00237\",\n        \"T015-00267\",\n        \"T015-00272\",\n        \"T015-00284\"\n      ]\n    },\n    {\n      \"claim\": \"The observed cadence is consistent with the inventory's stated approximate five-minute ChartMate update-check interval, but the differing hostname and executable location prevent confidently treating this as the approved updater.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T015-00108\",\n        \"T015-00110\",\n        \"T015-00209\",\n        \"T015-00264\",\n        \"T015-00269\",\n        \"T015-00281\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy CONNECT records show the requested hostname, status, byte counts, and tunnel duration, but the available records do not expose the HTTPS payload or establish what data was exchanged.\",\n    \"The evidence does not provide a file hash, digital-signature validation, or provenance for the AppData cmupdate.exe executable.\",\n    \"The records do not establish whether update.chartmate-imaging.net is an authorized alternate endpoint or who controls it.\"\n  ],\n  \"claims_not_established\": [\n    \"That the AppData executable is authentic ChartMate software, or that it is malicious.\",\n    \"That the .net endpoint is controlled by ChartMate or is an approved endpoint.\",\n    \"That any malicious payload was downloaded, executed, or sent, or that data was exfiltrated.\",\n    \"That the successful HTTPS tunnels contained anything beyond updater check traffic.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Collect the cmupdate.exe file and verify its hash, digital signature, creation/modification history, and relationship to the inventory-listed ChartMate installation.\",\n    \"Confirm with the ChartMate vendor or software owner whether update.chartmate-imaging.net is an authorized update endpoint, and compare it with the approved .com hostname.\",\n    \"Obtain proxy TLS inspection, endpoint network/content telemetry, or destination certificate and reputation evidence for the successful tunnels.\",\n    \"Review the updater's downloaded files and endpoint execution history around the connection times.\"\n  ],\n  \"unrelated_findings\": [\n    \"A separate SMB connection from WS-BCARTER-01 to FILE-HD-01 was followed by an ANONYMOUS LOGON network logon; review separately because it is not the alerted outbound HTTPS activity. Records: T015-00253, T015-00257.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 54556,
+    "output": 1938
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "The alerted HTTPS activity is associated with ChartMate-named updater process cmupdate.exe running from Ben Carter's AppData\\Local\\ChartMate directory, rather than the inventory-listed Program Files location. The process started at 13:37:57 UTC and made an outbound connection through the proxy at 13:38 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T015-00108",
+     "T015-00110",
+     "T015-00113"
+    ]
+   },
+   {
+    "claim": "The proxy records repeated HTTPS CONNECT attempts to update.chartmate-imaging.net, with successful tunnels around five-minute intervals from 13:38 through 14:08 UTC; some intervening attempts returned 407 or 502. The inventory lists update.chartmate-imaging.com as the expected ChartMate update host, so the observed hostname differs.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T015-00110",
+     "T015-00152",
+     "T015-00209",
+     "T015-00234",
+     "T015-00264",
+     "T015-00269",
+     "T015-00281"
+    ]
+   },
+   {
+    "claim": "Sysmon network events attribute several of these proxy connections to the same cmupdate.exe process running as ben.carter, linking the periodic activity to that process rather than merely to the workstation.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T015-00113",
+     "T015-00212",
+     "T015-00237",
+     "T015-00267",
+     "T015-00272",
+     "T015-00284"
+    ]
+   },
+   {
+    "claim": "The observed cadence is consistent with the inventory's stated approximate five-minute ChartMate update-check interval, but the differing hostname and executable location prevent confidently treating this as the approved updater.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T015-00108",
+     "T015-00110",
+     "T015-00209",
+     "T015-00264",
+     "T015-00269",
+     "T015-00281"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy CONNECT records show the requested hostname, status, byte counts, and tunnel duration, but the available records do not expose the HTTPS payload or establish what data was exchanged.",
+   "The evidence does not provide a file hash, digital-signature validation, or provenance for the AppData cmupdate.exe executable.",
+   "The records do not establish whether update.chartmate-imaging.net is an authorized alternate endpoint or who controls it."
+  ],
+  "claims_not_established": [
+   "That the AppData executable is authentic ChartMate software, or that it is malicious.",
+   "That the .net endpoint is controlled by ChartMate or is an approved endpoint.",
+   "That any malicious payload was downloaded, executed, or sent, or that data was exfiltrated.",
+   "That the successful HTTPS tunnels contained anything beyond updater check traffic."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Collect the cmupdate.exe file and verify its hash, digital signature, creation/modification history, and relationship to the inventory-listed ChartMate installation.",
+   "Confirm with the ChartMate vendor or software owner whether update.chartmate-imaging.net is an authorized update endpoint, and compare it with the approved .com hostname.",
+   "Obtain proxy TLS inspection, endpoint network/content telemetry, or destination certificate and reputation evidence for the successful tunnels.",
+   "Review the updater's downloaded files and endpoint execution history around the connection times."
+  ],
+  "unrelated_findings": [
+   "A separate SMB connection from WS-BCARTER-01 to FILE-HD-01 was followed by an ANONYMOUS LOGON network logon; review separately because it is not the alerted outbound HTTPS activity. Records: T015-00253, T015-00257."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 22,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.6
+}

@@ -1,0 +1,94 @@
+{
+ "scenario_id": "T257",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted account was created at 13:45:13 UTC, later than the alert's approximate 13:42 time. The creator was ian.doyle.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T257-00100\"]\n    },\n    {\n      \"claim\": \"Seconds after creation, adm_temp was added to the domain Administrators group by ian.doyle. This conflicts with the stated practice that temporary accounts are only added to Vendors and never receive administrator rights.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T257-00101\"]\n    },\n    {\n      \"claim\": \"Shortly before the account changes, ian.doyle logged on interactively to WS-MFISCHER-01 from 192.0.2.199. The inventory says remote administration is only done from WS-IDOYLE-01, making this remote session anomalous.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T257-00079\", \"T257-00080\", \"T257-00083\", \"T257-00084\"]\n    },\n    {\n      \"claim\": \"Immediately after the account was added to Administrators, a task on WS-MFISCHER-01 was registered by ian.doyle to run hidden PowerShell with an encoded command. The encoded command specifies downloading and invoking a script from http://192.0.2.199/a.ps1; the task record establishes its registration, not that it executed.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T257-00100\", \"T257-00101\", \"T257-00102\"]\n    },\n    {\n      \"claim\": \"The combination of an anomalous remote administrator session, an account named adm_temp being granted Administrators membership, and a nearby hidden PowerShell task referencing the same remote IP strongly supports malicious activity rather than an approved temporary-account workflow.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T257-00080\", \"T257-00083\", \"T257-00100\", \"T257-00101\", \"T257-00102\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available records do not include a domain-controller logon record tying the ian.doyle account-change logon ID to the interactive session on WS-MFISCHER-01.\",\n    \"The task-registration event shows the configured command, but the supplied evidence does not establish whether the task ran or whether the referenced script was retrieved.\",\n    \"The supplied evidence does not show the resulting account's subsequent logons or actions.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether ian.doyle personally performed these actions or the session or credentials were compromised.\",\n    \"Whether the account creation or task was authorized through an exception not represented in the supplied change context.\",\n    \"Whether the PowerShell task executed or caused further activity.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate domain-controller authentication and audit records for ian.doyle and logon ID 0x11f58d12 with the WS-MFISCHER-01 interactive session.\",\n    \"Review the task's execution history, process-creation telemetry, and proxy or network records for traffic to 192.0.2.199 and retrieval of /a.ps1.\",\n    \"Confirm with the organization whether this account creation and administrator-group change had an approved exception; preserve and investigate the adm_temp account and its subsequent activity.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-MFISCHER-01 connected to docs.google.com, a service not listed as approved. The record establishes a connection, not file upload or sharing; track separately and do not use it to decide this alert. (T257-00104)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 28048,
+    "output": 1855
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "The alerted account was created at 13:45:13 UTC, later than the alert's approximate 13:42 time. The creator was ian.doyle.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T257-00100"
+    ]
+   },
+   {
+    "claim": "Seconds after creation, adm_temp was added to the domain Administrators group by ian.doyle. This conflicts with the stated practice that temporary accounts are only added to Vendors and never receive administrator rights.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T257-00101"
+    ]
+   },
+   {
+    "claim": "Shortly before the account changes, ian.doyle logged on interactively to WS-MFISCHER-01 from 192.0.2.199. The inventory says remote administration is only done from WS-IDOYLE-01, making this remote session anomalous.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T257-00079",
+     "T257-00080",
+     "T257-00083",
+     "T257-00084"
+    ]
+   },
+   {
+    "claim": "Immediately after the account was added to Administrators, a task on WS-MFISCHER-01 was registered by ian.doyle to run hidden PowerShell with an encoded command. The encoded command specifies downloading and invoking a script from http://192.0.2.199/a.ps1; the task record establishes its registration, not that it executed.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T257-00100",
+     "T257-00101",
+     "T257-00102"
+    ]
+   },
+   {
+    "claim": "The combination of an anomalous remote administrator session, an account named adm_temp being granted Administrators membership, and a nearby hidden PowerShell task referencing the same remote IP strongly supports malicious activity rather than an approved temporary-account workflow.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T257-00080",
+     "T257-00083",
+     "T257-00100",
+     "T257-00101",
+     "T257-00102"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available records do not include a domain-controller logon record tying the ian.doyle account-change logon ID to the interactive session on WS-MFISCHER-01.",
+   "The task-registration event shows the configured command, but the supplied evidence does not establish whether the task ran or whether the referenced script was retrieved.",
+   "The supplied evidence does not show the resulting account's subsequent logons or actions."
+  ],
+  "claims_not_established": [
+   "Whether ian.doyle personally performed these actions or the session or credentials were compromised.",
+   "Whether the account creation or task was authorized through an exception not represented in the supplied change context.",
+   "Whether the PowerShell task executed or caused further activity."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate domain-controller authentication and audit records for ian.doyle and logon ID 0x11f58d12 with the WS-MFISCHER-01 interactive session.",
+   "Review the task's execution history, process-creation telemetry, and proxy or network records for traffic to 192.0.2.199 and retrieval of /a.ps1.",
+   "Confirm with the organization whether this account creation and administrator-group change had an approved exception; preserve and investigate the adm_temp account and its subsequent activity."
+  ],
+  "unrelated_findings": [
+   "WS-MFISCHER-01 connected to docs.google.com, a service not listed as approved. The record establishes a connection, not file upload or sharing; track separately and do not use it to decide this alert. (T257-00104)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 14,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.8
+}

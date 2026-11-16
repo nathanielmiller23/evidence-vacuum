@@ -1,0 +1,85 @@
+{
+ "scenario_id": "T019",
+ "condition": "C3",
+ "variant": "P1",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:41 UTC, maria.lopez ran PowerShell to compress the Clients directory on FILE-HD-01 into C:\\\\Users\\\\maria.lopez\\\\AppData\\\\Local\\\\Temp\\\\c.zip; Sysmon recorded creation of that archive.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T019-00117\", \"T019-00118\", \"T019-00119\"]\n    },\n    {\n      \"claim\": \"At 13:45 UTC, maria.lopez launched Chrome to sendbox-files.io, a service not included among the approved file-sharing or cloud-storage services in the supplied inventory.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T019-00150\", \"T019-00154\"]\n    },\n    {\n      \"claim\": \"At 13:48 UTC, approximately 51 MB of client-to-server traffic went through the proxy to sendbox-files.io. The proxy identified maria.lopez, and Sysmon attributed the proxy connection to the Chrome process that had opened that site.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T019-00170\", \"T019-00171\", \"T019-00172\", \"T019-00173\"]\n    },\n    {\n      \"claim\": \"The sequence of archiving a shared Clients directory, opening an unapproved file-sharing site, and sending approximately 51 MB to it strongly supports suspected data exfiltration and a malicious disposition.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T019-00117\", \"T019-00119\", \"T019-00150\", \"T019-00170\", \"T019-00171\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The network and proxy records provide destination and byte counts but do not expose the contents of the encrypted transfer or identify the uploaded file; see T019-00170 and T019-00171.\"\n  ],\n  \"claims_not_established\": [\n    \"The exact contents of c.zip and whether the approximately 51 MB transfer included that archive.\",\n    \"Whether maria.lopez had authorization to access, package, or transfer the Clients data.\",\n    \"Whether the remote service accepted and retained a file, or who controlled the destination account.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire c.zip, if available, and determine its contents, size, timestamps, and relationship to the outbound transfer.\",\n    \"Review FILE-HD-01 share and file-access auditing for maria.lopez\u2019s access to the Clients directory.\",\n    \"Obtain browser history, download/upload artifacts, and endpoint forensic data to identify the file submitted and the account used.\",\n    \"Check business records and interview the user to establish whether the data transfer was authorized.\",\n    \"Preserve and review proxy or destination-service records that may identify the remote account, request, or uploaded object.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 48984,
+    "output": 1670
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "At 13:41 UTC, maria.lopez ran PowerShell to compress the Clients directory on FILE-HD-01 into C:\\Users\\maria.lopez\\AppData\\Local\\Temp\\c.zip; Sysmon recorded creation of that archive.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00117",
+     "T019-00118",
+     "T019-00119"
+    ]
+   },
+   {
+    "claim": "At 13:45 UTC, maria.lopez launched Chrome to sendbox-files.io, a service not included among the approved file-sharing or cloud-storage services in the supplied inventory.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00150",
+     "T019-00154"
+    ]
+   },
+   {
+    "claim": "At 13:48 UTC, approximately 51 MB of client-to-server traffic went through the proxy to sendbox-files.io. The proxy identified maria.lopez, and Sysmon attributed the proxy connection to the Chrome process that had opened that site.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00170",
+     "T019-00171",
+     "T019-00172",
+     "T019-00173"
+    ]
+   },
+   {
+    "claim": "The sequence of archiving a shared Clients directory, opening an unapproved file-sharing site, and sending approximately 51 MB to it strongly supports suspected data exfiltration and a malicious disposition.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T019-00117",
+     "T019-00119",
+     "T019-00150",
+     "T019-00170",
+     "T019-00171"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The network and proxy records provide destination and byte counts but do not expose the contents of the encrypted transfer or identify the uploaded file; see T019-00170 and T019-00171."
+  ],
+  "claims_not_established": [
+   "The exact contents of c.zip and whether the approximately 51 MB transfer included that archive.",
+   "Whether maria.lopez had authorization to access, package, or transfer the Clients data.",
+   "Whether the remote service accepted and retained a file, or who controlled the destination account."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire c.zip, if available, and determine its contents, size, timestamps, and relationship to the outbound transfer.",
+   "Review FILE-HD-01 share and file-access auditing for maria.lopez\u2019s access to the Clients directory.",
+   "Obtain browser history, download/upload artifacts, and endpoint forensic data to identify the file submitted and the account used.",
+   "Check business records and interview the user to establish whether the data transfer was authorized.",
+   "Preserve and review proxy or destination-service records that may identify the remote account, request, or uploaded object."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 14,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 17.0
+}

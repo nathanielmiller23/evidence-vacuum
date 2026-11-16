@@ -1,0 +1,97 @@
+{
+ "scenario_id": "T065",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.9,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"WS-TWEBER-01 made repeated proxy CONNECT requests to update.medledger.co:443 at roughly five-minute intervals: successful tunnels at 13:40, 13:45, 13:50, 14:00, 14:05, and 14:10 UTC, with an authentication-required response at 13:55. The supplied inventory instead identifies update.medledger.com as the approved MediLedger update domain.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T065-00157\",\n        \"T065-00179\",\n        \"T065-00205\",\n        \"T065-00235\",\n        \"T065-00250\",\n        \"T065-00265\",\n        \"T065-00303\"\n      ]\n    },\n    {\n      \"claim\": \"The repeated connections are attributed by Sysmon to medledgerupd.exe running from Tom Weber's AppData\\\\Local\\\\MediLedger directory, not the Program Files path for the approved updater specified in the supplied inventory.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T065-00155\",\n        \"T065-00159\",\n        \"T065-00182\",\n        \"T065-00204\",\n        \"T065-00206\",\n        \"T065-00252\",\n        \"T065-00253\",\n        \"T065-00267\",\n        \"T065-00268\",\n        \"T065-00305\",\n        \"T065-00306\"\n      ]\n    },\n    {\n      \"claim\": \"The process-to-connection attribution and repeated destination mismatch make this activity suspicious and support escalating the alerted activity as malicious, though they do not establish what data or content was exchanged.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T065-00157\",\n        \"T065-00159\",\n        \"T065-00205\",\n        \"T065-00206\",\n        \"T065-00250\",\n        \"T065-00253\",\n        \"T065-00303\",\n        \"T065-00306\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records show CONNECT tunnels and byte counts, but the available evidence does not reveal the TLS application payload or the content exchanged.\",\n    \"The evidence does not include a hash, signature, provenance, or reputation assessment for the AppData medledgerupd.exe binary.\",\n    \"The evidence shows requests to update.medledger.co, but does not establish whether that domain is controlled by MediLedger or is malicious.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the AppData updater binary is legitimate, tampered with, or a masquerading executable.\",\n    \"Whether the .co destination is malicious or an authorized MediLedger endpoint.\",\n    \"Whether any data was exfiltrated, or whether a payload was downloaded or executed.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire the medledgerupd.exe binary and collect its hash, signature status, creation and modification times, and origin.\",\n    \"Review proxy or TLS inspection logs, if available, for certificate details, full request metadata, and content associated with the .co tunnels.\",\n    \"Validate update.medledger.co with MediLedger through a trusted channel and check domain registration, DNS history, and threat intelligence.\",\n    \"Review endpoint process, file, and persistence telemetry around the updater's execution and termination.\"\n  ],\n  \"unrelated_findings\": [\n    \"A UserAssist record indicates Tom Weber launched PowerShell during the review window; investigate separately rather than using it to decide this network alert. (T065-00269)\",\n    \"GoogleDriveFS identified itself in a proxy request to clients6.google.com, and OneDrive shell integration was also observed. Google Drive is not among the supplied approved services; assess separately. (T065-00200, T065-00202)\",\n    \"Tom Weber's Internet Settings ProxyEnable value was set to 0 during the window; investigate separately for intent and impact. (T065-00284)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 57127,
+    "output": 2598
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.9,
+  "supporting_observations": [
+   {
+    "claim": "WS-TWEBER-01 made repeated proxy CONNECT requests to update.medledger.co:443 at roughly five-minute intervals: successful tunnels at 13:40, 13:45, 13:50, 14:00, 14:05, and 14:10 UTC, with an authentication-required response at 13:55. The supplied inventory instead identifies update.medledger.com as the approved MediLedger update domain.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T065-00157",
+     "T065-00179",
+     "T065-00205",
+     "T065-00235",
+     "T065-00250",
+     "T065-00265",
+     "T065-00303"
+    ]
+   },
+   {
+    "claim": "The repeated connections are attributed by Sysmon to medledgerupd.exe running from Tom Weber's AppData\\Local\\MediLedger directory, not the Program Files path for the approved updater specified in the supplied inventory.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T065-00155",
+     "T065-00159",
+     "T065-00182",
+     "T065-00204",
+     "T065-00206",
+     "T065-00252",
+     "T065-00253",
+     "T065-00267",
+     "T065-00268",
+     "T065-00305",
+     "T065-00306"
+    ]
+   },
+   {
+    "claim": "The process-to-connection attribution and repeated destination mismatch make this activity suspicious and support escalating the alerted activity as malicious, though they do not establish what data or content was exchanged.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T065-00157",
+     "T065-00159",
+     "T065-00205",
+     "T065-00206",
+     "T065-00250",
+     "T065-00253",
+     "T065-00303",
+     "T065-00306"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records show CONNECT tunnels and byte counts, but the available evidence does not reveal the TLS application payload or the content exchanged.",
+   "The evidence does not include a hash, signature, provenance, or reputation assessment for the AppData medledgerupd.exe binary.",
+   "The evidence shows requests to update.medledger.co, but does not establish whether that domain is controlled by MediLedger or is malicious."
+  ],
+  "claims_not_established": [
+   "Whether the AppData updater binary is legitimate, tampered with, or a masquerading executable.",
+   "Whether the .co destination is malicious or an authorized MediLedger endpoint.",
+   "Whether any data was exfiltrated, or whether a payload was downloaded or executed."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire the medledgerupd.exe binary and collect its hash, signature status, creation and modification times, and origin.",
+   "Review proxy or TLS inspection logs, if available, for certificate details, full request metadata, and content associated with the .co tunnels.",
+   "Validate update.medledger.co with MediLedger through a trusted channel and check domain registration, DNS history, and threat intelligence.",
+   "Review endpoint process, file, and persistence telemetry around the updater's execution and termination."
+  ],
+  "unrelated_findings": [
+   "A UserAssist record indicates Tom Weber launched PowerShell during the review window; investigate separately rather than using it to decide this network alert. (T065-00269)",
+   "GoogleDriveFS identified itself in a proxy request to clients6.google.com, and OneDrive shell integration was also observed. Google Drive is not among the supplied approved services; assess separately. (T065-00200, T065-00202)",
+   "Tom Weber's Internet Settings ProxyEnable value was set to 0 during the window; investigate separately for intent and impact. (T065-00284)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 26,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 26.6
+}

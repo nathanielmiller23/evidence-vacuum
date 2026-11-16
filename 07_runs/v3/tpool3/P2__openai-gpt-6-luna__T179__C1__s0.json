@@ -1,0 +1,90 @@
+{
+ "scenario_id": "T179",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:43, Julia Frost ran PowerShell to compress \\\\\\\\FILE-MAP-01\\\\Shared\\\\Clients into a temporary archive named c.zip; a file-creation event confirms that archive was created.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T179-00131\",\n        \"T179-00133\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:49, Julia Frost launched Chrome to sharefast-files.com. The proxy recorded 51,000,000 client-to-server tunnel bytes over about 25 seconds, and Zeek independently recorded approximately 51 MB sent through the proxy. The service is not among the organization's approved file-sharing services.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T179-00179\",\n        \"T179-00184\",\n        \"T179-00185\"\n      ]\n    },\n    {\n      \"claim\": \"The client-data archive was created shortly before a large outbound transfer to an unapproved file-sharing destination, which strongly supports suspected exfiltration; the available logs do not prove that c.zip was the exact content transmitted.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T179-00131\",\n        \"T179-00133\",\n        \"T179-00179\",\n        \"T179-00184\",\n        \"T179-00185\"\n      ]\n    },\n    {\n      \"claim\": \"The large transfer is recorded at 13:49, rather than exactly 13:46. The records around 13:46 show Kerberos and LDAP traffic to DC-MAP-01, while the large proxy transfer appears later.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T179-00161\",\n        \"T179-00165\",\n        \"T179-00166\",\n        \"T179-00170\",\n        \"T179-00184\",\n        \"T179-00185\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records an HTTPS tunnel and byte counts, not the encrypted application payload or the specific file contents.\",\n    \"The logs do not directly link c.zip to the bytes sent to sharefast-files.com, nor do they establish the destination's receipt or retention of the data.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether Julia Frost was authorized to access or transfer the client data.\",\n    \"Whether the 51 MB sent through the tunnel consisted of c.zip, other data, or a combination.\",\n    \"Which specific client files, if any, were disclosed, and whether the destination retained them.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine WS-JFROST-01 for c.zip, its size and contents, source files accessed, and relevant browser download/upload artifacts.\",\n    \"Obtain proxy, DNS, and destination-side records that could identify the transfer's URL, account, upload result, or stored object.\",\n    \"Confirm with the user and appropriate business owner whether the archive and transfer were authorized; preserve relevant account and endpoint evidence.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 14:09, a Commvault service process on WS-JFROST-01 made an explicit-credentials logon attempt as svc-docsync to FILE-MAP-01. The inventory describes svc-docsync as a DocSync job account on FILE-MAP-01; investigate separately, without using this to decide the alerted transfer. (T179-00203, T179-00212)\",\n    \"At 14:18, PROXY-MAP-01 initiated an RDP connection to WS-JFROST-01. The inventory says remote administration is only done from WS-AHASSAN-01; investigate separately. (T179-00259, T179-00260, T179-00261)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 39944,
+    "output": 2062
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "At 13:43, Julia Frost ran PowerShell to compress \\\\FILE-MAP-01\\Shared\\Clients into a temporary archive named c.zip; a file-creation event confirms that archive was created.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T179-00131",
+     "T179-00133"
+    ]
+   },
+   {
+    "claim": "At 13:49, Julia Frost launched Chrome to sharefast-files.com. The proxy recorded 51,000,000 client-to-server tunnel bytes over about 25 seconds, and Zeek independently recorded approximately 51 MB sent through the proxy. The service is not among the organization's approved file-sharing services.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T179-00179",
+     "T179-00184",
+     "T179-00185"
+    ]
+   },
+   {
+    "claim": "The client-data archive was created shortly before a large outbound transfer to an unapproved file-sharing destination, which strongly supports suspected exfiltration; the available logs do not prove that c.zip was the exact content transmitted.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T179-00131",
+     "T179-00133",
+     "T179-00179",
+     "T179-00184",
+     "T179-00185"
+    ]
+   },
+   {
+    "claim": "The large transfer is recorded at 13:49, rather than exactly 13:46. The records around 13:46 show Kerberos and LDAP traffic to DC-MAP-01, while the large proxy transfer appears later.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T179-00161",
+     "T179-00165",
+     "T179-00166",
+     "T179-00170",
+     "T179-00184",
+     "T179-00185"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records an HTTPS tunnel and byte counts, not the encrypted application payload or the specific file contents.",
+   "The logs do not directly link c.zip to the bytes sent to sharefast-files.com, nor do they establish the destination's receipt or retention of the data."
+  ],
+  "claims_not_established": [
+   "Whether Julia Frost was authorized to access or transfer the client data.",
+   "Whether the 51 MB sent through the tunnel consisted of c.zip, other data, or a combination.",
+   "Which specific client files, if any, were disclosed, and whether the destination retained them."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine WS-JFROST-01 for c.zip, its size and contents, source files accessed, and relevant browser download/upload artifacts.",
+   "Obtain proxy, DNS, and destination-side records that could identify the transfer's URL, account, upload result, or stored object.",
+   "Confirm with the user and appropriate business owner whether the archive and transfer were authorized; preserve relevant account and endpoint evidence."
+  ],
+  "unrelated_findings": [
+   "At 14:09, a Commvault service process on WS-JFROST-01 made an explicit-credentials logon attempt as svc-docsync to FILE-MAP-01. The inventory describes svc-docsync as a DocSync job account on FILE-MAP-01; investigate separately, without using this to decide the alerted transfer. (T179-00203, T179-00212)",
+   "At 14:18, PROXY-MAP-01 initiated an RDP connection to WS-JFROST-01. The inventory says remote administration is only done from WS-AHASSAN-01; investigate separately. (T179-00259, T179-00260, T179-00261)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 16,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.3
+}

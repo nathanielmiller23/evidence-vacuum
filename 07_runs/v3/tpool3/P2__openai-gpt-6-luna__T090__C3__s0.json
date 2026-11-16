@@ -1,0 +1,86 @@
+{
+ "scenario_id": "T090",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.87,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The large transfer is consistent with the approved Vaultline backup: FILE-PIN-01 ran the inventoried Vaultline agent as svc-bkp with a job named Nightly and target ingest.vaultline-backup.com.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T090-00325\",\n        \"T090-00326\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:46 UTC, the proxy recorded a 24.3-second tunnel to ingest.vaultline-backup.com with 640,000,000 client-to-server bytes; Zeek recorded about 640 MB sent through the proxy. This matches the alert's large outbound transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T090-00328\",\n        \"T090-00331\"\n      ]\n    },\n    {\n      \"claim\": \"Shortly before the backup agent ran, the domain controller recorded a service ticket for svc-bkp to FILE-PIN-01 from 45.79.19.196, followed by a svc-bkp service logon on FILE-PIN-01. The source is unexpected given the provided context that the organization has no VPN; the records do not establish who or what initiated it.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T090-00310\",\n        \"T090-00311\"\n      ]\n    },\n    {\n      \"claim\": \"The transfer's destination, executable, account, and volume fit the approved backup description, but the nearby svc-bkp ticket from an external address makes it unclear whether this particular run was authorized.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T090-00310\",\n        \"T090-00311\",\n        \"T090-00325\",\n        \"T090-00328\",\n        \"T090-00331\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Winsec and Sysmon collection for WS-ESTONE-01 was unavailable from 13:25 to 14:10 UTC; this limits review of activity on that workstation during the window. Proxy and Zeek collection were reported as available.\",\n    \"The available records show the transfer's process and proxied byte counts, but do not show the uploaded data's contents or independently verify the job's authorization.\"\n  ],\n  \"claims_not_established\": [\n    \"The records do not establish whether the svc-bkp ticket request from 45.79.19.196 was legitimate, how it originated, or whether it caused or authorized the backup run.\",\n    \"The records do not establish whether the Nightly job was scheduled to run at 13:46 UTC or what files or data it uploaded.\",\n    \"The matching approved agent and destination do not, by themselves, establish that the transferred data or use of svc-bkp was authorized.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Validate the 13:44:57 svc-bkp Kerberos ticket request and source IP against domain-controller, perimeter, and authentication records; determine the source and whether svc-bkp credentials or tickets were used remotely.\",\n    \"Confirm the Vaultline job schedule and run history for 13:46 UTC, and obtain its upload manifest or equivalent evidence identifying the transferred data.\",\n    \"Verify the Vaultline agent's integrity and configuration, and confirm with the backup service or its administrative records that this run and destination were expected.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-ESTONE-01 launched mstsc to FILE-PIN-01, and FILE-PIN-01 recorded an RDP logon for emma.stone. This is separate from the backup transfer; assess whether the help-desk session was authorized. (T090-00041, T090-00047, T090-00055)\",\n    \"FILE-PIN-01 made other proxy requests with a python-requests user agent to receiver.citrix.com and www.bing.com, which are not listed among approved services. These are separate from the alerted Vaultline transfer. (T090-00090, T090-00667)\",\n    \"FILE-PIN-01 and DC-PIN-01 recorded failed NTLM logons for svc_mgmt with a disabled-account substatus; investigate separately as potentially stale or unauthorized activity. (T090-00636, T090-00642)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 99019,
+    "output": 3153
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.87,
+  "supporting_observations": [
+   {
+    "claim": "The large transfer is consistent with the approved Vaultline backup: FILE-PIN-01 ran the inventoried Vaultline agent as svc-bkp with a job named Nightly and target ingest.vaultline-backup.com.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T090-00325",
+     "T090-00326"
+    ]
+   },
+   {
+    "claim": "At 13:46 UTC, the proxy recorded a 24.3-second tunnel to ingest.vaultline-backup.com with 640,000,000 client-to-server bytes; Zeek recorded about 640 MB sent through the proxy. This matches the alert's large outbound transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T090-00328",
+     "T090-00331"
+    ]
+   },
+   {
+    "claim": "Shortly before the backup agent ran, the domain controller recorded a service ticket for svc-bkp to FILE-PIN-01 from 45.79.19.196, followed by a svc-bkp service logon on FILE-PIN-01. The source is unexpected given the provided context that the organization has no VPN; the records do not establish who or what initiated it.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T090-00310",
+     "T090-00311"
+    ]
+   },
+   {
+    "claim": "The transfer's destination, executable, account, and volume fit the approved backup description, but the nearby svc-bkp ticket from an external address makes it unclear whether this particular run was authorized.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T090-00310",
+     "T090-00311",
+     "T090-00325",
+     "T090-00328",
+     "T090-00331"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Winsec and Sysmon collection for WS-ESTONE-01 was unavailable from 13:25 to 14:10 UTC; this limits review of activity on that workstation during the window. Proxy and Zeek collection were reported as available.",
+   "The available records show the transfer's process and proxied byte counts, but do not show the uploaded data's contents or independently verify the job's authorization."
+  ],
+  "claims_not_established": [
+   "The records do not establish whether the svc-bkp ticket request from 45.79.19.196 was legitimate, how it originated, or whether it caused or authorized the backup run.",
+   "The records do not establish whether the Nightly job was scheduled to run at 13:46 UTC or what files or data it uploaded.",
+   "The matching approved agent and destination do not, by themselves, establish that the transferred data or use of svc-bkp was authorized."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Validate the 13:44:57 svc-bkp Kerberos ticket request and source IP against domain-controller, perimeter, and authentication records; determine the source and whether svc-bkp credentials or tickets were used remotely.",
+   "Confirm the Vaultline job schedule and run history for 13:46 UTC, and obtain its upload manifest or equivalent evidence identifying the transferred data.",
+   "Verify the Vaultline agent's integrity and configuration, and confirm with the backup service or its administrative records that this run and destination were expected."
+  ],
+  "unrelated_findings": [
+   "WS-ESTONE-01 launched mstsc to FILE-PIN-01, and FILE-PIN-01 recorded an RDP logon for emma.stone. This is separate from the backup transfer; assess whether the help-desk session was authorized. (T090-00041, T090-00047, T090-00055)",
+   "FILE-PIN-01 made other proxy requests with a python-requests user agent to receiver.citrix.com and www.bing.com, which are not listed among approved services. These are separate from the alerted Vaultline transfer. (T090-00090, T090-00667)",
+   "FILE-PIN-01 and DC-PIN-01 recorded failed NTLM logons for svc_mgmt with a disabled-account substatus; investigate separately as potentially stale or unauthorized activity. (T090-00636, T090-00642)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 30.3
+}

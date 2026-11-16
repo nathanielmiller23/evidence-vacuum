@@ -1,0 +1,92 @@
+{
+ "run_id": "A__T020__C3__20261115T044310Z",
+ "config": "A",
+ "scenario_id": "T020",
+ "condition": "C3",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 515,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 207748,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The large outbound transfer is strongly consistent with the approved CobaltVault backup: cvagent.exe ran as svc-bkp with a Nightly job targeting ingest.cobaltvault.net, then sent about 640 MB through the proxy to that host.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T020-00278\",\n        \"T020-00279\",\n        \"T020-00281\",\n        \"T020-00285\",\n        \"T020-00286\",\n        \"T020-00287\",\n        \"T020-00288\"\n      ]\n    },\n    {\n      \"claim\": \"Shortly before the transfer, PowerShell on WS-OHADDAD-01 used explicit credentials targeting svc-bkp on FILE-HD-01; the records do not establish why those credentials were used.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T020-00147\"\n      ]\n    },\n    {\n      \"claim\": \"A domain-controller Kerberos service-ticket record shows svc-bkp requesting a ticket for FILE-HD-01 from public IP 23.129.64.210. This is anomalous in the stated no-VPN environment, but the record alone does not establish who controlled that address or whether the request was malicious.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T020-00264\"\n      ]\n    },\n    {\n      \"claim\": \"Lucy Park's workstation connected to FILE-HD-01 over RDP, and FILE-HD-01 recorded a type 10 logon for lucy.park. The inventory says remote administration is only done from WS-OHADDAD-01, so this access is not explained by the stated practice; the records do not show what she did during the session.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T020-00342\",\n        \"T020-00344\",\n        \"T020-00349\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Winsec and Sysmon collection for WS-LPARK-01 was unavailable from 13:30 to 14:10 UTC due to a collection outage, leaving the originating workstation's activity during the RDP session unobserved.\",\n    \"The available transfer records show the proxy tunnel destination, byte counts, and initiating process, but do not establish the contents of the transferred data or independently verify the destination-side backup receipt.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the svc-bkp Kerberos request from the public IP was authorized, spoofed, or made by an attacker.\",\n    \"Why PowerShell on WS-OHADDAD-01 used svc-bkp credentials and whether that use was approved.\",\n    \"Whether Lucy Park's RDP session was authorized support activity or involved suspicious actions.\",\n    \"Whether the transferred data consisted solely of expected backup content.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Determine the ownership and network path for 23.129.64.210, and correlate the svc-bkp ticket request with firewall, domain-controller, and authentication records.\",\n    \"Review the WS-OHADDAD-01 PowerShell command history, script execution records, and relevant change or support tickets around 13:35 UTC.\",\n    \"Recover WS-LPARK-01 endpoint and authentication telemetry for the collection-outage window; review the RDP session's actions and any resulting file access or changes.\",\n    \"Verify the CobaltVault job run, expected data volume, file manifest or hashes, and destination-side receipt with the backup service.\",\n    \"Check svc-bkp credential use and service configuration changes around the transfer for an approved operational explanation.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 76275,
+    "output": 2935,
+    "reasoning": 2080
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "The large outbound transfer is strongly consistent with the approved CobaltVault backup: cvagent.exe ran as svc-bkp with a Nightly job targeting ingest.cobaltvault.net, then sent about 640 MB through the proxy to that host.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T020-00278",
+     "T020-00279",
+     "T020-00281",
+     "T020-00285",
+     "T020-00286",
+     "T020-00287",
+     "T020-00288"
+    ]
+   },
+   {
+    "claim": "Shortly before the transfer, PowerShell on WS-OHADDAD-01 used explicit credentials targeting svc-bkp on FILE-HD-01; the records do not establish why those credentials were used.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00147"
+    ]
+   },
+   {
+    "claim": "A domain-controller Kerberos service-ticket record shows svc-bkp requesting a ticket for FILE-HD-01 from public IP 23.129.64.210. This is anomalous in the stated no-VPN environment, but the record alone does not establish who controlled that address or whether the request was malicious.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T020-00264"
+    ]
+   },
+   {
+    "claim": "Lucy Park's workstation connected to FILE-HD-01 over RDP, and FILE-HD-01 recorded a type 10 logon for lucy.park. The inventory says remote administration is only done from WS-OHADDAD-01, so this access is not explained by the stated practice; the records do not show what she did during the session.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T020-00342",
+     "T020-00344",
+     "T020-00349"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Winsec and Sysmon collection for WS-LPARK-01 was unavailable from 13:30 to 14:10 UTC due to a collection outage, leaving the originating workstation's activity during the RDP session unobserved.",
+   "The available transfer records show the proxy tunnel destination, byte counts, and initiating process, but do not establish the contents of the transferred data or independently verify the destination-side backup receipt."
+  ],
+  "claims_not_established": [
+   "Whether the svc-bkp Kerberos request from the public IP was authorized, spoofed, or made by an attacker.",
+   "Why PowerShell on WS-OHADDAD-01 used svc-bkp credentials and whether that use was approved.",
+   "Whether Lucy Park's RDP session was authorized support activity or involved suspicious actions.",
+   "Whether the transferred data consisted solely of expected backup content."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Determine the ownership and network path for 23.129.64.210, and correlate the svc-bkp ticket request with firewall, domain-controller, and authentication records.",
+   "Review the WS-OHADDAD-01 PowerShell command history, script execution records, and relevant change or support tickets around 13:35 UTC.",
+   "Recover WS-LPARK-01 endpoint and authentication telemetry for the collection-outage window; review the RDP session's actions and any resulting file access or changes.",
+   "Verify the CobaltVault job run, expected data volume, file manifest or hashes, and destination-side receipt with the backup service.",
+   "Check svc-bkp credential use and service configuration changes around the transfer for an approved operational explanation."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 31.0
+}

@@ -1,0 +1,89 @@
+{
+ "scenario_id": "T201",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.84,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Two failed network logons for eli.brooks occurred at 13:45 and 13:47 UTC, from 203.0.113.133; both report an incorrect password.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T201-00008\", \"T201-00009\"]\n    },\n    {\n      \"claim\": \"At 13:48 UTC, the domain controller recorded a successful NTLM network logon for eli.brooks from the same 203.0.113.133 address that made the failed attempts.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T201-00010\"]\n    },\n    {\n      \"claim\": \"The failed attempts followed by a successful logon from the same unrecognized source are consistent with attempted credential guessing followed by accepted credentials. The provided environment context says there is no VPN and remote administration is only performed from WS-KITO-01; the records do not identify this source as that host.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T201-00008\", \"T201-00009\", \"T201-00010\"]\n    },\n    {\n      \"claim\": \"Earlier in the review window, eli.brooks authenticated with Kerberos from 10.54.20.10 to FILE-BLU-01. The records do not establish who or what used that address, so it cannot be treated as a verified baseline for the later source.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T201-00001\", \"T201-00002\", \"T201-00003\"]\n    },\n    {\n      \"claim\": \"A UserAssist registry value on WS-EBROOKS-01 encodes a path to mstsc.exe around the time of the failed logons; this does not establish that an RDP connection was made or that it caused the domain logons.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T201-00006\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy logs for PROXY-BLU-01 were not collected from 13:30 to 14:10 UTC because of a collection outage, which overlaps the alerted activity. This limitation is stated in the supplied sensor coverage metadata, which has no record ID.\",\n    \"Although Zeek sensors are reported as operational, no Zeek connection, DNS, or SSL records for this activity were included in the supplied evidence.\"\n  ],\n  \"claims_not_established\": [\n    \"The identity, device, or physical location behind 203.0.113.133 is not established.\",\n    \"The evidence does not establish how the credentials used in the successful logon were obtained or who used them.\",\n    \"The MSTSC-related registry entry does not establish a remote connection or a causal link to the DC logons.\",\n    \"The available records do not establish what actions, if any, followed the successful logon.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Identify and validate the source associated with 203.0.113.133 using endpoint, DHCP, firewall, and network records.\",\n    \"Review DC and endpoint authentication/session records after 13:48 UTC for activity attributable to this logon.\",\n    \"Recover or obtain relevant proxy and network telemetry for 13:30\u201314:10 UTC, and correlate any available Zeek records.\",\n    \"Verify whether eli.brooks or an approved administrator initiated the logons; consider containment and credential reset while investigating.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 3056,
+    "output": 2788
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.84,
+  "supporting_observations": [
+   {
+    "claim": "Two failed network logons for eli.brooks occurred at 13:45 and 13:47 UTC, from 203.0.113.133; both report an incorrect password.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T201-00008",
+     "T201-00009"
+    ]
+   },
+   {
+    "claim": "At 13:48 UTC, the domain controller recorded a successful NTLM network logon for eli.brooks from the same 203.0.113.133 address that made the failed attempts.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T201-00010"
+    ]
+   },
+   {
+    "claim": "The failed attempts followed by a successful logon from the same unrecognized source are consistent with attempted credential guessing followed by accepted credentials. The provided environment context says there is no VPN and remote administration is only performed from WS-KITO-01; the records do not identify this source as that host.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T201-00008",
+     "T201-00009",
+     "T201-00010"
+    ]
+   },
+   {
+    "claim": "Earlier in the review window, eli.brooks authenticated with Kerberos from 10.54.20.10 to FILE-BLU-01. The records do not establish who or what used that address, so it cannot be treated as a verified baseline for the later source.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T201-00001",
+     "T201-00002",
+     "T201-00003"
+    ]
+   },
+   {
+    "claim": "A UserAssist registry value on WS-EBROOKS-01 encodes a path to mstsc.exe around the time of the failed logons; this does not establish that an RDP connection was made or that it caused the domain logons.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T201-00006"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy logs for PROXY-BLU-01 were not collected from 13:30 to 14:10 UTC because of a collection outage, which overlaps the alerted activity. This limitation is stated in the supplied sensor coverage metadata, which has no record ID.",
+   "Although Zeek sensors are reported as operational, no Zeek connection, DNS, or SSL records for this activity were included in the supplied evidence."
+  ],
+  "claims_not_established": [
+   "The identity, device, or physical location behind 203.0.113.133 is not established.",
+   "The evidence does not establish how the credentials used in the successful logon were obtained or who used them.",
+   "The MSTSC-related registry entry does not establish a remote connection or a causal link to the DC logons.",
+   "The available records do not establish what actions, if any, followed the successful logon."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Identify and validate the source associated with 203.0.113.133 using endpoint, DHCP, firewall, and network records.",
+   "Review DC and endpoint authentication/session records after 13:48 UTC for activity attributable to this logon.",
+   "Recover or obtain relevant proxy and network telemetry for 13:30\u201314:10 UTC, and correlate any available Zeek records.",
+   "Verify whether eli.brooks or an approved administrator initiated the logons; consider containment and credential reset while investigating."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 29.1
+}

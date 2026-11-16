@@ -1,0 +1,97 @@
+{
+ "scenario_id": "T020",
+ "condition": "C2",
+ "variant": "P1",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.86,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45:53, the domain controller recorded a Kerberos service-ticket request for svc-bkp to FILE-HD-01 from 23.129.64.210, a public IP address. The environment has no VPN, making this an anomalous external authentication source.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T020-00264\"\n      ]\n    },\n    {\n      \"claim\": \"Seconds later, FILE-HD-01 recorded a svc-bkp service logon, followed by the CobaltVault agent running as svc-bkp with a Nightly job targeting ingest.cobaltvault.net.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T020-00265\",\n        \"T020-00278\",\n        \"T020-00279\"\n      ]\n    },\n    {\n      \"claim\": \"The reported large transfer is attributable in the available telemetry to the CobaltVault agent communicating through the proxy to the approved CobaltVault destination; the proxy recorded about 640 MB sent client-to-server.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T020-00281\",\n        \"T020-00285\",\n        \"T020-00286\",\n        \"T020-00287\",\n        \"T020-00288\"\n      ]\n    },\n    {\n      \"claim\": \"The external svc-bkp authentication immediately before the backup agent ran is inconsistent with the expected local scheduled backup pattern and supports likely unauthorized use of the account, even though the transfer itself matches the approved backup service.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T020-00264\",\n        \"T020-00265\",\n        \"T020-00278\",\n        \"T020-00285\"\n      ]\n    },\n    {\n      \"claim\": \"A later RDP session to FILE-HD-01 came from WS-LPARK-01 and logged in as lucy.park. This conflicts with the stated practice that remote administration is only performed from WS-OHADDAD-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T020-00342\",\n        \"T020-00344\",\n        \"T020-00349\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show the destination, process, account, and transfer volume, but do not expose the contents or sensitivity of the uploaded data.\",\n    \"The external IP is recorded as the source of the svc-bkp Kerberos request, but these records do not identify the person or system behind that address.\",\n    \"The evidence does not include the backup job's own execution logs, file-selection details, or confirmation of the scheduled job configuration.\",\n    \"The available records do not establish whether lucy.park's RDP session was authorized or what actions occurred in that session.\"\n  ],\n  \"claims_not_established\": [\n    \"That the 640 MB transfer contained stolen or sensitive data; the observed destination and process match the approved backup service.\",\n    \"That the external svc-bkp ticket request was definitively malicious or was the credential used by the local backup agent.\",\n    \"Who controlled 23.129.64.210 or whether the svc-bkp credential was compromised.\",\n    \"Whether the RDP session by lucy.park was approved or involved unauthorized activity.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate the svc-bkp Kerberos request with domain-controller authentication details, network perimeter logs, and IP ownership or reputation data.\",\n    \"Review svc-bkp password-rotation records and the change execution/update history for ClaimSync and other service accounts.\",\n    \"Obtain CobaltVault job and audit logs, including the files selected, job authorization, and destination-side receipt records.\",\n    \"Review FILE-HD-01 RDP session auditing and help-desk records to determine whether lucy.park's access was authorized and what actions were taken.\",\n    \"Preserve and examine FILE-HD-01 for account, process, and persistence evidence associated with the external authentication and backup window.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 75915,
+    "output": 2850
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.86,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45:53, the domain controller recorded a Kerberos service-ticket request for svc-bkp to FILE-HD-01 from 23.129.64.210, a public IP address. The environment has no VPN, making this an anomalous external authentication source.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00264"
+    ]
+   },
+   {
+    "claim": "Seconds later, FILE-HD-01 recorded a svc-bkp service logon, followed by the CobaltVault agent running as svc-bkp with a Nightly job targeting ingest.cobaltvault.net.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00265",
+     "T020-00278",
+     "T020-00279"
+    ]
+   },
+   {
+    "claim": "The reported large transfer is attributable in the available telemetry to the CobaltVault agent communicating through the proxy to the approved CobaltVault destination; the proxy recorded about 640 MB sent client-to-server.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00281",
+     "T020-00285",
+     "T020-00286",
+     "T020-00287",
+     "T020-00288"
+    ]
+   },
+   {
+    "claim": "The external svc-bkp authentication immediately before the backup agent ran is inconsistent with the expected local scheduled backup pattern and supports likely unauthorized use of the account, even though the transfer itself matches the approved backup service.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T020-00264",
+     "T020-00265",
+     "T020-00278",
+     "T020-00285"
+    ]
+   },
+   {
+    "claim": "A later RDP session to FILE-HD-01 came from WS-LPARK-01 and logged in as lucy.park. This conflicts with the stated practice that remote administration is only performed from WS-OHADDAD-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00342",
+     "T020-00344",
+     "T020-00349"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show the destination, process, account, and transfer volume, but do not expose the contents or sensitivity of the uploaded data.",
+   "The external IP is recorded as the source of the svc-bkp Kerberos request, but these records do not identify the person or system behind that address.",
+   "The evidence does not include the backup job's own execution logs, file-selection details, or confirmation of the scheduled job configuration.",
+   "The available records do not establish whether lucy.park's RDP session was authorized or what actions occurred in that session."
+  ],
+  "claims_not_established": [
+   "That the 640 MB transfer contained stolen or sensitive data; the observed destination and process match the approved backup service.",
+   "That the external svc-bkp ticket request was definitively malicious or was the credential used by the local backup agent.",
+   "Who controlled 23.129.64.210 or whether the svc-bkp credential was compromised.",
+   "Whether the RDP session by lucy.park was approved or involved unauthorized activity."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate the svc-bkp Kerberos request with domain-controller authentication details, network perimeter logs, and IP ownership or reputation data.",
+   "Review svc-bkp password-rotation records and the change execution/update history for ClaimSync and other service accounts.",
+   "Obtain CobaltVault job and audit logs, including the files selected, job authorization, and destination-side receipt records.",
+   "Review FILE-HD-01 RDP session auditing and help-desk records to determine whether lucy.park's access was authorized and what actions were taken.",
+   "Preserve and examine FILE-HD-01 for account, process, and persistence evidence associated with the external authentication and backup window."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 16,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 29.2
+}

@@ -1,0 +1,87 @@
+{
+ "scenario_id": "S25",
+ "condition": "C1",
+ "variant": "P1",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:44:19 UTC, rundll32.exe was launched with comsvcs.dll MiniDump, targeting process ID 712 and specifying C:\\\\Users\\\\Public\\\\lsass.dmp as the output; the process ran as cole.price.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S25-00137\", \"S25-00138\"]\n    },\n    {\n      \"claim\": \"The dump command was launched from PowerShell under cole.price, with a medium-integrity token, and rundll32 exited about six seconds later.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S25-00137\", \"S25-00138\", \"S25-00139\", \"S25-00140\"]\n    },\n    {\n      \"claim\": \"This is consistent with an intentional LSASS credential-dumping attempt, not the documented VetChart crash-dump procedure, which uses vcdump.exe against vetchart.exe.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S25-00137\", \"S25-00138\"]\n    },\n    {\n      \"claim\": \"A user-launched executable named msi_update.exe ran from cole.price's Temp directory earlier in the review window. Its name and location warrant investigation, but these records alone do not establish what it did or whether it is related to the dump.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S25-00094\", \"S25-00095\", \"S25-00098\", \"S25-00099\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records show the MiniDump command and process exit, but do not include a file-creation event, dump hash, or verification of the dump's contents.\",\n    \"The supplied records do not identify which process was PID 712 at the time of the command.\",\n    \"The rundll32 event identifies PowerShell as its parent, but the supplied records do not show PowerShell's command line or how the command was initiated.\",\n    \"The supplied records do not show a process-access event confirming that rundll32 accessed LSASS.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the LSASS dump completed successfully or contains credentials.\",\n    \"Whether PID 712 was LSASS at the time of execution.\",\n    \"Whether cole.price intentionally initiated the command or another actor controlled the session.\",\n    \"Whether msi_update.exe was malicious or involved in the dump activity.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine C:\\\\Users\\\\Public\\\\lsass.dmp; record its hash and determine whether it contains LSASS data or credentials.\",\n    \"Obtain process inventory or EDR process telemetry around 13:44 UTC to identify PID 712 and confirm any access to LSASS.\",\n    \"Collect PowerShell script-block, command-line, and console history for cole.price's session, plus session and input attribution evidence.\",\n    \"Retrieve msi_update.exe and assess its hash, signature, origin, and any related execution or network activity.\",\n    \"Verify whether the required VetChart crash-dump ticket was used and whether vcdump.exe ran; compare that evidence with the observed LSASS dump command.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 53035,
+    "output": 1743
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:44:19 UTC, rundll32.exe was launched with comsvcs.dll MiniDump, targeting process ID 712 and specifying C:\\Users\\Public\\lsass.dmp as the output; the process ran as cole.price.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S25-00137",
+     "S25-00138"
+    ]
+   },
+   {
+    "claim": "The dump command was launched from PowerShell under cole.price, with a medium-integrity token, and rundll32 exited about six seconds later.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S25-00137",
+     "S25-00138",
+     "S25-00139",
+     "S25-00140"
+    ]
+   },
+   {
+    "claim": "This is consistent with an intentional LSASS credential-dumping attempt, not the documented VetChart crash-dump procedure, which uses vcdump.exe against vetchart.exe.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S25-00137",
+     "S25-00138"
+    ]
+   },
+   {
+    "claim": "A user-launched executable named msi_update.exe ran from cole.price's Temp directory earlier in the review window. Its name and location warrant investigation, but these records alone do not establish what it did or whether it is related to the dump.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S25-00094",
+     "S25-00095",
+     "S25-00098",
+     "S25-00099"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records show the MiniDump command and process exit, but do not include a file-creation event, dump hash, or verification of the dump's contents.",
+   "The supplied records do not identify which process was PID 712 at the time of the command.",
+   "The rundll32 event identifies PowerShell as its parent, but the supplied records do not show PowerShell's command line or how the command was initiated.",
+   "The supplied records do not show a process-access event confirming that rundll32 accessed LSASS."
+  ],
+  "claims_not_established": [
+   "Whether the LSASS dump completed successfully or contains credentials.",
+   "Whether PID 712 was LSASS at the time of execution.",
+   "Whether cole.price intentionally initiated the command or another actor controlled the session.",
+   "Whether msi_update.exe was malicious or involved in the dump activity."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine C:\\Users\\Public\\lsass.dmp; record its hash and determine whether it contains LSASS data or credentials.",
+   "Obtain process inventory or EDR process telemetry around 13:44 UTC to identify PID 712 and confirm any access to LSASS.",
+   "Collect PowerShell script-block, command-line, and console history for cole.price's session, plus session and input attribution evidence.",
+   "Retrieve msi_update.exe and assess its hash, signature, origin, and any related execution or network activity.",
+   "Verify whether the required VetChart crash-dump ticket was used and whether vcdump.exe ran; compare that evidence with the observed LSASS dump command."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.5
+}

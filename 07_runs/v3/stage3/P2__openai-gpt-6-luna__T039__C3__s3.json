@@ -1,0 +1,73 @@
+{
+ "scenario_id": "T039",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 3,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.87,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45:58 UTC, WS-ICHEN-01 sent 50,100,389 bytes to the internal proxy at 10.40.20.30:8080 in a 9-second HTTP connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T039-00140\"]\n    },\n    {\n      \"claim\": \"The connection record identifies the internal proxy as the destination, but does not identify the external destination, request URL, initiating process, or transferred content.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T039-00140\"]\n    },\n    {\n      \"claim\": \"The large outbound byte count warrants investigation, but the available connection metadata alone does not establish that the transfer was malicious or that it reached an unauthorized external service.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T039-00140\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Winsec and Sysmon collection for WS-ICHEN-01 was unavailable from 13:30 to 14:10 UTC, including the alerted transfer, so process and endpoint activity cannot be attributed during that interval.\",\n    \"Proxy collection for PROXY-NWD-01 was unavailable from 13:30 to 14:10 UTC, so proxy records that could identify the external destination, request, or user associated with the transfer are missing.\",\n    \"Zeek connection telemetry was available, but the alerted record provides only connection-level byte counts and endpoints, not the content or external destination behind the proxy.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the 50 MB was an upload of data, or what data was transferred.\",\n    \"The external destination or service involved in the transfer.\",\n    \"Which process initiated the connection and whether it was authorized.\",\n    \"Whether Ivy Chen initiated or approved the activity.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover proxy request, tunnel, and authentication logs for the alerted connection from proxy-side storage or backups.\",\n    \"Obtain endpoint EDR, process, browser, and file-access telemetry for WS-ICHEN-01 around 13:45:58 UTC.\",\n    \"Determine the external destination, transfer method, file names or content, and whether the transfer was business-authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 14:12\u201314:13 UTC, Chrome on WS-ICHEN-01 visited aws.amazon.com, including its console page; this is after the alerted transfer and does not establish a connection to it. Review separately if AWS use is outside policy. (T039-00266, T039-00267, T039-00286)\",\n    \"A Zscaler ZSATunnel service process started on WS-ICHEN-01 at 14:12:33 UTC. This is outside the alerted transfer and is not evidence about that activity; review separately if the software is unexpected. (T039-00264, T039-00265)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 32353,
+    "output": 1716
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.87,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45:58 UTC, WS-ICHEN-01 sent 50,100,389 bytes to the internal proxy at 10.40.20.30:8080 in a 9-second HTTP connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T039-00140"
+    ]
+   },
+   {
+    "claim": "The connection record identifies the internal proxy as the destination, but does not identify the external destination, request URL, initiating process, or transferred content.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T039-00140"
+    ]
+   },
+   {
+    "claim": "The large outbound byte count warrants investigation, but the available connection metadata alone does not establish that the transfer was malicious or that it reached an unauthorized external service.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T039-00140"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Winsec and Sysmon collection for WS-ICHEN-01 was unavailable from 13:30 to 14:10 UTC, including the alerted transfer, so process and endpoint activity cannot be attributed during that interval.",
+   "Proxy collection for PROXY-NWD-01 was unavailable from 13:30 to 14:10 UTC, so proxy records that could identify the external destination, request, or user associated with the transfer are missing.",
+   "Zeek connection telemetry was available, but the alerted record provides only connection-level byte counts and endpoints, not the content or external destination behind the proxy."
+  ],
+  "claims_not_established": [
+   "Whether the 50 MB was an upload of data, or what data was transferred.",
+   "The external destination or service involved in the transfer.",
+   "Which process initiated the connection and whether it was authorized.",
+   "Whether Ivy Chen initiated or approved the activity."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover proxy request, tunnel, and authentication logs for the alerted connection from proxy-side storage or backups.",
+   "Obtain endpoint EDR, process, browser, and file-access telemetry for WS-ICHEN-01 around 13:45:58 UTC.",
+   "Determine the external destination, transfer method, file names or content, and whether the transfer was business-authorized."
+  ],
+  "unrelated_findings": [
+   "At 14:12\u201314:13 UTC, Chrome on WS-ICHEN-01 visited aws.amazon.com, including its console page; this is after the alerted transfer and does not establish a connection to it. Review separately if AWS use is outside policy. (T039-00266, T039-00267, T039-00286)",
+   "A Zscaler ZSATunnel service process started on WS-ICHEN-01 at 14:12:33 UTC. This is outside the alerted transfer and is not evidence about that activity; review separately if the software is unexpected. (T039-00264, T039-00265)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 3,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 17.3
+}

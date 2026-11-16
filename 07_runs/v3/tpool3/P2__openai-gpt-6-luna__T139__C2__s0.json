@@ -1,0 +1,79 @@
+{
+ "scenario_id": "T139",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.93,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:42 UTC, dan.reyes ran PowerShell from Explorer to compress \\\\\\\\FILE-COP-01\\\\Shared\\\\Clients into C:\\\\Users\\\\dan.reyes\\\\AppData\\\\Local\\\\Temp\\\\c.zip; a file-creation event confirms c.zip was created.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T139-00074\",\n        \"T139-00075\",\n        \"T139-00076\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:47:36 UTC, WS-DREYES-01 sent 51,000,258 bytes through the proxy in a connection attributed to Firefox; the proxy records a successful CONNECT to fastfile-share.io:443 with 51,000,000 client-to-server bytes. The destination is not among the approved services in the supplied inventory.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T139-00108\",\n        \"T139-00109\",\n        \"T139-00110\",\n        \"T139-00111\"\n      ]\n    },\n    {\n      \"claim\": \"The close sequence\u2014creating an archive of the Clients share and then sending about 51 MB to an unapproved file-sharing destination\u2014strongly supports attempted or completed data exfiltration and makes the alerted transfer malicious.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T139-00074\",\n        \"T139-00076\",\n        \"T139-00108\",\n        \"T139-00110\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records a CONNECT tunnel and byte counts, but the available records do not show the HTTPS request method, uploaded filename, or transfer contents. The 51 MB transfer therefore cannot be directly tied to c.zip. (T139-00108, T139-00110)\",\n    \"The process/network records attribute the connection to Firefox, but do not show the browser action or identify which local file, if any, it read. (T139-00109, T139-00111)\"\n  ],\n  \"claims_not_established\": [\n    \"That c.zip, or any specific client data, was the content uploaded.\",\n    \"The contents or sensitivity of the archived directory or the exact data transferred.\",\n    \"Whether dan.reyes had authorization for this specific transfer or whether the destination accepted and retained the data.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Proxy or TLS-inspection records for the fastfile-share.io tunnel that identify the HTTP upload request, filename, response, and destination account, if available.\",\n    \"Endpoint file-access and browser/download/upload telemetry around 13:42\u201313:48 UTC to correlate c.zip or other files with the Firefox transfer.\",\n    \"Preserve and examine c.zip and relevant browser history/cache, and confirm with the business owner whether the transfer was authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"DropboxUpdate.exe ran on WS-DREYES-01; Dropbox is not listed among approved software or services. Investigate separately; these records do not connect it to the alerted transfer. (T139-00079, T139-00080)\",\n    \"Firefox accessed Google Drive pages after the alerted transfer; Google Drive is not among the approved services. The shown requests are page/data GETs and do not establish another upload. Investigate separately. (T139-00119, T139-00120, T139-00124, T139-00125)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 38802,
+    "output": 1709
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.93,
+  "supporting_observations": [
+   {
+    "claim": "At 13:42 UTC, dan.reyes ran PowerShell from Explorer to compress \\\\FILE-COP-01\\Shared\\Clients into C:\\Users\\dan.reyes\\AppData\\Local\\Temp\\c.zip; a file-creation event confirms c.zip was created.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T139-00074",
+     "T139-00075",
+     "T139-00076"
+    ]
+   },
+   {
+    "claim": "At 13:47:36 UTC, WS-DREYES-01 sent 51,000,258 bytes through the proxy in a connection attributed to Firefox; the proxy records a successful CONNECT to fastfile-share.io:443 with 51,000,000 client-to-server bytes. The destination is not among the approved services in the supplied inventory.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T139-00108",
+     "T139-00109",
+     "T139-00110",
+     "T139-00111"
+    ]
+   },
+   {
+    "claim": "The close sequence\u2014creating an archive of the Clients share and then sending about 51 MB to an unapproved file-sharing destination\u2014strongly supports attempted or completed data exfiltration and makes the alerted transfer malicious.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T139-00074",
+     "T139-00076",
+     "T139-00108",
+     "T139-00110"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records a CONNECT tunnel and byte counts, but the available records do not show the HTTPS request method, uploaded filename, or transfer contents. The 51 MB transfer therefore cannot be directly tied to c.zip. (T139-00108, T139-00110)",
+   "The process/network records attribute the connection to Firefox, but do not show the browser action or identify which local file, if any, it read. (T139-00109, T139-00111)"
+  ],
+  "claims_not_established": [
+   "That c.zip, or any specific client data, was the content uploaded.",
+   "The contents or sensitivity of the archived directory or the exact data transferred.",
+   "Whether dan.reyes had authorization for this specific transfer or whether the destination accepted and retained the data."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Proxy or TLS-inspection records for the fastfile-share.io tunnel that identify the HTTP upload request, filename, response, and destination account, if available.",
+   "Endpoint file-access and browser/download/upload telemetry around 13:42\u201313:48 UTC to correlate c.zip or other files with the Firefox transfer.",
+   "Preserve and examine c.zip and relevant browser history/cache, and confirm with the business owner whether the transfer was authorized."
+  ],
+  "unrelated_findings": [
+   "DropboxUpdate.exe ran on WS-DREYES-01; Dropbox is not listed among approved software or services. Investigate separately; these records do not connect it to the alerted transfer. (T139-00079, T139-00080)",
+   "Firefox accessed Google Drive pages after the alerted transfer; Google Drive is not among the approved services. The shown requests are page/data GETs and do not establish another upload. Investigate separately. (T139-00119, T139-00120, T139-00124, T139-00125)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 19.9
+}

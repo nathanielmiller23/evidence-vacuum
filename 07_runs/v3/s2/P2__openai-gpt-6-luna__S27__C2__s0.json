@@ -1,0 +1,81 @@
+{
+ "scenario_id": "S27",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.9,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:42:53 UTC, cole.price was added to the Remote Desktop Users group. The recorded actor was dev.sharma.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S27-00048\"]\n    },\n    {\n      \"claim\": \"The environment states that Remote Desktop Users membership is restricted to IT, while cole.price is a vet tech. The recorded addition therefore conflicts with the stated access policy.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S27-00048\"]\n    },\n    {\n      \"claim\": \"About a minute after the group change, a UserAssist registry entry on cole.price's workstation records use of mstsc.exe. The encoded path decodes to C:\\\\Windows\\\\System32\\\\mstsc.exe, consistent with launching the Remote Desktop client.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S27-00060\"]\n    },\n    {\n      \"claim\": \"The group-change record identifies dev.sharma as the subject, and a DC logon record shortly before the change records a network logon for dev.sharma.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S27-00047\", \"S27-00048\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The UserAssist record indicates mstsc.exe was launched on cole.price's workstation, but the supplied evidence does not show whether a remote connection succeeded or what destination was targeted. [S27-00060]\",\n    \"The supplied records do not include a change ticket or other authorization evidence for the group addition. [S27-00048]\",\n    \"The records identify dev.sharma as the group-change actor, but do not establish whether the action was intentional, authorized, or performed using compromised credentials. [S27-00047, S27-00048]\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish that cole.price successfully connected to any host using Remote Desktop. [S27-00060]\",\n    \"The evidence does not establish whether dev.sharma made the change for an undocumented legitimate reason or whether the account or session was compromised. [S27-00047, S27-00048]\",\n    \"The evidence does not establish that the group change had a valid ticket or approval. [S27-00048]\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Check change-management records for an authorization or ticket covering cole.price's addition to Remote Desktop Users.\",\n    \"Review DC and server security logs after the group change for successful RDP logons by cole.price, including source host and destination.\",\n    \"Collect network and endpoint telemetry from WS-CPRICE-01 to determine whether mstsc.exe made a connection and to which host.\",\n    \"Investigate dev.sharma's session and account activity around the group change to determine whether the action was authorized or the account was compromised.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-DSHARMA-01's dev.sharma account launched ssh.exe and connected to PROXY-RB-01 on TCP port 22; SSH is not among the approved remote-access tools in the supplied environment context. This is separate from the alerted group change. [S27-00004, S27-00007, S27-00066, S27-00069]\",\n    \"dev.sharma launched mstsc.exe from WS-DSHARMA-01 to FILE-RB-01, with a corresponding RDP logon on FILE-RB-01. This is from the designated administration workstation and is not itself evidence that cole.price used RDP. [S27-00049, S27-00052, S27-00053]\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 13628,
+    "output": 2297
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.9,
+  "supporting_observations": [
+   {
+    "claim": "At 13:42:53 UTC, cole.price was added to the Remote Desktop Users group. The recorded actor was dev.sharma.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S27-00048"
+    ]
+   },
+   {
+    "claim": "The environment states that Remote Desktop Users membership is restricted to IT, while cole.price is a vet tech. The recorded addition therefore conflicts with the stated access policy.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S27-00048"
+    ]
+   },
+   {
+    "claim": "About a minute after the group change, a UserAssist registry entry on cole.price's workstation records use of mstsc.exe. The encoded path decodes to C:\\Windows\\System32\\mstsc.exe, consistent with launching the Remote Desktop client.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S27-00060"
+    ]
+   },
+   {
+    "claim": "The group-change record identifies dev.sharma as the subject, and a DC logon record shortly before the change records a network logon for dev.sharma.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S27-00047",
+     "S27-00048"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The UserAssist record indicates mstsc.exe was launched on cole.price's workstation, but the supplied evidence does not show whether a remote connection succeeded or what destination was targeted. [S27-00060]",
+   "The supplied records do not include a change ticket or other authorization evidence for the group addition. [S27-00048]",
+   "The records identify dev.sharma as the group-change actor, but do not establish whether the action was intentional, authorized, or performed using compromised credentials. [S27-00047, S27-00048]"
+  ],
+  "claims_not_established": [
+   "The evidence does not establish that cole.price successfully connected to any host using Remote Desktop. [S27-00060]",
+   "The evidence does not establish whether dev.sharma made the change for an undocumented legitimate reason or whether the account or session was compromised. [S27-00047, S27-00048]",
+   "The evidence does not establish that the group change had a valid ticket or approval. [S27-00048]"
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Check change-management records for an authorization or ticket covering cole.price's addition to Remote Desktop Users.",
+   "Review DC and server security logs after the group change for successful RDP logons by cole.price, including source host and destination.",
+   "Collect network and endpoint telemetry from WS-CPRICE-01 to determine whether mstsc.exe made a connection and to which host.",
+   "Investigate dev.sharma's session and account activity around the group change to determine whether the action was authorized or the account was compromised."
+  ],
+  "unrelated_findings": [
+   "WS-DSHARMA-01's dev.sharma account launched ssh.exe and connected to PROXY-RB-01 on TCP port 22; SSH is not among the approved remote-access tools in the supplied environment context. This is separate from the alerted group change. [S27-00004, S27-00007, S27-00066, S27-00069]",
+   "dev.sharma launched mstsc.exe from WS-DSHARMA-01 to FILE-RB-01, with a corresponding RDP logon on FILE-RB-01. This is from the designated administration workstation and is not itself evidence that cole.price used RDP. [S27-00049, S27-00052, S27-00053]"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 5,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.7
+}

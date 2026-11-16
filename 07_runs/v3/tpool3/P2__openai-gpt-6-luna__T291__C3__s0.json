@@ -1,0 +1,75 @@
+{
+ "scenario_id": "T291",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.92,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded two failed network logons for raul.diaz from 198.51.100.77, at 13:43:42 and 13:45:17 UTC. Both were NTLM failures with substatus 0xc000006a, indicating an incorrect password.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T291-00010\",\n        \"T291-00020\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:46:23 UTC, the domain controller recorded a successful network logon for raul.diaz using Kerberos from the same reported source address, 198.51.100.77, shortly after the failures.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T291-00021\"\n      ]\n    },\n    {\n      \"claim\": \"The sequence of failed password attempts followed by a successful logon from the same unrecognized source is consistent with unauthorized credential use. The inventory says there is no VPN, making the activity especially concerning.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T291-00010\",\n        \"T291-00020\",\n        \"T291-00021\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy logs were not collected from 13:20 to 14:00 UTC because of a collection outage; therefore, proxy activity during part of the review window cannot be assessed.\",\n    \"The supplied authentication records do not identify a corresponding managed endpoint for source address 198.51.100.77.\"\n  ],\n  \"claims_not_established\": [\n    \"The records do not establish who controlled the source address or whether it was a real external system, a relay, or an artifact of the logging or network path.\",\n    \"The records do not establish how the successful authentication occurred or whether the account's credentials were compromised.\",\n    \"The records do not establish what actions, if any, followed the successful logon.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate the source address and timestamps with firewall, network, and domain-controller authentication details to identify the origin and path of the successful logon.\",\n    \"Review raul.diaz's account and domain-controller activity immediately after 13:46 UTC for follow-on access or changes.\",\n    \"Confirm with raul.diaz and the relevant IT administrator whether the authentication was expected, and verify the account's credential status.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox.exe was launched by raul.diaz during the review window. Dropbox is not among the approved services listed in the environment context; this is separate from the alerted authentication activity.\",\n    \"GlobalProtect and Cisco AnyConnect user-interface processes were launched by raul.diaz. The inventory says there is no VPN; these process launches do not establish that a VPN connection occurred.\",\n    \"Slack activity is visible after 14:00 UTC. This is outside the alerted authentication sequence and does not determine this alert.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 8237,
+    "output": 1723
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.92,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded two failed network logons for raul.diaz from 198.51.100.77, at 13:43:42 and 13:45:17 UTC. Both were NTLM failures with substatus 0xc000006a, indicating an incorrect password.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T291-00010",
+     "T291-00020"
+    ]
+   },
+   {
+    "claim": "At 13:46:23 UTC, the domain controller recorded a successful network logon for raul.diaz using Kerberos from the same reported source address, 198.51.100.77, shortly after the failures.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T291-00021"
+    ]
+   },
+   {
+    "claim": "The sequence of failed password attempts followed by a successful logon from the same unrecognized source is consistent with unauthorized credential use. The inventory says there is no VPN, making the activity especially concerning.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T291-00010",
+     "T291-00020",
+     "T291-00021"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy logs were not collected from 13:20 to 14:00 UTC because of a collection outage; therefore, proxy activity during part of the review window cannot be assessed.",
+   "The supplied authentication records do not identify a corresponding managed endpoint for source address 198.51.100.77."
+  ],
+  "claims_not_established": [
+   "The records do not establish who controlled the source address or whether it was a real external system, a relay, or an artifact of the logging or network path.",
+   "The records do not establish how the successful authentication occurred or whether the account's credentials were compromised.",
+   "The records do not establish what actions, if any, followed the successful logon."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate the source address and timestamps with firewall, network, and domain-controller authentication details to identify the origin and path of the successful logon.",
+   "Review raul.diaz's account and domain-controller activity immediately after 13:46 UTC for follow-on access or changes.",
+   "Confirm with raul.diaz and the relevant IT administrator whether the authentication was expected, and verify the account's credential status."
+  ],
+  "unrelated_findings": [
+   "Dropbox.exe was launched by raul.diaz during the review window. Dropbox is not among the approved services listed in the environment context; this is separate from the alerted authentication activity.",
+   "GlobalProtect and Cisco AnyConnect user-interface processes were launched by raul.diaz. The inventory says there is no VPN; these process launches do not establish that a VPN connection occurred.",
+   "Slack activity is visible after 14:00 UTC. This is outside the alerted authentication sequence and does not determine this alert."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 6,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 17.0
+}

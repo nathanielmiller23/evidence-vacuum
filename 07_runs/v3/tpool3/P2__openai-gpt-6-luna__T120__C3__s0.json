@@ -1,0 +1,81 @@
+{
+ "scenario_id": "T120",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:49:52 UTC, FILE-COP-01 (10.52.20.20) sent a connection reporting 640,000,409 origin bytes to 10.52.20.30 on port 8080; the connection lasted about 19 seconds. This is the observed large transfer relevant to the alert.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T120-00311\"]\n    },\n    {\n      \"claim\": \"A separate HTTP connection from FILE-COP-01 to the same address and port occurred seconds earlier, but reported only 1,469 origin bytes.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T120-00310\"]\n    },\n    {\n      \"claim\": \"The transfer's reported volume is compatible in scale with the organization's documented several-hundred-MB Ironvault backup uploads, but the available connection record does not identify the application or establish that this was an approved backup.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T120-00311\"]\n    },\n    {\n      \"claim\": \"The large connection is recorded to 10.52.20.30:8080, not to an external destination; the available record does not reveal where the proxy forwarded the data.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T120-00311\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Provided sensor-coverage metadata (no record_id supplied) says FILE-COP-01 winsec and Sysmon, and PROXY-COP-01 proxy logs, were not collected from 13:25 to 14:20 UTC because of a collection outage.\",\n    \"Zeek connection logging is available for the large transfer, but the available record contains no process attribution, URL, or upstream destination.\",\n    \"The records show the large transfer at 13:49:52 UTC; they do not establish that this specific connection began at the alert's approximate 13:46 UTC time. (T120-00311)\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the process responsible for the 640,000,409 origin bytes was the approved Ironvault agent or another process. (T120-00311)\",\n    \"Whether the proxy forwarded the data to ironvault-cloud.com or to an unapproved destination; the observed connection ends at 10.52.20.30:8080, and proxy logs were unavailable per the supplied coverage metadata. (T120-00311)\",\n    \"What files or data were transferred, and whether the transfer was authorized.\",\n    \"Whether the large transfer was malicious or part of a scheduled or otherwise authorized backup.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover or obtain proxy logs for the transfer, including URL or upstream host, authenticated user, request method, and byte counts.\",\n    \"Collect FILE-COP-01 process and endpoint telemetry around 13:49:52 UTC to identify the process responsible for the connection and its command line or parent process.\",\n    \"Review Ironvault agent and backup-job logs, including job timing and upload records, for a matching transfer.\",\n    \"If available, inspect relevant file-access or backup audit logs to establish which data was read or staged.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:49:14 UTC, DC-COP-01 recorded a Kerberos service-ticket event for svc-backup with source IP 91.219.236.174. The evidence does not connect this event to the large proxy transfer; investigate separately. (T120-00298)\",\n    \"At 13:59:32 UTC, sara.ali launched Remote Desktop to FILE-COP-01 from WS-SALI-01, and a corresponding RDP connection is recorded. Given the supplied practice that remote administration is only performed from WS-PBECKER-01, investigate this separately; it does not establish who or what initiated the earlier large transfer. (T120-00422, T120-00423, T120-00427)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 55790,
+    "output": 2819
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "At 13:49:52 UTC, FILE-COP-01 (10.52.20.20) sent a connection reporting 640,000,409 origin bytes to 10.52.20.30 on port 8080; the connection lasted about 19 seconds. This is the observed large transfer relevant to the alert.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T120-00311"
+    ]
+   },
+   {
+    "claim": "A separate HTTP connection from FILE-COP-01 to the same address and port occurred seconds earlier, but reported only 1,469 origin bytes.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T120-00310"
+    ]
+   },
+   {
+    "claim": "The transfer's reported volume is compatible in scale with the organization's documented several-hundred-MB Ironvault backup uploads, but the available connection record does not identify the application or establish that this was an approved backup.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T120-00311"
+    ]
+   },
+   {
+    "claim": "The large connection is recorded to 10.52.20.30:8080, not to an external destination; the available record does not reveal where the proxy forwarded the data.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T120-00311"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Provided sensor-coverage metadata (no record_id supplied) says FILE-COP-01 winsec and Sysmon, and PROXY-COP-01 proxy logs, were not collected from 13:25 to 14:20 UTC because of a collection outage.",
+   "Zeek connection logging is available for the large transfer, but the available record contains no process attribution, URL, or upstream destination.",
+   "The records show the large transfer at 13:49:52 UTC; they do not establish that this specific connection began at the alert's approximate 13:46 UTC time. (T120-00311)"
+  ],
+  "claims_not_established": [
+   "Whether the process responsible for the 640,000,409 origin bytes was the approved Ironvault agent or another process. (T120-00311)",
+   "Whether the proxy forwarded the data to ironvault-cloud.com or to an unapproved destination; the observed connection ends at 10.52.20.30:8080, and proxy logs were unavailable per the supplied coverage metadata. (T120-00311)",
+   "What files or data were transferred, and whether the transfer was authorized.",
+   "Whether the large transfer was malicious or part of a scheduled or otherwise authorized backup."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover or obtain proxy logs for the transfer, including URL or upstream host, authenticated user, request method, and byte counts.",
+   "Collect FILE-COP-01 process and endpoint telemetry around 13:49:52 UTC to identify the process responsible for the connection and its command line or parent process.",
+   "Review Ironvault agent and backup-job logs, including job timing and upload records, for a matching transfer.",
+   "If available, inspect relevant file-access or backup audit logs to establish which data was read or staged."
+  ],
+  "unrelated_findings": [
+   "At 13:49:14 UTC, DC-COP-01 recorded a Kerberos service-ticket event for svc-backup with source IP 91.219.236.174. The evidence does not connect this event to the large proxy transfer; investigate separately. (T120-00298)",
+   "At 13:59:32 UTC, sara.ali launched Remote Desktop to FILE-COP-01 from WS-SALI-01, and a corresponding RDP connection is recorded. Given the supplied practice that remote administration is only performed from WS-PBECKER-01, investigate this separately; it does not establish who or what initiated the earlier large transfer. (T120-00422, T120-00423, T120-00427)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 4,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 27.2
+}

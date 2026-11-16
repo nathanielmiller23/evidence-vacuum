@@ -1,0 +1,73 @@
+{
+ "scenario_id": "T047",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 1,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:43:55 UTC, the domain-controller log records creation of the enabled account sysmaint by sam.okafor; about one second later, sam.okafor adds sysmaint to the Administrators group. This is inconsistent with the stated temporary-account practice, which limits help-desk accounts to the Freelancers group, and no matching change approval is provided.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T047-00081\",\n        \"T047-00082\"\n      ]\n    },\n    {\n      \"claim\": \"Shortly before the account changes, WS-LMARTINS-01 received an RDP connection from 203.0.113.250 and recorded a type-10 logon for sam.okafor from that address. The provided environment context says there is no VPN and remote administration is only performed from WS-SOKAFOR-01, making this access inconsistent with the stated practice.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T047-00063\",\n        \"T047-00064\",\n        \"T047-00065\"\n      ]\n    },\n    {\n      \"claim\": \"A scheduled task created under sam.okafor's session on WS-LMARTINS-01 runs hidden PowerShell with an encoded command. The command decodes to a web request for a.ps1 at 203.0.113.250; this is suspicious corroborating activity, though the record does not show that the task executed.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T047-00065\",\n        \"T047-00083\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available task-registration record shows the configured action, not proof of task execution or successful retrieval of the script (T047-00083).\",\n    \"The account creation and group-addition records use subject logon ID 0xcb3d075, while the workstation RDP session uses logon ID 0x34cf8fb; the supplied records do not directly correlate those sessions (T047-00065, T047-00081, T047-00082).\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish who controlled the RDP connection from 203.0.113.250 or whether sam.okafor's credentials were compromised (T047-00063, T047-00065).\",\n    \"The evidence does not establish whether sysmaint was subsequently used, whether its privileges were used, or whether the account was later removed (T047-00081, T047-00082).\",\n    \"The evidence does not establish that the scheduled task ran or that its referenced script was downloaded or executed (T047-00083).\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Validate the account creation and administrator-group change with sam.okafor, and obtain any relevant approval or change record.\",\n    \"Correlate domain-controller authentication and account-management logs with the RDP session, including the differing logon IDs.\",\n    \"Review WS-LMARTINS-01 task execution, PowerShell, network, file, and endpoint-protection telemetry for the task and referenced script.\",\n    \"Determine the source and attribution of the RDP connection and check whether sysmaint was used after creation.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 27903,
+    "output": 2142
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "At 13:43:55 UTC, the domain-controller log records creation of the enabled account sysmaint by sam.okafor; about one second later, sam.okafor adds sysmaint to the Administrators group. This is inconsistent with the stated temporary-account practice, which limits help-desk accounts to the Freelancers group, and no matching change approval is provided.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T047-00081",
+     "T047-00082"
+    ]
+   },
+   {
+    "claim": "Shortly before the account changes, WS-LMARTINS-01 received an RDP connection from 203.0.113.250 and recorded a type-10 logon for sam.okafor from that address. The provided environment context says there is no VPN and remote administration is only performed from WS-SOKAFOR-01, making this access inconsistent with the stated practice.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T047-00063",
+     "T047-00064",
+     "T047-00065"
+    ]
+   },
+   {
+    "claim": "A scheduled task created under sam.okafor's session on WS-LMARTINS-01 runs hidden PowerShell with an encoded command. The command decodes to a web request for a.ps1 at 203.0.113.250; this is suspicious corroborating activity, though the record does not show that the task executed.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T047-00065",
+     "T047-00083"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available task-registration record shows the configured action, not proof of task execution or successful retrieval of the script (T047-00083).",
+   "The account creation and group-addition records use subject logon ID 0xcb3d075, while the workstation RDP session uses logon ID 0x34cf8fb; the supplied records do not directly correlate those sessions (T047-00065, T047-00081, T047-00082)."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish who controlled the RDP connection from 203.0.113.250 or whether sam.okafor's credentials were compromised (T047-00063, T047-00065).",
+   "The evidence does not establish whether sysmaint was subsequently used, whether its privileges were used, or whether the account was later removed (T047-00081, T047-00082).",
+   "The evidence does not establish that the scheduled task ran or that its referenced script was downloaded or executed (T047-00083)."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Validate the account creation and administrator-group change with sam.okafor, and obtain any relevant approval or change record.",
+   "Correlate domain-controller authentication and account-management logs with the RDP session, including the differing logon IDs.",
+   "Review WS-LMARTINS-01 task execution, PowerShell, network, file, and endpoint-protection telemetry for the task and referenced script.",
+   "Determine the source and attribution of the RDP connection and check whether sysmaint was used after creation."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 7,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.8
+}

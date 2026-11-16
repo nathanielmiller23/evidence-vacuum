@@ -1,0 +1,86 @@
+{
+ "run_id": "A__T029__C1__20261115T044803Z",
+ "config": "A",
+ "scenario_id": "T029",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 308,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 128464,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45:17, maria.lopez ran PowerShell to compress \\\\\\\\FILE-HD-01\\\\Shared\\\\Clients into C:\\\\Users\\\\maria.lopez\\\\AppData\\\\Local\\\\Temp\\\\c.zip; Sysmon then recorded creation of that archive.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T029-00132\", \"T029-00133\", \"T029-00134\"]\n    },\n    {\n      \"claim\": \"Shortly afterward, maria.lopez launched Chrome to sendbox-files.io. The proxy recorded a successful tunnel with 51,000,000 client-to-server bytes and 8,800 server-to-client bytes, consistent with a large outbound upload.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T029-00155\", \"T029-00156\", \"T029-00173\", \"T029-00174\", \"T029-00175\", \"T029-00176\"]\n    },\n    {\n      \"claim\": \"The sequence of archiving the Clients share and then sending tens of megabytes to sendbox-files.io supports a likely data-exfiltration interpretation. The supplied environment context says no file-sharing services other than Microsoft 365/OneDrive and cobaltvault.net are approved.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T029-00132\", \"T029-00134\", \"T029-00155\", \"T029-00173\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and Zeek records show tunnel byte counts, but do not expose the uploaded payload or prove that c.zip was the transferred content (T029-00173, T029-00174).\",\n    \"The file-creation event establishes that c.zip was created but does not provide its size, contents, or hash (T029-00134).\",\n    \"The available records do not establish the user's intent or whether the activity had an undocumented authorization (T029-00132, T029-00155, T029-00173).\"\n  ],\n  \"claims_not_established\": [\n    \"That the 51,000,000 outbound bytes were exactly c.zip or contained all or any particular files from the Clients share.\",\n    \"What data was in the archive, whether it was sensitive, and whether the recipient retained or accessed it.\",\n    \"Whether maria.lopez acted with malicious intent or had an exception or authorization not included in the supplied context.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine c.zip and relevant source files; collect file size, hash, contents, and timestamps.\",\n    \"Obtain any available proxy TLS inspection, destination-side, or endpoint browser/upload telemetry to identify the uploaded object and recipient account.\",\n    \"Review FILE-HD-01 file-access auditing for access to \\\\\\\\Shared\\\\Clients and determine which files were read or staged.\",\n    \"Confirm with the data owner and maria.lopez whether the transfer was authorized, and review any exception or approval records.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 47389,
+    "output": 1470,
+    "reasoning": 768
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45:17, maria.lopez ran PowerShell to compress \\\\FILE-HD-01\\Shared\\Clients into C:\\Users\\maria.lopez\\AppData\\Local\\Temp\\c.zip; Sysmon then recorded creation of that archive.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T029-00132",
+     "T029-00133",
+     "T029-00134"
+    ]
+   },
+   {
+    "claim": "Shortly afterward, maria.lopez launched Chrome to sendbox-files.io. The proxy recorded a successful tunnel with 51,000,000 client-to-server bytes and 8,800 server-to-client bytes, consistent with a large outbound upload.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T029-00155",
+     "T029-00156",
+     "T029-00173",
+     "T029-00174",
+     "T029-00175",
+     "T029-00176"
+    ]
+   },
+   {
+    "claim": "The sequence of archiving the Clients share and then sending tens of megabytes to sendbox-files.io supports a likely data-exfiltration interpretation. The supplied environment context says no file-sharing services other than Microsoft 365/OneDrive and cobaltvault.net are approved.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T029-00132",
+     "T029-00134",
+     "T029-00155",
+     "T029-00173"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and Zeek records show tunnel byte counts, but do not expose the uploaded payload or prove that c.zip was the transferred content (T029-00173, T029-00174).",
+   "The file-creation event establishes that c.zip was created but does not provide its size, contents, or hash (T029-00134).",
+   "The available records do not establish the user's intent or whether the activity had an undocumented authorization (T029-00132, T029-00155, T029-00173)."
+  ],
+  "claims_not_established": [
+   "That the 51,000,000 outbound bytes were exactly c.zip or contained all or any particular files from the Clients share.",
+   "What data was in the archive, whether it was sensitive, and whether the recipient retained or accessed it.",
+   "Whether maria.lopez acted with malicious intent or had an exception or authorization not included in the supplied context."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine c.zip and relevant source files; collect file size, hash, contents, and timestamps.",
+   "Obtain any available proxy TLS inspection, destination-side, or endpoint browser/upload telemetry to identify the uploaded object and recipient account.",
+   "Review FILE-HD-01 file-access auditing for access to \\\\Shared\\Clients and determine which files were read or staged.",
+   "Confirm with the data owner and maria.lopez whether the transfer was authorized, and review any exception or approval records."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 15.4
+}

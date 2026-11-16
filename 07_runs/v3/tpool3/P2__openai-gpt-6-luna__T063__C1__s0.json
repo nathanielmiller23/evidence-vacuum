@@ -1,0 +1,97 @@
+{
+ "scenario_id": "T063",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"On WS-ARUIZ-01, ana.ruiz launched a Word document named Statement.docm; three seconds later WINWORD spawned PowerShell with -nop, -w hidden, and an encoded command. This records a suspicious document-to-PowerShell execution chain.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T063-00092\", \"T063-00096\", \"T063-00097\"]\n    },\n    {\n      \"claim\": \"The encoded PowerShell command decodes to an expression that downloads and executes a script using IEX and Net.WebClient from raw.githubusercontent.com/pinecrest-it/tools/main/u.ps1. The proxy recorded a successful GET for that URL.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T063-00096\", \"T063-00097\", \"T063-00100\"]\n    },\n    {\n      \"claim\": \"Two seconds after PowerShell started, it spawned rundll32 to invoke Init in C:\\\\Users\\\\ana.ruiz\\\\AppData\\\\Roaming\\\\svchelper.dll. This is consistent with the downloaded command leading to execution of a DLL from the user profile.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T063-00101\", \"T063-00102\"]\n    },\n    {\n      \"claim\": \"The recorded malicious chain occurred at 13:44:07\u201313:44:12 UTC on the alerted workstation and under ana.ruiz\u2019s account, within the review window, although it does not establish that this was the exact window the user noticed.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T063-00092\", \"T063-00096\", \"T063-00101\"]\n    },\n    {\n      \"claim\": \"Explorer recorded a UserAssist entry whose ROT13-encoded name decodes to the PowerShell executable path; this suggests PowerShell was also recorded in Explorer activity earlier, but does not by itself prove a process launch or its purpose.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T063-00028\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show the command line and a successful proxy request, but do not include the contents or hash of u.ps1 or svchelper.dll; the script and DLL behavior cannot be verified from these logs alone (T063-00096, T063-00100, T063-00101).\",\n    \"The process records place the document-to-PowerShell chain at 13:44, rather than exactly 13:40. The evidence does not identify which process, if any, produced the specific window ana.ruiz reported (T063-00092, T063-00096; earlier UserAssist entry: T063-00028).\",\n    \"The available records do not establish how Statement.docm arrived on the workstation, whether the user intentionally opened it, or whether the referenced GitHub content was authorized.\"\n  ],\n  \"claims_not_established\": [\n    \"The exact contents, provenance, and authorization status of Statement.docm, u.ps1, and svchelper.dll are not established by the available records.\",\n    \"The evidence does not establish the exact PowerShell window the user observed or whether the 13:44 execution caused that observation.\",\n    \"The available records do not establish whether the malicious chain achieved persistence, accessed or exfiltrated data, or affected other systems.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire Statement.docm, u.ps1, and svchelper.dll, preserving timestamps and computing hashes; inspect the document\u2019s macro and the script and DLL contents.\",\n    \"Retrieve proxy response or cache content for the GitHub request and determine what content was served at the time.\",\n    \"Review endpoint security detections, quarantine and scan results, file creation and modification telemetry, and persistence locations on WS-ARUIZ-01.\",\n    \"Investigate the origin and delivery path of Statement.docm and confirm with ana.ruiz whether and when she opened it or saw a PowerShell window.\",\n    \"Scope the script URL, DLL, and any resulting indicators across other endpoints and relevant identity, network, and file-server logs.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-ARUIZ-01 ran DropboxUpdate.exe from its Dropbox installation path. Dropbox is not among the approved services listed in the environment context; the records do not show that it participated in the PowerShell chain. Track separately (T063-00029, T063-00030, T063-00042, T063-00043).\",\n    \"Kerberos records show raj.patel authenticating from the WS-ARUIZ-01 address, followed by a network logon for raj.patel on WS-RPATEL-01. This is inconsistent with the stated practice that remote administration is done only from WS-RPATEL-01 and merits separate review; it is not used to determine this alert (T063-00076, T063-00077, T063-00079).\",\n    \"WS-ARUIZ-01 established TLS connections with SNI WS-TWEBER-01.pinecrest.local. The records identify svchost.exe as the originating process but do not explain the purpose; review separately without treating this as evidence for the alert (T063-00119, T063-00120, T063-00121, T063-00123, T063-00135, T063-00137, T063-00333, T063-00335).\",\n    \"A later SMB connection from WS-ARUIZ-01 to DC-PIN-01 was associated with an ANONYMOUS LOGON network session. Its purpose is not established and should be reviewed separately, not used to decide this alert (T063-00322, T063-00326).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 52159,
+    "output": 4184
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "On WS-ARUIZ-01, ana.ruiz launched a Word document named Statement.docm; three seconds later WINWORD spawned PowerShell with -nop, -w hidden, and an encoded command. This records a suspicious document-to-PowerShell execution chain.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T063-00092",
+     "T063-00096",
+     "T063-00097"
+    ]
+   },
+   {
+    "claim": "The encoded PowerShell command decodes to an expression that downloads and executes a script using IEX and Net.WebClient from raw.githubusercontent.com/pinecrest-it/tools/main/u.ps1. The proxy recorded a successful GET for that URL.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T063-00096",
+     "T063-00097",
+     "T063-00100"
+    ]
+   },
+   {
+    "claim": "Two seconds after PowerShell started, it spawned rundll32 to invoke Init in C:\\Users\\ana.ruiz\\AppData\\Roaming\\svchelper.dll. This is consistent with the downloaded command leading to execution of a DLL from the user profile.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T063-00101",
+     "T063-00102"
+    ]
+   },
+   {
+    "claim": "The recorded malicious chain occurred at 13:44:07\u201313:44:12 UTC on the alerted workstation and under ana.ruiz\u2019s account, within the review window, although it does not establish that this was the exact window the user noticed.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T063-00092",
+     "T063-00096",
+     "T063-00101"
+    ]
+   },
+   {
+    "claim": "Explorer recorded a UserAssist entry whose ROT13-encoded name decodes to the PowerShell executable path; this suggests PowerShell was also recorded in Explorer activity earlier, but does not by itself prove a process launch or its purpose.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T063-00028"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show the command line and a successful proxy request, but do not include the contents or hash of u.ps1 or svchelper.dll; the script and DLL behavior cannot be verified from these logs alone (T063-00096, T063-00100, T063-00101).",
+   "The process records place the document-to-PowerShell chain at 13:44, rather than exactly 13:40. The evidence does not identify which process, if any, produced the specific window ana.ruiz reported (T063-00092, T063-00096; earlier UserAssist entry: T063-00028).",
+   "The available records do not establish how Statement.docm arrived on the workstation, whether the user intentionally opened it, or whether the referenced GitHub content was authorized."
+  ],
+  "claims_not_established": [
+   "The exact contents, provenance, and authorization status of Statement.docm, u.ps1, and svchelper.dll are not established by the available records.",
+   "The evidence does not establish the exact PowerShell window the user observed or whether the 13:44 execution caused that observation.",
+   "The available records do not establish whether the malicious chain achieved persistence, accessed or exfiltrated data, or affected other systems."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire Statement.docm, u.ps1, and svchelper.dll, preserving timestamps and computing hashes; inspect the document\u2019s macro and the script and DLL contents.",
+   "Retrieve proxy response or cache content for the GitHub request and determine what content was served at the time.",
+   "Review endpoint security detections, quarantine and scan results, file creation and modification telemetry, and persistence locations on WS-ARUIZ-01.",
+   "Investigate the origin and delivery path of Statement.docm and confirm with ana.ruiz whether and when she opened it or saw a PowerShell window.",
+   "Scope the script URL, DLL, and any resulting indicators across other endpoints and relevant identity, network, and file-server logs."
+  ],
+  "unrelated_findings": [
+   "WS-ARUIZ-01 ran DropboxUpdate.exe from its Dropbox installation path. Dropbox is not among the approved services listed in the environment context; the records do not show that it participated in the PowerShell chain. Track separately (T063-00029, T063-00030, T063-00042, T063-00043).",
+   "Kerberos records show raj.patel authenticating from the WS-ARUIZ-01 address, followed by a network logon for raj.patel on WS-RPATEL-01. This is inconsistent with the stated practice that remote administration is done only from WS-RPATEL-01 and merits separate review; it is not used to determine this alert (T063-00076, T063-00077, T063-00079).",
+   "WS-ARUIZ-01 established TLS connections with SNI WS-TWEBER-01.pinecrest.local. The records identify svchost.exe as the originating process but do not explain the purpose; review separately without treating this as evidence for the alert (T063-00119, T063-00120, T063-00121, T063-00123, T063-00135, T063-00137, T063-00333, T063-00335).",
+   "A later SMB connection from WS-ARUIZ-01 to DC-PIN-01 was associated with an ANONYMOUS LOGON network session. Its purpose is not established and should be reviewed separately, not used to decide this alert (T063-00322, T063-00326)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 42.4
+}

@@ -1,0 +1,98 @@
+{
+ "scenario_id": "T243",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:42:40 UTC, zoe.adams opened C:\\\\Users\\\\zoe.adams\\\\Downloads\\\\Statement.docm in Microsoft Word.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T243-00216\", \"T243-00217\"]\n    },\n    {\n      \"claim\": \"About 11 seconds later, Word spawned PowerShell with no-profile, hidden-window, and encoded-command options. Decoding the command line indicates it uses WebClient.DownloadString to retrieve a script from raw.githubusercontent.com/sunridge-it/tools/main/u.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T243-00220\", \"T243-00221\"]\n    },\n    {\n      \"claim\": \"The proxy recorded a successful GET for that GitHub-hosted u.ps1 path, and Sysmon attributed the corresponding proxy connection to the alerted PowerShell process.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T243-00223\", \"T243-00224\", \"T243-00226\"]\n    },\n    {\n      \"claim\": \"PowerShell then launched rundll32 to execute C:\\\\Users\\\\zoe.adams\\\\AppData\\\\Roaming\\\\svchelper.dll,Init; the process ran briefly and exited.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T243-00231\", \"T243-00234\", \"T243-00235\", \"T243-00236\"]\n    },\n    {\n      \"claim\": \"The Word-to-hidden-encoded-PowerShell-to-downloaded-script-to-rundll32/DLL chain is consistent with malicious document-driven code execution, not routine workstation patching described in the environment context.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T243-00216\", \"T243-00220\", \"T243-00223\", \"T243-00231\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The provided records show process creation, proxy request metadata, and network connections, but do not include the retrieved script contents or the DLL contents.\",\n    \"No record in the provided evidence identifies how Statement.docm arrived on the workstation or who supplied it.\"\n  ],\n  \"claims_not_established\": [\n    \"The contents and behavior of u.ps1 and svchelper.dll are not established by the available records.\",\n    \"The evidence does not establish whether the DLL created persistence, accessed credentials, moved laterally, or collected or exfiltrated data.\",\n    \"The evidence does not establish whether the user knowingly opened the document or whether the GitHub repository or account was controlled by an authorized party.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and analyze Statement.docm, u.ps1, and svchelper.dll; obtain hashes, timestamps, and available file-origin metadata.\",\n    \"Acquire the exact GitHub-hosted script version returned at 13:42:53 UTC, including relevant repository history and proxy response content if retained.\",\n    \"Collect endpoint forensic data for WS-ZADAMS-01 around the execution, including file writes, registry and scheduled-task changes, memory, and subsequent network activity.\",\n    \"Review email, browser-download, and other delivery records to determine the document's source and scope any related recipients.\"\n  ],\n  \"unrelated_findings\": [\n    \"Google Drive File Stream launched on WS-ZADAMS-01; the inventory lists OneDrive as approved but does not list Google Drive. This is a separate software/use review and does not determine the alert. (T243-00171, T243-00172)\",\n    \"Chrome browsed Postman shortly before the alerted execution; this is separate activity and is not evidence that Postman caused the PowerShell execution. (T243-00156, T243-00157, T243-00161, T243-00163)\",\n    \"Chrome made a Dropbox shared-links API POST after the alerted execution; this is an unapproved cloud-storage service per the inventory and merits a separate review, but does not establish data transfer or decide this alert. (T243-00275)\",\n    \"GlobalProtect and Cisco AnyConnect processes appeared on WS-ZADAMS-01 despite the inventory stating there is no VPN. The records do not establish an active VPN connection. (T243-00048, T243-00077, T243-00397)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 67538,
+    "output": 1772
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:42:40 UTC, zoe.adams opened C:\\Users\\zoe.adams\\Downloads\\Statement.docm in Microsoft Word.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T243-00216",
+     "T243-00217"
+    ]
+   },
+   {
+    "claim": "About 11 seconds later, Word spawned PowerShell with no-profile, hidden-window, and encoded-command options. Decoding the command line indicates it uses WebClient.DownloadString to retrieve a script from raw.githubusercontent.com/sunridge-it/tools/main/u.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T243-00220",
+     "T243-00221"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a successful GET for that GitHub-hosted u.ps1 path, and Sysmon attributed the corresponding proxy connection to the alerted PowerShell process.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T243-00223",
+     "T243-00224",
+     "T243-00226"
+    ]
+   },
+   {
+    "claim": "PowerShell then launched rundll32 to execute C:\\Users\\zoe.adams\\AppData\\Roaming\\svchelper.dll,Init; the process ran briefly and exited.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T243-00231",
+     "T243-00234",
+     "T243-00235",
+     "T243-00236"
+    ]
+   },
+   {
+    "claim": "The Word-to-hidden-encoded-PowerShell-to-downloaded-script-to-rundll32/DLL chain is consistent with malicious document-driven code execution, not routine workstation patching described in the environment context.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T243-00216",
+     "T243-00220",
+     "T243-00223",
+     "T243-00231"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The provided records show process creation, proxy request metadata, and network connections, but do not include the retrieved script contents or the DLL contents.",
+   "No record in the provided evidence identifies how Statement.docm arrived on the workstation or who supplied it."
+  ],
+  "claims_not_established": [
+   "The contents and behavior of u.ps1 and svchelper.dll are not established by the available records.",
+   "The evidence does not establish whether the DLL created persistence, accessed credentials, moved laterally, or collected or exfiltrated data.",
+   "The evidence does not establish whether the user knowingly opened the document or whether the GitHub repository or account was controlled by an authorized party."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and analyze Statement.docm, u.ps1, and svchelper.dll; obtain hashes, timestamps, and available file-origin metadata.",
+   "Acquire the exact GitHub-hosted script version returned at 13:42:53 UTC, including relevant repository history and proxy response content if retained.",
+   "Collect endpoint forensic data for WS-ZADAMS-01 around the execution, including file writes, registry and scheduled-task changes, memory, and subsequent network activity.",
+   "Review email, browser-download, and other delivery records to determine the document's source and scope any related recipients."
+  ],
+  "unrelated_findings": [
+   "Google Drive File Stream launched on WS-ZADAMS-01; the inventory lists OneDrive as approved but does not list Google Drive. This is a separate software/use review and does not determine the alert. (T243-00171, T243-00172)",
+   "Chrome browsed Postman shortly before the alerted execution; this is separate activity and is not evidence that Postman caused the PowerShell execution. (T243-00156, T243-00157, T243-00161, T243-00163)",
+   "Chrome made a Dropbox shared-links API POST after the alerted execution; this is an unapproved cloud-storage service per the inventory and merits a separate review, but does not establish data transfer or decide this alert. (T243-00275)",
+   "GlobalProtect and Cisco AnyConnect processes appeared on WS-ZADAMS-01 despite the inventory stating there is no VPN. The records do not establish an active VPN connection. (T243-00048, T243-00077, T243-00397)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 19.1
+}

@@ -1,0 +1,89 @@
+{
+ "scenario_id": "T150",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.82,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The large transfer in the records is a 640,000,000-byte outbound proxy tunnel to ingest.safeharbor-backup.net, with only 39,000 bytes returning; the transfer began at 13:50:30 UTC, not around the alert's stated 13:46 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T150-00370\"\n      ]\n    },\n    {\n      \"claim\": \"Immediately before the transfer, the domain controller recorded a service-ticket event for svc-vault from public IP 139.162.174.124; FILE-MAP-01 then logged a svc-vault service logon.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T150-00329\",\n        \"T150-00330\"\n      ]\n    },\n    {\n      \"claim\": \"The Safeharbor agent ran as svc-vault under the same logon ID as that service logon and initiated the large upload about a minute later.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T150-00330\",\n        \"T150-00368\",\n        \"T150-00369\",\n        \"T150-00370\",\n        \"T150-00375\"\n      ]\n    },\n    {\n      \"claim\": \"Although Safeharbor and its agent are approved and the transfer destination matches the approved backup service, the preceding svc-vault authentication from a public IP is inconsistent with the stated environment (no VPN; remote administration only from WS-AHASSAN-01). The close account, process, and transfer linkage makes this transfer suspicious despite the approved tool and destination.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T150-00329\",\n        \"T150-00330\",\n        \"T150-00368\",\n        \"T150-00370\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show proxy tunnel byte counts and a related GET, but not the contents of the uploaded data.\",\n    \"The supplied records do not establish whether the svc-vault ticket request from the public IP was authorized or how it occurred.\",\n    \"The bulk upload recorded here starts at 13:50:30 UTC, several minutes after the alert's stated approximate time; the records do not explain that timing difference.\",\n    \"The records identify the agent path and command line but provide no file hash, signature-validation result, or backup-job configuration to independently verify the executable and job.\"\n  ],\n  \"claims_not_established\": [\n    \"That the uploaded data was stolen, sensitive, or outside the intended backup set.\",\n    \"That the public IP event was definitively an attacker rather than a logging, routing, or other anomaly.\",\n    \"That the alert's stated 13:46 time corresponds to the 13:50:30 transfer in the records.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate the alert's original flow/time with proxy and network telemetry to resolve the 13:46 versus 13:50:30 discrepancy.\",\n    \"Review domain-controller authentication details and perimeter/network records for the svc-vault ticket request from 139.162.174.124; validate whether that source is legitimate.\",\n    \"Collect Safeharbor job schedules, backup manifests, service configuration, and agent hash/signature validation to determine whether this upload was expected and what data it contained.\",\n    \"Review svc-vault credential use and changes around the event, including relevant account, service, and endpoint audit records.\"\n  ],\n  \"unrelated_findings\": [\n    \"greta.lund initiated an RDP session to FILE-MAP-01 from WS-GLUND-01, although the stated remote-administration practice assigns that activity to ali.hassan from WS-AHASSAN-01. This is a separate access review and is not used to decide the transfer alert. (T150-00286, T150-00293, T150-00298)\",\n    \"FILE-MAP-01 made proxy connections labeled GlobalProtect and Zscaler Client Connector, neither of which is listed as approved in the supplied inventory. Investigate separately; these connections do not establish the cause of the Safeharbor transfer. (T150-00308, T150-00596)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 88795,
+    "output": 2724
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.82,
+  "supporting_observations": [
+   {
+    "claim": "The large transfer in the records is a 640,000,000-byte outbound proxy tunnel to ingest.safeharbor-backup.net, with only 39,000 bytes returning; the transfer began at 13:50:30 UTC, not around the alert's stated 13:46 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T150-00370"
+    ]
+   },
+   {
+    "claim": "Immediately before the transfer, the domain controller recorded a service-ticket event for svc-vault from public IP 139.162.174.124; FILE-MAP-01 then logged a svc-vault service logon.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T150-00329",
+     "T150-00330"
+    ]
+   },
+   {
+    "claim": "The Safeharbor agent ran as svc-vault under the same logon ID as that service logon and initiated the large upload about a minute later.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T150-00330",
+     "T150-00368",
+     "T150-00369",
+     "T150-00370",
+     "T150-00375"
+    ]
+   },
+   {
+    "claim": "Although Safeharbor and its agent are approved and the transfer destination matches the approved backup service, the preceding svc-vault authentication from a public IP is inconsistent with the stated environment (no VPN; remote administration only from WS-AHASSAN-01). The close account, process, and transfer linkage makes this transfer suspicious despite the approved tool and destination.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T150-00329",
+     "T150-00330",
+     "T150-00368",
+     "T150-00370"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show proxy tunnel byte counts and a related GET, but not the contents of the uploaded data.",
+   "The supplied records do not establish whether the svc-vault ticket request from the public IP was authorized or how it occurred.",
+   "The bulk upload recorded here starts at 13:50:30 UTC, several minutes after the alert's stated approximate time; the records do not explain that timing difference.",
+   "The records identify the agent path and command line but provide no file hash, signature-validation result, or backup-job configuration to independently verify the executable and job."
+  ],
+  "claims_not_established": [
+   "That the uploaded data was stolen, sensitive, or outside the intended backup set.",
+   "That the public IP event was definitively an attacker rather than a logging, routing, or other anomaly.",
+   "That the alert's stated 13:46 time corresponds to the 13:50:30 transfer in the records."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate the alert's original flow/time with proxy and network telemetry to resolve the 13:46 versus 13:50:30 discrepancy.",
+   "Review domain-controller authentication details and perimeter/network records for the svc-vault ticket request from 139.162.174.124; validate whether that source is legitimate.",
+   "Collect Safeharbor job schedules, backup manifests, service configuration, and agent hash/signature validation to determine whether this upload was expected and what data it contained.",
+   "Review svc-vault credential use and changes around the event, including relevant account, service, and endpoint audit records."
+  ],
+  "unrelated_findings": [
+   "greta.lund initiated an RDP session to FILE-MAP-01 from WS-GLUND-01, although the stated remote-administration practice assigns that activity to ali.hassan from WS-AHASSAN-01. This is a separate access review and is not used to decide the transfer alert. (T150-00286, T150-00293, T150-00298)",
+   "FILE-MAP-01 made proxy connections labeled GlobalProtect and Zscaler Client Connector, neither of which is listed as approved in the supplied inventory. Investigate separately; these connections do not establish the cause of the Safeharbor transfer. (T150-00308, T150-00596)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 32.4
+}

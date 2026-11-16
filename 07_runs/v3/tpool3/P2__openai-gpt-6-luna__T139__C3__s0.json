@@ -1,0 +1,90 @@
+{
+ "scenario_id": "T139",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:47:36 UTC, WS-DREYES-01 sent approximately 51 MB outbound through the proxy in a CONNECT tunnel to fastfile-share.io:443. The proxy attributed the connection to dan.reyes.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T139-00108\", \"T139-00110\"]\n    },\n    {\n      \"claim\": \"The large transfer was associated with Firefox: the workstation firewall record identifies Firefox.exe for the connection, and the corresponding Sysmon network event uses the same process ID.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T139-00109\", \"T139-00111\"]\n    },\n    {\n      \"claim\": \"About five minutes before the transfer, dan.reyes ran PowerShell to compress \\\\\\\\FILE-COP-01\\\\Shared\\\\Clients into c.zip in the user's Temp directory; Sysmon recorded creation of that archive.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T139-00074\", \"T139-00075\", \"T139-00076\"]\n    },\n    {\n      \"claim\": \"The timing and sequence of archiving client-share data followed by a large upload to a file-sharing-named external domain strongly support attempted data exfiltration. The inventory lists no other file-sharing or cloud-storage services as approved.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T139-00074\", \"T139-00076\", \"T139-00108\", \"T139-00110\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The transfer used an HTTPS CONNECT tunnel, so these records establish destination and byte counts but do not reveal the uploaded file, its contents, or the precise application-level request (T139-00110).\",\n    \"DC-COP-01 winsec collection was unavailable from 13:30 to 14:10 UTC, limiting domain-event corroboration during that interval; Sysmon, proxy, and Zeek connection collection were reported available.\",\n    \"The records do not establish whether c.zip, or any particular file, was the material uploaded.\"\n  ],\n  \"claims_not_established\": [\n    \"The exact files or data contained in the approximately 51 MB upload.\",\n    \"That c.zip was the uploaded object, or that the uploaded content came from the Shared\\\\\\\\Clients directory.\",\n    \"The identity of the person operating the workstation or their intent; the proxy record attributes the connection to dan.reyes.\",\n    \"Who controlled or received the destination content, or whether it was subsequently accessed or retained.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve WS-DREYES-01 and collect browser history, upload artifacts, relevant process and file-access telemetry, and the c.zip file or recoverable remnants; compare its size and contents with the transfer where possible.\",\n    \"Obtain any available proxy TLS inspection, destination-side, or provider records to identify the uploaded object and recipient account.\",\n    \"Review access and audit records for \\\\\\\\FILE-COP-01\\\\Shared\\\\Clients and interview dan.reyes about the archive and transfer.\",\n    \"Investigate and contain the workstation and account as appropriate while preserving evidence.\"\n  ],\n  \"unrelated_findings\": [\n    \"Firefox accessed Google Drive pages shortly after the alerted transfer. These records show page and resource GETs, not a confirmed upload; handle as a separate review of access to an unapproved cloud-storage service (T139-00119, T139-00120, T139-00124, T139-00125).\",\n    \"Firefox accessed the AWS console and EC2 console pages. The records show console browsing, not a confirmed data transfer or relationship to the alerted upload (T139-00144, T139-00147, T139-00161).\",\n    \"Cisco AnyConnect vpnagent.exe started on WS-DREYES-01 despite the inventory stating there is no VPN. These records establish process execution, not an active VPN connection (T139-00252, T139-00253).\",\n    \"DropboxUpdate.exe ran on WS-DREYES-01; the supplied records do not show a Dropbox connection or transfer (T139-00079, T139-00080, T139-00081, T139-00082).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 39070,
+    "output": 2907
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "At 13:47:36 UTC, WS-DREYES-01 sent approximately 51 MB outbound through the proxy in a CONNECT tunnel to fastfile-share.io:443. The proxy attributed the connection to dan.reyes.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T139-00108",
+     "T139-00110"
+    ]
+   },
+   {
+    "claim": "The large transfer was associated with Firefox: the workstation firewall record identifies Firefox.exe for the connection, and the corresponding Sysmon network event uses the same process ID.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T139-00109",
+     "T139-00111"
+    ]
+   },
+   {
+    "claim": "About five minutes before the transfer, dan.reyes ran PowerShell to compress \\\\FILE-COP-01\\Shared\\Clients into c.zip in the user's Temp directory; Sysmon recorded creation of that archive.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T139-00074",
+     "T139-00075",
+     "T139-00076"
+    ]
+   },
+   {
+    "claim": "The timing and sequence of archiving client-share data followed by a large upload to a file-sharing-named external domain strongly support attempted data exfiltration. The inventory lists no other file-sharing or cloud-storage services as approved.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T139-00074",
+     "T139-00076",
+     "T139-00108",
+     "T139-00110"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The transfer used an HTTPS CONNECT tunnel, so these records establish destination and byte counts but do not reveal the uploaded file, its contents, or the precise application-level request (T139-00110).",
+   "DC-COP-01 winsec collection was unavailable from 13:30 to 14:10 UTC, limiting domain-event corroboration during that interval; Sysmon, proxy, and Zeek connection collection were reported available.",
+   "The records do not establish whether c.zip, or any particular file, was the material uploaded."
+  ],
+  "claims_not_established": [
+   "The exact files or data contained in the approximately 51 MB upload.",
+   "That c.zip was the uploaded object, or that the uploaded content came from the Shared\\\\Clients directory.",
+   "The identity of the person operating the workstation or their intent; the proxy record attributes the connection to dan.reyes.",
+   "Who controlled or received the destination content, or whether it was subsequently accessed or retained."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve WS-DREYES-01 and collect browser history, upload artifacts, relevant process and file-access telemetry, and the c.zip file or recoverable remnants; compare its size and contents with the transfer where possible.",
+   "Obtain any available proxy TLS inspection, destination-side, or provider records to identify the uploaded object and recipient account.",
+   "Review access and audit records for \\\\FILE-COP-01\\Shared\\Clients and interview dan.reyes about the archive and transfer.",
+   "Investigate and contain the workstation and account as appropriate while preserving evidence."
+  ],
+  "unrelated_findings": [
+   "Firefox accessed Google Drive pages shortly after the alerted transfer. These records show page and resource GETs, not a confirmed upload; handle as a separate review of access to an unapproved cloud-storage service (T139-00119, T139-00120, T139-00124, T139-00125).",
+   "Firefox accessed the AWS console and EC2 console pages. The records show console browsing, not a confirmed data transfer or relationship to the alerted upload (T139-00144, T139-00147, T139-00161).",
+   "Cisco AnyConnect vpnagent.exe started on WS-DREYES-01 despite the inventory stating there is no VPN. These records establish process execution, not an active VPN connection (T139-00252, T139-00253).",
+   "DropboxUpdate.exe ran on WS-DREYES-01; the supplied records do not show a Dropbox connection or transfer (T139-00079, T139-00080, T139-00081, T139-00082)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 28.7
+}

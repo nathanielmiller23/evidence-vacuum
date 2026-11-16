@@ -1,0 +1,82 @@
+{
+ "scenario_id": "T161",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.9,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded two failed network logons for noah.kim from 198.51.100.201 within about 90 seconds. Both report an incorrect-password status, and the attempts used Negotiate and NTLM authentication.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T161-00036\", \"T161-00037\"]\n    },\n    {\n      \"claim\": \"About one minute after the second failure, the domain controller recorded a successful Kerberos network logon for noah.kim from the same source address, 198.51.100.201.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T161-00037\", \"T161-00040\"]\n    },\n    {\n      \"claim\": \"The failure-then-success sequence from the same source is strongly suspicious for attempted credential guessing followed by successful use of a credential. The supplied inventory states there is no VPN and remote administration is only from WS-AHASSAN-01; the records do not identify the source as an approved host.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T161-00036\", \"T161-00037\", \"T161-00040\"]\n    },\n    {\n      \"claim\": \"At nearly the same time as the successful domain logon, WS-NKIM-01 recorded a local unlock for noah.kim in the existing workstation session. This is relevant context but does not establish that the source address was authorized or that the successful domain logon came from that workstation.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T161-00038\", \"T161-00039\", \"T161-00040\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied collection-status report says proxy logs were not collected from 13:20 through 14:00 UTC because of an outage, limiting visibility into web requests during part of the review window.\",\n    \"The available records do not map source address 198.51.100.201 to a person, device, or network path.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the successful logon was authorized by noah.kim or another legitimate user.\",\n    \"What device or network path was represented by source address 198.51.100.201.\",\n    \"Whether the successful logon led to any further access or activity.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate the source address with perimeter, firewall, NAT, and network records for the event times.\",\n    \"Review additional domain-controller authentication and session records tied to the successful logon.\",\n    \"Confirm with noah.kim whether the failed attempts and successful network logon were expected.\",\n    \"Review relevant endpoint and network telemetry for activity following the successful logon.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 4763,
+    "output": 2369
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.9,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded two failed network logons for noah.kim from 198.51.100.201 within about 90 seconds. Both report an incorrect-password status, and the attempts used Negotiate and NTLM authentication.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T161-00036",
+     "T161-00037"
+    ]
+   },
+   {
+    "claim": "About one minute after the second failure, the domain controller recorded a successful Kerberos network logon for noah.kim from the same source address, 198.51.100.201.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T161-00037",
+     "T161-00040"
+    ]
+   },
+   {
+    "claim": "The failure-then-success sequence from the same source is strongly suspicious for attempted credential guessing followed by successful use of a credential. The supplied inventory states there is no VPN and remote administration is only from WS-AHASSAN-01; the records do not identify the source as an approved host.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T161-00036",
+     "T161-00037",
+     "T161-00040"
+    ]
+   },
+   {
+    "claim": "At nearly the same time as the successful domain logon, WS-NKIM-01 recorded a local unlock for noah.kim in the existing workstation session. This is relevant context but does not establish that the source address was authorized or that the successful domain logon came from that workstation.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T161-00038",
+     "T161-00039",
+     "T161-00040"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied collection-status report says proxy logs were not collected from 13:20 through 14:00 UTC because of an outage, limiting visibility into web requests during part of the review window.",
+   "The available records do not map source address 198.51.100.201 to a person, device, or network path."
+  ],
+  "claims_not_established": [
+   "Whether the successful logon was authorized by noah.kim or another legitimate user.",
+   "What device or network path was represented by source address 198.51.100.201.",
+   "Whether the successful logon led to any further access or activity."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate the source address with perimeter, firewall, NAT, and network records for the event times.",
+   "Review additional domain-controller authentication and session records tied to the successful logon.",
+   "Confirm with noah.kim whether the failed attempts and successful network logon were expected.",
+   "Review relevant endpoint and network telemetry for activity following the successful logon."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 28.3
+}

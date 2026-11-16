@@ -1,0 +1,92 @@
+{
+ "scenario_id": "T010",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6.1-sol",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45:23 UTC, FILE-HD-01 started cvagent.exe as svc-bkp with a command targeting https://ingest.cobaltvault.net. The executable, account and destination are consistent with the supplied approved-backup inventory, but this alone does not identify the alerted bulk transfer.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T010-00320\",\n        \"T010-00321\"\n      ]\n    },\n    {\n      \"claim\": \"The backup process PID 3736 connected to the explicit proxy using source port 61847. Matching proxy records identify ingest.cobaltvault.net and an inspected GET request; the corresponding network connection records only 1,851 outbound bytes and 24,422 inbound bytes, not hundreds of MB.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T010-00322\",\n        \"T010-00323\",\n        \"T010-00324\",\n        \"T010-00325\",\n        \"T010-00326\"\n      ]\n    },\n    {\n      \"claim\": \"A subsequent CobaltVault CONNECT received HTTP 407 authentication-required. PID 3736's corresponding connection on source port 56386 carried 616 outbound bytes and 1,993 inbound bytes.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T010-00329\",\n        \"T010-00330\",\n        \"T010-00331\",\n        \"T010-00332\"\n      ]\n    },\n    {\n      \"claim\": \"The recorded backup process terminated at approximately 13:45:59 UTC. Its observed small connections and termination do not establish that it performed the alerted large transfer around 13:46 UTC.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T010-00325\",\n        \"T010-00331\",\n        \"T010-00336\",\n        \"T010-00337\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied evidence contains no flow or proxy record showing the reported hundreds-of-MB outbound transfer. The original alert's destination, connection tuple, byte counters and measurement interval are not provided.\",\n    \"The available CobaltVault network records show small exchanges, an inspected GET and an authentication challenge, rather than a bulk upload (T010-00322 through T010-00326; T010-00329 through T010-00332). They cannot substitute for telemetry of the alerted transfer.\",\n    \"Process creation records establish an executable path and command line, not successful backup completion or the contents transferred (T010-00320, T010-00321).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the reported large outbound transfer occurred as described, and which destination, process and account were responsible.\",\n    \"Whether the alerted activity was an authorized CobaltVault backup, malicious exfiltration or another activity.\",\n    \"Whether any sensitive files left the organization; no payload or file-level evidence for the alerted transfer is supplied.\",\n    \"Whether the backup job ultimately succeeded; the recorded instance encountered a proxy authentication challenge and then exited (T010-00329, T010-00336, T010-00337).\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Obtain the original network alert and underlying flow records, including exact start/end times, source and destination addresses and ports, directional byte counts and sensor location.\",\n    \"Retrieve complete proxy access and tunnel-completion logs for FILE-HD-01 during 13:20\u201314:20 UTC, including client source ports, tunnel IDs, destinations and directional byte totals.\",\n    \"Correlate the actual bulk-transfer connection tuple with endpoint network events and process lifetime records.\",\n    \"Obtain CobaltVault job logs and server-side receipt records showing job status, uploaded byte counts and destination, and reconcile them with the alerted flow.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate software-policy review: FILE-HD-01 proxy requests advertise GlobalProtect and Zscaler user agents to updates.paloaltonetworks.com, config.zscaler.net and gateway.zscaler.net. These are outside the supplied approved-service inventory, but the records do not prove an active VPN or link them to the alerted bulk transfer (T010-00123, T010-00234, T010-00271, T010-00277, T010-00473).\",\n    \"Separate investigation: FILE-HD-01 initiated a connection to WS-OHADDAD-01 TCP/135 at 14:05:34 UTC. Validate its purpose; these records establish RPC-endpoint connectivity, not remote command execution or a connection to the alerted transfer (T010-00528, T010-00529, T010-00530).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 103803,
+    "output": 1102
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45:23 UTC, FILE-HD-01 started cvagent.exe as svc-bkp with a command targeting https://ingest.cobaltvault.net. The executable, account and destination are consistent with the supplied approved-backup inventory, but this alone does not identify the alerted bulk transfer.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T010-00320",
+     "T010-00321"
+    ]
+   },
+   {
+    "claim": "The backup process PID 3736 connected to the explicit proxy using source port 61847. Matching proxy records identify ingest.cobaltvault.net and an inspected GET request; the corresponding network connection records only 1,851 outbound bytes and 24,422 inbound bytes, not hundreds of MB.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T010-00322",
+     "T010-00323",
+     "T010-00324",
+     "T010-00325",
+     "T010-00326"
+    ]
+   },
+   {
+    "claim": "A subsequent CobaltVault CONNECT received HTTP 407 authentication-required. PID 3736's corresponding connection on source port 56386 carried 616 outbound bytes and 1,993 inbound bytes.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T010-00329",
+     "T010-00330",
+     "T010-00331",
+     "T010-00332"
+    ]
+   },
+   {
+    "claim": "The recorded backup process terminated at approximately 13:45:59 UTC. Its observed small connections and termination do not establish that it performed the alerted large transfer around 13:46 UTC.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T010-00325",
+     "T010-00331",
+     "T010-00336",
+     "T010-00337"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied evidence contains no flow or proxy record showing the reported hundreds-of-MB outbound transfer. The original alert's destination, connection tuple, byte counters and measurement interval are not provided.",
+   "The available CobaltVault network records show small exchanges, an inspected GET and an authentication challenge, rather than a bulk upload (T010-00322 through T010-00326; T010-00329 through T010-00332). They cannot substitute for telemetry of the alerted transfer.",
+   "Process creation records establish an executable path and command line, not successful backup completion or the contents transferred (T010-00320, T010-00321)."
+  ],
+  "claims_not_established": [
+   "Whether the reported large outbound transfer occurred as described, and which destination, process and account were responsible.",
+   "Whether the alerted activity was an authorized CobaltVault backup, malicious exfiltration or another activity.",
+   "Whether any sensitive files left the organization; no payload or file-level evidence for the alerted transfer is supplied.",
+   "Whether the backup job ultimately succeeded; the recorded instance encountered a proxy authentication challenge and then exited (T010-00329, T010-00336, T010-00337)."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Obtain the original network alert and underlying flow records, including exact start/end times, source and destination addresses and ports, directional byte counts and sensor location.",
+   "Retrieve complete proxy access and tunnel-completion logs for FILE-HD-01 during 13:20\u201314:20 UTC, including client source ports, tunnel IDs, destinations and directional byte totals.",
+   "Correlate the actual bulk-transfer connection tuple with endpoint network events and process lifetime records.",
+   "Obtain CobaltVault job logs and server-side receipt records showing job status, uploaded byte counts and destination, and reconcile them with the alerted flow."
+  ],
+  "unrelated_findings": [
+   "Separate software-policy review: FILE-HD-01 proxy requests advertise GlobalProtect and Zscaler user agents to updates.paloaltonetworks.com, config.zscaler.net and gateway.zscaler.net. These are outside the supplied approved-service inventory, but the records do not prove an active VPN or link them to the alerted bulk transfer (T010-00123, T010-00234, T010-00271, T010-00277, T010-00473).",
+   "Separate investigation: FILE-HD-01 initiated a connection to WS-OHADDAD-01 TCP/135 at 14:05:34 UTC. Validate its purpose; these records establish RPC-endpoint connectivity, not remote command execution or a connection to the alerted transfer (T010-00528, T010-00529, T010-00530)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.5
+}

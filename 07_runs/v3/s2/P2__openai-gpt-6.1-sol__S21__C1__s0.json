@@ -1,0 +1,98 @@
+{
+ "scenario_id": "S21",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6.1-sol",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted RDP session successfully authenticated to FILE-RB-01 at 13:41:56 UTC as RIVERBEND\\\\dev.sharma, using logon ID 0x11c5e164. The server recorded logon type 10 and source WS-CPRICE-01 / 10.60.10.22.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S21-00212\", \"S21-00213\"]\n    },\n    {\n      \"claim\": \"Source-side process and network records corroborate the RDP origin: dev.sharma launched mstsc.exe /v:FILE-RB-01 on WS-CPRICE-01, and that process connected to 10.60.20.20:3389.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S21-00199\", \"S21-00204\", \"S21-00209\"]\n    },\n    {\n      \"claim\": \"Immediately before the RDP connection, WS-CPRICE-01 recorded a local interactive logon as dev.sharma and an explorer.exe process in the same local logon session, 0xdf2c9b0.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S21-00193\", \"S21-00197\", \"S21-00199\"]\n    },\n    {\n      \"claim\": \"The confirmed RDP origin violates the supplied administration baseline, which permits server remote administration only from WS-DSHARMA-01. This supports investigation of unauthorized administration, but does not alone establish malicious intent or account compromise.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S21-00199\", \"S21-00209\", \"S21-00212\"]\n    },\n    {\n      \"claim\": \"The destination session started userinit.exe and explorer.exe under dev.sharma with logon ID 0x11c5e164. These records establish an interactive desktop session, not its purpose.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S21-00214\", \"S21-00216\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not establish commands, file access, or administrative changes performed within alerted destination logon ID 0x11c5e164; the session-linked process evidence shows desktop initialization (S21-00214, S21-00216).\",\n    \"The 14:03:38 RDP logoff belongs to logon ID 0x11bd8611, not alerted logon ID 0x11c5e164, so it cannot establish when the alerted session ended (S21-00375, S21-00212).\",\n    \"Successful authentication and the local interactive logon identify the account used, not the human operating it (S21-00193, S21-00212).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether dev.sharma personally initiated the alerted RDP session or another operator used the account.\",\n    \"Whether the RDP session was an intentional policy exception, an administrator mistake, or malicious use of credentials.\",\n    \"Whether the alerted session performed credential theft, persistence, data access, exfiltration, or other harmful actions.\",\n    \"Whether the scheduled VetChart support work explains this server RDP session; the supplied change-calendar context does not itself authorize administration from WS-CPRICE-01.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Confirm with dev.sharma and the ticket owner whether the 13:41:56 UTC RDP session from WS-CPRICE-01 was initiated intentionally and whether any exception was approved.\",\n    \"Collect Terminal Services session lifecycle records for FILE-RB-01 and map logon ID 0x11c5e164 to its session ID, disconnects, reconnects, and logoff.\",\n    \"Collect endpoint process trees, PowerShell logging, file/share access audits, and administrative-change records attributable to logon ID 0x11c5e164.\",\n    \"Review WS-CPRICE-01 authentication and endpoint activity around local logon ID 0xdf2c9b0 to determine how the administrator account came to be used there.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separately investigate SYSTEM-context PowerShell on WS-CPRICE-01 supplying explicit svc-rbbackup credentials for FILE-RB-01 at 14:03:18 UTC. The record does not link this activity to the alerted RDP logon (S21-00370).\",\n    \"Validate the Meridian ServiceHealth executable against software inventory: it started as SYSTEM through services.exe and later connected through the proxy; a contemporaneous proxy record names www.bing.com. No supplied record links its execution to the alerted session (S21-00267, S21-00300, S21-00303, S21-00304).\",\n    \"Validate the dev.sharma-admin account and its use for a runas /netonly ADMIN$ directory listing from WS-DSHARMA-01. This is a separate network logon, 0x11c8006a, rather than the alerted RDP session (S21-00335, S21-00339, S21-00340).\",\n    \"Review Slack access against the approved-services inventory; a successful CONNECT to slack.com was recorded for dev.sharma on WS-DSHARMA-01. This does not establish anything malicious about the alerted RDP session (S21-00081).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 74257,
+    "output": 1293
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "The alerted RDP session successfully authenticated to FILE-RB-01 at 13:41:56 UTC as RIVERBEND\\dev.sharma, using logon ID 0x11c5e164. The server recorded logon type 10 and source WS-CPRICE-01 / 10.60.10.22.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S21-00212",
+     "S21-00213"
+    ]
+   },
+   {
+    "claim": "Source-side process and network records corroborate the RDP origin: dev.sharma launched mstsc.exe /v:FILE-RB-01 on WS-CPRICE-01, and that process connected to 10.60.20.20:3389.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S21-00199",
+     "S21-00204",
+     "S21-00209"
+    ]
+   },
+   {
+    "claim": "Immediately before the RDP connection, WS-CPRICE-01 recorded a local interactive logon as dev.sharma and an explorer.exe process in the same local logon session, 0xdf2c9b0.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S21-00193",
+     "S21-00197",
+     "S21-00199"
+    ]
+   },
+   {
+    "claim": "The confirmed RDP origin violates the supplied administration baseline, which permits server remote administration only from WS-DSHARMA-01. This supports investigation of unauthorized administration, but does not alone establish malicious intent or account compromise.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S21-00199",
+     "S21-00209",
+     "S21-00212"
+    ]
+   },
+   {
+    "claim": "The destination session started userinit.exe and explorer.exe under dev.sharma with logon ID 0x11c5e164. These records establish an interactive desktop session, not its purpose.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S21-00214",
+     "S21-00216"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not establish commands, file access, or administrative changes performed within alerted destination logon ID 0x11c5e164; the session-linked process evidence shows desktop initialization (S21-00214, S21-00216).",
+   "The 14:03:38 RDP logoff belongs to logon ID 0x11bd8611, not alerted logon ID 0x11c5e164, so it cannot establish when the alerted session ended (S21-00375, S21-00212).",
+   "Successful authentication and the local interactive logon identify the account used, not the human operating it (S21-00193, S21-00212)."
+  ],
+  "claims_not_established": [
+   "Whether dev.sharma personally initiated the alerted RDP session or another operator used the account.",
+   "Whether the RDP session was an intentional policy exception, an administrator mistake, or malicious use of credentials.",
+   "Whether the alerted session performed credential theft, persistence, data access, exfiltration, or other harmful actions.",
+   "Whether the scheduled VetChart support work explains this server RDP session; the supplied change-calendar context does not itself authorize administration from WS-CPRICE-01."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Confirm with dev.sharma and the ticket owner whether the 13:41:56 UTC RDP session from WS-CPRICE-01 was initiated intentionally and whether any exception was approved.",
+   "Collect Terminal Services session lifecycle records for FILE-RB-01 and map logon ID 0x11c5e164 to its session ID, disconnects, reconnects, and logoff.",
+   "Collect endpoint process trees, PowerShell logging, file/share access audits, and administrative-change records attributable to logon ID 0x11c5e164.",
+   "Review WS-CPRICE-01 authentication and endpoint activity around local logon ID 0xdf2c9b0 to determine how the administrator account came to be used there."
+  ],
+  "unrelated_findings": [
+   "Separately investigate SYSTEM-context PowerShell on WS-CPRICE-01 supplying explicit svc-rbbackup credentials for FILE-RB-01 at 14:03:18 UTC. The record does not link this activity to the alerted RDP logon (S21-00370).",
+   "Validate the Meridian ServiceHealth executable against software inventory: it started as SYSTEM through services.exe and later connected through the proxy; a contemporaneous proxy record names www.bing.com. No supplied record links its execution to the alerted session (S21-00267, S21-00300, S21-00303, S21-00304).",
+   "Validate the dev.sharma-admin account and its use for a runas /netonly ADMIN$ directory listing from WS-DSHARMA-01. This is a separate network logon, 0x11c8006a, rather than the alerted RDP session (S21-00335, S21-00339, S21-00340).",
+   "Review Slack access against the approved-services inventory; a successful CONNECT to slack.com was recorded for dev.sharma on WS-DSHARMA-01. This does not establish anything malicious about the alerted RDP session (S21-00081)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 25.5
+}

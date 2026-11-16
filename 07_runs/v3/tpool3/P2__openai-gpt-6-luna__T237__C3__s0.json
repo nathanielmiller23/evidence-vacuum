@@ -1,0 +1,81 @@
+{
+ "scenario_id": "T237",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"WS-MFISCHER-01 made Kerberos connections to the domain controller at 13:42:51\u201313:42:52 UTC, close to the alert's reported account-creation time.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T237-00096\", \"T237-00098\", \"T237-00102\"]\n    },\n    {\n      \"claim\": \"WS-MFISCHER-01 also made LDAP connections to the domain controller at 13:37, 13:53, and 14:06 UTC. These network records do not identify the LDAP operations performed.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T237-00074\", \"T237-00127\", \"T237-00165\"]\n    },\n    {\n      \"claim\": \"The nearby Kerberos and LDAP traffic is consistent with domain-controller communication, but the available records do not link it to creating adm_temp or identify who initiated any account-management action.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T237-00074\", \"T237-00096\", \"T237-00098\", \"T237-00102\", \"T237-00127\", \"T237-00165\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"According to the supplied sensor-coverage metadata, Winsec and Sysmon were not collected on WS-MFISCHER-01 and DC-SUN-01 from 13:20 through 14:15 UTC because of a collection outage; that interval includes the reported account-creation time. The metadata supplies no record ID.\",\n    \"Zeek connection records show network activity but not the LDAP request details or the user identity responsible for that activity.\"\n  ],\n  \"claims_not_established\": [\n    \"The supplied records do not establish whether adm_temp was actually created, the precise creation time, or the account's attributes and group memberships.\",\n    \"The evidence does not establish whether the account creation was authorized, who performed it, or whether it was performed from WS-MFISCHER-01.\",\n    \"The evidence does not establish whether adm_temp received privileges or was subsequently used.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover DC-SUN-01 Security audit events for the window, especially account-creation and group-membership events, including the subject account, logon ID, target account, and timestamp.\",\n    \"Obtain domain-controller directory auditing or equivalent records that show the LDAP operation and originating identity associated with the reported creation.\",\n    \"Verify the help-desk or change-management record for adm_temp and retrieve its creation request, intended group membership, and authorization.\",\n    \"Check the account's current and historical group memberships and authentication activity.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 14:15 UTC, an explicit-credentials event on WS-MFISCHER-01 shows SYSTEM targeting svc-store on FILE-SUN-01 through Meridian OpsAgent; the process then stopped. This is not linked by the supplied records to adm_temp and warrants a separate review. Records: T237-00204, T237-00205, T237-00206.\",\n    \"At 14:18\u201314:19 UTC, FILE-SUN-01 initiated a connection to WS-MFISCHER-01 on port 135, followed by a SYSTEM dllhost.exe process on the workstation. The supplied records do not link this activity to adm_temp; review separately. Records: T237-00218, T237-00219, T237-00220, T237-00221.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 11565,
+    "output": 2269
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "WS-MFISCHER-01 made Kerberos connections to the domain controller at 13:42:51\u201313:42:52 UTC, close to the alert's reported account-creation time.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T237-00096",
+     "T237-00098",
+     "T237-00102"
+    ]
+   },
+   {
+    "claim": "WS-MFISCHER-01 also made LDAP connections to the domain controller at 13:37, 13:53, and 14:06 UTC. These network records do not identify the LDAP operations performed.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T237-00074",
+     "T237-00127",
+     "T237-00165"
+    ]
+   },
+   {
+    "claim": "The nearby Kerberos and LDAP traffic is consistent with domain-controller communication, but the available records do not link it to creating adm_temp or identify who initiated any account-management action.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T237-00074",
+     "T237-00096",
+     "T237-00098",
+     "T237-00102",
+     "T237-00127",
+     "T237-00165"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "According to the supplied sensor-coverage metadata, Winsec and Sysmon were not collected on WS-MFISCHER-01 and DC-SUN-01 from 13:20 through 14:15 UTC because of a collection outage; that interval includes the reported account-creation time. The metadata supplies no record ID.",
+   "Zeek connection records show network activity but not the LDAP request details or the user identity responsible for that activity."
+  ],
+  "claims_not_established": [
+   "The supplied records do not establish whether adm_temp was actually created, the precise creation time, or the account's attributes and group memberships.",
+   "The evidence does not establish whether the account creation was authorized, who performed it, or whether it was performed from WS-MFISCHER-01.",
+   "The evidence does not establish whether adm_temp received privileges or was subsequently used."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover DC-SUN-01 Security audit events for the window, especially account-creation and group-membership events, including the subject account, logon ID, target account, and timestamp.",
+   "Obtain domain-controller directory auditing or equivalent records that show the LDAP operation and originating identity associated with the reported creation.",
+   "Verify the help-desk or change-management record for adm_temp and retrieve its creation request, intended group membership, and authorization.",
+   "Check the account's current and historical group memberships and authentication activity."
+  ],
+  "unrelated_findings": [
+   "At 14:15 UTC, an explicit-credentials event on WS-MFISCHER-01 shows SYSTEM targeting svc-store on FILE-SUN-01 through Meridian OpsAgent; the process then stopped. This is not linked by the supplied records to adm_temp and warrants a separate review. Records: T237-00204, T237-00205, T237-00206.",
+   "At 14:18\u201314:19 UTC, FILE-SUN-01 initiated a connection to WS-MFISCHER-01 on port 135, followed by a SYSTEM dllhost.exe process on the workstation. The supplied records do not link this activity to adm_temp; review separately. Records: T237-00218, T237-00219, T237-00220, T237-00221."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 22.8
+}

@@ -1,0 +1,92 @@
+{
+ "run_id": "A__T019__C3__20261115T044229Z",
+ "config": "A",
+ "scenario_id": "T019",
+ "condition": "C3",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 311,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 133201,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:41:56 UTC, maria.lopez ran PowerShell to compress \\\\\\\\FILE-HD-01\\\\Shared\\\\Clients into C:\\\\Users\\\\maria.lopez\\\\AppData\\\\Local\\\\Temp\\\\c.zip; the archive was created shortly afterward.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T019-00117\", \"T019-00118\", \"T019-00119\"]\n    },\n    {\n      \"claim\": \"At 13:45:24 UTC, maria.lopez launched Chrome to sendbox-files.io. The stated service inventory does not approve this file-sharing service.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T019-00150\", \"T019-00154\"]\n    },\n    {\n      \"claim\": \"At 13:48 UTC, WS-MLOPEZ-01 sent about 51 MB through the proxy to sendbox-files.io in a successful CONNECT tunnel. Chrome PID 4896 is associated with the connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T019-00170\", \"T019-00171\", \"T019-00172\", \"T019-00173\"]\n    },\n    {\n      \"claim\": \"The sequence of compressing client-share data, opening an unapproved file-sharing service, and sending a similarly large outbound transfer strongly supports apparent unauthorized data exfiltration.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T019-00117\", \"T019-00119\", \"T019-00150\", \"T019-00170\", \"T019-00171\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The sendbox connection is logged as a TLS CONNECT tunnel; the available records do not expose the encrypted application payload.\",\n    \"The supplied sensor-status information reports a winsec and Sysmon collection outage on WS-LPARK-01 from 13:30 to 14:10 UTC. It does not indicate an outage on WS-MLOPEZ-01.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish that the 51 MB transfer contained c.zip, or reveal the archive's contents.\",\n    \"The proxy's successful CONNECT status does not by itself establish that sendbox-files.io stored or accepted a completed upload.\",\n    \"The evidence does not establish whether maria.lopez had authorization or a legitimate business reason for the activity.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine c.zip, including its contents, size, hash, and source-file metadata.\",\n    \"Obtain browser and endpoint forensic artifacts to determine which file was selected for upload and whether the transfer completed.\",\n    \"Seek sendbox-files.io account and upload records, if available, to identify the recipient, account, and uploaded object.\",\n    \"Confirm with maria.lopez and the relevant data owner whether the transfer was authorized.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 48984,
+    "output": 1589,
+    "reasoning": 909
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "At 13:41:56 UTC, maria.lopez ran PowerShell to compress \\\\FILE-HD-01\\Shared\\Clients into C:\\Users\\maria.lopez\\AppData\\Local\\Temp\\c.zip; the archive was created shortly afterward.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00117",
+     "T019-00118",
+     "T019-00119"
+    ]
+   },
+   {
+    "claim": "At 13:45:24 UTC, maria.lopez launched Chrome to sendbox-files.io. The stated service inventory does not approve this file-sharing service.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00150",
+     "T019-00154"
+    ]
+   },
+   {
+    "claim": "At 13:48 UTC, WS-MLOPEZ-01 sent about 51 MB through the proxy to sendbox-files.io in a successful CONNECT tunnel. Chrome PID 4896 is associated with the connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00170",
+     "T019-00171",
+     "T019-00172",
+     "T019-00173"
+    ]
+   },
+   {
+    "claim": "The sequence of compressing client-share data, opening an unapproved file-sharing service, and sending a similarly large outbound transfer strongly supports apparent unauthorized data exfiltration.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T019-00117",
+     "T019-00119",
+     "T019-00150",
+     "T019-00170",
+     "T019-00171"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The sendbox connection is logged as a TLS CONNECT tunnel; the available records do not expose the encrypted application payload.",
+   "The supplied sensor-status information reports a winsec and Sysmon collection outage on WS-LPARK-01 from 13:30 to 14:10 UTC. It does not indicate an outage on WS-MLOPEZ-01."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish that the 51 MB transfer contained c.zip, or reveal the archive's contents.",
+   "The proxy's successful CONNECT status does not by itself establish that sendbox-files.io stored or accepted a completed upload.",
+   "The evidence does not establish whether maria.lopez had authorization or a legitimate business reason for the activity."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine c.zip, including its contents, size, hash, and source-file metadata.",
+   "Obtain browser and endpoint forensic artifacts to determine which file was selected for upload and whether the transfer completed.",
+   "Seek sendbox-files.io account and upload records, if available, to identify the recipient, account, and uploaded object.",
+   "Confirm with maria.lopez and the relevant data owner whether the transfer was authorized."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 14,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 15.9
+}

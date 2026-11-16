@@ -1,0 +1,78 @@
+{
+ "scenario_id": "T039",
+ "condition": "C3",
+ "variant": "P1",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45:58 UTC, Zeek recorded about 51 MB of origin-side data from WS-ICHEN-01 to the explicit proxy at 10.40.20.30:8080 over an approximately nine-second HTTP connection; the record does not identify the external destination or application.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T039-00140\"\n      ]\n    },\n    {\n      \"claim\": \"After the telemetry gap, proxy records show ivy.chen using Chrome to request AWS website pages and static assets. These records do not establish that the large earlier transfer went to AWS or involved an upload.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T039-00266\",\n        \"T039-00267\",\n        \"T039-00272\",\n        \"T039-00277\",\n        \"T039-00286\",\n        \"T039-00293\"\n      ]\n    },\n    {\n      \"claim\": \"After the reported transfer, Sysmon recorded svchost.exe accessing LSASS with GrantedAccess 0x1010 and services.exe accessing LSASS with GrantedAccess 0x1000; these events alone do not establish credential dumping or a connection to the transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T039-00304\",\n        \"T039-00305\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Winsec and Sysmon collection for WS-ICHEN-01 was unavailable from 13:30 to 14:10 UTC, spanning the large transfer; endpoint process and security-event context for that period is therefore missing.\",\n    \"Proxy collection was unavailable from 13:30 to 14:10 UTC, so the destination URL, HTTP method, authenticated user, and proxy-side transfer details for the large connection are not available.\",\n    \"Zeek connection metadata identifies the client-to-proxy byte volume but does not by itself establish the ultimate external destination or the content and purpose of the data.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the 51 MB sent to the proxy was forwarded to an external service, and if so, which service.\",\n    \"Whether the transfer contained organizational data or was an upload, backup, or other legitimate activity.\",\n    \"Which process initiated the large connection and which user action, if any, caused it.\",\n    \"Whether the later AWS browsing is related to the transfer.\",\n    \"Whether the LSASS access events were benign system activity or malicious activity.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover proxy logs or proxy-side transaction records for 13:30\u201314:10 UTC, especially the transaction associated with WS-ICHEN-01 at 13:45:58.\",\n    \"Obtain endpoint process, network, file-access, and security telemetry for WS-ICHEN-01 covering the outage window.\",\n    \"Review firewall, egress, or NAT records that can identify the external destination and actual bytes forwarded for the connection.\",\n    \"If AWS activity is suspected, review relevant AWS account audit records and browser history or cache for evidence of an upload or data transfer.\",\n    \"Review FILE-NWD-01 records for the scheduled svc-render password rotation and manual RenderQueue update to determine whether they are related.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 32219,
+    "output": 2504
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45:58 UTC, Zeek recorded about 51 MB of origin-side data from WS-ICHEN-01 to the explicit proxy at 10.40.20.30:8080 over an approximately nine-second HTTP connection; the record does not identify the external destination or application.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T039-00140"
+    ]
+   },
+   {
+    "claim": "After the telemetry gap, proxy records show ivy.chen using Chrome to request AWS website pages and static assets. These records do not establish that the large earlier transfer went to AWS or involved an upload.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T039-00266",
+     "T039-00267",
+     "T039-00272",
+     "T039-00277",
+     "T039-00286",
+     "T039-00293"
+    ]
+   },
+   {
+    "claim": "After the reported transfer, Sysmon recorded svchost.exe accessing LSASS with GrantedAccess 0x1010 and services.exe accessing LSASS with GrantedAccess 0x1000; these events alone do not establish credential dumping or a connection to the transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T039-00304",
+     "T039-00305"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Winsec and Sysmon collection for WS-ICHEN-01 was unavailable from 13:30 to 14:10 UTC, spanning the large transfer; endpoint process and security-event context for that period is therefore missing.",
+   "Proxy collection was unavailable from 13:30 to 14:10 UTC, so the destination URL, HTTP method, authenticated user, and proxy-side transfer details for the large connection are not available.",
+   "Zeek connection metadata identifies the client-to-proxy byte volume but does not by itself establish the ultimate external destination or the content and purpose of the data."
+  ],
+  "claims_not_established": [
+   "Whether the 51 MB sent to the proxy was forwarded to an external service, and if so, which service.",
+   "Whether the transfer contained organizational data or was an upload, backup, or other legitimate activity.",
+   "Which process initiated the large connection and which user action, if any, caused it.",
+   "Whether the later AWS browsing is related to the transfer.",
+   "Whether the LSASS access events were benign system activity or malicious activity."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover proxy logs or proxy-side transaction records for 13:30\u201314:10 UTC, especially the transaction associated with WS-ICHEN-01 at 13:45:58.",
+   "Obtain endpoint process, network, file-access, and security telemetry for WS-ICHEN-01 covering the outage window.",
+   "Review firewall, egress, or NAT records that can identify the external destination and actual bytes forwarded for the connection.",
+   "If AWS activity is suspected, review relevant AWS account audit records and browser history or cache for evidence of an upload or data transfer.",
+   "Review FILE-NWD-01 records for the scheduled svc-render password rotation and manual RenderQueue update to determine whether they are related."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 9,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 25.6
+}

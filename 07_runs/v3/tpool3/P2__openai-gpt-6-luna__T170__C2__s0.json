@@ -1,0 +1,96 @@
+{
+ "scenario_id": "T170",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.78,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The evidence records a large outbound transfer from FILE-MAP-01 at 13:51 UTC: the proxy logged a 640,000,000-byte upload to ingest.safeharbor-backup.net, and the corresponding connection records about 640 MB sent to the proxy.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T170-00339\", \"T170-00342\"]\n    },\n    {\n      \"claim\": \"The transfer used the inventoried Safeharbor agent and svc-vault account, and the destination is the approved backup service; these facts are consistent with legitimate backup activity.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T170-00331\", \"T170-00332\", \"T170-00339\"]\n    },\n    {\n      \"claim\": \"Shortly before the upload, the domain controller recorded a successful-looking service-ticket request for svc-vault from external IP 139.162.174.124. FILE-MAP-01 then logged svc-vault on as a service, and the Safeharbor process ran under that same logon ID.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T170-00320\", \"T170-00321\", \"T170-00331\", \"T170-00332\"]\n    },\n    {\n      \"claim\": \"Because the inventory states there is no VPN and remote administration is only from WS-AHASSAN-01, the external-IP svc-vault authentication immediately preceding the large upload is inconsistent with the stated access model and makes this transfer suspicious despite its approved tool and destination.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T170-00320\", \"T170-00339\", \"T170-00342\"]\n    },\n    {\n      \"claim\": \"The records place the observed large upload at 13:51 UTC, not 13:46 UTC; the available evidence does not establish the exact alert-to-transfer time relationship.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T170-00339\", \"T170-00342\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and connection records show transfer volume and destination, but the evidence does not show the uploaded files or their contents.\",\n    \"The evidence does not explain why the svc-vault service-ticket request was recorded from an external IP or independently establish who controlled that IP.\",\n    \"The observed large upload is timestamped about five minutes after the alert's approximate time.\"\n  ],\n  \"claims_not_established\": [\n    \"That the 640 MB upload contained law-office data, or that any data was unauthorizedly disclosed.\",\n    \"That the external-IP service-ticket request was made by an attacker rather than resulting from a logging, routing, or other unobserved condition.\",\n    \"That the transfer recorded at 13:51 UTC is definitively the specific activity that triggered the alert around 13:46 UTC.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Verify the svc-vault Kerberos ticket request against domain-controller and network records, including whether external access to the domain controller was possible and whether the source IP is attributable to an approved service.\",\n    \"Review Safeharbor job and application logs for the 13:49\u201313:52 UTC authentication and upload, including job initiation, file list, and destination-side receipt records.\",\n    \"Obtain the alert's exact flow timestamps, endpoints, and byte counts to confirm whether it corresponds to the 13:51 UTC Safeharbor upload.\"\n  ],\n  \"unrelated_findings\": [\n    \"greta.lund established an RDP session to FILE-MAP-01 from WS-GLUND-01, although the stated remote-administration practice restricts that activity to WS-AHASSAN-01; investigate separately. Records: T170-00241, T170-00244, T170-00245.\",\n    \"PROXY-MAP-01 later attempted RDP authentication to FILE-MAP-01 using disabled account svc_mgmt; investigate separately. Records: T170-00494, T170-00496, T170-00497.\",\n    \"An unlisted Meridian OpsAgent executable ran on FILE-MAP-01 and attempted explicit-credential use for svc-vault; it is not established as part of the alerted transfer and should be reviewed separately. Records: T170-00542, T170-00544, T170-00545.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 79770,
+    "output": 3188
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.78,
+  "supporting_observations": [
+   {
+    "claim": "The evidence records a large outbound transfer from FILE-MAP-01 at 13:51 UTC: the proxy logged a 640,000,000-byte upload to ingest.safeharbor-backup.net, and the corresponding connection records about 640 MB sent to the proxy.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T170-00339",
+     "T170-00342"
+    ]
+   },
+   {
+    "claim": "The transfer used the inventoried Safeharbor agent and svc-vault account, and the destination is the approved backup service; these facts are consistent with legitimate backup activity.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T170-00331",
+     "T170-00332",
+     "T170-00339"
+    ]
+   },
+   {
+    "claim": "Shortly before the upload, the domain controller recorded a successful-looking service-ticket request for svc-vault from external IP 139.162.174.124. FILE-MAP-01 then logged svc-vault on as a service, and the Safeharbor process ran under that same logon ID.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T170-00320",
+     "T170-00321",
+     "T170-00331",
+     "T170-00332"
+    ]
+   },
+   {
+    "claim": "Because the inventory states there is no VPN and remote administration is only from WS-AHASSAN-01, the external-IP svc-vault authentication immediately preceding the large upload is inconsistent with the stated access model and makes this transfer suspicious despite its approved tool and destination.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T170-00320",
+     "T170-00339",
+     "T170-00342"
+    ]
+   },
+   {
+    "claim": "The records place the observed large upload at 13:51 UTC, not 13:46 UTC; the available evidence does not establish the exact alert-to-transfer time relationship.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T170-00339",
+     "T170-00342"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and connection records show transfer volume and destination, but the evidence does not show the uploaded files or their contents.",
+   "The evidence does not explain why the svc-vault service-ticket request was recorded from an external IP or independently establish who controlled that IP.",
+   "The observed large upload is timestamped about five minutes after the alert's approximate time."
+  ],
+  "claims_not_established": [
+   "That the 640 MB upload contained law-office data, or that any data was unauthorizedly disclosed.",
+   "That the external-IP service-ticket request was made by an attacker rather than resulting from a logging, routing, or other unobserved condition.",
+   "That the transfer recorded at 13:51 UTC is definitively the specific activity that triggered the alert around 13:46 UTC."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Verify the svc-vault Kerberos ticket request against domain-controller and network records, including whether external access to the domain controller was possible and whether the source IP is attributable to an approved service.",
+   "Review Safeharbor job and application logs for the 13:49\u201313:52 UTC authentication and upload, including job initiation, file list, and destination-side receipt records.",
+   "Obtain the alert's exact flow timestamps, endpoints, and byte counts to confirm whether it corresponds to the 13:51 UTC Safeharbor upload."
+  ],
+  "unrelated_findings": [
+   "greta.lund established an RDP session to FILE-MAP-01 from WS-GLUND-01, although the stated remote-administration practice restricts that activity to WS-AHASSAN-01; investigate separately. Records: T170-00241, T170-00244, T170-00245.",
+   "PROXY-MAP-01 later attempted RDP authentication to FILE-MAP-01 using disabled account svc_mgmt; investigate separately. Records: T170-00494, T170-00496, T170-00497.",
+   "An unlisted Meridian OpsAgent executable ran on FILE-MAP-01 and attempted explicit-credential use for svc-vault; it is not established as part of the alerted transfer and should be reviewed separately. Records: T170-00542, T170-00544, T170-00545."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 14,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 39.1
+}

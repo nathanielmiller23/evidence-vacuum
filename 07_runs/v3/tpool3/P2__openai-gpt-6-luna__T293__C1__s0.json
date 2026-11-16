@@ -1,0 +1,96 @@
+{
+ "scenario_id": "T293",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Amy Cole opened a .docm file from Downloads in Microsoft Word shortly before Word spawned PowerShell.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T293-00160\", \"T293-00164\", \"T293-00165\"]\n    },\n    {\n      \"claim\": \"Word launched PowerShell with no profile, a hidden window, and an encoded command. Decoding the command shows it uses IEX to download and execute a script from raw.githubusercontent.com/orchard-it/tools/main/u.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T293-00164\", \"T293-00165\"]\n    },\n    {\n      \"claim\": \"The proxy recorded a successful HTTP GET (status 200) for the script URL specified in the PowerShell command.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T293-00170\"]\n    },\n    {\n      \"claim\": \"That PowerShell process launched rundll32 with a DLL in Amy Cole's Roaming AppData directory; the process then exited.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T293-00175\", \"T293-00176\", \"T293-00178\", \"T293-00179\"]\n    },\n    {\n      \"claim\": \"The sequence of a macro-enabled document spawning hidden encoded PowerShell that retrieves and executes a remote script, followed by rundll32 invoking a user-profile DLL, supports a malicious-activity finding.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T293-00160\", \"T293-00164\", \"T293-00170\", \"T293-00175\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available records show the requested script URL and a successful GET, but do not include the downloaded script contents or establish what its code did.\",\n    \"The records show rundll32 was invoked with the DLL path, but do not establish whether the DLL loaded successfully or what it did.\",\n    \"The available evidence does not identify who supplied the document or establish Amy Cole's intent.\"\n  ],\n  \"claims_not_established\": [\n    \"The contents, safety, or provenance of the downloaded PowerShell script.\",\n    \"The contents, hash, signing status, or execution effects of svchelper.dll.\",\n    \"Whether the activity resulted in persistence, credential access, data theft, or further compromise.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze Statement.docm, including its source, embedded macros, and download history.\",\n    \"Collect the downloaded u.ps1 and svchelper.dll, including hashes, signatures, file metadata, and endpoint security scan results.\",\n    \"Review endpoint process, script-block, AMSI, and security-product telemetry around 13:42 UTC for execution results and follow-on behavior.\",\n    \"Check for persistence, credential access, lateral movement, and other affected hosts or accounts associated with this activity.\"\n  ],\n  \"unrelated_findings\": [\n    \"Earlier on WS-ACOLE-01, Amy Cole launched PowerShell with ExecutionPolicy Bypass to run update-inventory.ps1, later opened additional command shells, and launched SSH and PostgreSQL client processes. These precede the alerted document-to-PowerShell sequence and should be assessed separately; the records alone do not establish their purpose or outcome. (T293-00001, T293-00022, T293-00026, T293-00028, T293-00056, T293-00077)\",\n    \"A network logon to WS-ACOLE-01 for Amy Cole originated from WS-THART-01. This is separate from the alerted execution sequence and should be validated independently. (T293-00012, T293-00013)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 50930,
+    "output": 1924
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "Amy Cole opened a .docm file from Downloads in Microsoft Word shortly before Word spawned PowerShell.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T293-00160",
+     "T293-00164",
+     "T293-00165"
+    ]
+   },
+   {
+    "claim": "Word launched PowerShell with no profile, a hidden window, and an encoded command. Decoding the command shows it uses IEX to download and execute a script from raw.githubusercontent.com/orchard-it/tools/main/u.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T293-00164",
+     "T293-00165"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a successful HTTP GET (status 200) for the script URL specified in the PowerShell command.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T293-00170"
+    ]
+   },
+   {
+    "claim": "That PowerShell process launched rundll32 with a DLL in Amy Cole's Roaming AppData directory; the process then exited.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T293-00175",
+     "T293-00176",
+     "T293-00178",
+     "T293-00179"
+    ]
+   },
+   {
+    "claim": "The sequence of a macro-enabled document spawning hidden encoded PowerShell that retrieves and executes a remote script, followed by rundll32 invoking a user-profile DLL, supports a malicious-activity finding.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T293-00160",
+     "T293-00164",
+     "T293-00170",
+     "T293-00175"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available records show the requested script URL and a successful GET, but do not include the downloaded script contents or establish what its code did.",
+   "The records show rundll32 was invoked with the DLL path, but do not establish whether the DLL loaded successfully or what it did.",
+   "The available evidence does not identify who supplied the document or establish Amy Cole's intent."
+  ],
+  "claims_not_established": [
+   "The contents, safety, or provenance of the downloaded PowerShell script.",
+   "The contents, hash, signing status, or execution effects of svchelper.dll.",
+   "Whether the activity resulted in persistence, credential access, data theft, or further compromise."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze Statement.docm, including its source, embedded macros, and download history.",
+   "Collect the downloaded u.ps1 and svchelper.dll, including hashes, signatures, file metadata, and endpoint security scan results.",
+   "Review endpoint process, script-block, AMSI, and security-product telemetry around 13:42 UTC for execution results and follow-on behavior.",
+   "Check for persistence, credential access, lateral movement, and other affected hosts or accounts associated with this activity."
+  ],
+  "unrelated_findings": [
+   "Earlier on WS-ACOLE-01, Amy Cole launched PowerShell with ExecutionPolicy Bypass to run update-inventory.ps1, later opened additional command shells, and launched SSH and PostgreSQL client processes. These precede the alerted document-to-PowerShell sequence and should be assessed separately; the records alone do not establish their purpose or outcome. (T293-00001, T293-00022, T293-00026, T293-00028, T293-00056, T293-00077)",
+   "A network logon to WS-ACOLE-01 for Amy Cole originated from WS-THART-01. This is separate from the alerted execution sequence and should be validated independently. (T293-00012, T293-00013)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 14,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 19.9
+}

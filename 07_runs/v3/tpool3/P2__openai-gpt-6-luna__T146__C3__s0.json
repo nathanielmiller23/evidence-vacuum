@@ -1,0 +1,85 @@
+{
+ "scenario_id": "T146",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"WS-NKIM-01 made repeated connections to the explicit proxy at 10.53.20.30:8080 during the review window, including connections around 13:41, 13:46, 13:50, 13:55, 14:01, 14:06, and 14:09 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T146-00073\", \"T146-00093\", \"T146-00146\", \"T146-00157\", \"T146-00171\", \"T146-00191\", \"T146-00224\"]\n    },\n    {\n      \"claim\": \"The timing and recurring response sizes are consistent with the inventory description of CaseBinder's updater checking about every five minutes, but the available records do not identify the destination or process for these connections.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T146-00073\", \"T146-00093\", \"T146-00146\", \"T146-00157\", \"T146-00171\", \"T146-00191\", \"T146-00224\"]\n    },\n    {\n      \"claim\": \"After the proxy collection outage window, a proxy record shows a successful HTTPS tunnel to ctldl.windowsupdate.com using Microsoft-CryptoAPI; this demonstrates a benign-looking proxied connection at 14:17, but does not identify the earlier periodic connections.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T146-00251\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy records for PROXY-MAP-01 were not collected from 13:20 to 14:15 UTC, leaving the destinations and tunnel details for most of the alerted interval unavailable.\",\n    \"Winsec and Sysmon records for WS-NKIM-01 were not collected from 13:20 to 14:15 UTC, so endpoint process and user context for the alerted connections is unavailable.\",\n    \"Zeek connection records show traffic from WS-NKIM-01 to the proxy, but do not by themselves establish the HTTPS destination or the originating application.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the periodic connections were to update.casebinder.com or another destination.\",\n    \"Whether casebinderupd.exe, another approved application, or an unapproved process originated the connections.\",\n    \"Whether the HTTPS activity transferred data or performed actions beyond the connection-level byte counts.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover proxy logs for WS-NKIM-01 from 13:20 to 14:15 UTC, including CONNECT destinations, status, user agent, and byte counts.\",\n    \"Obtain endpoint process/network telemetry or EDR records for WS-NKIM-01 covering the same interval to attribute the connections to a process and user.\",\n    \"Check CaseBinder updater logs or configuration for update checks at the observed times and confirm the expected update domain.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 14:00 UTC, WS-NKIM-01 connected to FILE-MAP-01 over SMB and FILE-MAP-01 recorded an ANONYMOUS LOGON. This is separate from the periodic proxy activity and the records do not establish what SMB resource was accessed. (T146-00164, T146-00168)\",\n    \"At 14:04 UTC, DC-MAP-01 initiated a connection to WS-NKIM-01 on port 135. This is outside the alerted outbound proxy activity and its purpose is not established by the available record. (T146-00184)\",\n    \"At 14:19 UTC, Sysmon recorded msiexec.exe accessing services.exe with GrantedAccess 0x1000 on WS-NKIM-01. This does not establish malicious behavior and is separate from the alerted connections. (T146-00259)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 21251,
+    "output": 2423
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "WS-NKIM-01 made repeated connections to the explicit proxy at 10.53.20.30:8080 during the review window, including connections around 13:41, 13:46, 13:50, 13:55, 14:01, 14:06, and 14:09 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T146-00073",
+     "T146-00093",
+     "T146-00146",
+     "T146-00157",
+     "T146-00171",
+     "T146-00191",
+     "T146-00224"
+    ]
+   },
+   {
+    "claim": "The timing and recurring response sizes are consistent with the inventory description of CaseBinder's updater checking about every five minutes, but the available records do not identify the destination or process for these connections.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T146-00073",
+     "T146-00093",
+     "T146-00146",
+     "T146-00157",
+     "T146-00171",
+     "T146-00191",
+     "T146-00224"
+    ]
+   },
+   {
+    "claim": "After the proxy collection outage window, a proxy record shows a successful HTTPS tunnel to ctldl.windowsupdate.com using Microsoft-CryptoAPI; this demonstrates a benign-looking proxied connection at 14:17, but does not identify the earlier periodic connections.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T146-00251"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy records for PROXY-MAP-01 were not collected from 13:20 to 14:15 UTC, leaving the destinations and tunnel details for most of the alerted interval unavailable.",
+   "Winsec and Sysmon records for WS-NKIM-01 were not collected from 13:20 to 14:15 UTC, so endpoint process and user context for the alerted connections is unavailable.",
+   "Zeek connection records show traffic from WS-NKIM-01 to the proxy, but do not by themselves establish the HTTPS destination or the originating application."
+  ],
+  "claims_not_established": [
+   "Whether the periodic connections were to update.casebinder.com or another destination.",
+   "Whether casebinderupd.exe, another approved application, or an unapproved process originated the connections.",
+   "Whether the HTTPS activity transferred data or performed actions beyond the connection-level byte counts."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover proxy logs for WS-NKIM-01 from 13:20 to 14:15 UTC, including CONNECT destinations, status, user agent, and byte counts.",
+   "Obtain endpoint process/network telemetry or EDR records for WS-NKIM-01 covering the same interval to attribute the connections to a process and user.",
+   "Check CaseBinder updater logs or configuration for update checks at the observed times and confirm the expected update domain."
+  ],
+  "unrelated_findings": [
+   "At 14:00 UTC, WS-NKIM-01 connected to FILE-MAP-01 over SMB and FILE-MAP-01 recorded an ANONYMOUS LOGON. This is separate from the periodic proxy activity and the records do not establish what SMB resource was accessed. (T146-00164, T146-00168)",
+   "At 14:04 UTC, DC-MAP-01 initiated a connection to WS-NKIM-01 on port 135. This is outside the alerted outbound proxy activity and its purpose is not established by the available record. (T146-00184)",
+   "At 14:19 UTC, Sysmon recorded msiexec.exe accessing services.exe with GrantedAccess 0x1000 on WS-NKIM-01. This does not establish malicious behavior and is separate from the alerted connections. (T146-00259)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 26.0
+}

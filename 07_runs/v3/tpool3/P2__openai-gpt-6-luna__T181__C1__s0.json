@@ -1,0 +1,84 @@
+{
+ "scenario_id": "T181",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded two failed network logons for eli.brooks from 203.0.113.133: one using NTLM at 13:43:54 and another using Negotiate at 13:45:08; both report an incorrect password.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T181-00064\", \"T181-00066\"]\n    },\n    {\n      \"claim\": \"At 13:46:29, the domain controller recorded a successful LogonType 3 NTLM logon for eli.brooks from the same IP address, following those failures.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T181-00064\", \"T181-00066\", \"T181-00067\"]\n    },\n    {\n      \"claim\": \"The sequence of failed domain network logons followed shortly by a successful logon from a source not identified in the supplied environment as an authorized remote-administration host supports treating the alerted activity as malicious and escalating it.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T181-00064\", \"T181-00066\", \"T181-00067\"]\n    },\n    {\n      \"claim\": \"A separate failed interactive logon for eli.brooks occurred on WS-EBROOKS-01 at 13:25:46 with an incorrect password; it is a different logon type and precedes the domain-controller activity.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T181-00005\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show the source IP as 203.0.113.133, but do not establish who controlled that source or whether the address was sanitized. [T181-00064, T181-00066, T181-00067]\",\n    \"The successful logon record reports WorkstationName=DC-BLU-01 while also recording IpAddress=::ffff:203.0.113.133; the available records do not explain this discrepancy. [T181-00067]\",\n    \"The supplied evidence does not show what activity followed the successful network logon or whether the session was used to access resources. [T181-00067]\"\n  ],\n  \"claims_not_established\": [\n    \"The identity of the person or system behind 203.0.113.133 is not established.\",\n    \"The evidence does not establish whether the successful logon was interactive, what resources were accessed, or whether data was changed or taken.\",\n    \"The available records do not establish how the account credentials were obtained.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Collect surrounding DC-BLU-01 authentication, logon-session, and resource-access records for the successful logon ID 0xa9ea9a4.\",\n    \"Correlate the source IP and ports with firewall, network, and any available endpoint telemetry to identify the originating system; verify whether the address is sanitized.\",\n    \"Confirm with eli.brooks and IT whether the 13:43\u201313:46 authentication sequence was expected, and review account activity for subsequent access or changes.\",\n    \"Review account and credential-security telemetry for other authentication attempts or signs of credential compromise.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox.exe was running on WS-EBROOKS-01 and exited at 14:01; Dropbox is an unapproved cloud-storage service in the supplied environment context. Track separately; this does not determine the alerted authentication activity. [T181-00075, T181-00078]\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 14804,
+    "output": 2327
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded two failed network logons for eli.brooks from 203.0.113.133: one using NTLM at 13:43:54 and another using Negotiate at 13:45:08; both report an incorrect password.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T181-00064",
+     "T181-00066"
+    ]
+   },
+   {
+    "claim": "At 13:46:29, the domain controller recorded a successful LogonType 3 NTLM logon for eli.brooks from the same IP address, following those failures.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T181-00064",
+     "T181-00066",
+     "T181-00067"
+    ]
+   },
+   {
+    "claim": "The sequence of failed domain network logons followed shortly by a successful logon from a source not identified in the supplied environment as an authorized remote-administration host supports treating the alerted activity as malicious and escalating it.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T181-00064",
+     "T181-00066",
+     "T181-00067"
+    ]
+   },
+   {
+    "claim": "A separate failed interactive logon for eli.brooks occurred on WS-EBROOKS-01 at 13:25:46 with an incorrect password; it is a different logon type and precedes the domain-controller activity.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T181-00005"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show the source IP as 203.0.113.133, but do not establish who controlled that source or whether the address was sanitized. [T181-00064, T181-00066, T181-00067]",
+   "The successful logon record reports WorkstationName=DC-BLU-01 while also recording IpAddress=::ffff:203.0.113.133; the available records do not explain this discrepancy. [T181-00067]",
+   "The supplied evidence does not show what activity followed the successful network logon or whether the session was used to access resources. [T181-00067]"
+  ],
+  "claims_not_established": [
+   "The identity of the person or system behind 203.0.113.133 is not established.",
+   "The evidence does not establish whether the successful logon was interactive, what resources were accessed, or whether data was changed or taken.",
+   "The available records do not establish how the account credentials were obtained."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Collect surrounding DC-BLU-01 authentication, logon-session, and resource-access records for the successful logon ID 0xa9ea9a4.",
+   "Correlate the source IP and ports with firewall, network, and any available endpoint telemetry to identify the originating system; verify whether the address is sanitized.",
+   "Confirm with eli.brooks and IT whether the 13:43\u201313:46 authentication sequence was expected, and review account activity for subsequent access or changes.",
+   "Review account and credential-security telemetry for other authentication attempts or signs of credential compromise."
+  ],
+  "unrelated_findings": [
+   "Dropbox.exe was running on WS-EBROOKS-01 and exited at 14:01; Dropbox is an unapproved cloud-storage service in the supplied environment context. Track separately; this does not determine the alerted authentication activity. [T181-00075, T181-00078]"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 9,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 28.2
+}

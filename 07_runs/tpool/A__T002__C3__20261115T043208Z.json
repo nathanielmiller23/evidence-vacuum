@@ -1,0 +1,76 @@
+{
+ "run_id": "A__T002__C3__20261115T043208Z",
+ "config": "A",
+ "scenario_id": "T002",
+ "condition": "C3",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 1,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 5661,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:39:31.767 UTC, WS-LPARK-01 recorded a Windows event 4648 in which SYSTEM used explicit credentials for svc-claimsync, targeting PROXY-HD-01; the process was C:\\\\Program Files\\\\Commvault\\\\ContentStore\\\\Base\\\\GxCVD.exe.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T002-00019\"\n      ]\n    },\n    {\n      \"claim\": \"Use of svc-claimsync by a process on the help-desk workstation is unexpected given the supplied inventory, which places the ClaimSync job on FILE-HD-01. This warrants investigation, but the event alone does not establish malicious activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T002-00019\"\n      ]\n    },\n    {\n      \"claim\": \"The available event does not establish that authentication failed or succeeded, and does not substantiate repeated failed domain logons.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T002-00019\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Winsec and Sysmon logs were not collected from DC-HD-01 and FILE-HD-01 from 13:30 to 14:10 UTC, overlapping the alert and scheduled password rotation.\",\n    \"The supplied evidence contains only one authentication-related event; it does not provide a complete authentication sequence for the requested hour.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether svc-claimsync authentication attempts failed, succeeded, or were repeated.\",\n    \"Whether the event was caused by authorized software or activity, or by credential misuse.\",\n    \"Whether the password rotation or ClaimSync job update caused the reported failures.\",\n    \"Whether the process on WS-LPARK-01 made network connections or generated further activity involving the account.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover or obtain DC-HD-01 and FILE-HD-01 authentication and process logs for 13:30\u201314:10 UTC, including domain logon outcomes and relevant account activity.\",\n    \"Review proxy and network records for connections from WS-LPARK-01 to PROXY-HD-01 around 13:39 UTC and identify the authentication outcome and destination activity.\",\n    \"Verify whether GxCVD.exe was expected and authorized on WS-LPARK-01; collect its file metadata, signature, execution history, and parent process.\",\n    \"Confirm the svc-claimsync password rotation and ClaimSync job update timeline, and check whether the account was used from any other hosts during the review window.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 1704,
+    "output": 1233,
+    "reasoning": 620
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "At 13:39:31.767 UTC, WS-LPARK-01 recorded a Windows event 4648 in which SYSTEM used explicit credentials for svc-claimsync, targeting PROXY-HD-01; the process was C:\\Program Files\\Commvault\\ContentStore\\Base\\GxCVD.exe.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T002-00019"
+    ]
+   },
+   {
+    "claim": "Use of svc-claimsync by a process on the help-desk workstation is unexpected given the supplied inventory, which places the ClaimSync job on FILE-HD-01. This warrants investigation, but the event alone does not establish malicious activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T002-00019"
+    ]
+   },
+   {
+    "claim": "The available event does not establish that authentication failed or succeeded, and does not substantiate repeated failed domain logons.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T002-00019"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Winsec and Sysmon logs were not collected from DC-HD-01 and FILE-HD-01 from 13:30 to 14:10 UTC, overlapping the alert and scheduled password rotation.",
+   "The supplied evidence contains only one authentication-related event; it does not provide a complete authentication sequence for the requested hour."
+  ],
+  "claims_not_established": [
+   "Whether svc-claimsync authentication attempts failed, succeeded, or were repeated.",
+   "Whether the event was caused by authorized software or activity, or by credential misuse.",
+   "Whether the password rotation or ClaimSync job update caused the reported failures.",
+   "Whether the process on WS-LPARK-01 made network connections or generated further activity involving the account."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover or obtain DC-HD-01 and FILE-HD-01 authentication and process logs for 13:30\u201314:10 UTC, including domain logon outcomes and relevant account activity.",
+   "Review proxy and network records for connections from WS-LPARK-01 to PROXY-HD-01 around 13:39 UTC and identify the authentication outcome and destination activity.",
+   "Verify whether GxCVD.exe was expected and authorized on WS-LPARK-01; collect its file metadata, signature, execution history, and parent process.",
+   "Confirm the svc-claimsync password rotation and ClaimSync job update timeline, and check whether the account was used from any other hosts during the review window."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 3,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 13.7
+}

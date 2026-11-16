@@ -1,0 +1,100 @@
+{
+ "scenario_id": "T123",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:44:54 UTC, WINWORD.EXE opened C:\\\\Users\\\\dan.reyes\\\\Downloads\\\\Statement.docm; about one second later, PowerShell ran as a child of WINWORD.EXE under dan.reyes with hidden-window, no-profile, and encoded-command options. This supports document-triggered execution, but does not establish the mechanism that launched it.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T123-00214\",\n        \"T123-00217\",\n        \"T123-00218\",\n        \"T123-00219\"\n      ]\n    },\n    {\n      \"claim\": \"The encoded PowerShell command decodes to an expression that downloads and executes a script from https://raw.githubusercontent.com/copperline-it/tools/main/u.ps1.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T123-00218\",\n        \"T123-00219\"\n      ]\n    },\n    {\n      \"claim\": \"The proxy recorded a successful GET for that script URL, and network events identify PowerShell process 5856 connecting through the proxy at the same time.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T123-00222\",\n        \"T123-00223\",\n        \"T123-00224\",\n        \"T123-00227\",\n        \"T123-00225\",\n        \"T123-00226\",\n        \"T123-00228\"\n      ]\n    },\n    {\n      \"claim\": \"PowerShell subsequently launched rundll32.exe to invoke C:\\\\Users\\\\dan.reyes\\\\AppData\\\\Roaming\\\\svchelper.dll,Init; the rundll32 process was a child of that PowerShell process.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T123-00232\",\n        \"T123-00233\"\n      ]\n    },\n    {\n      \"claim\": \"The observed PowerShell chain begins at 13:44:55 UTC, later than the ticket's approximate 13:40 time; the records at 13:40:28 show Kerberos activity rather than a PowerShell process.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T123-00191\",\n        \"T123-00193\",\n        \"T123-00218\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records the script URL and successful status, but the supplied evidence does not include the downloaded script's contents.\",\n    \"The supplied records show rundll32 invoking svchelper.dll but do not provide the DLL's creation event, hash, signature, or contents.\",\n    \"Collection metadata reports a winsec and Sysmon collection outage on WS-SALI-01 from 13:25 to 14:10 UTC; the supplied records do not show that host participating in the alerted process chain.\"\n  ],\n  \"claims_not_established\": [\n    \"The available records do not establish how Statement.docm was obtained, whether it contained a macro, or whether the user intentionally opened it.\",\n    \"The contents and behavior of u.ps1 and svchelper.dll, and whether the DLL successfully executed malicious actions, are not established by the supplied evidence.\",\n    \"The records do not establish whether data was accessed or exfiltrated, or whether the host remained compromised after the observed processes exited.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze Statement.docm, u.ps1, svchelper.dll, and the PowerShell temporary file; record hashes, signatures, and provenance.\",\n    \"Review endpoint detection, process, file, persistence, and network telemetry on WS-DREYES-01 after the observed chain to determine impact and persistence.\",\n    \"Review the user's download and email or browser provenance for Statement.docm, and verify whether the GitHub repository and script are organization-authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:36 UTC, WS-DREYES-01 authenticated as kim.nguyen to WS-KNGUYEN-01, and that host recorded a network logon for kim.nguyen from WS-DREYES-01. Review separately; this is not used to determine the alerted PowerShell activity.\",\n    \"At 13:36 UTC, Cisco AnyConnect's signed vpnui.exe started on WS-DREYES-01. The inventory states there is no VPN; these records show the client process, not an established VPN session.\",\n    \"At 13:36 UTC, Chrome on WS-DREYES-01 connected to drive.google.com. Google Drive is not listed among approved services; the records do not establish a file transfer.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 65826,
+    "output": 2783
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:44:54 UTC, WINWORD.EXE opened C:\\Users\\dan.reyes\\Downloads\\Statement.docm; about one second later, PowerShell ran as a child of WINWORD.EXE under dan.reyes with hidden-window, no-profile, and encoded-command options. This supports document-triggered execution, but does not establish the mechanism that launched it.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T123-00214",
+     "T123-00217",
+     "T123-00218",
+     "T123-00219"
+    ]
+   },
+   {
+    "claim": "The encoded PowerShell command decodes to an expression that downloads and executes a script from https://raw.githubusercontent.com/copperline-it/tools/main/u.ps1.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T123-00218",
+     "T123-00219"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a successful GET for that script URL, and network events identify PowerShell process 5856 connecting through the proxy at the same time.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T123-00222",
+     "T123-00223",
+     "T123-00224",
+     "T123-00227",
+     "T123-00225",
+     "T123-00226",
+     "T123-00228"
+    ]
+   },
+   {
+    "claim": "PowerShell subsequently launched rundll32.exe to invoke C:\\Users\\dan.reyes\\AppData\\Roaming\\svchelper.dll,Init; the rundll32 process was a child of that PowerShell process.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T123-00232",
+     "T123-00233"
+    ]
+   },
+   {
+    "claim": "The observed PowerShell chain begins at 13:44:55 UTC, later than the ticket's approximate 13:40 time; the records at 13:40:28 show Kerberos activity rather than a PowerShell process.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T123-00191",
+     "T123-00193",
+     "T123-00218"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records the script URL and successful status, but the supplied evidence does not include the downloaded script's contents.",
+   "The supplied records show rundll32 invoking svchelper.dll but do not provide the DLL's creation event, hash, signature, or contents.",
+   "Collection metadata reports a winsec and Sysmon collection outage on WS-SALI-01 from 13:25 to 14:10 UTC; the supplied records do not show that host participating in the alerted process chain."
+  ],
+  "claims_not_established": [
+   "The available records do not establish how Statement.docm was obtained, whether it contained a macro, or whether the user intentionally opened it.",
+   "The contents and behavior of u.ps1 and svchelper.dll, and whether the DLL successfully executed malicious actions, are not established by the supplied evidence.",
+   "The records do not establish whether data was accessed or exfiltrated, or whether the host remained compromised after the observed processes exited."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze Statement.docm, u.ps1, svchelper.dll, and the PowerShell temporary file; record hashes, signatures, and provenance.",
+   "Review endpoint detection, process, file, persistence, and network telemetry on WS-DREYES-01 after the observed chain to determine impact and persistence.",
+   "Review the user's download and email or browser provenance for Statement.docm, and verify whether the GitHub repository and script are organization-authorized."
+  ],
+  "unrelated_findings": [
+   "At 13:36 UTC, WS-DREYES-01 authenticated as kim.nguyen to WS-KNGUYEN-01, and that host recorded a network logon for kim.nguyen from WS-DREYES-01. Review separately; this is not used to determine the alerted PowerShell activity.",
+   "At 13:36 UTC, Cisco AnyConnect's signed vpnui.exe started on WS-DREYES-01. The inventory states there is no VPN; these records show the client process, not an established VPN session.",
+   "At 13:36 UTC, Chrome on WS-DREYES-01 connected to drive.google.com. Google Drive is not listed among approved services; the records do not establish a file transfer."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 18,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 28.2
+}

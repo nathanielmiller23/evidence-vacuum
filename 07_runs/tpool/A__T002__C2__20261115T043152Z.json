@@ -1,0 +1,77 @@
+{
+ "run_id": "A__T002__C2__20261115T043152Z",
+ "config": "A",
+ "scenario_id": "T002",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 1,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 4249,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:39:31 UTC, a Windows 4648 event on WS-LPARK-01 recorded the SYSTEM process using explicit credentials for svc-claimsync, targeting PROXY-HD-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T002-00019\"]\n    },\n    {\n      \"claim\": \"The recorded process was Commvault GxCVD.exe. The supplied inventory identifies CobaltVault, not Commvault, as the approved offsite backup agent, and identifies svc-claimsync as a ClaimSync job account on FILE-HD-01; this combination is anomalous against the supplied context.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T002-00019\"]\n    },\n    {\n      \"claim\": \"The event occurred about nine minutes after the scheduled svc-claimsync password rotation, which could be relevant to authentication issues but does not explain why the credentials were used from WS-LPARK-01 by the recorded process.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T002-00019\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Only one log record was provided; it does not establish repeated attempts.\",\n    \"Event 4648 records use of explicit credentials, but this record alone does not establish whether authentication succeeded or failed.\",\n    \"No domain-controller authentication records, proxy logs, process execution history, or endpoint investigation results were provided.\"\n  ],\n  \"claims_not_established\": [\n    \"That repeated failed domain logons occurred during the review window.\",\n    \"That the credentials were accepted, or that any proxy connection or subsequent activity occurred.\",\n    \"Whether Commvault GxCVD.exe was authorized or why it was running on WS-LPARK-01.\",\n    \"Whether the event was caused by the scheduled password rotation or represents malicious activity.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Domain-controller security logs for svc-claimsync authentication attempts and outcomes during 13:20\u201314:20 UTC.\",\n    \"PROXY-HD-01 logs for requests or connections associated with svc-claimsync and the source of this event.\",\n    \"WS-LPARK-01 process creation and endpoint telemetry for Commvault GxCVD.exe, including its file path, signature, hash, parent process, and network activity.\",\n    \"Change and job-update records confirming the password rotation and any authorized use of svc-claimsync from WS-LPARK-01.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 1190,
+    "output": 1271,
+    "reasoning": 685
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "At 13:39:31 UTC, a Windows 4648 event on WS-LPARK-01 recorded the SYSTEM process using explicit credentials for svc-claimsync, targeting PROXY-HD-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T002-00019"
+    ]
+   },
+   {
+    "claim": "The recorded process was Commvault GxCVD.exe. The supplied inventory identifies CobaltVault, not Commvault, as the approved offsite backup agent, and identifies svc-claimsync as a ClaimSync job account on FILE-HD-01; this combination is anomalous against the supplied context.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T002-00019"
+    ]
+   },
+   {
+    "claim": "The event occurred about nine minutes after the scheduled svc-claimsync password rotation, which could be relevant to authentication issues but does not explain why the credentials were used from WS-LPARK-01 by the recorded process.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T002-00019"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Only one log record was provided; it does not establish repeated attempts.",
+   "Event 4648 records use of explicit credentials, but this record alone does not establish whether authentication succeeded or failed.",
+   "No domain-controller authentication records, proxy logs, process execution history, or endpoint investigation results were provided."
+  ],
+  "claims_not_established": [
+   "That repeated failed domain logons occurred during the review window.",
+   "That the credentials were accepted, or that any proxy connection or subsequent activity occurred.",
+   "Whether Commvault GxCVD.exe was authorized or why it was running on WS-LPARK-01.",
+   "Whether the event was caused by the scheduled password rotation or represents malicious activity."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Domain-controller security logs for svc-claimsync authentication attempts and outcomes during 13:20\u201314:20 UTC.",
+   "PROXY-HD-01 logs for requests or connections associated with svc-claimsync and the source of this event.",
+   "WS-LPARK-01 process creation and endpoint telemetry for Commvault GxCVD.exe, including its file path, signature, hash, parent process, and network activity.",
+   "Change and job-update records confirming the password rotation and any authorized use of svc-claimsync from WS-LPARK-01."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 3,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 15.3
+}

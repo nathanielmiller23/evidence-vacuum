@@ -1,0 +1,103 @@
+{
+ "scenario_id": "T247",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted account was created on DC-SUN-01 at 13:44:36 UTC by ian.doyle, later than the alert's approximate 13:42 time but within the review window.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T247-00144\"]\n    },\n    {\n      \"claim\": \"Less than a minute after creation, adm_temp was added to a group named Administrators. The event's target SID ends in -512, the domain group RID associated with Domain Admins.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T247-00144\", \"T247-00148\"]\n    },\n    {\n      \"claim\": \"The account name and privileged group membership conflict with stated help-desk practice: temporary accounts use the v.<name> pattern and are added only to Vendors, never given administrator rights.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T247-00144\", \"T247-00148\"]\n    },\n    {\n      \"claim\": \"Shortly before the account changes, ian.doyle logged on to WS-MFISCHER-01 using RDP from 192.0.2.199; that address is not identified as an approved remote-administration host in the supplied inventory, which says remote administration is only from WS-IDOYLE-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T247-00103\", \"T247-00106\", \"T247-00108\"]\n    },\n    {\n      \"claim\": \"At 13:44:58, a task was registered on WS-MFISCHER-01 under ian.doyle's logon session. It runs hidden PowerShell with an encoded command that decodes to an instruction to retrieve and execute a script from http://192.0.2.199/a.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T247-00108\", \"T247-00149\"]\n    },\n    {\n      \"claim\": \"The account creation, privileged group addition, unauthorized-source RDP session, and hidden script-running task together support a malicious-activity finding rather than an authorized temporary-account workflow.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T247-00144\", \"T247-00148\", \"T247-00106\", \"T247-00108\", \"T247-00149\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show the account and task changes but do not show the process or command that performed the account creation and group addition.\",\n    \"The task registration is evidenced, but the available records do not show whether it ran or what the retrieved script contained.\",\n    \"The logs identify ian.doyle as the account-change and task author, but do not establish whether ian.doyle personally initiated the activity or whether the credentials or session were misused.\"\n  ],\n  \"claims_not_established\": [\n    \"Who controlled the RDP source address 192.0.2.199 or whether it was a compromised system.\",\n    \"Whether the task executed and whether the script caused further activity.\",\n    \"Whether adm_temp was subsequently used to authenticate or access resources.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Collect DC-SUN-01 account-management and directory audit details, including the originating process, client, and full group identity for the account creation and membership change.\",\n    \"Investigate the 192.0.2.199 RDP source and validate whether ian.doyle's credentials or session were compromised.\",\n    \"Collect task execution, PowerShell, file, and network telemetry for the task and the referenced script URL.\",\n    \"Review adm_temp's subsequent logons, group memberships, and resource access; contain or disable the account and remove unauthorized privileged membership while preserving evidence.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-MFISCHER-01 connected to Dropbox's desktop update service; Dropbox is not among the approved services listed in the supplied context. This is separate from the account-management alert. (T247-00044)\",\n    \"Google Drive File Stream ran under max.fischer, and the workstation accessed docs.google.com; Google Drive is not among the approved services listed in the supplied context. This is separate from the account-management alert. (T247-00223, T247-00256)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 40106,
+    "output": 2145
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "The alerted account was created on DC-SUN-01 at 13:44:36 UTC by ian.doyle, later than the alert's approximate 13:42 time but within the review window.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T247-00144"
+    ]
+   },
+   {
+    "claim": "Less than a minute after creation, adm_temp was added to a group named Administrators. The event's target SID ends in -512, the domain group RID associated with Domain Admins.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T247-00144",
+     "T247-00148"
+    ]
+   },
+   {
+    "claim": "The account name and privileged group membership conflict with stated help-desk practice: temporary accounts use the v.<name> pattern and are added only to Vendors, never given administrator rights.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T247-00144",
+     "T247-00148"
+    ]
+   },
+   {
+    "claim": "Shortly before the account changes, ian.doyle logged on to WS-MFISCHER-01 using RDP from 192.0.2.199; that address is not identified as an approved remote-administration host in the supplied inventory, which says remote administration is only from WS-IDOYLE-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T247-00103",
+     "T247-00106",
+     "T247-00108"
+    ]
+   },
+   {
+    "claim": "At 13:44:58, a task was registered on WS-MFISCHER-01 under ian.doyle's logon session. It runs hidden PowerShell with an encoded command that decodes to an instruction to retrieve and execute a script from http://192.0.2.199/a.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T247-00108",
+     "T247-00149"
+    ]
+   },
+   {
+    "claim": "The account creation, privileged group addition, unauthorized-source RDP session, and hidden script-running task together support a malicious-activity finding rather than an authorized temporary-account workflow.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T247-00144",
+     "T247-00148",
+     "T247-00106",
+     "T247-00108",
+     "T247-00149"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show the account and task changes but do not show the process or command that performed the account creation and group addition.",
+   "The task registration is evidenced, but the available records do not show whether it ran or what the retrieved script contained.",
+   "The logs identify ian.doyle as the account-change and task author, but do not establish whether ian.doyle personally initiated the activity or whether the credentials or session were misused."
+  ],
+  "claims_not_established": [
+   "Who controlled the RDP source address 192.0.2.199 or whether it was a compromised system.",
+   "Whether the task executed and whether the script caused further activity.",
+   "Whether adm_temp was subsequently used to authenticate or access resources."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Collect DC-SUN-01 account-management and directory audit details, including the originating process, client, and full group identity for the account creation and membership change.",
+   "Investigate the 192.0.2.199 RDP source and validate whether ian.doyle's credentials or session were compromised.",
+   "Collect task execution, PowerShell, file, and network telemetry for the task and the referenced script URL.",
+   "Review adm_temp's subsequent logons, group memberships, and resource access; contain or disable the account and remove unauthorized privileged membership while preserving evidence."
+  ],
+  "unrelated_findings": [
+   "WS-MFISCHER-01 connected to Dropbox's desktop update service; Dropbox is not among the approved services listed in the supplied context. This is separate from the account-management alert. (T247-00044)",
+   "Google Drive File Stream ran under max.fischer, and the workstation accessed docs.google.com; Google Drive is not among the approved services listed in the supplied context. This is separate from the account-management alert. (T247-00223, T247-00256)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.5
+}

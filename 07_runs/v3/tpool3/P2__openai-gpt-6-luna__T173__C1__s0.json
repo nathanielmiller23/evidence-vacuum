@@ -1,0 +1,91 @@
+{
+ "scenario_id": "T173",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:42:37 UTC, Julia Frost opened C:\\\\Users\\\\julia.frost\\\\Downloads\\\\Statement.docm in Word; about two seconds later, Word launched PowerShell with no profile, a hidden-window option, and an encoded command. (T173-00144, T173-00148, T173-00149)\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T173-00144\", \"T173-00148\", \"T173-00149\"]\n    },\n    {\n      \"claim\": \"The encoded PowerShell command requests execution of a script downloaded with WebClient from raw.githubusercontent.com/maplehill-it/tools/main/u.ps1. The proxy recorded a successful GET for that URL under the same tunnel ID. (T173-00148, T173-00150, T173-00152)\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T173-00148\", \"T173-00150\", \"T173-00152\"]\n    },\n    {\n      \"claim\": \"Within about half a second of the download request, that PowerShell process launched rundll32 against C:\\\\Users\\\\julia.frost\\\\AppData\\\\Roaming\\\\svchelper.dll,Init. (T173-00148, T173-00152, T173-00157, T173-00159)\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T173-00148\", \"T173-00152\", \"T173-00157\", \"T173-00159\"]\n    },\n    {\n      \"claim\": \"The Word-launched hidden PowerShell downloader and subsequent execution of a DLL from the user's Roaming profile are strongly indicative of malicious activity in the alerted time window. (T173-00144, T173-00148, T173-00152, T173-00157, T173-00159)\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T173-00144\", \"T173-00148\", \"T173-00152\", \"T173-00157\", \"T173-00159\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show the script URL and a successful GET, but do not provide the downloaded script contents. (T173-00152)\",\n    \"The records show rundll32 loading the DLL by command line, but do not provide the DLL contents, hash, or analysis results. (T173-00157, T173-00159)\",\n    \"The supplied records do not include Word macro contents or PowerShell script-block/AMSI content, so the exact macro and payload behavior are not established.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the downloaded script or DLL performed additional actions, established persistence, or caused data access or exfiltration.\",\n    \"Whether Julia intentionally opened the document or knew it would launch the observed processes.\",\n    \"Whether the GitHub repository or files were controlled by an authorized Maple Hill party.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze Statement.docm, including its macro/VBA content.\",\n    \"Retrieve the exact u.ps1 response and the svchelper.dll; preserve hashes and analyze both.\",\n    \"Collect endpoint protection detections, PowerShell operational/script-block or AMSI logs, and relevant file-creation and persistence telemetry for WS-JFROST-01.\",\n    \"Review repository ownership and change history for maplehill-it/tools, and determine whether its use was authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox launched under Julia's account, although the inventory says no file-sharing or cloud-storage services other than Microsoft 365/OneDrive are approved; handle separately. (T173-00255, T173-00256)\",\n    \"Webex launched with a Slack URL, while no non-approved communication or file-sharing services are listed in the inventory; handle separately. (T173-00264, T173-00266)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 53607,
+    "output": 2070
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:42:37 UTC, Julia Frost opened C:\\Users\\julia.frost\\Downloads\\Statement.docm in Word; about two seconds later, Word launched PowerShell with no profile, a hidden-window option, and an encoded command. (T173-00144, T173-00148, T173-00149)",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T173-00144",
+     "T173-00148",
+     "T173-00149"
+    ]
+   },
+   {
+    "claim": "The encoded PowerShell command requests execution of a script downloaded with WebClient from raw.githubusercontent.com/maplehill-it/tools/main/u.ps1. The proxy recorded a successful GET for that URL under the same tunnel ID. (T173-00148, T173-00150, T173-00152)",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T173-00148",
+     "T173-00150",
+     "T173-00152"
+    ]
+   },
+   {
+    "claim": "Within about half a second of the download request, that PowerShell process launched rundll32 against C:\\Users\\julia.frost\\AppData\\Roaming\\svchelper.dll,Init. (T173-00148, T173-00152, T173-00157, T173-00159)",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T173-00148",
+     "T173-00152",
+     "T173-00157",
+     "T173-00159"
+    ]
+   },
+   {
+    "claim": "The Word-launched hidden PowerShell downloader and subsequent execution of a DLL from the user's Roaming profile are strongly indicative of malicious activity in the alerted time window. (T173-00144, T173-00148, T173-00152, T173-00157, T173-00159)",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T173-00144",
+     "T173-00148",
+     "T173-00152",
+     "T173-00157",
+     "T173-00159"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show the script URL and a successful GET, but do not provide the downloaded script contents. (T173-00152)",
+   "The records show rundll32 loading the DLL by command line, but do not provide the DLL contents, hash, or analysis results. (T173-00157, T173-00159)",
+   "The supplied records do not include Word macro contents or PowerShell script-block/AMSI content, so the exact macro and payload behavior are not established."
+  ],
+  "claims_not_established": [
+   "Whether the downloaded script or DLL performed additional actions, established persistence, or caused data access or exfiltration.",
+   "Whether Julia intentionally opened the document or knew it would launch the observed processes.",
+   "Whether the GitHub repository or files were controlled by an authorized Maple Hill party."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze Statement.docm, including its macro/VBA content.",
+   "Retrieve the exact u.ps1 response and the svchelper.dll; preserve hashes and analyze both.",
+   "Collect endpoint protection detections, PowerShell operational/script-block or AMSI logs, and relevant file-creation and persistence telemetry for WS-JFROST-01.",
+   "Review repository ownership and change history for maplehill-it/tools, and determine whether its use was authorized."
+  ],
+  "unrelated_findings": [
+   "Dropbox launched under Julia's account, although the inventory says no file-sharing or cloud-storage services other than Microsoft 365/OneDrive are approved; handle separately. (T173-00255, T173-00256)",
+   "Webex launched with a Slack URL, while no non-approved communication or file-sharing services are listed in the inventory; handle separately. (T173-00264, T173-00266)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.0
+}

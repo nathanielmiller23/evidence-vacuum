@@ -1,0 +1,86 @@
+{
+ "run_id": "A__T020__C2__20261115T044248Z",
+ "config": "A",
+ "scenario_id": "T020",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 515,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 206730,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.9,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45:53 UTC, the domain controller recorded a Kerberos service-ticket event for svc-bkp targeting FILE-HD-01$ with source IP 23.129.64.210, a public address. The supplied environment context says there is no VPN and remote administration is only performed from WS-OHADDAD-01, so this origin is unexplained and strongly suspicious.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T020-00264\"]\n    },\n    {\n      \"claim\": \"The large transfer itself is consistent with the approved backup activity: cvagent.exe ran as svc-bkp with a CobaltVault target, and proxy telemetry recorded about 640 MB sent to ingest.cobaltvault.net during that process's outbound connection.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T020-00278\", \"T020-00279\", \"T020-00281\", \"T020-00285\", \"T020-00286\", \"T020-00288\"]\n    },\n    {\n      \"claim\": \"A Kerberos RDP session from WS-LPARK-01 (10.30.10.24) to FILE-HD-01 was followed by a type-10 logon for lucy.park. This is inconsistent with the stated restriction that remote administration is only done from WS-OHADDAD-01, unless there was separate authorization not present in the evidence.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T020-00341\", \"T020-00342\", \"T020-00344\", \"T020-00349\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records show tunnel byte counts and destination, but do not establish the contents or business purpose of the transferred data. [T020-00281, T020-00285, T020-00286]\",\n    \"The supplied records do not show whether the public-source Kerberos event led to other access or activity; they also do not establish who controlled that source IP. [T020-00264]\",\n    \"The RDP records establish a session and account logon, but do not establish whether the session was authorized or what actions were taken in it. [T020-00342, T020-00349]\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the public-source Kerberos event reflects compromised credentials, an authorized exception, or another cause; the record alone does not establish subsequent use of a ticket. [T020-00264]\",\n    \"Whether svc-bkp credentials or the backup agent were compromised. The observed agent execution and transfer match the approved backup description, but do not resolve the suspicious Kerberos origin. [T020-00264, T020-00278, T020-00285]\",\n    \"Whether lucy.park's RDP session was authorized or involved malicious actions. [T020-00342, T020-00349]\",\n    \"Whether the svc-claimsync password rotation and manual job update occurred as scheduled; the supplied records do not establish either outcome.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate the 13:45:53 Kerberos event with DC authentication details, network perimeter/firewall telemetry, and any source-IP attribution; determine whether the source was actually reachable and authorized.\",\n    \"Review FILE-HD-01 service, scheduled-task, and account-change logs around the svc-bkp logon and the suspicious Kerberos event; verify the backup agent binary and configuration against a known-good baseline.\",\n    \"Obtain RDP session activity and help-desk/change records to determine whether lucy.park's session was authorized and what actions occurred.\",\n    \"Retrieve CobaltVault job and ingestion records, including backup job status and transferred object metadata, to validate the 640 MB upload.\",\n    \"Review change records and ClaimSync application/job logs to confirm the scheduled svc-claimsync rotation and manual update.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 75915,
+    "output": 2781,
+    "reasoning": 1883
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.9,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45:53 UTC, the domain controller recorded a Kerberos service-ticket event for svc-bkp targeting FILE-HD-01$ with source IP 23.129.64.210, a public address. The supplied environment context says there is no VPN and remote administration is only performed from WS-OHADDAD-01, so this origin is unexplained and strongly suspicious.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T020-00264"
+    ]
+   },
+   {
+    "claim": "The large transfer itself is consistent with the approved backup activity: cvagent.exe ran as svc-bkp with a CobaltVault target, and proxy telemetry recorded about 640 MB sent to ingest.cobaltvault.net during that process's outbound connection.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T020-00278",
+     "T020-00279",
+     "T020-00281",
+     "T020-00285",
+     "T020-00286",
+     "T020-00288"
+    ]
+   },
+   {
+    "claim": "A Kerberos RDP session from WS-LPARK-01 (10.30.10.24) to FILE-HD-01 was followed by a type-10 logon for lucy.park. This is inconsistent with the stated restriction that remote administration is only done from WS-OHADDAD-01, unless there was separate authorization not present in the evidence.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T020-00341",
+     "T020-00342",
+     "T020-00344",
+     "T020-00349"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records show tunnel byte counts and destination, but do not establish the contents or business purpose of the transferred data. [T020-00281, T020-00285, T020-00286]",
+   "The supplied records do not show whether the public-source Kerberos event led to other access or activity; they also do not establish who controlled that source IP. [T020-00264]",
+   "The RDP records establish a session and account logon, but do not establish whether the session was authorized or what actions were taken in it. [T020-00342, T020-00349]"
+  ],
+  "claims_not_established": [
+   "Whether the public-source Kerberos event reflects compromised credentials, an authorized exception, or another cause; the record alone does not establish subsequent use of a ticket. [T020-00264]",
+   "Whether svc-bkp credentials or the backup agent were compromised. The observed agent execution and transfer match the approved backup description, but do not resolve the suspicious Kerberos origin. [T020-00264, T020-00278, T020-00285]",
+   "Whether lucy.park's RDP session was authorized or involved malicious actions. [T020-00342, T020-00349]",
+   "Whether the svc-claimsync password rotation and manual job update occurred as scheduled; the supplied records do not establish either outcome."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate the 13:45:53 Kerberos event with DC authentication details, network perimeter/firewall telemetry, and any source-IP attribution; determine whether the source was actually reachable and authorized.",
+   "Review FILE-HD-01 service, scheduled-task, and account-change logs around the svc-bkp logon and the suspicious Kerberos event; verify the backup agent binary and configuration against a known-good baseline.",
+   "Obtain RDP session activity and help-desk/change records to determine whether lucy.park's session was authorized and what actions occurred.",
+   "Retrieve CobaltVault job and ingestion records, including backup job status and transferred object metadata, to validate the 640 MB upload.",
+   "Review change records and ClaimSync application/job logs to confirm the scheduled svc-claimsync rotation and manual update."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 29.1
+}

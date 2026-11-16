@@ -1,0 +1,95 @@
+{
+ "scenario_id": "T215",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted activity is a series of HTTPS CONNECT attempts to update.stockpilot.co, beginning at 13:41:40 and recurring at approximately five-minute intervals through 14:06:35. The final cited attempt falls within the alert window.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T215-00103\",\n        \"T215-00129\",\n        \"T215-00171\",\n        \"T215-00193\",\n        \"T215-00211\",\n        \"T215-00226\"\n      ]\n    },\n    {\n      \"claim\": \"Endpoint network events attribute the repeated proxy connections to stockpilotupd.exe running from Eli Brooks's AppData\\\\Local\\\\StockPilot directory, rather than the inventoried approved path under C:\\\\Program Files\\\\StockPilot.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T215-00100\",\n        \"T215-00105\",\n        \"T215-00106\",\n        \"T215-00131\",\n        \"T215-00132\",\n        \"T215-00228\",\n        \"T215-00229\"\n      ]\n    },\n    {\n      \"claim\": \"The executable was started as a child of Chrome whose command line referenced graph.microsoft.com, and a file-create event subsequently records that same executable path. This is inconsistent with the inventoried updater path and warrants concern about masquerading or an unexpected installation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T215-00100\",\n        \"T215-00102\"\n      ]\n    },\n    {\n      \"claim\": \"The observed destination hostname is update.stockpilot.co, whereas the inventory identifies the approved updater check-in domain as update.stockpilot.com. The hostname mismatch, combined with the unexpected executable location and launch context, supports treating the alerted activity as malicious pending investigation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T215-00103\",\n        \"T215-00129\",\n        \"T215-00171\",\n        \"T215-00193\",\n        \"T215-00211\",\n        \"T215-00226\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Winsec collection for DC-BLU-01 was unavailable from 13:30 to 14:10 UTC due to a log collection outage; this may limit corroboration of domain authentication activity during the alert window.\",\n    \"The provided evidence does not include a file hash, signature validation, or executable contents for the AppData\\\\Local\\\\StockPilot binary.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish the binary's provenance, whether it is signed or modified, or whether the mismatch resulted from a legitimate but undocumented installation or update.\",\n    \"The evidence does not establish what data, if any, was sent to the destination or whether the connections delivered a payload.\",\n    \"The evidence does not establish whether update.stockpilot.co is controlled by an attacker or whether the observed hostname resulted from an intentional configuration error.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze the stockpilotupd.exe file from the recorded AppData\\\\Local path, including hash, signature, compile metadata, and comparison with the approved Program Files installation.\",\n    \"Review proxy and DNS records for the destination hostname, including resolution history, certificate details if available, and any related connections from other endpoints.\",\n    \"Check software deployment and browser download records on WS-EBROOKS-01 to determine how the executable was created and launched.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-RMOSS-01 launched msra.exe targeting WS-EBROOKS-01 and used explicit credentials for eli.brooks. This is outside the alerted outbound HTTPS activity and appears inconsistent with the stated practice that remote administration is performed only from WS-KITO-01; investigate separately. (T215-00186, T215-00188)\",\n    \"A GoogleDriveFS client connected to clients4.google.com from WS-EBROOKS-01; Google Drive is not among the listed approved services. This is separate from the alerted StockPilot-related connections. (T215-00133, T215-00134)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 49243,
+    "output": 2331
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "The alerted activity is a series of HTTPS CONNECT attempts to update.stockpilot.co, beginning at 13:41:40 and recurring at approximately five-minute intervals through 14:06:35. The final cited attempt falls within the alert window.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T215-00103",
+     "T215-00129",
+     "T215-00171",
+     "T215-00193",
+     "T215-00211",
+     "T215-00226"
+    ]
+   },
+   {
+    "claim": "Endpoint network events attribute the repeated proxy connections to stockpilotupd.exe running from Eli Brooks's AppData\\Local\\StockPilot directory, rather than the inventoried approved path under C:\\Program Files\\StockPilot.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T215-00100",
+     "T215-00105",
+     "T215-00106",
+     "T215-00131",
+     "T215-00132",
+     "T215-00228",
+     "T215-00229"
+    ]
+   },
+   {
+    "claim": "The executable was started as a child of Chrome whose command line referenced graph.microsoft.com, and a file-create event subsequently records that same executable path. This is inconsistent with the inventoried updater path and warrants concern about masquerading or an unexpected installation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T215-00100",
+     "T215-00102"
+    ]
+   },
+   {
+    "claim": "The observed destination hostname is update.stockpilot.co, whereas the inventory identifies the approved updater check-in domain as update.stockpilot.com. The hostname mismatch, combined with the unexpected executable location and launch context, supports treating the alerted activity as malicious pending investigation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T215-00103",
+     "T215-00129",
+     "T215-00171",
+     "T215-00193",
+     "T215-00211",
+     "T215-00226"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Winsec collection for DC-BLU-01 was unavailable from 13:30 to 14:10 UTC due to a log collection outage; this may limit corroboration of domain authentication activity during the alert window.",
+   "The provided evidence does not include a file hash, signature validation, or executable contents for the AppData\\Local\\StockPilot binary."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish the binary's provenance, whether it is signed or modified, or whether the mismatch resulted from a legitimate but undocumented installation or update.",
+   "The evidence does not establish what data, if any, was sent to the destination or whether the connections delivered a payload.",
+   "The evidence does not establish whether update.stockpilot.co is controlled by an attacker or whether the observed hostname resulted from an intentional configuration error."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze the stockpilotupd.exe file from the recorded AppData\\Local path, including hash, signature, compile metadata, and comparison with the approved Program Files installation.",
+   "Review proxy and DNS records for the destination hostname, including resolution history, certificate details if available, and any related connections from other endpoints.",
+   "Check software deployment and browser download records on WS-EBROOKS-01 to determine how the executable was created and launched."
+  ],
+  "unrelated_findings": [
+   "WS-RMOSS-01 launched msra.exe targeting WS-EBROOKS-01 and used explicit credentials for eli.brooks. This is outside the alerted outbound HTTPS activity and appears inconsistent with the stated practice that remote administration is performed only from WS-KITO-01; investigate separately. (T215-00186, T215-00188)",
+   "A GoogleDriveFS client connected to clients4.google.com from WS-EBROOKS-01; Google Drive is not among the listed approved services. This is separate from the alerted StockPilot-related connections. (T215-00133, T215-00134)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 21,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 24.7
+}

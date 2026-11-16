@@ -1,0 +1,84 @@
+{
+ "scenario_id": "T247",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The account was created at 13:44:36 UTC by ian.doyle, rather than under the help-desk temporary-account naming pattern described in the environment context.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T247-00144\"\n      ]\n    },\n    {\n      \"claim\": \"Less than a minute after creation, adm_temp was added to a group logged as Administrators. This conflicts with the stated practice that temporary accounts never receive administrator rights. The event's group name and target SID should be validated because the SID ends in 512.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T247-00144\",\n        \"T247-00148\"\n      ]\n    },\n    {\n      \"claim\": \"ian.doyle logged on to WS-MFISCHER-01 over RDP from 192.0.2.199. The environment says remote administration is only done from WS-IDOYLE-01 and there is no VPN; the records do not identify the source host behind that IP.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T247-00106\",\n        \"T247-00108\"\n      ]\n    },\n    {\n      \"claim\": \"Shortly after the account creation and group change, a task was registered under ian.doyle's WS-MFISCHER-01 logon. It invokes hidden PowerShell with an encoded command that decodes to a download-and-execute expression for a script at 192.0.2.199. The record establishes task registration, not that the task ran successfully.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T247-00149\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available records show the account was created at 13:44:36 UTC, not at approximately 13:42 UTC as stated in the alert.\",\n    \"The records do not establish who controlled the RDP source or whether 192.0.2.199 is a real address or a substituted value.\",\n    \"The account-management events and the workstation task event have different logon IDs; the records do not directly prove they were performed in the same session.\",\n    \"The task-registration record does not show whether the task executed or what the downloaded script contained.\",\n    \"The group-add event names Administrators but reports a target SID ending in 512; the group identity and effective privileges should be confirmed.\"\n  ],\n  \"claims_not_established\": [\n    \"The actual identity or location of the person operating as ian.doyle.\",\n    \"Whether the account was used after creation or whether it retained privileged membership.\",\n    \"Whether the scheduled task ran, and whether its command successfully retrieved or executed a script.\",\n    \"Whether the group membership event reflects effective administrator privileges despite the group name/SID discrepancy.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Confirm adm_temp's current and historical group memberships, group SID mapping, account attributes, and any subsequent authentication or use.\",\n    \"Correlate domain-controller and WS-MFISCHER-01 authentication records to identify the origin of the RDP session and validate the actor.\",\n    \"Obtain scheduled-task execution history, PowerShell logs, file and network telemetry for the task, and any available contents of the referenced script.\",\n    \"Check change approvals or help-desk records for this account and the account-management actions.\"\n  ],\n  \"unrelated_findings\": [\n    \"Google Drive File Stream ran on WS-MFISCHER-01 and the user accessed docs.google.com, although the environment lists no approved Google Drive or other file-sharing service. Track separately; this does not determine the account-alert assessment. (T247-00223, T247-00227, T247-00251, T247-00256)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 39729,
+    "output": 2636
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "The account was created at 13:44:36 UTC by ian.doyle, rather than under the help-desk temporary-account naming pattern described in the environment context.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T247-00144"
+    ]
+   },
+   {
+    "claim": "Less than a minute after creation, adm_temp was added to a group logged as Administrators. This conflicts with the stated practice that temporary accounts never receive administrator rights. The event's group name and target SID should be validated because the SID ends in 512.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T247-00144",
+     "T247-00148"
+    ]
+   },
+   {
+    "claim": "ian.doyle logged on to WS-MFISCHER-01 over RDP from 192.0.2.199. The environment says remote administration is only done from WS-IDOYLE-01 and there is no VPN; the records do not identify the source host behind that IP.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T247-00106",
+     "T247-00108"
+    ]
+   },
+   {
+    "claim": "Shortly after the account creation and group change, a task was registered under ian.doyle's WS-MFISCHER-01 logon. It invokes hidden PowerShell with an encoded command that decodes to a download-and-execute expression for a script at 192.0.2.199. The record establishes task registration, not that the task ran successfully.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T247-00149"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available records show the account was created at 13:44:36 UTC, not at approximately 13:42 UTC as stated in the alert.",
+   "The records do not establish who controlled the RDP source or whether 192.0.2.199 is a real address or a substituted value.",
+   "The account-management events and the workstation task event have different logon IDs; the records do not directly prove they were performed in the same session.",
+   "The task-registration record does not show whether the task executed or what the downloaded script contained.",
+   "The group-add event names Administrators but reports a target SID ending in 512; the group identity and effective privileges should be confirmed."
+  ],
+  "claims_not_established": [
+   "The actual identity or location of the person operating as ian.doyle.",
+   "Whether the account was used after creation or whether it retained privileged membership.",
+   "Whether the scheduled task ran, and whether its command successfully retrieved or executed a script.",
+   "Whether the group membership event reflects effective administrator privileges despite the group name/SID discrepancy."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Confirm adm_temp's current and historical group memberships, group SID mapping, account attributes, and any subsequent authentication or use.",
+   "Correlate domain-controller and WS-MFISCHER-01 authentication records to identify the origin of the RDP session and validate the actor.",
+   "Obtain scheduled-task execution history, PowerShell logs, file and network telemetry for the task, and any available contents of the referenced script.",
+   "Check change approvals or help-desk records for this account and the account-management actions."
+  ],
+  "unrelated_findings": [
+   "Google Drive File Stream ran on WS-MFISCHER-01 and the user accessed docs.google.com, although the environment lists no approved Google Drive or other file-sharing service. Track separately; this does not determine the account-alert assessment. (T247-00223, T247-00227, T247-00251, T247-00256)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 6,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 25.6
+}

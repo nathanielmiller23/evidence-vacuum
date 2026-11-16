@@ -1,0 +1,82 @@
+{
+ "scenario_id": "T281",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.86,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded two failed network logons for raul.diaz from 198.51.100.77, both with bad-password substatus 0xc000006a.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T281-00073\", \"T281-00074\"]\n    },\n    {\n      \"claim\": \"The domain controller then recorded a successful network logon for raul.diaz from the same address, 198.51.100.77, at 13:44:22 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T281-00075\"]\n    },\n    {\n      \"claim\": \"The failed attempts followed by a success from the same reported address are suspicious and warrant investigation, but do not by themselves establish who controlled the source or whether the successful logon was unauthorized.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T281-00073\", \"T281-00074\", \"T281-00075\"]\n    },\n    {\n      \"claim\": \"Separate failed interactive logons for raul.diaz were recorded on WS-RDIAZ-01 before 13:40 UTC, also with bad-password substatus; these are distinct from the later network failures.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T281-00028\", \"T281-00043\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The reported source address 198.51.100.77 is in the reserved TEST-NET-2 range, so these records do not establish a real, routable public source or its relationship to any internal host.\",\n    \"The records identify network logon type 3 but do not identify the client process, the specific service or resource accessed, or the person using the source.\",\n    \"The available records do not establish whether the successful logon created an authorized session or what activity, if any, followed it.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the failed attempts and subsequent success originated from an external attacker, an internal system represented by a sanitized address, or an authorized client.\",\n    \"Whether raul.diaz or another authorized user initiated the successful logon.\",\n    \"Whether the successful logon resulted in access to data or other actions on the domain controller.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Confirm whether the source address was sanitized and, if so, obtain the original source address and its host or NAT mapping.\",\n    \"Correlate domain-controller authentication and service logs around 13:41\u201313:45 UTC to identify the requested service, client, and any actions following the successful logon.\",\n    \"Check endpoint, firewall, and network telemetry for the source corresponding to the failed and successful attempts; verify with raul.diaz whether the activity was expected.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate from the alerted authentication sequence, records show access to a Slack file endpoint, a Google Mail URL launched through Webex, Salesforce login pages, and SignalWire; these services are not listed among the approved services. The records show access attempts, not data upload or exfiltration. Records: T281-00012, T281-00100, T281-00084, T281-00106.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 18686,
+    "output": 3654
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.86,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded two failed network logons for raul.diaz from 198.51.100.77, both with bad-password substatus 0xc000006a.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T281-00073",
+     "T281-00074"
+    ]
+   },
+   {
+    "claim": "The domain controller then recorded a successful network logon for raul.diaz from the same address, 198.51.100.77, at 13:44:22 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T281-00075"
+    ]
+   },
+   {
+    "claim": "The failed attempts followed by a success from the same reported address are suspicious and warrant investigation, but do not by themselves establish who controlled the source or whether the successful logon was unauthorized.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T281-00073",
+     "T281-00074",
+     "T281-00075"
+    ]
+   },
+   {
+    "claim": "Separate failed interactive logons for raul.diaz were recorded on WS-RDIAZ-01 before 13:40 UTC, also with bad-password substatus; these are distinct from the later network failures.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T281-00028",
+     "T281-00043"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The reported source address 198.51.100.77 is in the reserved TEST-NET-2 range, so these records do not establish a real, routable public source or its relationship to any internal host.",
+   "The records identify network logon type 3 but do not identify the client process, the specific service or resource accessed, or the person using the source.",
+   "The available records do not establish whether the successful logon created an authorized session or what activity, if any, followed it."
+  ],
+  "claims_not_established": [
+   "Whether the failed attempts and subsequent success originated from an external attacker, an internal system represented by a sanitized address, or an authorized client.",
+   "Whether raul.diaz or another authorized user initiated the successful logon.",
+   "Whether the successful logon resulted in access to data or other actions on the domain controller."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Confirm whether the source address was sanitized and, if so, obtain the original source address and its host or NAT mapping.",
+   "Correlate domain-controller authentication and service logs around 13:41\u201313:45 UTC to identify the requested service, client, and any actions following the successful logon.",
+   "Check endpoint, firewall, and network telemetry for the source corresponding to the failed and successful attempts; verify with raul.diaz whether the activity was expected."
+  ],
+  "unrelated_findings": [
+   "Separate from the alerted authentication sequence, records show access to a Slack file endpoint, a Google Mail URL launched through Webex, Salesforce login pages, and SignalWire; these services are not listed among the approved services. The records show access attempts, not data upload or exfiltration. Records: T281-00012, T281-00100, T281-00084, T281-00106."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 8,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 34.1
+}

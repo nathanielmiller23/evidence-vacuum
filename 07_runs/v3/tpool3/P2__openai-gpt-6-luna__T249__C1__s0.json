@@ -1,0 +1,93 @@
+{
+ "scenario_id": "T249",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:43:04 UTC, Zoe Adams ran PowerShell to compress \\\\\\\\FILE-SUN-01\\\\Shared\\\\Clients into C:\\\\Users\\\\zoe.adams\\\\AppData\\\\Local\\\\Temp\\\\c.zip; a file-creation event confirms c.zip was created.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T249-00296\",\n        \"T249-00297\",\n        \"T249-00298\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:49:21 UTC, the proxy recorded 51,000,000 client-to-server bytes from WS-ZADAMS-01 to zipshare-host.io, and Zeek recorded 51,000,341 originating bytes for the same connection. The proxy attributed the connection to Zoe Adams; Sysmon identifies Chrome as the initiating process.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T249-00356\",\n        \"T249-00357\",\n        \"T249-00358\",\n        \"T249-00359\"\n      ]\n    },\n    {\n      \"claim\": \"The close sequence of creating an archive of client data and then sending roughly 51 MB to an unapproved file-sharing destination strongly supports suspected data exfiltration, although the logs do not directly establish that c.zip was the uploaded file.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T249-00296\",\n        \"T249-00298\",\n        \"T249-00356\",\n        \"T249-00358\"\n      ]\n    },\n    {\n      \"claim\": \"The provided records at 13:46 show a small proxy connection, not the tens-of-megabytes transfer; the large transfer is recorded at 13:49:21 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T249-00314\",\n        \"T249-00315\",\n        \"T249-00317\",\n        \"T249-00356\",\n        \"T249-00358\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and Zeek records establish a large outbound transfer to zipshare-host.io, but do not expose the transferred payload or identify it as c.zip.\",\n    \"The available records do not show the contents, size, or hash of c.zip, or provide file-level auditing of the source data read from the share.\",\n    \"The evidence records the large transfer at 13:49:21 UTC, rather than around the alert's stated 13:46 UTC.\"\n  ],\n  \"claims_not_established\": [\n    \"That the 51 MB transfer contained c.zip or data from \\\\\\\\FILE-SUN-01\\\\Shared\\\\Clients.\",\n    \"Which specific files or sensitive information, if any, were transferred.\",\n    \"Who operated the workstation or whether Zoe Adams personally initiated the actions.\",\n    \"Whether the destination accepted, retained, or further distributed the data.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine c.zip, including its hash, contents, creation metadata, and any subsequent copies or deletions.\",\n    \"Obtain file-server auditing and endpoint file-access telemetry for the Shared\\\\Clients path around 13:43 UTC.\",\n    \"Review proxy or network inspection records for the 13:49:21 connection for upload paths, payload details, and destination-side response.\",\n    \"Investigate the user's activity and authorization for accessing client data and using the destination; preserve WS-ZADAMS-01 telemetry.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox.exe launched from the user's profile during the review window. Dropbox is not among the organization's approved file-sharing services; investigate separately. Records: T249-00259, T249-00260, T249-00261.\",\n    \"Cisco AnyConnect vpnui.exe launched on WS-ZADAMS-01 despite the inventory stating there is no VPN. The records show the UI launch, not a VPN connection; investigate separately. Records: T249-00089, T249-00090, T249-00091.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 81598,
+    "output": 1953
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "At 13:43:04 UTC, Zoe Adams ran PowerShell to compress \\\\FILE-SUN-01\\Shared\\Clients into C:\\Users\\zoe.adams\\AppData\\Local\\Temp\\c.zip; a file-creation event confirms c.zip was created.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T249-00296",
+     "T249-00297",
+     "T249-00298"
+    ]
+   },
+   {
+    "claim": "At 13:49:21 UTC, the proxy recorded 51,000,000 client-to-server bytes from WS-ZADAMS-01 to zipshare-host.io, and Zeek recorded 51,000,341 originating bytes for the same connection. The proxy attributed the connection to Zoe Adams; Sysmon identifies Chrome as the initiating process.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T249-00356",
+     "T249-00357",
+     "T249-00358",
+     "T249-00359"
+    ]
+   },
+   {
+    "claim": "The close sequence of creating an archive of client data and then sending roughly 51 MB to an unapproved file-sharing destination strongly supports suspected data exfiltration, although the logs do not directly establish that c.zip was the uploaded file.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T249-00296",
+     "T249-00298",
+     "T249-00356",
+     "T249-00358"
+    ]
+   },
+   {
+    "claim": "The provided records at 13:46 show a small proxy connection, not the tens-of-megabytes transfer; the large transfer is recorded at 13:49:21 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T249-00314",
+     "T249-00315",
+     "T249-00317",
+     "T249-00356",
+     "T249-00358"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and Zeek records establish a large outbound transfer to zipshare-host.io, but do not expose the transferred payload or identify it as c.zip.",
+   "The available records do not show the contents, size, or hash of c.zip, or provide file-level auditing of the source data read from the share.",
+   "The evidence records the large transfer at 13:49:21 UTC, rather than around the alert's stated 13:46 UTC."
+  ],
+  "claims_not_established": [
+   "That the 51 MB transfer contained c.zip or data from \\\\FILE-SUN-01\\Shared\\Clients.",
+   "Which specific files or sensitive information, if any, were transferred.",
+   "Who operated the workstation or whether Zoe Adams personally initiated the actions.",
+   "Whether the destination accepted, retained, or further distributed the data."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine c.zip, including its hash, contents, creation metadata, and any subsequent copies or deletions.",
+   "Obtain file-server auditing and endpoint file-access telemetry for the Shared\\Clients path around 13:43 UTC.",
+   "Review proxy or network inspection records for the 13:49:21 connection for upload paths, payload details, and destination-side response.",
+   "Investigate the user's activity and authorization for accessing client data and using the destination; preserve WS-ZADAMS-01 telemetry."
+  ],
+  "unrelated_findings": [
+   "Dropbox.exe launched from the user's profile during the review window. Dropbox is not among the organization's approved file-sharing services; investigate separately. Records: T249-00259, T249-00260, T249-00261.",
+   "Cisco AnyConnect vpnui.exe launched on WS-ZADAMS-01 despite the inventory stating there is no VPN. The records show the UI launch, not a VPN connection; investigate separately. Records: T249-00089, T249-00090, T249-00091."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 16,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.1
+}

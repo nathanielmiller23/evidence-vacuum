@@ -1,0 +1,76 @@
+{
+ "scenario_id": "T043",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 2,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:41:50 UTC, ivy.chen opened C:\\\\Users\\\\ivy.chen\\\\Downloads\\\\Statement.docm in Word; about two seconds later Word spawned PowerShell with hidden-window and encoded-command options.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T043-00124\", \"T043-00128\", \"T043-00129\"]\n    },\n    {\n      \"claim\": \"The encoded command decodes to an instruction to use .NET WebClient DownloadString to retrieve a PowerShell script from raw.githubusercontent.com/nwd-it/tools/main/u.ps1. The proxy recorded a successful HTTP 200 GET for that same URL.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T043-00128\", \"T043-00132\"]\n    },\n    {\n      \"claim\": \"PowerShell then spawned rundll32 to invoke C:\\\\Users\\\\ivy.chen\\\\AppData\\\\Roaming\\\\svchelper.dll,Init. The document-launched hidden PowerShell, remote script retrieval, and DLL invocation together support a malicious-activity finding for the alerted activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T043-00128\", \"T043-00132\", \"T043-00139\", \"T043-00140\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied sensor-status information reports winsec and Sysmon collection outages for WS-NBLAKE-01 from 13:30 to 14:10 UTC; this is not the alerted host. Collection is reported as OK for other hosts and sensors.\",\n    \"The available records do not include the downloaded script or DLL contents, or PowerShell script-block/AMSI content, so their exact functionality is not established.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish what the downloaded script or svchelper.dll does beyond the recorded command and DLL invocation.\",\n    \"The records do not establish whether the activity achieved persistence, credential theft, lateral movement, or other follow-on effects.\",\n    \"The evidence does not establish who authored or supplied Statement.docm, or whether ivy.chen knowingly opened it.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze Statement.docm, the downloaded u.ps1 content, and C:\\\\Users\\\\ivy.chen\\\\AppData\\\\Roaming\\\\svchelper.dll, including hashes and provenance.\",\n    \"Review endpoint file, script-block, AMSI, EDR, and persistence telemetry around the event; determine whether the script or DLL made further changes or connections.\",\n    \"Investigate the separate administrator-account logon activity from WS-ICHEN-01 to WS-SOKAFOR-01.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate investigation: DC-NWD-01 issued a Kerberos ticket for sam.okafor from WS-ICHEN-01, and WS-SOKAFOR-01 recorded a network logon for sam.okafor identifying WS-ICHEN-01 as the workstation. This is inconsistent with the supplied practice that remote administration is only done from WS-SOKAFOR-01; it occurred before the alerted Word/PowerShell activity and does not determine this alert. (T043-00080, T043-00082, T043-00084)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 41791,
+    "output": 1784
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:41:50 UTC, ivy.chen opened C:\\Users\\ivy.chen\\Downloads\\Statement.docm in Word; about two seconds later Word spawned PowerShell with hidden-window and encoded-command options.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T043-00124",
+     "T043-00128",
+     "T043-00129"
+    ]
+   },
+   {
+    "claim": "The encoded command decodes to an instruction to use .NET WebClient DownloadString to retrieve a PowerShell script from raw.githubusercontent.com/nwd-it/tools/main/u.ps1. The proxy recorded a successful HTTP 200 GET for that same URL.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T043-00128",
+     "T043-00132"
+    ]
+   },
+   {
+    "claim": "PowerShell then spawned rundll32 to invoke C:\\Users\\ivy.chen\\AppData\\Roaming\\svchelper.dll,Init. The document-launched hidden PowerShell, remote script retrieval, and DLL invocation together support a malicious-activity finding for the alerted activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T043-00128",
+     "T043-00132",
+     "T043-00139",
+     "T043-00140"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied sensor-status information reports winsec and Sysmon collection outages for WS-NBLAKE-01 from 13:30 to 14:10 UTC; this is not the alerted host. Collection is reported as OK for other hosts and sensors.",
+   "The available records do not include the downloaded script or DLL contents, or PowerShell script-block/AMSI content, so their exact functionality is not established."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish what the downloaded script or svchelper.dll does beyond the recorded command and DLL invocation.",
+   "The records do not establish whether the activity achieved persistence, credential theft, lateral movement, or other follow-on effects.",
+   "The evidence does not establish who authored or supplied Statement.docm, or whether ivy.chen knowingly opened it."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze Statement.docm, the downloaded u.ps1 content, and C:\\Users\\ivy.chen\\AppData\\Roaming\\svchelper.dll, including hashes and provenance.",
+   "Review endpoint file, script-block, AMSI, EDR, and persistence telemetry around the event; determine whether the script or DLL made further changes or connections.",
+   "Investigate the separate administrator-account logon activity from WS-ICHEN-01 to WS-SOKAFOR-01."
+  ],
+  "unrelated_findings": [
+   "Separate investigation: DC-NWD-01 issued a Kerberos ticket for sam.okafor from WS-ICHEN-01, and WS-SOKAFOR-01 recorded a network logon for sam.okafor identifying WS-ICHEN-01 as the workstation. This is inconsistent with the supplied practice that remote administration is only done from WS-SOKAFOR-01; it occurred before the alerted Word/PowerShell activity and does not determine this alert. (T043-00080, T043-00082, T043-00084)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 9,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.1
+}

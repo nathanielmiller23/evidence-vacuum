@@ -1,0 +1,75 @@
+{
+ "scenario_id": "T076",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"WS-TWEBER-01 (10.51.10.22) made repeated TCP connections to PROXY-PIN-01 (10.51.20.30) on port 8080 during the review window. The records show HTTP service and recurring traffic with similar byte counts, including sessions at 13:41:02, 13:45:43, 13:50:50, 13:55:43, 14:00:51, and 14:06:01 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T076-00275\",\n        \"T076-00316\",\n        \"T076-00388\",\n        \"T076-00402\",\n        \"T076-00421\",\n        \"T076-00435\"\n      ]\n    },\n    {\n      \"claim\": \"The available connection records show the workstation connecting to the internal proxy, not the external HTTPS destinations or the application responsible for the sessions.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T076-00228\",\n        \"T076-00275\",\n        \"T076-00388\",\n        \"T076-00421\",\n        \"T076-00435\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Winsec and Sysmon collection for WS-TWEBER-01 was unavailable throughout 13:20\u201314:20 UTC, so endpoint process attribution and relevant host security events are missing.\",\n    \"Proxy-PIN-01 proxy logs were unavailable throughout the review window, so the proxy destination, URL, CONNECT details, and any recorded user or client attribution are unavailable.\",\n    \"Zeek connection, DNS, and TLS sensors were reported operational, but the provided records do not identify an external destination for the alerted proxy sessions.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the repeated proxy sessions were HTTPS tunnels, and which external hosts or URLs they reached.\",\n    \"Which process or user on WS-TWEBER-01 initiated the sessions.\",\n    \"Whether the sessions were the approved MediLedger updater checking update.medledger.com, or another activity.\",\n    \"Whether the activity was malicious or benign; the timing and traffic pattern alone do not establish either.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover or obtain PROXY-PIN-01 logs for 13:20\u201314:20 UTC, including destination host, URL or CONNECT target, authenticated user, and request/response details.\",\n    \"Recover WS-TWEBER-01 endpoint telemetry for the window, especially process creation, network connections, and relevant service or application logs; identify the process responsible for the proxy sessions.\",\n    \"Check installed and running MediLedger updater details and logs, and compare its observed check times and destinations with the proxy sessions.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate review: WS-TWEBER-01 queried afemode.pinecrest.local, which resolved to 10.51.20.183, then attempted a TCP connection to that address on port 1433; the connection record shows no completed session. This is outside the alerted proxy activity. (T076-00124, T076-00135)\",\n    \"Separate review: other workstations made TLS connections to WS-TWEBER-01 on port 443, with its hostname as the TLS server name. These are inbound connections to the alerted host, not the repeated proxy connections in the alert. (T076-00046, T076-00047, T076-00238, T076-00239, T076-00331, T076-00332, T076-00493, T076-00494)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 47836,
+    "output": 2457
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "WS-TWEBER-01 (10.51.10.22) made repeated TCP connections to PROXY-PIN-01 (10.51.20.30) on port 8080 during the review window. The records show HTTP service and recurring traffic with similar byte counts, including sessions at 13:41:02, 13:45:43, 13:50:50, 13:55:43, 14:00:51, and 14:06:01 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T076-00275",
+     "T076-00316",
+     "T076-00388",
+     "T076-00402",
+     "T076-00421",
+     "T076-00435"
+    ]
+   },
+   {
+    "claim": "The available connection records show the workstation connecting to the internal proxy, not the external HTTPS destinations or the application responsible for the sessions.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T076-00228",
+     "T076-00275",
+     "T076-00388",
+     "T076-00421",
+     "T076-00435"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Winsec and Sysmon collection for WS-TWEBER-01 was unavailable throughout 13:20\u201314:20 UTC, so endpoint process attribution and relevant host security events are missing.",
+   "Proxy-PIN-01 proxy logs were unavailable throughout the review window, so the proxy destination, URL, CONNECT details, and any recorded user or client attribution are unavailable.",
+   "Zeek connection, DNS, and TLS sensors were reported operational, but the provided records do not identify an external destination for the alerted proxy sessions."
+  ],
+  "claims_not_established": [
+   "Whether the repeated proxy sessions were HTTPS tunnels, and which external hosts or URLs they reached.",
+   "Which process or user on WS-TWEBER-01 initiated the sessions.",
+   "Whether the sessions were the approved MediLedger updater checking update.medledger.com, or another activity.",
+   "Whether the activity was malicious or benign; the timing and traffic pattern alone do not establish either."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover or obtain PROXY-PIN-01 logs for 13:20\u201314:20 UTC, including destination host, URL or CONNECT target, authenticated user, and request/response details.",
+   "Recover WS-TWEBER-01 endpoint telemetry for the window, especially process creation, network connections, and relevant service or application logs; identify the process responsible for the proxy sessions.",
+   "Check installed and running MediLedger updater details and logs, and compare its observed check times and destinations with the proxy sessions."
+  ],
+  "unrelated_findings": [
+   "Separate review: WS-TWEBER-01 queried afemode.pinecrest.local, which resolved to 10.51.20.183, then attempted a TCP connection to that address on port 1433; the connection record shows no completed session. This is outside the alerted proxy activity. (T076-00124, T076-00135)",
+   "Separate review: other workstations made TLS connections to WS-TWEBER-01 on port 443, with its hostname as the TLS server name. These are inbound connections to the alerted host, not the repeated proxy connections in the alert. (T076-00046, T076-00047, T076-00238, T076-00239, T076-00331, T076-00332, T076-00493, T076-00494)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.7
+}

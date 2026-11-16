@@ -1,0 +1,80 @@
+{
+ "scenario_id": "T239",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:39:56 UTC, PowerShell running as zoe.adams compressed \\\\\\\\FILE-SUN-01\\\\Shared\\\\Clients into C:\\\\Users\\\\zoe.adams\\\\AppData\\\\Local\\\\Temp\\\\c.zip; the archive file was created shortly afterward.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T239-00066\", \"T239-00068\", \"T239-00069\", \"T239-00070\"]\n    },\n    {\n      \"claim\": \"At 13:45:33 UTC, the proxy recorded an HTTPS tunnel from WS-ZADAMS-01, attributed to zoe.adams, to the unapproved zipshare-host.io destination, with 51,000,000 client-to-server bytes and 8,800 server-to-client bytes. Network telemetry independently records approximately 51 MB sent in that connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T239-00109\", \"T239-00110\", \"T239-00111\", \"T239-00112\"]\n    },\n    {\n      \"claim\": \"The close timing between creating an archive of the Clients share and sending approximately 51 MB to a file-sharing-like, unapproved destination strongly supports likely data exfiltration as the alerted activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T239-00066\", \"T239-00068\", \"T239-00109\", \"T239-00112\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records the HTTPS tunnel destination and byte counts, but the available logs do not expose the encrypted request path, uploaded filename, or payload contents.\",\n    \"The records do not establish that c.zip was the exact file uploaded; its size and contents are not shown.\",\n    \"The available evidence does not show who initiated the upload or whether the activity had any authorization.\"\n  ],\n  \"claims_not_established\": [\n    \"That the bytes sent to zipshare-host.io were specifically the c.zip archive or contained data from the Clients share.\",\n    \"What information, if any, was present in the transmitted data or whether it included sensitive customer information.\",\n    \"The identity of the recipient or the purpose and authorization status of the transfer.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine WS-ZADAMS-01, including c.zip if present, browser history, download/upload artifacts, and relevant endpoint file-access records.\",\n    \"Obtain proxy or network inspection records that may identify the request path, upload metadata, or destination account associated with zipshare-host.io.\",\n    \"Review FILE-SUN-01 share-access and file-audit records around 13:39\u201313:46 UTC to determine what data was accessed.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:59:18 UTC, taskhostw.exe on WS-ZADAMS-01 attempted explicit authentication using svc-ledger to DC-SUN-01. The inventory describes svc-ledger as a FILE-SUN-01 job account that re-authenticates each run; investigate this workstation use separately. This observation does not determine the disposition of the alerted transfer. (T239-00157)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 31730,
+    "output": 1510
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "At 13:39:56 UTC, PowerShell running as zoe.adams compressed \\\\FILE-SUN-01\\Shared\\Clients into C:\\Users\\zoe.adams\\AppData\\Local\\Temp\\c.zip; the archive file was created shortly afterward.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T239-00066",
+     "T239-00068",
+     "T239-00069",
+     "T239-00070"
+    ]
+   },
+   {
+    "claim": "At 13:45:33 UTC, the proxy recorded an HTTPS tunnel from WS-ZADAMS-01, attributed to zoe.adams, to the unapproved zipshare-host.io destination, with 51,000,000 client-to-server bytes and 8,800 server-to-client bytes. Network telemetry independently records approximately 51 MB sent in that connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T239-00109",
+     "T239-00110",
+     "T239-00111",
+     "T239-00112"
+    ]
+   },
+   {
+    "claim": "The close timing between creating an archive of the Clients share and sending approximately 51 MB to a file-sharing-like, unapproved destination strongly supports likely data exfiltration as the alerted activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T239-00066",
+     "T239-00068",
+     "T239-00109",
+     "T239-00112"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records the HTTPS tunnel destination and byte counts, but the available logs do not expose the encrypted request path, uploaded filename, or payload contents.",
+   "The records do not establish that c.zip was the exact file uploaded; its size and contents are not shown.",
+   "The available evidence does not show who initiated the upload or whether the activity had any authorization."
+  ],
+  "claims_not_established": [
+   "That the bytes sent to zipshare-host.io were specifically the c.zip archive or contained data from the Clients share.",
+   "What information, if any, was present in the transmitted data or whether it included sensitive customer information.",
+   "The identity of the recipient or the purpose and authorization status of the transfer."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine WS-ZADAMS-01, including c.zip if present, browser history, download/upload artifacts, and relevant endpoint file-access records.",
+   "Obtain proxy or network inspection records that may identify the request path, upload metadata, or destination account associated with zipshare-host.io.",
+   "Review FILE-SUN-01 share-access and file-audit records around 13:39\u201313:46 UTC to determine what data was accessed."
+  ],
+  "unrelated_findings": [
+   "At 13:59:18 UTC, taskhostw.exe on WS-ZADAMS-01 attempted explicit authentication using svc-ledger to DC-SUN-01. The inventory describes svc-ledger as a FILE-SUN-01 job account that re-authenticates each run; investigate this workstation use separately. This observation does not determine the disposition of the alerted transfer. (T239-00157)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 14.9
+}

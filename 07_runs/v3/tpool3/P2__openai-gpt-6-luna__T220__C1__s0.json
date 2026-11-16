@@ -1,0 +1,88 @@
+{
+ "scenario_id": "T220",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.83,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The large transfer is recorded at 13:50:08 UTC, later than the alert's approximate 13:46 time. The proxy logged 640,000,000 client-to-server bytes to ingest.cloudkeep-backup.com, and Zeek recorded a matching large connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T220-00249\",\n        \"T220-00251\"\n      ]\n    },\n    {\n      \"claim\": \"The transfer is consistent with an approved backup operation: Cloudkeep's agent.exe ran on FILE-BLU-01 as svc-arch with the Nightly job and the approved Cloudkeep target; the process's network activity is also recorded.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T220-00247\",\n        \"T220-00248\",\n        \"T220-00250\",\n        \"T220-00256\",\n        \"T220-00257\"\n      ]\n    },\n    {\n      \"claim\": \"Shortly before that run, a Kerberos service-ticket event named svc-arch and showed a source IP of 91.219.236.174 for the FILE-BLU-01$ service; a local service logon as svc-arch followed.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T220-00218\",\n        \"T220-00219\"\n      ]\n    },\n    {\n      \"claim\": \"The proximity of the svc-arch ticket event to the backup-agent run leaves open whether the approved backup was operating normally or whether the service account or operation was misused. The records do not establish a direct causal link between the external-IP ticket request and the transfer.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T220-00218\",\n        \"T220-00219\",\n        \"T220-00247\",\n        \"T220-00249\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and Zeek records show transfer volume and destination, but do not reveal the contents of the encrypted transfer.\",\n    \"The available records do not show whether the svc-arch ticket request from 91.219.236.174 was authorized or how it relates to the subsequent local service logon and backup run.\",\n    \"The alert time is approximate; the large transfer records provided are timestamped around 13:50 UTC.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the 640,000,000 bytes contained expected backup data or other files.\",\n    \"Whether the svc-arch authentication from 91.219.236.174 was legitimate, and whether that source was authorized to request a ticket for FILE-BLU-01$.\",\n    \"Whether the Nightly job was scheduled to run at this time or whether the run was initiated or altered by an unauthorized party.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Validate the 91.219.236.174 ticket request against DC, network, and identity-provider records, including whether that source could legitimately reach the environment.\",\n    \"Review FILE-BLU-01 service and task configuration, job history, and Cloudkeep backup logs to verify the Nightly run, its timing, and the data included.\",\n    \"Obtain Cloudkeep-side upload records or other available file-level evidence to confirm the transferred data and destination account.\"\n  ],\n  \"unrelated_findings\": [\n    \"A curl/7.88.1 request to the unapproved downloads.cloud.com service was denied by the proxy after the large transfer; investigate separately. (T220-00349, T220-00350)\",\n    \"PROXY-BLU-01 attempted SMB authentication to FILE-BLU-01 as svc_mgmt and received a disabled-account failure; investigate separately. (T220-00469, T220-00470)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 85689,
+    "output": 2717
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.83,
+  "supporting_observations": [
+   {
+    "claim": "The large transfer is recorded at 13:50:08 UTC, later than the alert's approximate 13:46 time. The proxy logged 640,000,000 client-to-server bytes to ingest.cloudkeep-backup.com, and Zeek recorded a matching large connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T220-00249",
+     "T220-00251"
+    ]
+   },
+   {
+    "claim": "The transfer is consistent with an approved backup operation: Cloudkeep's agent.exe ran on FILE-BLU-01 as svc-arch with the Nightly job and the approved Cloudkeep target; the process's network activity is also recorded.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T220-00247",
+     "T220-00248",
+     "T220-00250",
+     "T220-00256",
+     "T220-00257"
+    ]
+   },
+   {
+    "claim": "Shortly before that run, a Kerberos service-ticket event named svc-arch and showed a source IP of 91.219.236.174 for the FILE-BLU-01$ service; a local service logon as svc-arch followed.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T220-00218",
+     "T220-00219"
+    ]
+   },
+   {
+    "claim": "The proximity of the svc-arch ticket event to the backup-agent run leaves open whether the approved backup was operating normally or whether the service account or operation was misused. The records do not establish a direct causal link between the external-IP ticket request and the transfer.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T220-00218",
+     "T220-00219",
+     "T220-00247",
+     "T220-00249"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and Zeek records show transfer volume and destination, but do not reveal the contents of the encrypted transfer.",
+   "The available records do not show whether the svc-arch ticket request from 91.219.236.174 was authorized or how it relates to the subsequent local service logon and backup run.",
+   "The alert time is approximate; the large transfer records provided are timestamped around 13:50 UTC."
+  ],
+  "claims_not_established": [
+   "Whether the 640,000,000 bytes contained expected backup data or other files.",
+   "Whether the svc-arch authentication from 91.219.236.174 was legitimate, and whether that source was authorized to request a ticket for FILE-BLU-01$.",
+   "Whether the Nightly job was scheduled to run at this time or whether the run was initiated or altered by an unauthorized party."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Validate the 91.219.236.174 ticket request against DC, network, and identity-provider records, including whether that source could legitimately reach the environment.",
+   "Review FILE-BLU-01 service and task configuration, job history, and Cloudkeep backup logs to verify the Nightly run, its timing, and the data included.",
+   "Obtain Cloudkeep-side upload records or other available file-level evidence to confirm the transferred data and destination account."
+  ],
+  "unrelated_findings": [
+   "A curl/7.88.1 request to the unapproved downloads.cloud.com service was denied by the proxy after the large transfer; investigate separately. (T220-00349, T220-00350)",
+   "PROXY-BLU-01 attempted SMB authentication to FILE-BLU-01 as svc_mgmt and received a disabled-account failure; investigate separately. (T220-00469, T220-00470)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 27.6
+}

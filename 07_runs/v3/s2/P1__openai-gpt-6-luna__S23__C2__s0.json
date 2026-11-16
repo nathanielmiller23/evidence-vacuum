@@ -1,0 +1,91 @@
+{
+ "scenario_id": "S23",
+ "condition": "C2",
+ "variant": "P1",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"A UserAssist registry entry on WS-HITO-01 contains a ROT13-encoded path that decodes to C:\\\\Windows\\\\System32\\\\mstsc.exe. This is a lead consistent with Remote Desktop client use, but does not establish a connection or its purpose.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S23-00064\"]\n    },\n    {\n      \"claim\": \"At 13:24 and 14:15 UTC, msiexec.exe accessed the services.exe process; these events are compatible with installation activity but do not identify the installer, initiating process, or task.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S23-00058\", \"S23-00205\"]\n    },\n    {\n      \"claim\": \"The workstation made SMB connections to the domain controller authenticated as WS-HITO-01$, with corresponding machine-account logon events; the records do not identify the accessed share or establish administrative activity.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S23-00111\", \"S23-00113\", \"S23-00114\", \"S23-00162\", \"S23-00164\", \"S23-00165\"]\n    },\n    {\n      \"claim\": \"The available records show LDAP and Kerberos traffic from WS-HITO-01 to DC-RB-01 around the alert window, but do not show which user or process initiated the underlying directory activity.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S23-00119\", \"S23-00120\", \"S23-00121\", \"S23-00122\", \"S23-00123\", \"S23-00200\", \"S23-00204\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not include the scheduled-task registration details, such as task name, action, creator, or trigger, so the alert cannot be matched to the approved deployment task.\",\n    \"The supplied records do not show a process-creation event for msiexec.exe or establish the installer source and outcome.\",\n    \"The UserAssist entry is not evidence by itself that mstsc.exe connected to a remote host or that an administrative session occurred.\",\n    \"The SMB and directory-service records do not reveal the accessed share, queried objects, or purpose of the activity.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the task was the approved VetChart 4.2 deployment task or an unauthorized task.\",\n    \"Whether mstsc.exe was used to connect remotely, and if so, to which host, under which account, and for what purpose.\",\n    \"Whether any task or installer action executed successfully or caused unauthorized changes.\",\n    \"Whether the observed network activity was related to the scheduled task.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Retrieve the Task Scheduler operational and Security events for the reported registration, including task XML, name, action, creator, and registration time.\",\n    \"Collect process creation and parent-process telemetry around 13:20\u201314:20 UTC, especially for msiexec.exe, schtasks.exe, PowerShell, and processes associated with task creation.\",\n    \"Verify the VetChart deployment ticket and compare the task name, installer path, signature, and execution results with the approved deployment procedure.\",\n    \"Review RDP client and server logs, connection telemetry, and authentication records to determine whether the mstsc.exe entry resulted in a remote session.\",\n    \"Obtain SMB audit or file-server logs identifying shares and files accessed by WS-HITO-01 during the window.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 26406,
+    "output": 2290
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "A UserAssist registry entry on WS-HITO-01 contains a ROT13-encoded path that decodes to C:\\Windows\\System32\\mstsc.exe. This is a lead consistent with Remote Desktop client use, but does not establish a connection or its purpose.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S23-00064"
+    ]
+   },
+   {
+    "claim": "At 13:24 and 14:15 UTC, msiexec.exe accessed the services.exe process; these events are compatible with installation activity but do not identify the installer, initiating process, or task.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S23-00058",
+     "S23-00205"
+    ]
+   },
+   {
+    "claim": "The workstation made SMB connections to the domain controller authenticated as WS-HITO-01$, with corresponding machine-account logon events; the records do not identify the accessed share or establish administrative activity.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S23-00111",
+     "S23-00113",
+     "S23-00114",
+     "S23-00162",
+     "S23-00164",
+     "S23-00165"
+    ]
+   },
+   {
+    "claim": "The available records show LDAP and Kerberos traffic from WS-HITO-01 to DC-RB-01 around the alert window, but do not show which user or process initiated the underlying directory activity.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S23-00119",
+     "S23-00120",
+     "S23-00121",
+     "S23-00122",
+     "S23-00123",
+     "S23-00200",
+     "S23-00204"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not include the scheduled-task registration details, such as task name, action, creator, or trigger, so the alert cannot be matched to the approved deployment task.",
+   "The supplied records do not show a process-creation event for msiexec.exe or establish the installer source and outcome.",
+   "The UserAssist entry is not evidence by itself that mstsc.exe connected to a remote host or that an administrative session occurred.",
+   "The SMB and directory-service records do not reveal the accessed share, queried objects, or purpose of the activity."
+  ],
+  "claims_not_established": [
+   "Whether the task was the approved VetChart 4.2 deployment task or an unauthorized task.",
+   "Whether mstsc.exe was used to connect remotely, and if so, to which host, under which account, and for what purpose.",
+   "Whether any task or installer action executed successfully or caused unauthorized changes.",
+   "Whether the observed network activity was related to the scheduled task."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Retrieve the Task Scheduler operational and Security events for the reported registration, including task XML, name, action, creator, and registration time.",
+   "Collect process creation and parent-process telemetry around 13:20\u201314:20 UTC, especially for msiexec.exe, schtasks.exe, PowerShell, and processes associated with task creation.",
+   "Verify the VetChart deployment ticket and compare the task name, installer path, signature, and execution results with the approved deployment procedure.",
+   "Review RDP client and server logs, connection telemetry, and authentication records to determine whether the mstsc.exe entry resulted in a remote session.",
+   "Obtain SMB audit or file-server logs identifying shares and files accessed by WS-HITO-01 during the window."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 16,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 24.5
+}

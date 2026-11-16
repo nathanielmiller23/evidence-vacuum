@@ -1,0 +1,112 @@
+{
+ "scenario_id": "T085",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted periodic HTTPS activity is represented by repeated proxy CONNECT requests to update.medledger.co at approximately five-minute intervals from 13:36:39 through 14:06:35 UTC; the 13:51:42 request returned 503.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T085-00136\", \"T085-00190\", \"T085-00212\", \"T085-00259\", \"T085-00313\", \"T085-00331\", \"T085-00338\"]\n    },\n    {\n      \"claim\": \"Endpoint network events associate these repeated proxy connections with medledgerupd.exe running from Tom Weber's user-writable AppData directory, rather than the approved installation path in the supplied inventory.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T085-00133\", \"T085-00138\", \"T085-00139\", \"T085-00192\", \"T085-00193\", \"T085-00214\", \"T085-00215\", \"T085-00260\", \"T085-00261\", \"T085-00315\", \"T085-00316\", \"T085-00333\", \"T085-00334\", \"T085-00340\", \"T085-00341\"]\n    },\n    {\n      \"claim\": \"The observed destination is update.medledger.co, which differs from the approved update.medledger.com hostname in the supplied inventory. Together with the unexpected executable path and repeated updater-like behavior, this supports treating the alerted activity as malicious.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T085-00136\", \"T085-00190\", \"T085-00212\", \"T085-00259\", \"T085-00313\", \"T085-00331\", \"T085-00338\"]\n    },\n    {\n      \"claim\": \"The updater process was created under tom.weber's interactive user context from Explorer, and its observed network activity ended with the process terminating at 14:06:58 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T085-00133\", \"T085-00134\", \"T085-00365\", \"T085-00366\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records show CONNECT tunnel metadata, not the HTTPS request or response contents.\",\n    \"The supplied records do not provide a file hash, signature validation, download provenance, or the executable's contents.\",\n    \"The records identify the requested hostname but do not establish who controls it or whether it is malicious.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether update.medledger.co is controlled by an attacker, the MediLedger vendor, or another party.\",\n    \"Whether the AppData executable is a modified or counterfeit updater, or whether it downloaded or executed additional payloads.\",\n    \"Whether any sensitive data was accessed or exfiltrated through the observed tunnels.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and preserve the medledgerupd.exe file; calculate its hash and verify its signature and provenance against a known-good vendor copy.\",\n    \"Review DNS, certificate, and proxy/TLS inspection records for update.medledger.co, and validate the hostname with MediLedger through a trusted channel.\",\n    \"Collect endpoint file-creation, download, persistence, and child-process telemetry around the updater's execution.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate review: tom.weber launched SSH to PROXY-PIN-01; the records show the connection and ssh.exe execution. This is outside the alerted HTTPS activity. (T085-00050, T085-00051, T085-00052)\",\n    \"Separate review: raj.patel credentials were validated for activity originating from WS-TWEBER-01, despite the supplied context stating remote administration is only from WS-RPATEL-01. The records show credential validation and a network logon to WS-RPATEL-01; they do not establish what actions followed. (T085-00081, T085-00082, T085-00267, T085-00268)\",\n    \"Separate review: tom.weber launched sqlcmd with a command to back up the reporting database on 10.0.2.50 to D:\\\\Backups\\\\webapp_prod.bak. The associated connection record is S0 with zero bytes, so successful database access or backup is not established. (T085-00083, T085-00085, T085-00086)\",\n    \"Separate review: Google Drive File Stream ran on WS-TWEBER-01, although the supplied inventory lists OneDrive as approved and says no other cloud-storage services are approved. (T085-00282, T085-00283)\",\n    \"Separate review: tom.weber ran psql.exe with the postgres account name and connected to 10.51.20.30:5432. The records do not establish what database actions succeeded. (T085-00293, T085-00295, T085-00296)\",\n    \"Separate review: an unlisted Meridian OpsAgent ran on WS-TWEBER-01 and attempted explicit use of svc-billing. This is separate from the alerted HTTPS activity. (T085-00386, T085-00387, T085-00388)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 64883,
+    "output": 3251
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "The alerted periodic HTTPS activity is represented by repeated proxy CONNECT requests to update.medledger.co at approximately five-minute intervals from 13:36:39 through 14:06:35 UTC; the 13:51:42 request returned 503.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T085-00136",
+     "T085-00190",
+     "T085-00212",
+     "T085-00259",
+     "T085-00313",
+     "T085-00331",
+     "T085-00338"
+    ]
+   },
+   {
+    "claim": "Endpoint network events associate these repeated proxy connections with medledgerupd.exe running from Tom Weber's user-writable AppData directory, rather than the approved installation path in the supplied inventory.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T085-00133",
+     "T085-00138",
+     "T085-00139",
+     "T085-00192",
+     "T085-00193",
+     "T085-00214",
+     "T085-00215",
+     "T085-00260",
+     "T085-00261",
+     "T085-00315",
+     "T085-00316",
+     "T085-00333",
+     "T085-00334",
+     "T085-00340",
+     "T085-00341"
+    ]
+   },
+   {
+    "claim": "The observed destination is update.medledger.co, which differs from the approved update.medledger.com hostname in the supplied inventory. Together with the unexpected executable path and repeated updater-like behavior, this supports treating the alerted activity as malicious.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T085-00136",
+     "T085-00190",
+     "T085-00212",
+     "T085-00259",
+     "T085-00313",
+     "T085-00331",
+     "T085-00338"
+    ]
+   },
+   {
+    "claim": "The updater process was created under tom.weber's interactive user context from Explorer, and its observed network activity ended with the process terminating at 14:06:58 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T085-00133",
+     "T085-00134",
+     "T085-00365",
+     "T085-00366"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records show CONNECT tunnel metadata, not the HTTPS request or response contents.",
+   "The supplied records do not provide a file hash, signature validation, download provenance, or the executable's contents.",
+   "The records identify the requested hostname but do not establish who controls it or whether it is malicious."
+  ],
+  "claims_not_established": [
+   "Whether update.medledger.co is controlled by an attacker, the MediLedger vendor, or another party.",
+   "Whether the AppData executable is a modified or counterfeit updater, or whether it downloaded or executed additional payloads.",
+   "Whether any sensitive data was accessed or exfiltrated through the observed tunnels."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and preserve the medledgerupd.exe file; calculate its hash and verify its signature and provenance against a known-good vendor copy.",
+   "Review DNS, certificate, and proxy/TLS inspection records for update.medledger.co, and validate the hostname with MediLedger through a trusted channel.",
+   "Collect endpoint file-creation, download, persistence, and child-process telemetry around the updater's execution."
+  ],
+  "unrelated_findings": [
+   "Separate review: tom.weber launched SSH to PROXY-PIN-01; the records show the connection and ssh.exe execution. This is outside the alerted HTTPS activity. (T085-00050, T085-00051, T085-00052)",
+   "Separate review: raj.patel credentials were validated for activity originating from WS-TWEBER-01, despite the supplied context stating remote administration is only from WS-RPATEL-01. The records show credential validation and a network logon to WS-RPATEL-01; they do not establish what actions followed. (T085-00081, T085-00082, T085-00267, T085-00268)",
+   "Separate review: tom.weber launched sqlcmd with a command to back up the reporting database on 10.0.2.50 to D:\\Backups\\webapp_prod.bak. The associated connection record is S0 with zero bytes, so successful database access or backup is not established. (T085-00083, T085-00085, T085-00086)",
+   "Separate review: Google Drive File Stream ran on WS-TWEBER-01, although the supplied inventory lists OneDrive as approved and says no other cloud-storage services are approved. (T085-00282, T085-00283)",
+   "Separate review: tom.weber ran psql.exe with the postgres account name and connected to 10.51.20.30:5432. The records do not establish what database actions succeeded. (T085-00293, T085-00295, T085-00296)",
+   "Separate review: an unlisted Meridian OpsAgent ran on WS-TWEBER-01 and attempted explicit use of svc-billing. This is separate from the alerted HTTPS activity. (T085-00386, T085-00387, T085-00388)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 33,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 32.0
+}

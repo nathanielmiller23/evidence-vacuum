@@ -1,0 +1,106 @@
+{
+ "scenario_id": "T023",
+ "condition": "C1",
+ "variant": "P4",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Within the review window, WINWORD.EXE opened C:\\\\Users\\\\maria.lopez\\\\Downloads\\\\Statement.docm, then launched PowerShell with -nop, -w hidden, and an encoded command under maria.lopez's account.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T023-00081\", \"T023-00085\", \"T023-00086\"]\n    },\n    {\n      \"claim\": \"The encoded PowerShell command decodes to an expression that downloads and executes a script from raw.githubusercontent.com/harbor-dental-it/tools/main/u.ps1; the proxy logged a successful GET for that script.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T023-00085\", \"T023-00086\", \"T023-00089\"]\n    },\n    {\n      \"claim\": \"That PowerShell process launched rundll32.exe with C:\\\\Users\\\\maria.lopez\\\\AppData\\\\Roaming\\\\svchelper.dll,Init as its command line.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T023-00096\", \"T023-00097\"]\n    },\n    {\n      \"claim\": \"The PowerShell and rundll32 processes exited shortly afterward, consistent with a brief execution; the logs also show a temporary file created by the PowerShell process.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T023-00100\", \"T023-00101\", \"T023-00102\", \"T023-00103\", \"T023-00104\"]\n    },\n    {\n      \"claim\": \"The reported time was approximate: the logs show an interactive logon around 13:40, while the document-launched PowerShell activity is recorded at 13:44:46 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T023-00057\", \"T023-00085\", \"T023-00086\"]\n    },\n    {\n      \"claim\": \"The documented IT patching procedure uses a named administrator account, a specific patch script, and a different workstation; the observed document-launched hidden PowerShell activity does not match that documented explanation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T023-00081\", \"T023-00085\", \"T023-00096\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records show the download request and process command lines, but do not include the downloaded script's contents or the contents or hash of svchelper.dll. (T023-00085, T023-00089, T023-00096)\",\n    \"The supplied records identify Statement.docm as the document opened, but do not establish how it arrived on the workstation or show its contents. (T023-00081)\"\n  ],\n  \"claims_not_established\": [\n    \"The available records do not establish what u.ps1 or svchelper.dll did after execution, or whether they caused further compromise. (T023-00085, T023-00089, T023-00096)\",\n    \"The records do not establish whether the reported window at approximately 13:40 was the same execution logged at 13:44:46 UTC. (T023-00057, T023-00085)\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and analyze Statement.docm, including its macros, provenance, and any email or download that delivered it.\",\n    \"Retrieve the exact u.ps1 content served at the logged time and analyze it.\",\n    \"Collect svchelper.dll and its hash, signature, creation history, and execution or persistence evidence from the workstation.\",\n    \"Review endpoint protection and forensic telemetry for actions by PowerShell and rundll32, and interview maria.lopez about the document and the observed window.\"\n  ],\n  \"unrelated_findings\": [\n    \"Edge accessed Slack at slack.com/client during the window; Slack is not named in the supplied approved-services list. This is separate from the alerted document-to-PowerShell chain. (T023-00176, T023-00179, T023-00180)\",\n    \"A SYSTEM PowerShell process ran C:\\\\Scripts\\\\endpoint-inventory.ps1 from taskeng.exe and later made an explicit-credential event for svc-bkp to PROXY-HD-01. This is distinct from the alerted user-session process and merits separate validation. (T023-00165, T023-00166, T023-00168)\",\n    \"Maria.lopez later ran a separate PowerShell command querying packages.nuget.org; the supplied records do not link it to the earlier document-launched process. (T023-00265, T023-00266, T023-00267, T023-00268)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 43082,
+    "output": 2570
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "Within the review window, WINWORD.EXE opened C:\\Users\\maria.lopez\\Downloads\\Statement.docm, then launched PowerShell with -nop, -w hidden, and an encoded command under maria.lopez's account.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T023-00081",
+     "T023-00085",
+     "T023-00086"
+    ]
+   },
+   {
+    "claim": "The encoded PowerShell command decodes to an expression that downloads and executes a script from raw.githubusercontent.com/harbor-dental-it/tools/main/u.ps1; the proxy logged a successful GET for that script.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T023-00085",
+     "T023-00086",
+     "T023-00089"
+    ]
+   },
+   {
+    "claim": "That PowerShell process launched rundll32.exe with C:\\Users\\maria.lopez\\AppData\\Roaming\\svchelper.dll,Init as its command line.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T023-00096",
+     "T023-00097"
+    ]
+   },
+   {
+    "claim": "The PowerShell and rundll32 processes exited shortly afterward, consistent with a brief execution; the logs also show a temporary file created by the PowerShell process.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T023-00100",
+     "T023-00101",
+     "T023-00102",
+     "T023-00103",
+     "T023-00104"
+    ]
+   },
+   {
+    "claim": "The reported time was approximate: the logs show an interactive logon around 13:40, while the document-launched PowerShell activity is recorded at 13:44:46 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T023-00057",
+     "T023-00085",
+     "T023-00086"
+    ]
+   },
+   {
+    "claim": "The documented IT patching procedure uses a named administrator account, a specific patch script, and a different workstation; the observed document-launched hidden PowerShell activity does not match that documented explanation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T023-00081",
+     "T023-00085",
+     "T023-00096"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records show the download request and process command lines, but do not include the downloaded script's contents or the contents or hash of svchelper.dll. (T023-00085, T023-00089, T023-00096)",
+   "The supplied records identify Statement.docm as the document opened, but do not establish how it arrived on the workstation or show its contents. (T023-00081)"
+  ],
+  "claims_not_established": [
+   "The available records do not establish what u.ps1 or svchelper.dll did after execution, or whether they caused further compromise. (T023-00085, T023-00089, T023-00096)",
+   "The records do not establish whether the reported window at approximately 13:40 was the same execution logged at 13:44:46 UTC. (T023-00057, T023-00085)"
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and analyze Statement.docm, including its macros, provenance, and any email or download that delivered it.",
+   "Retrieve the exact u.ps1 content served at the logged time and analyze it.",
+   "Collect svchelper.dll and its hash, signature, creation history, and execution or persistence evidence from the workstation.",
+   "Review endpoint protection and forensic telemetry for actions by PowerShell and rundll32, and interview maria.lopez about the document and the observed window."
+  ],
+  "unrelated_findings": [
+   "Edge accessed Slack at slack.com/client during the window; Slack is not named in the supplied approved-services list. This is separate from the alerted document-to-PowerShell chain. (T023-00176, T023-00179, T023-00180)",
+   "A SYSTEM PowerShell process ran C:\\Scripts\\endpoint-inventory.ps1 from taskeng.exe and later made an explicit-credential event for svc-bkp to PROXY-HD-01. This is distinct from the alerted user-session process and merits separate validation. (T023-00165, T023-00166, T023-00168)",
+   "Maria.lopez later ran a separate PowerShell command querying packages.nuget.org; the supplied records do not link it to the earlier document-launched process. (T023-00265, T023-00266, T023-00267, T023-00268)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 19,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 25.4
+}

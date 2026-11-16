@@ -1,0 +1,102 @@
+{
+ "scenario_id": "T133",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:42:16 UTC, dan.reyes opened C:\\\\Users\\\\dan.reyes\\\\Downloads\\\\Statement.docm in Microsoft Word from Explorer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T133-00151\", \"T133-00153\"]\n    },\n    {\n      \"claim\": \"Two seconds later, Word spawned PowerShell with no profile, a hidden window, and an encoded command. The command decodes to an invocation of WebClient.DownloadString for https://raw.githubusercontent.com/copperline-it/tools/main/u.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T133-00155\", \"T133-00156\"]\n    },\n    {\n      \"claim\": \"PowerShell made a proxied HTTP connection with 12,222 response bytes, then another proxied connection with 1,565 response bytes; the timing and process telemetry are consistent with the encoded download command.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T133-00159\", \"T133-00160\", \"T133-00161\", \"T133-00164\", \"T133-00165\", \"T133-00166\"]\n    },\n    {\n      \"claim\": \"PowerShell created a temporary file and then spawned rundll32 with the command line C:\\\\Users\\\\dan.reyes\\\\AppData\\\\Roaming\\\\svchelper.dll,Init.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T133-00162\", \"T133-00167\", \"T133-00168\"]\n    },\n    {\n      \"claim\": \"PowerShell, Word, and rundll32 exited within about 20 seconds of the initial PowerShell launch.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T133-00155\", \"T133-00169\", \"T133-00170\", \"T133-00171\", \"T133-00173\", \"T133-00174\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy logs for the proxy host were not collected from 13:25 to 14:20 UTC, including the alerted activity window; the available connection records identify the proxy endpoint and byte counts but do not provide the proxy request URL or content.\",\n    \"The available records do not include the contents of Statement.docm, the downloaded script, the temporary file, or svchelper.dll.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the downloaded script completed successfully or what actions its contents performed.\",\n    \"Whether svchelper.dll existed at the referenced path, what it contained, or whether rundll32 successfully loaded it.\",\n    \"Whether the activity resulted in persistence, credential access, lateral movement, or data exfiltration.\",\n    \"Who supplied the document or whether dan.reyes knowingly opened it.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze Statement.docm, including macro contents and document provenance.\",\n    \"Recover the downloaded u.ps1 and svchelper.dll from endpoint, proxy cache, browser, or other available artifacts; also inspect the created temporary file.\",\n    \"Collect full endpoint forensic data for WS-DREYES-01 around 13:42 UTC, including file-system, registry, and memory evidence relevant to the process chain.\",\n    \"Recover proxy-side records or cache data for the alerted connections if available, and determine the exact requests and responses.\",\n    \"Interview dan.reyes about the document and its source.\"\n  ],\n  \"unrelated_findings\": [\n    \"DropboxUpdate.exe ran as SYSTEM on WS-DREYES-01, although Dropbox is not among the approved services listed in the inventory; track separately. (T133-00208, T133-00209, T133-00289, T133-00290)\",\n    \"GoogleDriveFS.exe was launched by dan.reyes on WS-DREYES-01, although Google Drive is not among the approved cloud-storage services listed in the inventory; track separately. (T133-00376, T133-00377, T133-00378)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 54737,
+    "output": 1844
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:42:16 UTC, dan.reyes opened C:\\Users\\dan.reyes\\Downloads\\Statement.docm in Microsoft Word from Explorer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T133-00151",
+     "T133-00153"
+    ]
+   },
+   {
+    "claim": "Two seconds later, Word spawned PowerShell with no profile, a hidden window, and an encoded command. The command decodes to an invocation of WebClient.DownloadString for https://raw.githubusercontent.com/copperline-it/tools/main/u.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T133-00155",
+     "T133-00156"
+    ]
+   },
+   {
+    "claim": "PowerShell made a proxied HTTP connection with 12,222 response bytes, then another proxied connection with 1,565 response bytes; the timing and process telemetry are consistent with the encoded download command.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T133-00159",
+     "T133-00160",
+     "T133-00161",
+     "T133-00164",
+     "T133-00165",
+     "T133-00166"
+    ]
+   },
+   {
+    "claim": "PowerShell created a temporary file and then spawned rundll32 with the command line C:\\Users\\dan.reyes\\AppData\\Roaming\\svchelper.dll,Init.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T133-00162",
+     "T133-00167",
+     "T133-00168"
+    ]
+   },
+   {
+    "claim": "PowerShell, Word, and rundll32 exited within about 20 seconds of the initial PowerShell launch.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T133-00155",
+     "T133-00169",
+     "T133-00170",
+     "T133-00171",
+     "T133-00173",
+     "T133-00174"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy logs for the proxy host were not collected from 13:25 to 14:20 UTC, including the alerted activity window; the available connection records identify the proxy endpoint and byte counts but do not provide the proxy request URL or content.",
+   "The available records do not include the contents of Statement.docm, the downloaded script, the temporary file, or svchelper.dll."
+  ],
+  "claims_not_established": [
+   "Whether the downloaded script completed successfully or what actions its contents performed.",
+   "Whether svchelper.dll existed at the referenced path, what it contained, or whether rundll32 successfully loaded it.",
+   "Whether the activity resulted in persistence, credential access, lateral movement, or data exfiltration.",
+   "Who supplied the document or whether dan.reyes knowingly opened it."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze Statement.docm, including macro contents and document provenance.",
+   "Recover the downloaded u.ps1 and svchelper.dll from endpoint, proxy cache, browser, or other available artifacts; also inspect the created temporary file.",
+   "Collect full endpoint forensic data for WS-DREYES-01 around 13:42 UTC, including file-system, registry, and memory evidence relevant to the process chain.",
+   "Recover proxy-side records or cache data for the alerted connections if available, and determine the exact requests and responses.",
+   "Interview dan.reyes about the document and its source."
+  ],
+  "unrelated_findings": [
+   "DropboxUpdate.exe ran as SYSTEM on WS-DREYES-01, although Dropbox is not among the approved services listed in the inventory; track separately. (T133-00208, T133-00209, T133-00289, T133-00290)",
+   "GoogleDriveFS.exe was launched by dan.reyes on WS-DREYES-01, although Google Drive is not among the approved cloud-storage services listed in the inventory; track separately. (T133-00376, T133-00377, T133-00378)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 19,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.9
+}

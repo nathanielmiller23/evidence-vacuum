@@ -1,0 +1,81 @@
+{
+ "scenario_id": "T247",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:44:36 UTC, the domain controller recorded creation of adm_temp, with ian.doyle as the subject.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T247-00144\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:44:47 UTC, adm_temp was added to the group recorded as Administrators. The target group SID ends in RID 512, ordinarily the domain Domain Admins group; this is inconsistent with the stated practice that temporary accounts receive no administrator rights.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T247-00148\"\n      ]\n    },\n    {\n      \"claim\": \"The account-creation event occurred at 13:44:36 UTC, later than the alert's approximate 13:42 time.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T247-00144\"\n      ]\n    },\n    {\n      \"claim\": \"A successful RDP logon for ian.doyle to WS-MFISCHER-01 came from 192.0.2.199 shortly before the account creation, despite the inventory stating remote administration is only performed from WS-IDOYLE-01. The provided records do not establish that this session caused the account change.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T247-00106\",\n        \"T247-00108\",\n        \"T247-00144\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy log collection was unavailable from 13:20 to 14:00 UTC, overlapping the account creation and group addition; proxy activity in that interval cannot be assessed.\",\n    \"The supplied records do not include a DC logon event matching the account-change SubjectLogonId 0x9863a7b, so the originating host or session for those changes is not established.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the account creation and group addition were approved or authorized.\",\n    \"Which host or interactive session originated the account changes, and whether the ian.doyle credentials were used by their legitimate owner.\",\n    \"Whether the RDP session from 192.0.2.199 was directly related to the account changes.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Verify the change against approved account-creation and privilege-change records, including the intended purpose and owner of adm_temp.\",\n    \"Collect DC authentication and directory-audit records around 13:44 UTC that identify the source host and session for SubjectLogonId 0x9863a7b.\",\n    \"Confirm the actual membership and effective privileges of adm_temp, and contain or disable the account pending verification.\",\n    \"Investigate the 192.0.2.199 RDP source and validate whether ian.doyle initiated that session.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-MFISCHER-01 recorded creation of a scheduled task named HealthCheck that runs hidden, encoded PowerShell and retrieves a script from http://192.0.2.199/a.ps1. Investigate in a separate ticket; it is not needed to support the account-management finding. (T247-00149)\",\n    \"Google Drive File Stream ran on WS-MFISCHER-01, although the inventory lists OneDrive\u2014not Google Drive\u2014as approved file-sharing software. Investigate separately. (T247-00223, T247-00224)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 39992,
+    "output": 2461
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:44:36 UTC, the domain controller recorded creation of adm_temp, with ian.doyle as the subject.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T247-00144"
+    ]
+   },
+   {
+    "claim": "At 13:44:47 UTC, adm_temp was added to the group recorded as Administrators. The target group SID ends in RID 512, ordinarily the domain Domain Admins group; this is inconsistent with the stated practice that temporary accounts receive no administrator rights.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T247-00148"
+    ]
+   },
+   {
+    "claim": "The account-creation event occurred at 13:44:36 UTC, later than the alert's approximate 13:42 time.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T247-00144"
+    ]
+   },
+   {
+    "claim": "A successful RDP logon for ian.doyle to WS-MFISCHER-01 came from 192.0.2.199 shortly before the account creation, despite the inventory stating remote administration is only performed from WS-IDOYLE-01. The provided records do not establish that this session caused the account change.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T247-00106",
+     "T247-00108",
+     "T247-00144"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy log collection was unavailable from 13:20 to 14:00 UTC, overlapping the account creation and group addition; proxy activity in that interval cannot be assessed.",
+   "The supplied records do not include a DC logon event matching the account-change SubjectLogonId 0x9863a7b, so the originating host or session for those changes is not established."
+  ],
+  "claims_not_established": [
+   "Whether the account creation and group addition were approved or authorized.",
+   "Which host or interactive session originated the account changes, and whether the ian.doyle credentials were used by their legitimate owner.",
+   "Whether the RDP session from 192.0.2.199 was directly related to the account changes."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Verify the change against approved account-creation and privilege-change records, including the intended purpose and owner of adm_temp.",
+   "Collect DC authentication and directory-audit records around 13:44 UTC that identify the source host and session for SubjectLogonId 0x9863a7b.",
+   "Confirm the actual membership and effective privileges of adm_temp, and contain or disable the account pending verification.",
+   "Investigate the 192.0.2.199 RDP source and validate whether ian.doyle initiated that session."
+  ],
+  "unrelated_findings": [
+   "WS-MFISCHER-01 recorded creation of a scheduled task named HealthCheck that runs hidden, encoded PowerShell and retrieves a script from http://192.0.2.199/a.ps1. Investigate in a separate ticket; it is not needed to support the account-management finding. (T247-00149)",
+   "Google Drive File Stream ran on WS-MFISCHER-01, although the inventory lists OneDrive\u2014not Google Drive\u2014as approved file-sharing software. Investigate separately. (T247-00223, T247-00224)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 6,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 25.6
+}

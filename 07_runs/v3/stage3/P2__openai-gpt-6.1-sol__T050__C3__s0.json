@@ -1,0 +1,109 @@
+{
+ "scenario_id": "T050",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6.1-sol",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.87,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted transfer is corroborated: at 13:46:54 UTC the proxy recorded 640,000,000 client-to-server bytes in a CONNECT tunnel naming ingest.stratosafe-backup.com:443. Zeek recorded 640,000,448 outbound bytes on the corresponding connection from FILE-NWD-01 source port 63350 to the proxy.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T050-00244\", \"T050-00245\"]\n    },\n    {\n      \"claim\": \"Endpoint records attribute the bulk-transfer connection on source port 63350 to PID 2988, C:\\\\Program Files\\\\StratoSafe\\\\stsync.exe, running as NWD\\\\svc-archive. Its creation record shows services.exe as parent and a command line targeting ingest.stratosafe-backup.com.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T050-00237\", \"T050-00238\", \"T050-00246\", \"T050-00247\"]\n    },\n    {\n      \"claim\": \"The process path, account, named destination and transfer size match the supplied inventory description of approved StratoSafe backup activity, providing substantial support for a benign explanation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T050-00237\", \"T050-00244\", \"T050-00247\"]\n    },\n    {\n      \"claim\": \"However, immediately before the backup service logon, the domain controller recorded a service-ticket request for svc-archive to FILE-NWD-01$ with client address 45.79.19.196. This public source is inconsistent with the supplied description of svc-archive as a local backup-agent account and the absence of VPN access.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T050-00223\", \"T050-00224\"]\n    },\n    {\n      \"claim\": \"The service logon and transfer process share logon ID 0x8de1864. The preceding public-address ticket request concerns the same account and server, but the records do not establish that it caused this service logon. This unresolved authentication anomaly is relevant to the alerted process without proving that its upload was malicious.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T050-00223\", \"T050-00224\", \"T050-00237\", \"T050-00247\"]\n    },\n    {\n      \"claim\": \"The inspected HTTPS GET belongs to the small connection on source port 60619, not the bulk connection on port 63350. Inspection of that GET therefore does not establish the contents or authorization of the 640 MB upload.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T050-00239\", \"T050-00240\", \"T050-00241\", \"T050-00244\", \"T050-00245\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied collection status reports missing winsec and Sysmon telemetry on WS-NBLAKE-01 from 13:30 to 14:10 UTC; it does not report an outage on FILE-NWD-01 or the proxy.\",\n    \"The bulk connection is represented by tunnel metadata and byte counts, not inspected upload contents or backup-job results (T050-00244, T050-00245).\",\n    \"The supplied creation records identify the backup executable by path and command line but provide no hash or signature verification for it (T050-00237, T050-00238).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the public client address in the svc-archive ticket request reflects unauthorized credential use, an infrastructure explanation or a logging issue (T050-00223).\",\n    \"Whether that ticket request is causally linked to service logon 0x8de1864 (T050-00223, T050-00224).\",\n    \"Whether the uploaded data and destination tenant were authorized backup material; the command line and CONNECT hostname alone do not establish this (T050-00237, T050-00244).\",\n    \"Malicious exfiltration is not established, but the authentication anomaly prevents an unqualified benign disposition.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Obtain StratoSafe job logs and provider-side receipt records identifying the job, destination tenant, uploaded objects and expected byte count for PID 2988's transfer.\",\n    \"Validate the svc-archive ticket request in original domain-controller logs and obtain surrounding authentication and network records explaining client address 45.79.19.196 (T050-00223).\",\n    \"Verify the hash, signature and service configuration of stsync.exe and confirm the job invocation with the backup owner (T050-00237).\",\n    \"Obtain proxy upstream connection and TLS identity records for the bulk tunnel, keeping it distinct from the inspected GET on source port 60619 (T050-00239 through T050-00247).\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate access-policy ticket: nora.blake successfully logged on to FILE-NWD-01 through RDP from WS-NBLAKE-01 at 14:18:40 UTC, contrary to the supplied restriction that remote administration originates only from WS-SOKAFOR-01. These records do not establish administrator privileges or a link to the earlier upload (T050-00441, T050-00448, T050-00459).\",\n    \"Separate software/service validation ticket: a SYSTEM Java process running C:\\\\ProgramData\\\\Meridian\\\\integration-worker.jar connected through the proxy to receiver.citrix.com. This is a different PID and connection from the alerted transfer; validate its purpose and approval rather than treating the shared user-agent string as evidence of common ownership (T050-00165, T050-00249, T050-00250, T050-00251).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 73275,
+    "output": 1425
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.87,
+  "supporting_observations": [
+   {
+    "claim": "The alerted transfer is corroborated: at 13:46:54 UTC the proxy recorded 640,000,000 client-to-server bytes in a CONNECT tunnel naming ingest.stratosafe-backup.com:443. Zeek recorded 640,000,448 outbound bytes on the corresponding connection from FILE-NWD-01 source port 63350 to the proxy.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T050-00244",
+     "T050-00245"
+    ]
+   },
+   {
+    "claim": "Endpoint records attribute the bulk-transfer connection on source port 63350 to PID 2988, C:\\Program Files\\StratoSafe\\stsync.exe, running as NWD\\svc-archive. Its creation record shows services.exe as parent and a command line targeting ingest.stratosafe-backup.com.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T050-00237",
+     "T050-00238",
+     "T050-00246",
+     "T050-00247"
+    ]
+   },
+   {
+    "claim": "The process path, account, named destination and transfer size match the supplied inventory description of approved StratoSafe backup activity, providing substantial support for a benign explanation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T050-00237",
+     "T050-00244",
+     "T050-00247"
+    ]
+   },
+   {
+    "claim": "However, immediately before the backup service logon, the domain controller recorded a service-ticket request for svc-archive to FILE-NWD-01$ with client address 45.79.19.196. This public source is inconsistent with the supplied description of svc-archive as a local backup-agent account and the absence of VPN access.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T050-00223",
+     "T050-00224"
+    ]
+   },
+   {
+    "claim": "The service logon and transfer process share logon ID 0x8de1864. The preceding public-address ticket request concerns the same account and server, but the records do not establish that it caused this service logon. This unresolved authentication anomaly is relevant to the alerted process without proving that its upload was malicious.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T050-00223",
+     "T050-00224",
+     "T050-00237",
+     "T050-00247"
+    ]
+   },
+   {
+    "claim": "The inspected HTTPS GET belongs to the small connection on source port 60619, not the bulk connection on port 63350. Inspection of that GET therefore does not establish the contents or authorization of the 640 MB upload.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T050-00239",
+     "T050-00240",
+     "T050-00241",
+     "T050-00244",
+     "T050-00245"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied collection status reports missing winsec and Sysmon telemetry on WS-NBLAKE-01 from 13:30 to 14:10 UTC; it does not report an outage on FILE-NWD-01 or the proxy.",
+   "The bulk connection is represented by tunnel metadata and byte counts, not inspected upload contents or backup-job results (T050-00244, T050-00245).",
+   "The supplied creation records identify the backup executable by path and command line but provide no hash or signature verification for it (T050-00237, T050-00238)."
+  ],
+  "claims_not_established": [
+   "Whether the public client address in the svc-archive ticket request reflects unauthorized credential use, an infrastructure explanation or a logging issue (T050-00223).",
+   "Whether that ticket request is causally linked to service logon 0x8de1864 (T050-00223, T050-00224).",
+   "Whether the uploaded data and destination tenant were authorized backup material; the command line and CONNECT hostname alone do not establish this (T050-00237, T050-00244).",
+   "Malicious exfiltration is not established, but the authentication anomaly prevents an unqualified benign disposition."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Obtain StratoSafe job logs and provider-side receipt records identifying the job, destination tenant, uploaded objects and expected byte count for PID 2988's transfer.",
+   "Validate the svc-archive ticket request in original domain-controller logs and obtain surrounding authentication and network records explaining client address 45.79.19.196 (T050-00223).",
+   "Verify the hash, signature and service configuration of stsync.exe and confirm the job invocation with the backup owner (T050-00237).",
+   "Obtain proxy upstream connection and TLS identity records for the bulk tunnel, keeping it distinct from the inspected GET on source port 60619 (T050-00239 through T050-00247)."
+  ],
+  "unrelated_findings": [
+   "Separate access-policy ticket: nora.blake successfully logged on to FILE-NWD-01 through RDP from WS-NBLAKE-01 at 14:18:40 UTC, contrary to the supplied restriction that remote administration originates only from WS-SOKAFOR-01. These records do not establish administrator privileges or a link to the earlier upload (T050-00441, T050-00448, T050-00459).",
+   "Separate software/service validation ticket: a SYSTEM Java process running C:\\ProgramData\\Meridian\\integration-worker.jar connected through the proxy to receiver.citrix.com. This is a different PID and connection from the alerted transfer; validate its purpose and approval rather than treating the shared user-agent string as evidence of common ownership (T050-00165, T050-00249, T050-00250, T050-00251)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 20,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 26.7
+}

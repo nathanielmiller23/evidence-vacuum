@@ -1,0 +1,76 @@
+{
+ "scenario_id": "T267",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The supplied records show WS-RDIAZ-01 making a Kerberos connection to DC-ORC-01 at 13:43:58 and an LDAP connection to the same domain controller at 13:44:00.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T267-00117\",\n        \"T267-00120\"\n      ]\n    },\n    {\n      \"claim\": \"The LDAP record provides connection metadata only; it does not identify an account-management operation or show that the sysops account was created.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T267-00120\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:41:54, WS-RDIAZ-01 connected through the proxy to ec2.ap-southeast-2.amazonaws.com; this does not establish any relationship to the alerted account creation.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T267-00099\",\n        \"T267-00100\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records contain no account-creation audit event for sysops, such as a domain-controller event identifying the created account and the actor.\",\n    \"The network records show connection metadata, not LDAP operations or their results.\",\n    \"The records do not attribute the observed WS-RDIAZ-01 network activity to a particular person or logon session.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether sysops was created during the review window, and the exact creation time.\",\n    \"Who created the account, from which host or session, and whether the action was authorized.\",\n    \"Whether sysops received group memberships, privileges, or subsequent activity.\",\n    \"Whether the observed WS-RDIAZ-01 connections were related to the reported account creation.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Collect domain-controller Security logs around 13:42 UTC, especially account-management events such as 4720 and relevant group-membership or account-change events, including the subject, target, timestamp, and logon ID.\",\n    \"Correlate the account-creation actor and logon ID with authentication and logon records, source host, and endpoint process telemetry.\",\n    \"Check the sysops account's creation attributes, group memberships, privileges, and subsequent authentication activity.\",\n    \"Check for an approved help-desk request or other change record authorizing creation of sysops.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-RDIAZ-01 connected through the proxy to Google Drive at 14:16:26. Google Drive is not listed as approved; the CONNECT record does not establish that files were transferred. Handle separately.\",\n    \"WS-RDIAZ-01 connected through the proxy to i.redd.it at 13:30:59; this is outside the account-creation determination. Handle separately if relevant.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 11297,
+    "output": 1945
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "The supplied records show WS-RDIAZ-01 making a Kerberos connection to DC-ORC-01 at 13:43:58 and an LDAP connection to the same domain controller at 13:44:00.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T267-00117",
+     "T267-00120"
+    ]
+   },
+   {
+    "claim": "The LDAP record provides connection metadata only; it does not identify an account-management operation or show that the sysops account was created.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T267-00120"
+    ]
+   },
+   {
+    "claim": "At 13:41:54, WS-RDIAZ-01 connected through the proxy to ec2.ap-southeast-2.amazonaws.com; this does not establish any relationship to the alerted account creation.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T267-00099",
+     "T267-00100"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records contain no account-creation audit event for sysops, such as a domain-controller event identifying the created account and the actor.",
+   "The network records show connection metadata, not LDAP operations or their results.",
+   "The records do not attribute the observed WS-RDIAZ-01 network activity to a particular person or logon session."
+  ],
+  "claims_not_established": [
+   "Whether sysops was created during the review window, and the exact creation time.",
+   "Who created the account, from which host or session, and whether the action was authorized.",
+   "Whether sysops received group memberships, privileges, or subsequent activity.",
+   "Whether the observed WS-RDIAZ-01 connections were related to the reported account creation."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Collect domain-controller Security logs around 13:42 UTC, especially account-management events such as 4720 and relevant group-membership or account-change events, including the subject, target, timestamp, and logon ID.",
+   "Correlate the account-creation actor and logon ID with authentication and logon records, source host, and endpoint process telemetry.",
+   "Check the sysops account's creation attributes, group memberships, privileges, and subsequent authentication activity.",
+   "Check for an approved help-desk request or other change record authorizing creation of sysops."
+  ],
+  "unrelated_findings": [
+   "WS-RDIAZ-01 connected through the proxy to Google Drive at 14:16:26. Google Drive is not listed as approved; the CONNECT record does not establish that files were transferred. Handle separately.",
+   "WS-RDIAZ-01 connected through the proxy to i.redd.it at 13:30:59; this is outside the account-creation determination. Handle separately if relevant."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 5,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.7
+}

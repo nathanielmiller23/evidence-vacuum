@@ -1,0 +1,75 @@
+{
+ "scenario_id": "T011",
+ "condition": "C3",
+ "variant": "P4",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.87,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded two failed network logons for ben.carter using NTLM, both from 192.0.2.45 and both with a bad-password status, at 13:41:55 and 13:43:20 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T011-00003\",\n        \"T011-00004\"\n      ]\n    },\n    {\n      \"claim\": \"The domain controller recorded a successful network logon for ben.carter from the same IP at 13:44:45 UTC, using Kerberos.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T011-00005\"\n      ]\n    },\n    {\n      \"claim\": \"The failures followed by a successful logon from the same IP warrant investigation, but these records do not establish whether they resulted from a legitimate credential error or malicious activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T011-00003\",\n        \"T011-00004\",\n        \"T011-00005\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy logs for PROXY-HD-01 were not collected from 13:30 to 14:10 UTC because of a collection outage; this overlaps the alert window.\",\n    \"Although winsec, sysmon, zeek_conn, zeek_dns, and zeek_ssl are reported as operational for the relevant hosts, the supplied evidence does not include a source-host attribution for 192.0.2.45 or the surrounding network records.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether 192.0.2.45 maps to ben.carter's workstation, another internal host, or an external source.\",\n    \"Whether the failed attempts were caused by a user-entered password, an application or stored credential, or an unauthorized actor.\",\n    \"Whether the successful logon was authorized or whether it led to any further activity.\",\n    \"No specific documented legitimate explanation for these logons is established by the supplied records.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Identify the owner and location of 192.0.2.45 during the alert window using DHCP, address-management, firewall, or network records.\",\n    \"Collect the source system's authentication and process telemetry around 13:41\u201313:45 UTC to determine what initiated the attempts and success.\",\n    \"Review surrounding domain-controller authentication events and available zeek_conn, zeek_dns, and zeek_ssl records for the source and destination activity.\",\n    \"Recover proxy records for the outage window if available, or document that they cannot be recovered.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-BCARTER-01 had its Internet Settings ProxyEnable value set to 0 at 13:39:30 UTC. This is separate from the domain-logon alert and does not establish its cause or connection to the authentication events. Record: T011-00002.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 2660,
+    "output": 1703
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.87,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded two failed network logons for ben.carter using NTLM, both from 192.0.2.45 and both with a bad-password status, at 13:41:55 and 13:43:20 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T011-00003",
+     "T011-00004"
+    ]
+   },
+   {
+    "claim": "The domain controller recorded a successful network logon for ben.carter from the same IP at 13:44:45 UTC, using Kerberos.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T011-00005"
+    ]
+   },
+   {
+    "claim": "The failures followed by a successful logon from the same IP warrant investigation, but these records do not establish whether they resulted from a legitimate credential error or malicious activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T011-00003",
+     "T011-00004",
+     "T011-00005"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy logs for PROXY-HD-01 were not collected from 13:30 to 14:10 UTC because of a collection outage; this overlaps the alert window.",
+   "Although winsec, sysmon, zeek_conn, zeek_dns, and zeek_ssl are reported as operational for the relevant hosts, the supplied evidence does not include a source-host attribution for 192.0.2.45 or the surrounding network records."
+  ],
+  "claims_not_established": [
+   "Whether 192.0.2.45 maps to ben.carter's workstation, another internal host, or an external source.",
+   "Whether the failed attempts were caused by a user-entered password, an application or stored credential, or an unauthorized actor.",
+   "Whether the successful logon was authorized or whether it led to any further activity.",
+   "No specific documented legitimate explanation for these logons is established by the supplied records."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Identify the owner and location of 192.0.2.45 during the alert window using DHCP, address-management, firewall, or network records.",
+   "Collect the source system's authentication and process telemetry around 13:41\u201313:45 UTC to determine what initiated the attempts and success.",
+   "Review surrounding domain-controller authentication events and available zeek_conn, zeek_dns, and zeek_ssl records for the source and destination activity.",
+   "Recover proxy records for the outage window if available, or document that they cannot be recovered."
+  ],
+  "unrelated_findings": [
+   "WS-BCARTER-01 had its Internet Settings ProxyEnable value set to 0 at 13:39:30 UTC. This is separate from the domain-logon alert and does not establish its cause or connection to the authentication events. Record: T011-00002."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 6,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.4
+}

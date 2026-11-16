@@ -1,0 +1,96 @@
+{
+ "scenario_id": "T283",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:40:54 UTC, amy.cole opened Statement.docm from her Downloads folder in Microsoft Word.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T283-00115\", \"T283-00118\"]\n    },\n    {\n      \"claim\": \"A second later, Word launched PowerShell with no profile, a hidden window, and an encoded command. The command decodes to an in-memory download-and-execute of a script from raw.githubusercontent.com/orchard-it/tools/main/u.ps1.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T283-00119\", \"T283-00120\"]\n    },\n    {\n      \"claim\": \"The proxy recorded a successful GET for that exact u.ps1 URL during the PowerShell activity.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T283-00121\", \"T283-00123\"]\n    },\n    {\n      \"claim\": \"PowerShell then launched rundll32 to invoke Init in C:\\\\Users\\\\amy.cole\\\\AppData\\\\Roaming\\\\svchelper.dll; the process ran briefly.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T283-00135\", \"T283-00136\", \"T283-00139\", \"T283-00140\"]\n    },\n    {\n      \"claim\": \"The PowerShell and rundll32 processes ran as amy.cole at medium integrity, with Word as PowerShell's parent.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T283-00119\", \"T283-00120\", \"T283-00135\", \"T283-00136\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not include the downloaded script contents or a hash, signature, or analysis of u.ps1.\",\n    \"The supplied records do not include the svchelper.dll contents, hash, signature, or forensic analysis.\",\n    \"The Defender DetectionHistory file-creation record does not disclose the detection details or establish which activity triggered it.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish who authored or distributed Statement.docm or whether amy.cole intentionally opened it.\",\n    \"The evidence does not establish the full behavior or impact of the downloaded script or DLL, including whether data was accessed, persisted, or exfiltrated.\",\n    \"The proxy records show a successful request for the script but do not themselves establish its contents or prove what bytes PowerShell executed.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire Statement.docm, u.ps1, and svchelper.dll; preserve hashes and analyze the document\u2019s macros and both payloads.\",\n    \"Review endpoint protection and forensic telemetry for execution effects, persistence, credential access, and any containment or remediation already performed.\",\n    \"Review proxy inspection data or cached response content for the exact u.ps1 response and correlate it with the PowerShell process.\"\n  ],\n  \"unrelated_findings\": [\n    \"Google Drive File Stream launched on WS-ACOLE-01, although Google Drive is not among the approved services in the supplied inventory; handle separately and do not use it to decide this alert. (T283-00289, T283-00290, T283-00295)\",\n    \"The workstation\u2019s Webex executable was launched with a Slack client URL, while the inventory lists no approved Slack or other file-sharing/cloud-storage service; review separately. (T283-00291, T283-00296)\",\n    \"Meridian OpsAgent ran on WS-ACOLE-01 and attempted explicit authentication to FILE-ORC-01 as svc-safe; this workstation agent and activity are not established as part of the alerted PowerShell chain. Review separately. (T283-00404, T283-00406)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 76885,
+    "output": 1369
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:40:54 UTC, amy.cole opened Statement.docm from her Downloads folder in Microsoft Word.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T283-00115",
+     "T283-00118"
+    ]
+   },
+   {
+    "claim": "A second later, Word launched PowerShell with no profile, a hidden window, and an encoded command. The command decodes to an in-memory download-and-execute of a script from raw.githubusercontent.com/orchard-it/tools/main/u.ps1.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T283-00119",
+     "T283-00120"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a successful GET for that exact u.ps1 URL during the PowerShell activity.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T283-00121",
+     "T283-00123"
+    ]
+   },
+   {
+    "claim": "PowerShell then launched rundll32 to invoke Init in C:\\Users\\amy.cole\\AppData\\Roaming\\svchelper.dll; the process ran briefly.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T283-00135",
+     "T283-00136",
+     "T283-00139",
+     "T283-00140"
+    ]
+   },
+   {
+    "claim": "The PowerShell and rundll32 processes ran as amy.cole at medium integrity, with Word as PowerShell's parent.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T283-00119",
+     "T283-00120",
+     "T283-00135",
+     "T283-00136"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not include the downloaded script contents or a hash, signature, or analysis of u.ps1.",
+   "The supplied records do not include the svchelper.dll contents, hash, signature, or forensic analysis.",
+   "The Defender DetectionHistory file-creation record does not disclose the detection details or establish which activity triggered it."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish who authored or distributed Statement.docm or whether amy.cole intentionally opened it.",
+   "The evidence does not establish the full behavior or impact of the downloaded script or DLL, including whether data was accessed, persisted, or exfiltrated.",
+   "The proxy records show a successful request for the script but do not themselves establish its contents or prove what bytes PowerShell executed."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire Statement.docm, u.ps1, and svchelper.dll; preserve hashes and analyze the document\u2019s macros and both payloads.",
+   "Review endpoint protection and forensic telemetry for execution effects, persistence, credential access, and any containment or remediation already performed.",
+   "Review proxy inspection data or cached response content for the exact u.ps1 response and correlate it with the PowerShell process."
+  ],
+  "unrelated_findings": [
+   "Google Drive File Stream launched on WS-ACOLE-01, although Google Drive is not among the approved services in the supplied inventory; handle separately and do not use it to decide this alert. (T283-00289, T283-00290, T283-00295)",
+   "The workstation\u2019s Webex executable was launched with a Slack client URL, while the inventory lists no approved Slack or other file-sharing/cloud-storage service; review separately. (T283-00291, T283-00296)",
+   "Meridian OpsAgent ran on WS-ACOLE-01 and attempted explicit authentication to FILE-ORC-01 as svc-safe; this workstation agent and activity are not established as part of the alerted PowerShell chain. Review separately. (T283-00404, T283-00406)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 14,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 13.2
+}

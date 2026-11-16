@@ -1,0 +1,96 @@
+{
+ "scenario_id": "T100",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The large outbound transfer occurred at about 13:49:49 UTC, after the alert's approximate 13:46 time. The proxy recorded 640,000,000 client-to-server bytes in a successful CONNECT tunnel to ingest.vaultline-backup.com, and Zeek recorded a corresponding connection through the proxy.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T100-00246\", \"T100-00250\"]\n    },\n    {\n      \"claim\": \"The process associated with the transfer was C:\\\\Program Files\\\\Vaultline\\\\agent.exe, running as PINECREST\\\\svc-bkp with a command line specifying a Nightly job targeting ingest.vaultline-backup.com.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T100-00244\", \"T100-00245\", \"T100-00249\", \"T100-00252\", \"T100-00254\"]\n    },\n    {\n      \"claim\": \"The destination, agent path, and transfer size match the organization's stated approved offsite backup service and expected uploads of several hundred MB, supporting a benign explanation for the alerted transfer.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T100-00244\", \"T100-00246\", \"T100-00250\"]\n    },\n    {\n      \"claim\": \"Shortly before the agent ran, the domain controller recorded a service-ticket request for svc-bkp to FILE-PIN-01 from external IP 91.219.236.174. This is unexpected given the provided environment context and leaves the provenance of the service-account activity unresolved.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T100-00241\"]\n    },\n    {\n      \"claim\": \"FILE-PIN-01 recorded a svc-bkp service logon followed by the Vaultline agent starting under that account. These records do not establish that the local logon was caused by, or otherwise linked to, the external-IP ticket request.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T100-00242\", \"T100-00244\", \"T100-00245\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and Zeek records provide destination and byte-count metadata, but the evidence does not show the contents of the transferred data.\",\n    \"The records do not establish whether the external-IP svc-bkp ticket request was legitimate, misattributed, or related to the local Vaultline run.\",\n    \"No file hash, signature validation, or other integrity evidence for the Vaultline agent is provided.\"\n  ],\n  \"claims_not_established\": [\n    \"What data was included in the 640,000,000 client-to-server bytes or whether it was the expected backup data.\",\n    \"Whether the external IP represents authorized infrastructure, a logging or network-address translation artifact, or an unauthorized source.\",\n    \"Whether svc-bkp credentials were compromised or the external-IP ticket request was associated with the backup transfer.\",\n    \"Whether the transfer was an authorized scheduled backup run, despite its matching the documented service, agent, destination, and expected size.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Validate the external-IP svc-bkp ticket request against domain-controller and network records, including whether that source is authorized and whether related authentication succeeded.\",\n    \"Review Vaultline job and server-side ingest records for the run, including job schedule, data manifest, and files or datasets uploaded.\",\n    \"Verify the Vaultline agent's hash and signature against the organization's approved baseline and inspect its execution history.\"\n  ],\n  \"unrelated_findings\": [\n    \"PROXY-PIN-01 attempted an SMB connection to FILE-PIN-01 using the disabled account svc_mgmt; handle separately from the alerted Vaultline transfer. (T100-00572, T100-00573, T100-00575)\",\n    \"WS-RPATEL-01 initiated an RDP session to FILE-PIN-01. This is separate from the outbound transfer and should be assessed against the organization's administrative-access practice. (T100-00190, T100-00196, T100-00198, T100-00202)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 87155,
+    "output": 2237
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "The large outbound transfer occurred at about 13:49:49 UTC, after the alert's approximate 13:46 time. The proxy recorded 640,000,000 client-to-server bytes in a successful CONNECT tunnel to ingest.vaultline-backup.com, and Zeek recorded a corresponding connection through the proxy.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T100-00246",
+     "T100-00250"
+    ]
+   },
+   {
+    "claim": "The process associated with the transfer was C:\\Program Files\\Vaultline\\agent.exe, running as PINECREST\\svc-bkp with a command line specifying a Nightly job targeting ingest.vaultline-backup.com.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T100-00244",
+     "T100-00245",
+     "T100-00249",
+     "T100-00252",
+     "T100-00254"
+    ]
+   },
+   {
+    "claim": "The destination, agent path, and transfer size match the organization's stated approved offsite backup service and expected uploads of several hundred MB, supporting a benign explanation for the alerted transfer.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T100-00244",
+     "T100-00246",
+     "T100-00250"
+    ]
+   },
+   {
+    "claim": "Shortly before the agent ran, the domain controller recorded a service-ticket request for svc-bkp to FILE-PIN-01 from external IP 91.219.236.174. This is unexpected given the provided environment context and leaves the provenance of the service-account activity unresolved.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T100-00241"
+    ]
+   },
+   {
+    "claim": "FILE-PIN-01 recorded a svc-bkp service logon followed by the Vaultline agent starting under that account. These records do not establish that the local logon was caused by, or otherwise linked to, the external-IP ticket request.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T100-00242",
+     "T100-00244",
+     "T100-00245"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and Zeek records provide destination and byte-count metadata, but the evidence does not show the contents of the transferred data.",
+   "The records do not establish whether the external-IP svc-bkp ticket request was legitimate, misattributed, or related to the local Vaultline run.",
+   "No file hash, signature validation, or other integrity evidence for the Vaultline agent is provided."
+  ],
+  "claims_not_established": [
+   "What data was included in the 640,000,000 client-to-server bytes or whether it was the expected backup data.",
+   "Whether the external IP represents authorized infrastructure, a logging or network-address translation artifact, or an unauthorized source.",
+   "Whether svc-bkp credentials were compromised or the external-IP ticket request was associated with the backup transfer.",
+   "Whether the transfer was an authorized scheduled backup run, despite its matching the documented service, agent, destination, and expected size."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Validate the external-IP svc-bkp ticket request against domain-controller and network records, including whether that source is authorized and whether related authentication succeeded.",
+   "Review Vaultline job and server-side ingest records for the run, including job schedule, data manifest, and files or datasets uploaded.",
+   "Verify the Vaultline agent's hash and signature against the organization's approved baseline and inspect its execution history."
+  ],
+  "unrelated_findings": [
+   "PROXY-PIN-01 attempted an SMB connection to FILE-PIN-01 using the disabled account svc_mgmt; handle separately from the alerted Vaultline transfer. (T100-00572, T100-00573, T100-00575)",
+   "WS-RPATEL-01 initiated an RDP session to FILE-PIN-01. This is separate from the outbound transfer and should be assessed against the organization's administrative-access practice. (T100-00190, T100-00196, T100-00198, T100-00202)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 14,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.1
+}

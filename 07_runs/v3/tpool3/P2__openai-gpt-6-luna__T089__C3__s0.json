@@ -1,0 +1,79 @@
+{
+ "scenario_id": "T089",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.9,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"ana.ruiz ran PowerShell to compress \\\\\\\\FILE-PIN-01\\\\Shared\\\\Clients into C:\\\\Users\\\\ana.ruiz\\\\AppData\\\\Local\\\\Temp\\\\c.zip; Sysmon recorded creation of that archive shortly afterward.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T089-00173\",\n        \"T089-00175\"\n      ]\n    },\n    {\n      \"claim\": \"The same user then opened dropzone-transfer.net in Edge. The proxy recorded the CONNECT attempt as status 407 with action auth-required, and the corresponding connection record shows only a short exchange with the proxy.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T089-00185\",\n        \"T089-00188\",\n        \"T089-00189\"\n      ]\n    },\n    {\n      \"claim\": \"The archive-then-transfer-site sequence is suspicious and consistent with attempted exfiltration, but the available records do not establish that the archive was uploaded or that the alert's reported large transfer occurred.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T089-00173\",\n        \"T089-00175\",\n        \"T089-00185\",\n        \"T089-00188\",\n        \"T089-00189\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The provided proxy record for dropzone-transfer.net shows a rejected CONNECT attempt (407), not a completed tunnel; the associated Zeek record is a connection to the internal proxy, not proof of bytes sent to the external site. Records: T089-00188, T089-00189.\",\n    \"The evidence does not include the archive's size or contents, or proxy request-body and upload details, so the reported transfer volume and what data may have left the host cannot be verified.\",\n    \"The supplied sensor status reports a collection outage for WS-ESTONE-01, not WS-ARUIZ-01; no outage on the alerted host is indicated for the relevant sensors.\"\n  ],\n  \"claims_not_established\": [\n    \"That tens of megabytes were successfully transferred from WS-ARUIZ-01 to dropzone-transfer.net or any other external destination.\",\n    \"That c.zip contained actual client records, or what files were included in the archive.\",\n    \"Whether the archive and attempted site access were authorized by ana.ruiz or otherwise had a legitimate business purpose.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Retrieve detailed proxy logs for the full interval, including any subsequent authenticated CONNECT, upload requests, byte counts, and destination details for dropzone-transfer.net.\",\n    \"Verify the alert's underlying network-flow evidence and correlate it with proxy records to identify the destination, time, and transferred byte count.\",\n    \"Preserve and examine c.zip and relevant endpoint/browser artifacts to determine its size, contents, and whether an upload was attempted.\",\n    \"Confirm with ana.ruiz and the relevant data owner whether creating this archive or using the transfer site was authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-ARUIZ-01's browser accessed dbeaver.io, which is not listed among approved services. Treat this as a separate review; it does not establish the alerted transfer. Records: T089-00336, T089-00337.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 61909,
+    "output": 2010
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.9,
+  "supporting_observations": [
+   {
+    "claim": "ana.ruiz ran PowerShell to compress \\\\FILE-PIN-01\\Shared\\Clients into C:\\Users\\ana.ruiz\\AppData\\Local\\Temp\\c.zip; Sysmon recorded creation of that archive shortly afterward.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T089-00173",
+     "T089-00175"
+    ]
+   },
+   {
+    "claim": "The same user then opened dropzone-transfer.net in Edge. The proxy recorded the CONNECT attempt as status 407 with action auth-required, and the corresponding connection record shows only a short exchange with the proxy.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T089-00185",
+     "T089-00188",
+     "T089-00189"
+    ]
+   },
+   {
+    "claim": "The archive-then-transfer-site sequence is suspicious and consistent with attempted exfiltration, but the available records do not establish that the archive was uploaded or that the alert's reported large transfer occurred.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T089-00173",
+     "T089-00175",
+     "T089-00185",
+     "T089-00188",
+     "T089-00189"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The provided proxy record for dropzone-transfer.net shows a rejected CONNECT attempt (407), not a completed tunnel; the associated Zeek record is a connection to the internal proxy, not proof of bytes sent to the external site. Records: T089-00188, T089-00189.",
+   "The evidence does not include the archive's size or contents, or proxy request-body and upload details, so the reported transfer volume and what data may have left the host cannot be verified.",
+   "The supplied sensor status reports a collection outage for WS-ESTONE-01, not WS-ARUIZ-01; no outage on the alerted host is indicated for the relevant sensors."
+  ],
+  "claims_not_established": [
+   "That tens of megabytes were successfully transferred from WS-ARUIZ-01 to dropzone-transfer.net or any other external destination.",
+   "That c.zip contained actual client records, or what files were included in the archive.",
+   "Whether the archive and attempted site access were authorized by ana.ruiz or otherwise had a legitimate business purpose."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Retrieve detailed proxy logs for the full interval, including any subsequent authenticated CONNECT, upload requests, byte counts, and destination details for dropzone-transfer.net.",
+   "Verify the alert's underlying network-flow evidence and correlate it with proxy records to identify the destination, time, and transferred byte count.",
+   "Preserve and examine c.zip and relevant endpoint/browser artifacts to determine its size, contents, and whether an upload was attempted.",
+   "Confirm with ana.ruiz and the relevant data owner whether creating this archive or using the transfer site was authorized."
+  ],
+  "unrelated_findings": [
+   "WS-ARUIZ-01's browser accessed dbeaver.io, which is not listed among approved services. Treat this as a separate review; it does not establish the alerted transfer. Records: T089-00336, T089-00337."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.4
+}

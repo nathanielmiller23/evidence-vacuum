@@ -1,0 +1,106 @@
+{
+ "scenario_id": "T023",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 3,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The reported window was around 13:40 UTC, but the records show an interactive logon at 13:40:11 and no PowerShell process launch until 13:44:46; the timing is close but not exact.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T023-00057\", \"T023-00085\", \"T023-00086\"]\n    },\n    {\n      \"claim\": \"At 13:44:40, Maria's Word process opened Downloads\\\\Statement.docm. About six seconds later, Word launched PowerShell with no profile, a hidden window, and an encoded command.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T023-00081\", \"T023-00084\", \"T023-00085\", \"T023-00086\"]\n    },\n    {\n      \"claim\": \"The encoded PowerShell command decodes to an expression that downloads and executes a script from raw.githubusercontent.com/harbor-dental-it/tools/main/u.ps1. Proxy records show a successful GET for that URL and a 200 status.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T023-00085\", \"T023-00086\", \"T023-00089\"]\n    },\n    {\n      \"claim\": \"The PowerShell process launched rundll32.exe to call Init in C:\\\\Users\\\\maria.lopez\\\\AppData\\\\Roaming\\\\svchelper.dll, and both processes subsequently exited.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T023-00096\", \"T023-00097\", \"T023-00101\", \"T023-00102\", \"T023-00103\", \"T023-00104\"]\n    },\n    {\n      \"claim\": \"The sequence of a macro-enabled document opening, hidden encoded PowerShell downloading and executing remote content, and rundll32 invoking a DLL in the user's roaming profile strongly supports malicious execution on the alerted workstation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T023-00081\", \"T023-00084\", \"T023-00085\", \"T023-00086\", \"T023-00089\", \"T023-00096\", \"T023-00097\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show the downloaded script URL and successful HTTP status, but do not provide the script contents or prove what actions it performed (T023-00085, T023-00089).\",\n    \"The process command line identifies the DLL path and export invoked, but these records do not establish the DLL's contents or effects (T023-00096, T023-00097).\",\n    \"The provided records do not include PowerShell script-block or AMSI content, file hashes, or a DLL image-load record for svchelper.dll.\"\n  ],\n  \"claims_not_established\": [\n    \"The available records do not establish whether Maria intentionally opened Statement.docm or knew about the resulting execution (T023-00081, T023-00085).\",\n    \"The contents and behavior of the downloaded u.ps1 script and svchelper.dll are not established by the available records (T023-00089, T023-00096).\",\n    \"The records do not establish whether the activity persisted, accessed credentials, or exfiltrated data.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze Statement.docm, including its macro content and origin.\",\n    \"Retrieve the exact u.ps1 response and the svchelper.dll file; preserve hashes and determine their behavior.\",\n    \"Collect PowerShell operational/script-block and AMSI logs, endpoint detection telemetry, and relevant file-creation and persistence artifacts from WS-MLOPEZ-01.\",\n    \"Hunt across other hosts for the URL, script, DLL name or hash, and related process behavior.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 14:03, a SYSTEM scheduled-task PowerShell process ran C:\\\\Scripts\\\\endpoint-inventory.ps1; at 14:05, that process generated an explicit-credentials event using svc-bkp for PROXY-HD-01. This is outside the alerted execution sequence and should be reviewed separately (T023-00165, T023-00166, T023-00168).\",\n    \"At 14:06, Edge accessed Slack. This is outside the alerted execution sequence and may warrant separate review against organizational policy (T023-00176, T023-00179, T023-00180).\",\n    \"At 14:16, Maria launched PowerShell to request https://packages.nuget.org/api/v2; this is outside the alerted execution sequence and should be assessed separately if relevant (T023-00265, T023-00266).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 42931,
+    "output": 1966
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "The reported window was around 13:40 UTC, but the records show an interactive logon at 13:40:11 and no PowerShell process launch until 13:44:46; the timing is close but not exact.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T023-00057",
+     "T023-00085",
+     "T023-00086"
+    ]
+   },
+   {
+    "claim": "At 13:44:40, Maria's Word process opened Downloads\\Statement.docm. About six seconds later, Word launched PowerShell with no profile, a hidden window, and an encoded command.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T023-00081",
+     "T023-00084",
+     "T023-00085",
+     "T023-00086"
+    ]
+   },
+   {
+    "claim": "The encoded PowerShell command decodes to an expression that downloads and executes a script from raw.githubusercontent.com/harbor-dental-it/tools/main/u.ps1. Proxy records show a successful GET for that URL and a 200 status.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T023-00085",
+     "T023-00086",
+     "T023-00089"
+    ]
+   },
+   {
+    "claim": "The PowerShell process launched rundll32.exe to call Init in C:\\Users\\maria.lopez\\AppData\\Roaming\\svchelper.dll, and both processes subsequently exited.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T023-00096",
+     "T023-00097",
+     "T023-00101",
+     "T023-00102",
+     "T023-00103",
+     "T023-00104"
+    ]
+   },
+   {
+    "claim": "The sequence of a macro-enabled document opening, hidden encoded PowerShell downloading and executing remote content, and rundll32 invoking a DLL in the user's roaming profile strongly supports malicious execution on the alerted workstation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T023-00081",
+     "T023-00084",
+     "T023-00085",
+     "T023-00086",
+     "T023-00089",
+     "T023-00096",
+     "T023-00097"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show the downloaded script URL and successful HTTP status, but do not provide the script contents or prove what actions it performed (T023-00085, T023-00089).",
+   "The process command line identifies the DLL path and export invoked, but these records do not establish the DLL's contents or effects (T023-00096, T023-00097).",
+   "The provided records do not include PowerShell script-block or AMSI content, file hashes, or a DLL image-load record for svchelper.dll."
+  ],
+  "claims_not_established": [
+   "The available records do not establish whether Maria intentionally opened Statement.docm or knew about the resulting execution (T023-00081, T023-00085).",
+   "The contents and behavior of the downloaded u.ps1 script and svchelper.dll are not established by the available records (T023-00089, T023-00096).",
+   "The records do not establish whether the activity persisted, accessed credentials, or exfiltrated data."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze Statement.docm, including its macro content and origin.",
+   "Retrieve the exact u.ps1 response and the svchelper.dll file; preserve hashes and determine their behavior.",
+   "Collect PowerShell operational/script-block and AMSI logs, endpoint detection telemetry, and relevant file-creation and persistence artifacts from WS-MLOPEZ-01.",
+   "Hunt across other hosts for the URL, script, DLL name or hash, and related process behavior."
+  ],
+  "unrelated_findings": [
+   "At 14:03, a SYSTEM scheduled-task PowerShell process ran C:\\Scripts\\endpoint-inventory.ps1; at 14:05, that process generated an explicit-credentials event using svc-bkp for PROXY-HD-01. This is outside the alerted execution sequence and should be reviewed separately (T023-00165, T023-00166, T023-00168).",
+   "At 14:06, Edge accessed Slack. This is outside the alerted execution sequence and may warrant separate review against organizational policy (T023-00176, T023-00179, T023-00180).",
+   "At 14:16, Maria launched PowerShell to request https://packages.nuget.org/api/v2; this is outside the alerted execution sequence and should be assessed separately if relevant (T023-00265, T023-00266)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 23,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 19.1
+}

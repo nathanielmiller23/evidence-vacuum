@@ -1,0 +1,93 @@
+{
+ "scenario_id": "T189",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.95,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:43 UTC, mia.santos ran PowerShell to compress \\\\\\\\FILE-BLU-01\\\\Shared\\\\Clients into C:\\\\Users\\\\mia.santos\\\\AppData\\\\Local\\\\Temp\\\\c.zip; a subsequent file-creation record confirms c.zip was created.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T189-00244\", \"T189-00245\", \"T189-00246\"]\n    },\n    {\n      \"claim\": \"At 13:49:14 UTC, WS-MSANTOS-01 sent 51,000,000 client bytes through the proxy to bigsend-drop.net, a service not listed as approved in the supplied environment context.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T189-00269\", \"T189-00270\"]\n    },\n    {\n      \"claim\": \"The proxy connection carrying the 51,000,000 bytes was attributed to Chrome (PID 3308) running as mia.santos.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T189-00271\", \"T189-00272\"]\n    },\n    {\n      \"claim\": \"The close sequence of creating a ZIP archive from the Clients share and sending 51 MB to an unapproved drop service strongly supports an attempted data exfiltration finding. The evidence does not establish that c.zip was the exact content sent.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T189-00244\", \"T189-00246\", \"T189-00269\", \"T189-00270\"]\n    },\n    {\n      \"claim\": \"The logged large transfer occurred at 13:49:14 UTC, later than the alert's approximate 13:46 UTC time.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T189-00269\", \"T189-00270\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records show the destination and byte counts but do not identify the uploaded file or its contents; the large transfer is recorded as a tunnel to bigsend-drop.net without an inspected URL or payload description (T189-00269, T189-00270).\",\n    \"The available records do not directly correlate c.zip with the bytes sent in the later Chrome connection (T189-00246, T189-00269, T189-00270).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the 51 MB transfer contained c.zip, other files, or a different payload (T189-00246, T189-00269, T189-00270).\",\n    \"Whether mia.santos knowingly authorized the transfer, or whether another party controlled the browser session (T189-00271, T189-00272).\",\n    \"Whether the destination accepted, retained, or further distributed the data; the records show a successful proxy tunnel, not the recipient's subsequent handling (T189-00269, T189-00270).\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and inspect c.zip and relevant endpoint artifacts, including its contents, hash, creation/access metadata, and any related browser upload or history records.\",\n    \"Obtain proxy or destination-side transaction details for the 13:49:14 UTC connection to determine the uploaded object and whether the transfer completed.\",\n    \"Review file-server access auditing for mia.santos and WS-MSANTOS-01 access to the Clients share around 13:43 UTC.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-MSANTOS-01 accessed Google Drive pages and had GoogleDriveFS traffic earlier in the window; Google Drive is not among the services listed as approved. This is separate from the alerted large transfer and should be assessed independently (T189-00047, T189-00048, T189-00055, T189-00139, T189-00140).\",\n    \"FILE-BLU-01 initiated an RDP connection to WS-MSANTOS-01 at 13:54 UTC, although the supplied context says remote administration is only performed from WS-KITO-01. The available records show the connection but do not establish a successful remote session; handle separately (T189-00286, T189-00287, T189-00288).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 73857,
+    "output": 2317
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.95,
+  "supporting_observations": [
+   {
+    "claim": "At 13:43 UTC, mia.santos ran PowerShell to compress \\\\FILE-BLU-01\\Shared\\Clients into C:\\Users\\mia.santos\\AppData\\Local\\Temp\\c.zip; a subsequent file-creation record confirms c.zip was created.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T189-00244",
+     "T189-00245",
+     "T189-00246"
+    ]
+   },
+   {
+    "claim": "At 13:49:14 UTC, WS-MSANTOS-01 sent 51,000,000 client bytes through the proxy to bigsend-drop.net, a service not listed as approved in the supplied environment context.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T189-00269",
+     "T189-00270"
+    ]
+   },
+   {
+    "claim": "The proxy connection carrying the 51,000,000 bytes was attributed to Chrome (PID 3308) running as mia.santos.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T189-00271",
+     "T189-00272"
+    ]
+   },
+   {
+    "claim": "The close sequence of creating a ZIP archive from the Clients share and sending 51 MB to an unapproved drop service strongly supports an attempted data exfiltration finding. The evidence does not establish that c.zip was the exact content sent.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T189-00244",
+     "T189-00246",
+     "T189-00269",
+     "T189-00270"
+    ]
+   },
+   {
+    "claim": "The logged large transfer occurred at 13:49:14 UTC, later than the alert's approximate 13:46 UTC time.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T189-00269",
+     "T189-00270"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records show the destination and byte counts but do not identify the uploaded file or its contents; the large transfer is recorded as a tunnel to bigsend-drop.net without an inspected URL or payload description (T189-00269, T189-00270).",
+   "The available records do not directly correlate c.zip with the bytes sent in the later Chrome connection (T189-00246, T189-00269, T189-00270)."
+  ],
+  "claims_not_established": [
+   "Whether the 51 MB transfer contained c.zip, other files, or a different payload (T189-00246, T189-00269, T189-00270).",
+   "Whether mia.santos knowingly authorized the transfer, or whether another party controlled the browser session (T189-00271, T189-00272).",
+   "Whether the destination accepted, retained, or further distributed the data; the records show a successful proxy tunnel, not the recipient's subsequent handling (T189-00269, T189-00270)."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and inspect c.zip and relevant endpoint artifacts, including its contents, hash, creation/access metadata, and any related browser upload or history records.",
+   "Obtain proxy or destination-side transaction details for the 13:49:14 UTC connection to determine the uploaded object and whether the transfer completed.",
+   "Review file-server access auditing for mia.santos and WS-MSANTOS-01 access to the Clients share around 13:43 UTC."
+  ],
+  "unrelated_findings": [
+   "WS-MSANTOS-01 accessed Google Drive pages and had GoogleDriveFS traffic earlier in the window; Google Drive is not among the services listed as approved. This is separate from the alerted large transfer and should be assessed independently (T189-00047, T189-00048, T189-00055, T189-00139, T189-00140).",
+   "FILE-BLU-01 initiated an RDP connection to WS-MSANTOS-01 at 13:54 UTC, although the supplied context says remote administration is only performed from WS-KITO-01. The available records show the connection but do not establish a successful remote session; handle separately (T189-00286, T189-00287, T189-00288)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 27.4
+}

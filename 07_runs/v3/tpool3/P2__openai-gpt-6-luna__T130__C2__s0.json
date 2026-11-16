@@ -1,0 +1,73 @@
+{
+ "scenario_id": "T130",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The large outbound transfer is recorded at 13:50:19 UTC, several minutes after the alert's approximate 13:46 time: the proxy logged 640,000,000 client-to-server bytes to ingest.ironvault-cloud.com.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T130-00259\"]\n    },\n    {\n      \"claim\": \"FILE-COP-01 ran C:\\\\Program Files\\\\Ironvault\\\\agent.exe as COPPERLINE\\\\svc-backup with a command line targeting https://ingest.ironvault-cloud.com immediately before the large transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T130-00257\", \"T130-00258\"]\n    },\n    {\n      \"claim\": \"The proxy and network connection records independently show roughly 640 MB sent from FILE-COP-01 to the explicit proxy during the Ironvault upload, consistent with the inventory's description of the approved Ironvault backup agent uploading several hundred MB.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T130-00259\", \"T130-00260\", \"T130-00261\", \"T130-00262\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The alert describes activity around 13:46 UTC, while the matching 640 MB transfer is logged at 13:50:19 UTC; the available records do not explain this time difference.\",\n    \"The proxy records the destination and transfer byte counts, but do not establish which files or data were transferred or their sensitivity.\",\n    \"The proxy CONNECT record reports the transfer size and destination, but the evidence does not independently verify the remote endpoint's ownership or the integrity of the agent binary.\"\n  ],\n  \"claims_not_established\": [\n    \"The specific files or data included in the transfer.\",\n    \"Whether the 640 MB transfer is the exact network event that triggered the alert, given the timestamp difference.\",\n    \"Whether the Ironvault agent binary and its configuration were untampered.\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [],\n  \"unrelated_findings\": [\n    \"Separate review: at 14:10, FILE-COP-01 made proxy requests to config.zscaler.net, updates.paloaltonetworks.com, and www.bing.com; the last used a python-requests user agent. These are distinct from the recorded Ironvault transfer and should be checked against approved-use policy. (T130-00423, T130-00425, T130-00426)\",\n    \"Separate review: Veeam.Backup.Service.exe started on FILE-COP-01, and later attempted explicit use of svc-backup credentials for PROXY-COP-01. The supplied inventory identifies Ironvault, not Veeam, as the approved backup agent. (T130-00402, T130-00416)\",\n    \"Separate review: FILE-COP-01 recorded failed logons for disabled accounts svc_deploy and svc_mgmt. (T130-00163, T130-00510)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 78263,
+    "output": 1724
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "The large outbound transfer is recorded at 13:50:19 UTC, several minutes after the alert's approximate 13:46 time: the proxy logged 640,000,000 client-to-server bytes to ingest.ironvault-cloud.com.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T130-00259"
+    ]
+   },
+   {
+    "claim": "FILE-COP-01 ran C:\\Program Files\\Ironvault\\agent.exe as COPPERLINE\\svc-backup with a command line targeting https://ingest.ironvault-cloud.com immediately before the large transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T130-00257",
+     "T130-00258"
+    ]
+   },
+   {
+    "claim": "The proxy and network connection records independently show roughly 640 MB sent from FILE-COP-01 to the explicit proxy during the Ironvault upload, consistent with the inventory's description of the approved Ironvault backup agent uploading several hundred MB.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T130-00259",
+     "T130-00260",
+     "T130-00261",
+     "T130-00262"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The alert describes activity around 13:46 UTC, while the matching 640 MB transfer is logged at 13:50:19 UTC; the available records do not explain this time difference.",
+   "The proxy records the destination and transfer byte counts, but do not establish which files or data were transferred or their sensitivity.",
+   "The proxy CONNECT record reports the transfer size and destination, but the evidence does not independently verify the remote endpoint's ownership or the integrity of the agent binary."
+  ],
+  "claims_not_established": [
+   "The specific files or data included in the transfer.",
+   "Whether the 640 MB transfer is the exact network event that triggered the alert, given the timestamp difference.",
+   "Whether the Ironvault agent binary and its configuration were untampered."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [],
+  "unrelated_findings": [
+   "Separate review: at 14:10, FILE-COP-01 made proxy requests to config.zscaler.net, updates.paloaltonetworks.com, and www.bing.com; the last used a python-requests user agent. These are distinct from the recorded Ironvault transfer and should be checked against approved-use policy. (T130-00423, T130-00425, T130-00426)",
+   "Separate review: Veeam.Backup.Service.exe started on FILE-COP-01, and later attempted explicit use of svc-backup credentials for PROXY-COP-01. The supplied inventory identifies Ironvault, not Veeam, as the approved backup agent. (T130-00402, T130-00416)",
+   "Separate review: FILE-COP-01 recorded failed logons for disabled accounts svc_deploy and svc_mgmt. (T130-00163, T130-00510)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 7,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 17.6
+}

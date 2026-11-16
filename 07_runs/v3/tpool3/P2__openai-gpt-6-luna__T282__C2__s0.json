@@ -1,0 +1,100 @@
+{
+ "scenario_id": "T282",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Repeated failures for svc-grades occurred on FILE-ORC-01, with the workstation name FILE-ORC-01 and source IP 10.56.20.20; the failures report an incorrect-password status (0xc000006a).\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T282-00002\",\n        \"T282-00003\",\n        \"T282-00007\",\n        \"T282-00011\",\n        \"T282-00019\",\n        \"T282-00022\",\n        \"T282-00027\",\n        \"T282-00034\"\n      ]\n    },\n    {\n      \"claim\": \"The failures recur at roughly one-minute intervals from 13:32 through at least 13:47 UTC, consistent with the supplied inventory description that GradeSync runs every minute and re-authenticates each run.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T282-00002\",\n        \"T282-00007\",\n        \"T282-00011\",\n        \"T282-00015\",\n        \"T282-00019\",\n        \"T282-00022\",\n        \"T282-00025\",\n        \"T282-00029\",\n        \"T282-00031\",\n        \"T282-00033\"\n      ]\n    },\n    {\n      \"claim\": \"The failures began shortly after the supplied change calendar's 13:30 UTC svc-grades password rotation time; a stale credential in the regularly re-authenticating job is a plausible explanation, though the logs do not confirm the rotation or job update occurred.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T282-00001\",\n        \"T282-00002\",\n        \"T282-00003\",\n        \"T282-00004\"\n      ]\n    },\n    {\n      \"claim\": \"The domain-controller records include repeated svc-grades pre-authentication failures with status 0x18 during the same period.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T282-00004\",\n        \"T282-00008\",\n        \"T282-00012\",\n        \"T282-00020\",\n        \"T282-00021\",\n        \"T282-00024\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied authentication records end at 13:47 UTC, so they do not show whether failures continued or resolved during the remainder of the requested window through 14:20 UTC.\",\n    \"The records do not establish whether the scheduled password rotation was completed, when the new password became effective, or whether GradeSync was updated.\",\n    \"The 4625 records show lsass.exe as the process; the provided logs do not identify the application or job that initiated each authentication attempt.\"\n  ],\n  \"claims_not_established\": [\n    \"That the scheduled password rotation was actually performed at 13:30 UTC.\",\n    \"That GradeSync caused every failed authentication, despite the matching host, account, and roughly one-minute cadence.\",\n    \"That any of the failed attempts succeeded or that an unauthorized party controlled svc-grades.\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [\n    \"No further evidence is required to close this alert as likely benign; operationally, verify that the rotation and manual GradeSync credential update were completed.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:30:21 UTC, an explicit-credentials event on FILE-ORC-01 names C:\\\\Program Files\\\\Meridian\\\\OpsAgent\\\\ops-agent.exe and targets svc-grades at PROXY-ORC-01. The supplied approved-software context does not list this agent. The event does not establish success or connect it to the subsequent failed logons; investigate separately. Record: T282-00001.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 6036,
+    "output": 1926
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "Repeated failures for svc-grades occurred on FILE-ORC-01, with the workstation name FILE-ORC-01 and source IP 10.56.20.20; the failures report an incorrect-password status (0xc000006a).",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T282-00002",
+     "T282-00003",
+     "T282-00007",
+     "T282-00011",
+     "T282-00019",
+     "T282-00022",
+     "T282-00027",
+     "T282-00034"
+    ]
+   },
+   {
+    "claim": "The failures recur at roughly one-minute intervals from 13:32 through at least 13:47 UTC, consistent with the supplied inventory description that GradeSync runs every minute and re-authenticates each run.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T282-00002",
+     "T282-00007",
+     "T282-00011",
+     "T282-00015",
+     "T282-00019",
+     "T282-00022",
+     "T282-00025",
+     "T282-00029",
+     "T282-00031",
+     "T282-00033"
+    ]
+   },
+   {
+    "claim": "The failures began shortly after the supplied change calendar's 13:30 UTC svc-grades password rotation time; a stale credential in the regularly re-authenticating job is a plausible explanation, though the logs do not confirm the rotation or job update occurred.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T282-00001",
+     "T282-00002",
+     "T282-00003",
+     "T282-00004"
+    ]
+   },
+   {
+    "claim": "The domain-controller records include repeated svc-grades pre-authentication failures with status 0x18 during the same period.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T282-00004",
+     "T282-00008",
+     "T282-00012",
+     "T282-00020",
+     "T282-00021",
+     "T282-00024"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied authentication records end at 13:47 UTC, so they do not show whether failures continued or resolved during the remainder of the requested window through 14:20 UTC.",
+   "The records do not establish whether the scheduled password rotation was completed, when the new password became effective, or whether GradeSync was updated.",
+   "The 4625 records show lsass.exe as the process; the provided logs do not identify the application or job that initiated each authentication attempt."
+  ],
+  "claims_not_established": [
+   "That the scheduled password rotation was actually performed at 13:30 UTC.",
+   "That GradeSync caused every failed authentication, despite the matching host, account, and roughly one-minute cadence.",
+   "That any of the failed attempts succeeded or that an unauthorized party controlled svc-grades."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [
+   "No further evidence is required to close this alert as likely benign; operationally, verify that the rotation and manual GradeSync credential update were completed."
+  ],
+  "unrelated_findings": [
+   "At 13:30:21 UTC, an explicit-credentials event on FILE-ORC-01 names C:\\Program Files\\Meridian\\OpsAgent\\ops-agent.exe and targets svc-grades at PROXY-ORC-01. The supplied approved-software context does not list this agent. The event does not establish success or connect it to the subsequent failed logons; investigate separately. Record: T282-00001."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 28,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.3
+}

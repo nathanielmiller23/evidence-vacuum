@@ -1,0 +1,85 @@
+{
+ "run_id": "A__T030__C2__20261115T044846Z",
+ "config": "A",
+ "scenario_id": "T030",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 408,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 161383,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.76,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:48:44 UTC, the domain controller logged a Kerberos service-ticket event for svc-bkp from public IP 45.79.19.196, with FILE-HD-01$ as the service. This is anomalous given the stated environment, where svc-bkp is a backup agent on FILE-HD-01 and there is no VPN.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T030-00269\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:29:25 UTC, FILE-HD-01 logged explicit credential use for svc-claimsync by Veeam.Backup.Service.exe, shortly before the scheduled password rotation. The record establishes the credential use, but not its purpose or whether it was authorized.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T030-00071\"\n      ]\n    },\n    {\n      \"claim\": \"The SMB activity at 13:46:06 UTC was a connection from FILE-HD-01 to DC-HD-01, with 5,155 origin bytes; the associated logon was ANONYMOUS LOGON. These records do not show a hundreds-of-MB outbound transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T030-00241\",\n        \"T030-00242\"\n      ]\n    },\n    {\n      \"claim\": \"The supplied proxy records show comparatively small tunnels to Windows Update and Zscaler, not a hundreds-of-MB transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T030-00433\",\n        \"T030-00435\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not identify the process, destination, or data associated with the alert's reported large outbound transfer.\",\n    \"The records show an external-IP Kerberos event but do not establish that it caused the reported transfer or that a corresponding interactive logon occurred.\",\n    \"The proxy records provided do not account for all possible outbound network paths or traffic during the alert window.\"\n  ],\n  \"claims_not_established\": [\n    \"That the reported large transfer was exfiltration rather than an authorized backup upload.\",\n    \"That the external-IP Kerberos event was the source of, or directly related to, the reported transfer.\",\n    \"What data was transferred, who initiated it, or whether the event was authorized.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Network-flow, firewall, and proxy records for FILE-HD-01 around 13:46 UTC, including destination, byte counts, and whether traffic bypassed the proxy.\",\n    \"Process-to-network telemetry and CobaltVault agent logs on FILE-HD-01 covering the transfer window.\",\n    \"DC-HD-01 and FILE-HD-01 authentication logs around 13:48:44 UTC to validate the external-IP svc-bkp event and determine whether it led to a logon or access.\",\n    \"Change and backup-job records confirming the svc-claimsync rotation, the Veeam service's credential use, and any scheduled CobaltVault upload.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 60190,
+    "output": 2781,
+    "reasoning": 2048
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.76,
+  "supporting_observations": [
+   {
+    "claim": "At 13:48:44 UTC, the domain controller logged a Kerberos service-ticket event for svc-bkp from public IP 45.79.19.196, with FILE-HD-01$ as the service. This is anomalous given the stated environment, where svc-bkp is a backup agent on FILE-HD-01 and there is no VPN.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T030-00269"
+    ]
+   },
+   {
+    "claim": "At 13:29:25 UTC, FILE-HD-01 logged explicit credential use for svc-claimsync by Veeam.Backup.Service.exe, shortly before the scheduled password rotation. The record establishes the credential use, but not its purpose or whether it was authorized.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T030-00071"
+    ]
+   },
+   {
+    "claim": "The SMB activity at 13:46:06 UTC was a connection from FILE-HD-01 to DC-HD-01, with 5,155 origin bytes; the associated logon was ANONYMOUS LOGON. These records do not show a hundreds-of-MB outbound transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T030-00241",
+     "T030-00242"
+    ]
+   },
+   {
+    "claim": "The supplied proxy records show comparatively small tunnels to Windows Update and Zscaler, not a hundreds-of-MB transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T030-00433",
+     "T030-00435"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not identify the process, destination, or data associated with the alert's reported large outbound transfer.",
+   "The records show an external-IP Kerberos event but do not establish that it caused the reported transfer or that a corresponding interactive logon occurred.",
+   "The proxy records provided do not account for all possible outbound network paths or traffic during the alert window."
+  ],
+  "claims_not_established": [
+   "That the reported large transfer was exfiltration rather than an authorized backup upload.",
+   "That the external-IP Kerberos event was the source of, or directly related to, the reported transfer.",
+   "What data was transferred, who initiated it, or whether the event was authorized."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Network-flow, firewall, and proxy records for FILE-HD-01 around 13:46 UTC, including destination, byte counts, and whether traffic bypassed the proxy.",
+   "Process-to-network telemetry and CobaltVault agent logs on FILE-HD-01 covering the transfer window.",
+   "DC-HD-01 and FILE-HD-01 authentication logs around 13:48:44 UTC to validate the external-IP svc-bkp event and determine whether it led to a logon or access.",
+   "Change and backup-job records confirming the svc-claimsync rotation, the Veeam service's credential use, and any scheduled CobaltVault upload."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 6,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 26.7
+}

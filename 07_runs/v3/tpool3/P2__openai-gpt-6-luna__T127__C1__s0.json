@@ -1,0 +1,94 @@
+{
+ "scenario_id": "T127",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted account was created at 13:46:43 UTC, rather than around 13:42 as stated in the alert. The creator recorded on the domain controller was paul.becker.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T127-00255\"\n      ]\n    },\n    {\n      \"claim\": \"About two seconds later, backupadmin was added to the Administrators group by paul.becker.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T127-00256\"\n      ]\n    },\n    {\n      \"claim\": \"Shortly before the account creation, paul.becker logged on to WS-KNGUYEN-01 over RDP from 192.0.2.88.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T127-00246\",\n        \"T127-00247\",\n        \"T127-00248\"\n      ]\n    },\n    {\n      \"claim\": \"A hidden PowerShell task was registered in the same paul.becker logon session shortly after the account creation. Its encoded command decodes to a command that retrieves and executes a script from http://192.0.2.88/a.ps1.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T127-00248\",\n        \"T127-00257\"\n      ]\n    },\n    {\n      \"claim\": \"The account\u2019s administrator membership and the hidden script-execution task are inconsistent with the inventory\u2019s stated help-desk account practices. The RDP source and destination also do not match the stated remote-administration arrangement, which permits administration only from WS-PBECKER-01 and says there is no VPN.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T127-00246\",\n        \"T127-00247\",\n        \"T127-00248\",\n        \"T127-00255\",\n        \"T127-00256\",\n        \"T127-00257\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show task registration and its encoded command, but do not show whether the task ran or what the downloaded script contained.\",\n    \"The records do not identify who controlled 192.0.2.88 or establish whether paul.becker personally performed or authorized these actions.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether paul.becker\u2019s credentials or session were compromised.\",\n    \"Whether the scheduled task executed and whether any downloaded payload caused further impact.\",\n    \"Whether there was an authorized exception or change approval for creating backupadmin, granting it administrator rights, or registering the task.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Investigate the RDP source and session, including authentication and network-device records, and verify whether paul.becker initiated or authorized it.\",\n    \"Retrieve the scheduled task\u2019s execution history and PowerShell logs, and safely obtain and analyze the referenced script if available.\",\n    \"Review domain-controller and endpoint audit records for subsequent use of backupadmin and other account, group, or persistence changes.\",\n    \"Check change approvals and confirm with the responsible administrator whether these actions were authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"Kim Nguyen ran PowerShell with ExecutionPolicy Bypass to execute C:\\\\Admin\\\\update-inventory.ps1; the available records do not establish whether this was authorized or harmful. Track separately.\",\n    \"Power BI queried afemode.copperline.local, resolved to 10.52.20.116, and attempted a connection to port 1433; the recorded connection had no successful session. Track separately.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 53744,
+    "output": 1916
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "The alerted account was created at 13:46:43 UTC, rather than around 13:42 as stated in the alert. The creator recorded on the domain controller was paul.becker.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T127-00255"
+    ]
+   },
+   {
+    "claim": "About two seconds later, backupadmin was added to the Administrators group by paul.becker.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T127-00256"
+    ]
+   },
+   {
+    "claim": "Shortly before the account creation, paul.becker logged on to WS-KNGUYEN-01 over RDP from 192.0.2.88.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T127-00246",
+     "T127-00247",
+     "T127-00248"
+    ]
+   },
+   {
+    "claim": "A hidden PowerShell task was registered in the same paul.becker logon session shortly after the account creation. Its encoded command decodes to a command that retrieves and executes a script from http://192.0.2.88/a.ps1.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T127-00248",
+     "T127-00257"
+    ]
+   },
+   {
+    "claim": "The account\u2019s administrator membership and the hidden script-execution task are inconsistent with the inventory\u2019s stated help-desk account practices. The RDP source and destination also do not match the stated remote-administration arrangement, which permits administration only from WS-PBECKER-01 and says there is no VPN.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T127-00246",
+     "T127-00247",
+     "T127-00248",
+     "T127-00255",
+     "T127-00256",
+     "T127-00257"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show task registration and its encoded command, but do not show whether the task ran or what the downloaded script contained.",
+   "The records do not identify who controlled 192.0.2.88 or establish whether paul.becker personally performed or authorized these actions."
+  ],
+  "claims_not_established": [
+   "Whether paul.becker\u2019s credentials or session were compromised.",
+   "Whether the scheduled task executed and whether any downloaded payload caused further impact.",
+   "Whether there was an authorized exception or change approval for creating backupadmin, granting it administrator rights, or registering the task."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Investigate the RDP source and session, including authentication and network-device records, and verify whether paul.becker initiated or authorized it.",
+   "Retrieve the scheduled task\u2019s execution history and PowerShell logs, and safely obtain and analyze the referenced script if available.",
+   "Review domain-controller and endpoint audit records for subsequent use of backupadmin and other account, group, or persistence changes.",
+   "Check change approvals and confirm with the responsible administrator whether these actions were authorized."
+  ],
+  "unrelated_findings": [
+   "Kim Nguyen ran PowerShell with ExecutionPolicy Bypass to execute C:\\Admin\\update-inventory.ps1; the available records do not establish whether this was authorized or harmful. Track separately.",
+   "Power BI queried afemode.copperline.local, resolved to 10.52.20.116, and attempted a connection to port 1433; the recorded connection had no successful session. Track separately."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.5
+}

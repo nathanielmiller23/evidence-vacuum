@@ -1,0 +1,190 @@
+version: '1.0'
+name: ev-T260
+description: Evidence Vacuum TRAINING scenario T260 (sunridge, backup_upload, vd).
+environment:
+  description: Sunridge Credit Union
+  domain: sunridge.local
+  timezone:
+    default: UTC
+  proxy:
+    mode: explicit
+    listener_port: 8080
+  users:
+  - username: zoe.adams
+    full_name: Zoe Adams
+    email: zoe.adams@sunridgecu.org
+    persona: accountant
+    primary_system: WS-ZADAMS-01
+    groups:
+    - staff
+    enabled: true
+    browsing_intensity: normal
+  - username: max.fischer
+    full_name: Max Fischer
+    email: max.fischer@sunridgecu.org
+    persona: analyst
+    primary_system: WS-MFISCHER-01
+    groups:
+    - staff
+    enabled: true
+    browsing_intensity: light
+  - username: ian.doyle
+    full_name: Ian Doyle
+    email: ian.doyle@sunridgecu.org
+    persona: sysadmin
+    primary_system: WS-IDOYLE-01
+    groups:
+    - it-admins
+    - domain-admins
+    enabled: true
+    browsing_intensity: light
+  - username: lena.ward
+    full_name: Lena Ward
+    email: lena.ward@sunridgecu.org
+    persona: help_desk
+    primary_system: WS-LWARD-01
+    groups:
+    - staff
+    enabled: true
+    browsing_intensity: light
+  service_accounts:
+  - svc-store
+  - svc-ledger
+  systems:
+  - hostname: WS-ZADAMS-01
+    ip: 10.55.10.21
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: zoe.adams
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-MFISCHER-01
+    ip: 10.55.10.22
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: max.fischer
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-IDOYLE-01
+    ip: 10.55.10.23
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: ian.doyle
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-LWARD-01
+    ip: 10.55.10.24
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: lena.ward
+    services:
+    - dns-client
+    - termservice
+  - hostname: DC-SUN-01
+    ip: 10.55.20.10
+    os: Windows Server 2022
+    type: domain_controller
+    services:
+    - kerberos
+    - ldap
+    - dns
+    roles:
+    - domain_controller
+    - dns_server
+  - hostname: FILE-SUN-01
+    ip: 10.55.20.20
+    os: Windows Server 2022
+    type: server
+    services:
+    - smb
+    - dns-client
+    roles:
+    - file_server
+  - hostname: PROXY-SUN-01
+    ip: 10.55.20.30
+    os: Ubuntu 22.04 LTS
+    type: server
+    services:
+    - squid
+    - dns-client
+    roles:
+    - forward_proxy
+  network:
+    public_cidrs:
+    - 198.51.100.112/28
+    segments:
+    - name: workstations
+      cidr: 10.55.10.0/24
+      exposure: internal
+      systems:
+      - WS-ZADAMS-01
+      - WS-MFISCHER-01
+      - WS-IDOYLE-01
+      - WS-LWARD-01
+    - name: servers
+      cidr: 10.55.20.0/24
+      exposure: internal
+      systems:
+      - DC-SUN-01
+      - FILE-SUN-01
+      - PROXY-SUN-01
+    sensors:
+    - type: network
+      name: core-span
+      hostname: ZEEK-CORE
+      monitoring_segments:
+      - workstations
+      - servers
+      direction: bidirectional
+      placement: span
+      log_formats:
+      - zeek
+time_window:
+  start: '2026-10-06T13:00:00Z'
+  duration: 2h
+  warmup: 1h
+generation_seed: 8260
+baseline_activity:
+  description: Quiet afternoon
+  intensity: medium
+  variation: low
+  suspicious_noise: medium
+observation_profile: complete
+storyline:
+- id: svc
+  time: +47m
+  actor: svc-store
+  system: FILE-SUN-01
+  activity: Task Scheduler starts the backup job
+  events:
+  - type: logon
+    logon_type: 5
+- id: bk
+  time: +48m
+  actor: svc-store
+  system: FILE-SUN-01
+  activity: Backup agent uploads to approved vendor
+  events:
+  - type: process
+    process_name: C:\Program Files\Arcvault\agent.exe
+    command_line: '"C:\Program Files\Arcvault\agent.exe" --job Nightly --target https://ingest.arcvault-backup.com'
+  - type: connection
+    dst_ip: 203.0.113.141
+    dst_port: 443
+    hostname: ingest.arcvault-backup.com
+    service: ssl
+    orig_bytes: 640000000
+    resp_bytes: 39000
+output:
+  logs:
+  - format: windows_event_security
+  - format: windows_event_sysmon
+  - format: zeek_conn
+  - format: zeek_dns
+  - format: zeek_ssl
+  - format: proxy_access
+  destination: out/T260
+  compression: false

@@ -1,0 +1,99 @@
+{
+ "run_id": "A__T040__C3__20261115T045534Z",
+ "config": "A",
+ "scenario_id": "T040",
+ "condition": "C3",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 347,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 139321,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45:28 UTC, FILE-NWD-01 opened an HTTP-classified connection to the explicit proxy PROXY-NWD-01 and sent 640,000,221 bytes; the connection lasted about 12 seconds and completed normally.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T040-00204\"\n      ]\n    },\n    {\n      \"claim\": \"The transfer volume is compatible with the supplied description of approved offsite backups, but this record identifies only the proxy as the immediate destination\u2014not the external service, URL, or uploading process.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T040-00204\"\n      ]\n    },\n    {\n      \"claim\": \"A Kerberos service-ticket event recorded svc-archive requesting a ticket for FILE-NWD-01 from source IP 139.162.174.124, an address outside the supplied internal network context. This is suspicious, but the record does not establish why the request occurred or whether it is connected to the transfer.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T040-00193\"\n      ]\n    },\n    {\n      \"claim\": \"Nora Blake launched Remote Desktop from WS-NBLAKE-01 to FILE-NWD-01 at 13:34:28 UTC; the recorded RDP connection lasted about 785 seconds and overlapped the large proxy flow. The evidence does not show that the RDP session caused or initiated the transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T040-00098\",\n        \"T040-00103\",\n        \"T040-00108\"\n      ]\n    },\n    {\n      \"claim\": \"The supplied operational practice says remote administration is performed from WS-SOKAFOR-01, whereas the recorded RDP connection originated from WS-NBLAKE-01. This discrepancy warrants investigation, but the records alone do not establish malicious intent or the actions taken in the session.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T040-00098\",\n        \"T040-00103\",\n        \"T040-00108\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied coverage status reports that FILE-NWD-01 winsec and sysmon logs were not collected from 13:30 to 14:10 UTC; this includes the transfer and the scheduled svc-render password-rotation period.\",\n    \"The supplied coverage status reports that proxy logs were not collected from 13:30 to 14:10 UTC, preventing confirmation of the HTTP destination, URL, and proxy transaction details.\",\n    \"Zeek connection telemetry records the large flow to the proxy, but the available record does not identify the originating process or final external destination.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the large transfer went to the approved StratoSafe service or to an unapproved destination.\",\n    \"Which process, account, or job generated the large proxy flow.\",\n    \"Whether the svc-archive ticket request from the external IP was legitimate, compromised, or related to the transfer.\",\n    \"What Nora Blake did during the RDP session and whether that activity was authorized.\",\n    \"Whether the scheduled svc-render password rotation occurred and whether the RenderQueue job was updated.\",\n    \"Whether data was exfiltrated or any other malicious action occurred.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Recover or obtain proxy transaction logs for 13:30\u201314:10 UTC, including URL/host, authenticated user, request outcome, and byte counts.\",\n    \"Collect FILE-NWD-01 process, service, scheduled-task, and authentication records for the period, including RenderQueue and StratoSafe agent execution and configuration.\",\n    \"Review StratoSafe backup-agent logs and vendor-side records to confirm whether this transfer was an expected backup.\",\n    \"Investigate the svc-archive Kerberos request from 139.162.174.124, including authentication-source and account-use records around 13:43:51 UTC.\",\n    \"Review FILE-NWD-01 RDP session and interactive activity records for Nora Blake, and verify whether the access was authorized.\",\n    \"Verify the svc-render password rotation and manual job update against change records or application logs.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 52244,
+    "output": 2490,
+    "reasoning": 1515
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45:28 UTC, FILE-NWD-01 opened an HTTP-classified connection to the explicit proxy PROXY-NWD-01 and sent 640,000,221 bytes; the connection lasted about 12 seconds and completed normally.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T040-00204"
+    ]
+   },
+   {
+    "claim": "The transfer volume is compatible with the supplied description of approved offsite backups, but this record identifies only the proxy as the immediate destination\u2014not the external service, URL, or uploading process.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T040-00204"
+    ]
+   },
+   {
+    "claim": "A Kerberos service-ticket event recorded svc-archive requesting a ticket for FILE-NWD-01 from source IP 139.162.174.124, an address outside the supplied internal network context. This is suspicious, but the record does not establish why the request occurred or whether it is connected to the transfer.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T040-00193"
+    ]
+   },
+   {
+    "claim": "Nora Blake launched Remote Desktop from WS-NBLAKE-01 to FILE-NWD-01 at 13:34:28 UTC; the recorded RDP connection lasted about 785 seconds and overlapped the large proxy flow. The evidence does not show that the RDP session caused or initiated the transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T040-00098",
+     "T040-00103",
+     "T040-00108"
+    ]
+   },
+   {
+    "claim": "The supplied operational practice says remote administration is performed from WS-SOKAFOR-01, whereas the recorded RDP connection originated from WS-NBLAKE-01. This discrepancy warrants investigation, but the records alone do not establish malicious intent or the actions taken in the session.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T040-00098",
+     "T040-00103",
+     "T040-00108"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied coverage status reports that FILE-NWD-01 winsec and sysmon logs were not collected from 13:30 to 14:10 UTC; this includes the transfer and the scheduled svc-render password-rotation period.",
+   "The supplied coverage status reports that proxy logs were not collected from 13:30 to 14:10 UTC, preventing confirmation of the HTTP destination, URL, and proxy transaction details.",
+   "Zeek connection telemetry records the large flow to the proxy, but the available record does not identify the originating process or final external destination."
+  ],
+  "claims_not_established": [
+   "Whether the large transfer went to the approved StratoSafe service or to an unapproved destination.",
+   "Which process, account, or job generated the large proxy flow.",
+   "Whether the svc-archive ticket request from the external IP was legitimate, compromised, or related to the transfer.",
+   "What Nora Blake did during the RDP session and whether that activity was authorized.",
+   "Whether the scheduled svc-render password rotation occurred and whether the RenderQueue job was updated.",
+   "Whether data was exfiltrated or any other malicious action occurred."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Recover or obtain proxy transaction logs for 13:30\u201314:10 UTC, including URL/host, authenticated user, request outcome, and byte counts.",
+   "Collect FILE-NWD-01 process, service, scheduled-task, and authentication records for the period, including RenderQueue and StratoSafe agent execution and configuration.",
+   "Review StratoSafe backup-agent logs and vendor-side records to confirm whether this transfer was an expected backup.",
+   "Investigate the svc-archive Kerberos request from 139.162.174.124, including authentication-source and account-use records around 13:43:51 UTC.",
+   "Review FILE-NWD-01 RDP session and interactive activity records for Nora Blake, and verify whether the access was authorized.",
+   "Verify the svc-render password rotation and manual job update against change records or application logs."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 9,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 25.6
+}

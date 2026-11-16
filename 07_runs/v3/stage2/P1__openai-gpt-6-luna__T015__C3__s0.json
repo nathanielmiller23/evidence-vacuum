@@ -1,0 +1,101 @@
+{
+ "scenario_id": "T015",
+ "condition": "C3",
+ "variant": "P1",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.82,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The recurring HTTPS activity is attributable to cmupdate.exe running from Ben Carter's user-writable AppData\\\\Local\\\\ChartMate directory, rather than the inventory-listed Program Files path. The process starts with --background and initiates proxy connections.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T015-00108\", \"T015-00109\", \"T015-00112\", \"T015-00113\"]\n    },\n    {\n      \"claim\": \"The process connects to update.chartmate-imaging.net, whereas the approved service inventory names update.chartmate-imaging.com; the observed hostname and executable location both differ from the listed approved updater details.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T015-00108\", \"T015-00110\", \"T015-00113\"]\n    },\n    {\n      \"claim\": \"Connections to update.chartmate-imaging.net recur at roughly five-minute intervals from 13:38 through 14:08 UTC, matching the alert's periodic pattern. Some attempts succeed and others return proxy errors.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T015-00110\", \"T015-00152\", \"T015-00209\", \"T015-00234\", \"T015-00264\", \"T015-00269\", \"T015-00281\"]\n    },\n    {\n      \"claim\": \"After the updater starts and makes its first observed connection, a file-create event targets the updater executable itself. The records do not establish what content was written or whether this was a legitimate update.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T015-00108\", \"T015-00110\", \"T015-00114\"]\n    },\n    {\n      \"claim\": \"WS-BCARTER-01 also connects to FILE-HD-01 over SMB, where the server records an ANONYMOUS LOGON network logon. The records do not show what share or files, if any, were accessed.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T015-00253\", \"T015-00256\", \"T015-00257\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied connection and proxy records show destinations, timing, status, and byte counts, but do not provide the HTTPS payload or establish what the remote service delivered.\",\n    \"The supplied records do not include a hash, signature verification, or file contents for cmupdate.exe.\",\n    \"The stated winsec and Sysmon collection outage applies to WS-LPARK-01 from 13:30 to 14:10 UTC, not to WS-BCARTER-01; that gap limits assessment of activity on WS-LPARK-01 during the alert window.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether cmupdate.exe is malicious, signed by ChartMate, or an unauthorized replacement.\",\n    \"Whether update.chartmate-imaging.net is controlled by ChartMate or is malicious; the available evidence establishes only that it differs from the inventory-listed hostname.\",\n    \"Whether the file-create event changed or replaced the running executable.\",\n    \"Whether the SMB connection to FILE-HD-01 accessed data or was authorized.\",\n    \"Whether any data was exfiltrated through the HTTPS connections.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire cmupdate.exe and its metadata; verify its hash, digital signature, provenance, and version against a trusted ChartMate release.\",\n    \"Review DNS, TLS certificate, proxy, and endpoint records for the updater hostname and its destination IPs, including reputation and ownership.\",\n    \"Inspect file and process telemetry around the 13:38 file-create event and determine whether the executable changed.\",\n    \"Review FILE-HD-01 SMB share and object-access auditing around 13:54 UTC to determine whether the anonymous logon accessed any resources.\",\n    \"Confirm with the software owner whether an AppData-based updater and the .net hostname are legitimate or approved.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 54782,
+    "output": 2264
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.82,
+  "supporting_observations": [
+   {
+    "claim": "The recurring HTTPS activity is attributable to cmupdate.exe running from Ben Carter's user-writable AppData\\Local\\ChartMate directory, rather than the inventory-listed Program Files path. The process starts with --background and initiates proxy connections.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T015-00108",
+     "T015-00109",
+     "T015-00112",
+     "T015-00113"
+    ]
+   },
+   {
+    "claim": "The process connects to update.chartmate-imaging.net, whereas the approved service inventory names update.chartmate-imaging.com; the observed hostname and executable location both differ from the listed approved updater details.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T015-00108",
+     "T015-00110",
+     "T015-00113"
+    ]
+   },
+   {
+    "claim": "Connections to update.chartmate-imaging.net recur at roughly five-minute intervals from 13:38 through 14:08 UTC, matching the alert's periodic pattern. Some attempts succeed and others return proxy errors.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T015-00110",
+     "T015-00152",
+     "T015-00209",
+     "T015-00234",
+     "T015-00264",
+     "T015-00269",
+     "T015-00281"
+    ]
+   },
+   {
+    "claim": "After the updater starts and makes its first observed connection, a file-create event targets the updater executable itself. The records do not establish what content was written or whether this was a legitimate update.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T015-00108",
+     "T015-00110",
+     "T015-00114"
+    ]
+   },
+   {
+    "claim": "WS-BCARTER-01 also connects to FILE-HD-01 over SMB, where the server records an ANONYMOUS LOGON network logon. The records do not show what share or files, if any, were accessed.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T015-00253",
+     "T015-00256",
+     "T015-00257"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied connection and proxy records show destinations, timing, status, and byte counts, but do not provide the HTTPS payload or establish what the remote service delivered.",
+   "The supplied records do not include a hash, signature verification, or file contents for cmupdate.exe.",
+   "The stated winsec and Sysmon collection outage applies to WS-LPARK-01 from 13:30 to 14:10 UTC, not to WS-BCARTER-01; that gap limits assessment of activity on WS-LPARK-01 during the alert window."
+  ],
+  "claims_not_established": [
+   "Whether cmupdate.exe is malicious, signed by ChartMate, or an unauthorized replacement.",
+   "Whether update.chartmate-imaging.net is controlled by ChartMate or is malicious; the available evidence establishes only that it differs from the inventory-listed hostname.",
+   "Whether the file-create event changed or replaced the running executable.",
+   "Whether the SMB connection to FILE-HD-01 accessed data or was authorized.",
+   "Whether any data was exfiltrated through the HTTPS connections."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire cmupdate.exe and its metadata; verify its hash, digital signature, provenance, and version against a trusted ChartMate release.",
+   "Review DNS, TLS certificate, proxy, and endpoint records for the updater hostname and its destination IPs, including reputation and ownership.",
+   "Inspect file and process telemetry around the 13:38 file-create event and determine whether the executable changed.",
+   "Review FILE-HD-01 SMB share and object-access auditing around 13:54 UTC to determine whether the anonymous logon accessed any resources.",
+   "Confirm with the software owner whether an AppData-based updater and the .net hostname are legitimate or approved."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 20,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.5
+}

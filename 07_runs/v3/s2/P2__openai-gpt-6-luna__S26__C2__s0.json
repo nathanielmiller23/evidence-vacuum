@@ -1,0 +1,68 @@
+{
+ "scenario_id": "S26",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The records nearest the alert show LDAP traffic from WS-CPRICE-01's address to DC-RB-01 at 13:43:40 and 13:44:20 UTC; they do not document a dump write or identify an endpoint process responsible for one.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"S26-00191\",\n        \"S26-00197\"\n      ]\n    },\n    {\n      \"claim\": \"The DC-side network event at 13:44:20 identifies LSASS on DC-RB-01 for the LDAP connection, not the process that may have written a dump on WS-CPRICE-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"S26-00194\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not include endpoint file-creation or process telemetry that establishes whether the alerted .dmp was written, its path, or which process created it.\",\n    \"The available network records show connections but do not establish the provenance or contents of a memory dump.\",\n    \"The supplied evidence does not establish whether the VetChart crash-dump workflow or its required ticket was used for the alerted activity.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the .dmp was actually created on WS-CPRICE-01 and, if so, its path, size, hash, and contents.\",\n    \"Whether vcdump.exe or another process created the file, and which user or process initiated the activity.\",\n    \"Whether the dump was related to the reported VetChart hang and an authorized ticket.\",\n    \"Whether the file or surrounding activity was malicious.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Endpoint EDR or file-system telemetry for the alerted time, including the dump's creation event, full path, size, hash, and creator process.\",\n    \"Process execution and parent-child telemetry for vcdump.exe and other processes around 13:44 UTC, including command lines and signatures.\",\n    \"The VetChart crash report and associated ticket details to determine whether this dump was an authorized collection.\",\n    \"If available, forensic analysis of the dump and relevant endpoint process-access telemetry.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:23:33 UTC, cole.price ran WMIC to query running services from cmd.exe; the records do not link this activity to the alerted dump. Review separately if warranted. (S26-00027, S26-00028)\",\n    \"A SYSTEM svchost.exe process set the WMI CIMOM Logging registry value at 13:28:13 UTC; the records do not link this change to the alerted dump. Review separately if warranted. (S26-00100)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 35701,
+    "output": 2535
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "The records nearest the alert show LDAP traffic from WS-CPRICE-01's address to DC-RB-01 at 13:43:40 and 13:44:20 UTC; they do not document a dump write or identify an endpoint process responsible for one.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S26-00191",
+     "S26-00197"
+    ]
+   },
+   {
+    "claim": "The DC-side network event at 13:44:20 identifies LSASS on DC-RB-01 for the LDAP connection, not the process that may have written a dump on WS-CPRICE-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S26-00194"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not include endpoint file-creation or process telemetry that establishes whether the alerted .dmp was written, its path, or which process created it.",
+   "The available network records show connections but do not establish the provenance or contents of a memory dump.",
+   "The supplied evidence does not establish whether the VetChart crash-dump workflow or its required ticket was used for the alerted activity."
+  ],
+  "claims_not_established": [
+   "Whether the .dmp was actually created on WS-CPRICE-01 and, if so, its path, size, hash, and contents.",
+   "Whether vcdump.exe or another process created the file, and which user or process initiated the activity.",
+   "Whether the dump was related to the reported VetChart hang and an authorized ticket.",
+   "Whether the file or surrounding activity was malicious."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Endpoint EDR or file-system telemetry for the alerted time, including the dump's creation event, full path, size, hash, and creator process.",
+   "Process execution and parent-child telemetry for vcdump.exe and other processes around 13:44 UTC, including command lines and signatures.",
+   "The VetChart crash report and associated ticket details to determine whether this dump was an authorized collection.",
+   "If available, forensic analysis of the dump and relevant endpoint process-access telemetry."
+  ],
+  "unrelated_findings": [
+   "At 13:23:33 UTC, cole.price ran WMIC to query running services from cmd.exe; the records do not link this activity to the alerted dump. Review separately if warranted. (S26-00027, S26-00028)",
+   "A SYSTEM svchost.exe process set the WMI CIMOM Logging registry value at 13:28:13 UTC; the records do not link this change to the alerted dump. Review separately if warranted. (S26-00100)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 3,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 28.9
+}

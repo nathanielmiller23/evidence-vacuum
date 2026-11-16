@@ -1,0 +1,89 @@
+{
+ "scenario_id": "T156",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"During the alert window, WS-NKIM-01 had multiple TCP connections to the internal explicit proxy PROXY-MAP-01 on port 8080. The records show proxy-directed HTTP connections, not the external HTTPS destination or the initiating process.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T156-00139\",\n        \"T156-00142\",\n        \"T156-00145\",\n        \"T156-00152\",\n        \"T156-00197\",\n        \"T156-00203\",\n        \"T156-00208\",\n        \"T156-00220\",\n        \"T156-00256\"\n      ]\n    },\n    {\n      \"claim\": \"Some of the observed proxy connections are separated by roughly four to five minutes, but the intervals are not uniformly five minutes; for example, records show connections at 13:59:46, 14:02:00, and 14:04:57 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T156-00203\",\n        \"T156-00208\",\n        \"T156-00220\"\n      ]\n    },\n    {\n      \"claim\": \"The pattern could be consistent with the approved CaseBinder updater's approximately five-minute update checks, but these records do not identify CaseBinder or establish that the connections were benign.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T156-00139\",\n        \"T156-00145\",\n        \"T156-00152\",\n        \"T156-00197\",\n        \"T156-00203\",\n        \"T156-00220\",\n        \"T156-00256\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied coverage status reports that WS-NKIM-01 winsec and sysmon collection was unavailable from 13:20 to 14:15 UTC, preventing attribution of the alerted-window connections to endpoint processes.\",\n    \"The supplied coverage status reports that PROXY-MAP-01 proxy-log collection was unavailable from 13:20 to 14:15 UTC, so the external destinations, URL/host, and proxy transaction details are unavailable.\",\n    \"Zeek connection, DNS, and SSL sensors are reported as available, but the provided alerted-window connection records identify the internal proxy rather than the external HTTPS endpoint or application.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the connections actually reached an external destination over HTTPS, and what that destination was.\",\n    \"Which process or software on WS-NKIM-01 initiated the connections.\",\n    \"Whether the activity was CaseBinder update checking or another service, and whether the transferred content was authorized.\",\n    \"Whether the alert's periodicity reflects additional connections not represented in the supplied records.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Retrieve PROXY-MAP-01 access and transaction logs for 13:20\u201314:15 UTC, including destination host, URL, TLS tunnel details, and byte counts.\",\n    \"Recover or collect endpoint process/network telemetry for WS-NKIM-01 during the same interval and correlate process IDs with the proxy connections.\",\n    \"Obtain CaseBinder updater logs and configuration for the host and compare its update-check times and destinations with the observed connections.\",\n    \"Obtain the alert rule's underlying events and criteria to confirm which connections triggered it.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate ticket: DC-MAP-01 initiated a successful RDP connection to WS-NKIM-01 at 13:51:53 UTC; inventory states remote administration is only performed from WS-AHASSAN-01. The same source also had rejected SMB and port 443 connection attempts to WS-NKIM-01 shortly beforehand. These events do not establish the nature of the alerted proxy activity. Records: T156-00185, T156-00187, T156-00190.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 28177,
+    "output": 2476
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "During the alert window, WS-NKIM-01 had multiple TCP connections to the internal explicit proxy PROXY-MAP-01 on port 8080. The records show proxy-directed HTTP connections, not the external HTTPS destination or the initiating process.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T156-00139",
+     "T156-00142",
+     "T156-00145",
+     "T156-00152",
+     "T156-00197",
+     "T156-00203",
+     "T156-00208",
+     "T156-00220",
+     "T156-00256"
+    ]
+   },
+   {
+    "claim": "Some of the observed proxy connections are separated by roughly four to five minutes, but the intervals are not uniformly five minutes; for example, records show connections at 13:59:46, 14:02:00, and 14:04:57 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T156-00203",
+     "T156-00208",
+     "T156-00220"
+    ]
+   },
+   {
+    "claim": "The pattern could be consistent with the approved CaseBinder updater's approximately five-minute update checks, but these records do not identify CaseBinder or establish that the connections were benign.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T156-00139",
+     "T156-00145",
+     "T156-00152",
+     "T156-00197",
+     "T156-00203",
+     "T156-00220",
+     "T156-00256"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied coverage status reports that WS-NKIM-01 winsec and sysmon collection was unavailable from 13:20 to 14:15 UTC, preventing attribution of the alerted-window connections to endpoint processes.",
+   "The supplied coverage status reports that PROXY-MAP-01 proxy-log collection was unavailable from 13:20 to 14:15 UTC, so the external destinations, URL/host, and proxy transaction details are unavailable.",
+   "Zeek connection, DNS, and SSL sensors are reported as available, but the provided alerted-window connection records identify the internal proxy rather than the external HTTPS endpoint or application."
+  ],
+  "claims_not_established": [
+   "Whether the connections actually reached an external destination over HTTPS, and what that destination was.",
+   "Which process or software on WS-NKIM-01 initiated the connections.",
+   "Whether the activity was CaseBinder update checking or another service, and whether the transferred content was authorized.",
+   "Whether the alert's periodicity reflects additional connections not represented in the supplied records."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Retrieve PROXY-MAP-01 access and transaction logs for 13:20\u201314:15 UTC, including destination host, URL, TLS tunnel details, and byte counts.",
+   "Recover or collect endpoint process/network telemetry for WS-NKIM-01 during the same interval and correlate process IDs with the proxy connections.",
+   "Obtain CaseBinder updater logs and configuration for the host and compare its update-check times and destinations with the observed connections.",
+   "Obtain the alert rule's underlying events and criteria to confirm which connections triggered it."
+  ],
+  "unrelated_findings": [
+   "Separate ticket: DC-MAP-01 initiated a successful RDP connection to WS-NKIM-01 at 13:51:53 UTC; inventory states remote administration is only performed from WS-AHASSAN-01. The same source also had rejected SMB and port 443 connection attempts to WS-NKIM-01 shortly beforehand. These events do not establish the nature of the alerted proxy activity. Records: T156-00185, T156-00187, T156-00190."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 19,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 24.2
+}

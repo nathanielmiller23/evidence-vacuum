@@ -1,0 +1,89 @@
+{
+ "scenario_id": "T259",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:43 UTC, zoe.adams ran PowerShell from an interactive desktop session to compress \\\\\\\\FILE-SUN-01\\\\Shared\\\\Clients into C:\\\\Users\\\\zoe.adams\\\\AppData\\\\Local\\\\Temp\\\\c.zip; a file-creation event then records c.zip being created.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T259-00125\", \"T259-00126\", \"T259-00127\"]\n    },\n    {\n      \"claim\": \"At 13:48 UTC, the proxy recorded a successful CONNECT tunnel to zipshare-host.io attributed to zoe.adams, with approximately 51 MB sent by the client; Zeek independently records approximately 51 MB of originating traffic in the corresponding connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T259-00148\", \"T259-00149\"]\n    },\n    {\n      \"claim\": \"Chrome, running as zoe.adams, was the process associated with the large outbound connection through the organization's proxy.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T259-00150\", \"T259-00151\"]\n    },\n    {\n      \"claim\": \"The sequence of archiving a Clients share and then sending tens of megabytes to an unapproved file-sharing destination strongly supports an attempted unauthorized data transfer. The evidence does not prove that the uploaded bytes were exactly c.zip.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T259-00125\", \"T259-00127\", \"T259-00148\", \"T259-00149\", \"T259-00151\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records an encrypted CONNECT tunnel and byte counts, not the uploaded payload or its server-side processing.\",\n    \"The evidence shows c.zip was created and a large outbound transfer followed, but does not directly link the file to the transmitted bytes.\",\n    \"The available records do not establish the contents of the Clients share or archive, or whether the activity had authorization.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the archive contained sensitive customer or other protected information.\",\n    \"Whether zipshare-host.io successfully stored or retained the transmitted data.\",\n    \"Whether zoe.adams acted intentionally or whether another person or process controlled the session.\",\n    \"Whether the transfer had any specific business authorization not represented in the supplied context.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine c.zip, including its hash, contents, timestamps, and any available file-access or archive-completion telemetry.\",\n    \"Obtain proxy inspection, DNS, and destination-side records, if available, to determine what was transferred and whether the remote service accepted it.\",\n    \"Confirm with the data owner and zoe.adams whether access to the Clients share and transfer to zipshare-host.io were authorized.\",\n    \"Preserve relevant endpoint, browser, and account-session evidence for WS-ZADAMS-01.\"\n  ],\n  \"unrelated_findings\": [\n    \"GlobalProtect PanGPA.exe was launched on WS-ZADAMS-01 even though the supplied environment context says there is no VPN. The records establish a process launch and a valid Palo Alto signature, but do not establish a VPN connection; review separately. (T259-00156, T259-00157, T259-00158)\",\n    \"A connection to drive.google.com was observed from WS-ZADAMS-01 at 14:15 UTC. The supplied context does not list Google Drive as approved; these records show a CONNECT and modest byte counts, not an upload or a link to the alerted transfer. Review separately. (T259-00337, T259-00338)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 59580,
+    "output": 1970
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "At 13:43 UTC, zoe.adams ran PowerShell from an interactive desktop session to compress \\\\FILE-SUN-01\\Shared\\Clients into C:\\Users\\zoe.adams\\AppData\\Local\\Temp\\c.zip; a file-creation event then records c.zip being created.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T259-00125",
+     "T259-00126",
+     "T259-00127"
+    ]
+   },
+   {
+    "claim": "At 13:48 UTC, the proxy recorded a successful CONNECT tunnel to zipshare-host.io attributed to zoe.adams, with approximately 51 MB sent by the client; Zeek independently records approximately 51 MB of originating traffic in the corresponding connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T259-00148",
+     "T259-00149"
+    ]
+   },
+   {
+    "claim": "Chrome, running as zoe.adams, was the process associated with the large outbound connection through the organization's proxy.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T259-00150",
+     "T259-00151"
+    ]
+   },
+   {
+    "claim": "The sequence of archiving a Clients share and then sending tens of megabytes to an unapproved file-sharing destination strongly supports an attempted unauthorized data transfer. The evidence does not prove that the uploaded bytes were exactly c.zip.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T259-00125",
+     "T259-00127",
+     "T259-00148",
+     "T259-00149",
+     "T259-00151"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records an encrypted CONNECT tunnel and byte counts, not the uploaded payload or its server-side processing.",
+   "The evidence shows c.zip was created and a large outbound transfer followed, but does not directly link the file to the transmitted bytes.",
+   "The available records do not establish the contents of the Clients share or archive, or whether the activity had authorization."
+  ],
+  "claims_not_established": [
+   "Whether the archive contained sensitive customer or other protected information.",
+   "Whether zipshare-host.io successfully stored or retained the transmitted data.",
+   "Whether zoe.adams acted intentionally or whether another person or process controlled the session.",
+   "Whether the transfer had any specific business authorization not represented in the supplied context."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine c.zip, including its hash, contents, timestamps, and any available file-access or archive-completion telemetry.",
+   "Obtain proxy inspection, DNS, and destination-side records, if available, to determine what was transferred and whether the remote service accepted it.",
+   "Confirm with the data owner and zoe.adams whether access to the Clients share and transfer to zipshare-host.io were authorized.",
+   "Preserve relevant endpoint, browser, and account-session evidence for WS-ZADAMS-01."
+  ],
+  "unrelated_findings": [
+   "GlobalProtect PanGPA.exe was launched on WS-ZADAMS-01 even though the supplied environment context says there is no VPN. The records establish a process launch and a valid Palo Alto signature, but do not establish a VPN connection; review separately. (T259-00156, T259-00157, T259-00158)",
+   "A connection to drive.google.com was observed from WS-ZADAMS-01 at 14:15 UTC. The supplied context does not list Google Drive as approved; these records show a CONNECT and modest byte counts, not an upload or a link to the alerted transfer. Review separately. (T259-00337, T259-00338)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 22.7
+}

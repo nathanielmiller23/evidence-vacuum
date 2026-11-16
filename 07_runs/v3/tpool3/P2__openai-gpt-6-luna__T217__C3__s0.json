@@ -1,0 +1,84 @@
+{
+ "scenario_id": "T217",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:47:22 UTC, BLUEFIN\\\\ken.ito created the alerted account svc_update on DC-BLU-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T217-00108\"]\n    },\n    {\n      \"claim\": \"About one second later, BLUEFIN\\\\ken.ito added svc_update to the domain Administrators group. This is inconsistent with the stated practice that temporary accounts never receive administrator rights.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T217-00109\"]\n    },\n    {\n      \"claim\": \"At 13:42 UTC, ken.ito established a remote-interactive logon to WS-EBROOKS-01 from 203.0.113.133. The environment states remote administration is only done from WS-KITO-01 and there is no VPN.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T217-00071\", \"T217-00074\", \"T217-00075\", \"T217-00076\"]\n    },\n    {\n      \"claim\": \"In ken.ito's WS-EBROOKS-01 logon session, a task named Microsoft\\\\Windows\\\\HealthCheck was created with hidden PowerShell arguments that decode to a command fetching and executing a script from http://203.0.113.133/a.ps1. This is suspicious and temporally close to the account creation and administrator-group addition.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T217-00076\", \"T217-00110\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy logs were not collected from 13:30 through 14:00 UTC because of a collection outage; this overlaps the account creation and scheduled-task activity.\",\n    \"The available records show the scheduled task definition, but do not establish whether the task ran or whether the referenced script was retrieved or executed.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish who controlled the 203.0.113.133 source address or whether ken.ito's credentials or session were compromised.\",\n    \"The evidence does not establish whether svc_update was subsequently used, what access it obtained, or whether it remains active.\",\n    \"The evidence does not establish whether the HealthCheck task's script ran or what its contents or effects were.\",\n    \"The evidence does not establish a direct technical link between the svc_update account and the HealthCheck task beyond their close timing and the observed ken.ito activity.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and review DC-BLU-01 account, group-membership, and authentication records and WS-EBROOKS-01 logon/session details around 13:42\u201313:48 UTC.\",\n    \"Identify the source and ownership of 203.0.113.133 and determine whether the address was reachable from the organization.\",\n    \"Collect task execution history, PowerShell operational/script-block logs, process and network telemetry, and any available proxy or firewall records for the script URL.\",\n    \"Review svc_update's current status, group memberships, logons, and subsequent activity; disable or contain it pending investigation if still present.\",\n    \"Validate with ken.ito through a trusted channel whether the remote session, account creation, group change, and task creation were authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"eli.brooks launched msi_update.exe from the user's Temp directory after a local interactive logon. This is a separate activity and should be reviewed independently; it does not determine the svc_update alert disposition. (T217-00125, T217-00130, T217-00131)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 37039,
+    "output": 1835
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "At 13:47:22 UTC, BLUEFIN\\ken.ito created the alerted account svc_update on DC-BLU-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T217-00108"
+    ]
+   },
+   {
+    "claim": "About one second later, BLUEFIN\\ken.ito added svc_update to the domain Administrators group. This is inconsistent with the stated practice that temporary accounts never receive administrator rights.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T217-00109"
+    ]
+   },
+   {
+    "claim": "At 13:42 UTC, ken.ito established a remote-interactive logon to WS-EBROOKS-01 from 203.0.113.133. The environment states remote administration is only done from WS-KITO-01 and there is no VPN.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T217-00071",
+     "T217-00074",
+     "T217-00075",
+     "T217-00076"
+    ]
+   },
+   {
+    "claim": "In ken.ito's WS-EBROOKS-01 logon session, a task named Microsoft\\Windows\\HealthCheck was created with hidden PowerShell arguments that decode to a command fetching and executing a script from http://203.0.113.133/a.ps1. This is suspicious and temporally close to the account creation and administrator-group addition.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T217-00076",
+     "T217-00110"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy logs were not collected from 13:30 through 14:00 UTC because of a collection outage; this overlaps the account creation and scheduled-task activity.",
+   "The available records show the scheduled task definition, but do not establish whether the task ran or whether the referenced script was retrieved or executed."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish who controlled the 203.0.113.133 source address or whether ken.ito's credentials or session were compromised.",
+   "The evidence does not establish whether svc_update was subsequently used, what access it obtained, or whether it remains active.",
+   "The evidence does not establish whether the HealthCheck task's script ran or what its contents or effects were.",
+   "The evidence does not establish a direct technical link between the svc_update account and the HealthCheck task beyond their close timing and the observed ken.ito activity."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and review DC-BLU-01 account, group-membership, and authentication records and WS-EBROOKS-01 logon/session details around 13:42\u201313:48 UTC.",
+   "Identify the source and ownership of 203.0.113.133 and determine whether the address was reachable from the organization.",
+   "Collect task execution history, PowerShell operational/script-block logs, process and network telemetry, and any available proxy or firewall records for the script URL.",
+   "Review svc_update's current status, group memberships, logons, and subsequent activity; disable or contain it pending investigation if still present.",
+   "Validate with ken.ito through a trusted channel whether the remote session, account creation, group change, and task creation were authorized."
+  ],
+  "unrelated_findings": [
+   "eli.brooks launched msi_update.exe from the user's Temp directory after a local interactive logon. This is a separate activity and should be reviewed independently; it does not determine the svc_update alert disposition. (T217-00125, T217-00130, T217-00131)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 8,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.0
+}

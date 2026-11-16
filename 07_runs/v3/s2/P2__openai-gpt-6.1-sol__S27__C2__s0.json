@@ -1,0 +1,91 @@
+{
+ "scenario_id": "S27",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6.1-sol",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.92,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted change occurred at 13:42:53 UTC: DC-RB-01 recorded cole.price being added to a group named Remote Desktop Users by dev.sharma, using subject logon ID 0x7a76dca.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S27-00048\"]\n    },\n    {\n      \"claim\": \"The group-change logon ID matches a network logon to DC-RB-01 as dev.sharma from 10.60.10.22 at 13:40:15 UTC. Separate network telemetry identifies WS-DSHARMA-01 as 10.60.10.23. This source discrepancy warrants investigation against the supplied requirement that group changes originate from WS-DSHARMA-01; the supplied records do not identify the host owning 10.60.10.22.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S27-00047\", \"S27-00048\", \"S27-00052\"]\n    },\n    {\n      \"claim\": \"Adding cole.price to a group named Remote Desktop Users conflicts with the supplied IT-only membership policy and does not match the scheduled hana.ito Billing-Share change. Use of dev.sharma's account alone does not establish that this change was authorized.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S27-00048\"]\n    },\n    {\n      \"claim\": \"At 13:43:55 UTC, Explorer updated cole.price's UserAssist entry on WS-CPRICE-01 for a ROT13-encoded path decoding to C:\\\\Windows\\\\System32\\\\mstsc.exe. This is suggestive of RDP-client use shortly after the addition, but does not establish a destination or successful remote session.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S27-00060\"]\n    },\n    {\n      \"claim\": \"The explicitly documented successful RDP session to FILE-RB-01 was dev.sharma connecting from WS-DSHARMA-01 at 10.60.10.23, not cole.price. It therefore does not demonstrate that cole.price exercised the newly added membership.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S27-00049\", \"S27-00052\", \"S27-00053\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"S27-00047 records the group-change session's source IP but not its source hostname; the supplied evidence does not map 10.60.10.22 to an endpoint.\",\n    \"S27-00048 identifies the acting account and session, but not the initiating command, process, human operator, or approval ticket.\",\n    \"S27-00060 is a registry update with binary data, not a process-creation, network-connection, or successful-logon record.\",\n    \"The group in S27-00048 has SID ending in -4541 rather than the built-in Remote Desktop Users SID S-1-5-32-555; its effective rights cannot be established from its display name alone.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether dev.sharma intentionally authorized this specific membership addition or the account was misused (S27-00048).\",\n    \"Whether 10.60.10.22 was an unauthorized source, an alternate address for the administrator workstation, or another system (S27-00047, S27-00052).\",\n    \"Whether the added membership actually granted remote-desktop access, and whether cole.price used it successfully (S27-00048, S27-00060).\",\n    \"Whether the change was malicious rather than an administrative mistake or an undocumented exception (S27-00048).\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Obtain the approval ticket and independently confirm with dev.sharma the intended member, group, source workstation, and purpose of the change in S27-00048.\",\n    \"Resolve ownership of 10.60.10.22 at 13:40 UTC using historical DHCP, IPAM, and endpoint records; collect its authentication and process telemetry associated with S27-00047.\",\n    \"Collect directory-management process and PowerShell logs and correlate them with DC session 0x7a76dca.\",\n    \"Resolve the exact group SID in S27-00048 and inspect its nesting, effective permissions, and applicable remote-logon policies.\",\n    \"Collect mstsc process, network, and Terminal Services logs from WS-CPRICE-01 and potential destination servers to investigate the activity suggested by S27-00060.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 13628,
+    "output": 1129
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.92,
+  "supporting_observations": [
+   {
+    "claim": "The alerted change occurred at 13:42:53 UTC: DC-RB-01 recorded cole.price being added to a group named Remote Desktop Users by dev.sharma, using subject logon ID 0x7a76dca.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S27-00048"
+    ]
+   },
+   {
+    "claim": "The group-change logon ID matches a network logon to DC-RB-01 as dev.sharma from 10.60.10.22 at 13:40:15 UTC. Separate network telemetry identifies WS-DSHARMA-01 as 10.60.10.23. This source discrepancy warrants investigation against the supplied requirement that group changes originate from WS-DSHARMA-01; the supplied records do not identify the host owning 10.60.10.22.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S27-00047",
+     "S27-00048",
+     "S27-00052"
+    ]
+   },
+   {
+    "claim": "Adding cole.price to a group named Remote Desktop Users conflicts with the supplied IT-only membership policy and does not match the scheduled hana.ito Billing-Share change. Use of dev.sharma's account alone does not establish that this change was authorized.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S27-00048"
+    ]
+   },
+   {
+    "claim": "At 13:43:55 UTC, Explorer updated cole.price's UserAssist entry on WS-CPRICE-01 for a ROT13-encoded path decoding to C:\\Windows\\System32\\mstsc.exe. This is suggestive of RDP-client use shortly after the addition, but does not establish a destination or successful remote session.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S27-00060"
+    ]
+   },
+   {
+    "claim": "The explicitly documented successful RDP session to FILE-RB-01 was dev.sharma connecting from WS-DSHARMA-01 at 10.60.10.23, not cole.price. It therefore does not demonstrate that cole.price exercised the newly added membership.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S27-00049",
+     "S27-00052",
+     "S27-00053"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "S27-00047 records the group-change session's source IP but not its source hostname; the supplied evidence does not map 10.60.10.22 to an endpoint.",
+   "S27-00048 identifies the acting account and session, but not the initiating command, process, human operator, or approval ticket.",
+   "S27-00060 is a registry update with binary data, not a process-creation, network-connection, or successful-logon record.",
+   "The group in S27-00048 has SID ending in -4541 rather than the built-in Remote Desktop Users SID S-1-5-32-555; its effective rights cannot be established from its display name alone."
+  ],
+  "claims_not_established": [
+   "Whether dev.sharma intentionally authorized this specific membership addition or the account was misused (S27-00048).",
+   "Whether 10.60.10.22 was an unauthorized source, an alternate address for the administrator workstation, or another system (S27-00047, S27-00052).",
+   "Whether the added membership actually granted remote-desktop access, and whether cole.price used it successfully (S27-00048, S27-00060).",
+   "Whether the change was malicious rather than an administrative mistake or an undocumented exception (S27-00048)."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Obtain the approval ticket and independently confirm with dev.sharma the intended member, group, source workstation, and purpose of the change in S27-00048.",
+   "Resolve ownership of 10.60.10.22 at 13:40 UTC using historical DHCP, IPAM, and endpoint records; collect its authentication and process telemetry associated with S27-00047.",
+   "Collect directory-management process and PowerShell logs and correlate them with DC session 0x7a76dca.",
+   "Resolve the exact group SID in S27-00048 and inspect its nesting, effective permissions, and applicable remote-logon policies.",
+   "Collect mstsc process, network, and Terminal Services logs from WS-CPRICE-01 and potential destination servers to investigate the activity suggested by S27-00060."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 9,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.4
+}

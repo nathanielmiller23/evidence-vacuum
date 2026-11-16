@@ -1,0 +1,74 @@
+{
+ "scenario_id": "T240",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.82,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted large upload is attributed to the approved Arcvault agent running on FILE-SUN-01 as svc-store, with the command line specifying the Nightly job and the approved ingest.arcvault-backup.com target.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T240-00257\", \"T240-00258\"]\n    },\n    {\n      \"claim\": \"The upload went through the configured proxy to ingest.arcvault-backup.com. Proxy and network records show approximately 640 MB sent client-to-server, consistent with the inventory description of Arcvault uploading several hundred MB.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T240-00264\", \"T240-00266\"]\n    },\n    {\n      \"claim\": \"Shortly before the agent ran, the domain controller recorded a service-ticket event for svc-store from external IP 45.79.19.196, followed by a local svc-store service logon on FILE-SUN-01. This is unusual in the provided environment and warrants validation, but does not establish that it caused or controlled the upload.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T240-00221\", \"T240-00231\", \"T240-00257\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and connection records establish the destination and large client-to-server byte count, but do not reveal the uploaded files or their contents.\",\n    \"The evidence does not establish why the svc-store ticket event came from 45.79.19.196 or whether that event was connected to the local Arcvault job.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the external-IP svc-store ticket event was legitimate, misattributed, or evidence of credential misuse.\",\n    \"Whether the uploaded data was the expected backup set, or whether any files were selected or altered for unauthorized transfer.\",\n    \"Whether the Arcvault job ran on its normal schedule and used its expected configuration.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Validate the 45.79.19.196 svc-store ticket event against domain-controller, firewall, and identity-provider records; determine the actual source and authentication context.\",\n    \"Obtain the Arcvault job schedule, run history, configuration, and logs for this execution, including the source-file manifest and upload result.\",\n    \"Review endpoint or backup audit data to verify the agent binary and configuration and identify the data included in the upload.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate ticket: FILE-SUN-01 authenticated to WS-IDOYLE-01 as ian.doyle using NTLM at 13:48:21; investigate this direction of authentication against the remote-administration practice. This is not used to decide the alerted transfer. Records: T240-00316, T240-00317.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 86902,
+    "output": 2776
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.82,
+  "supporting_observations": [
+   {
+    "claim": "The alerted large upload is attributed to the approved Arcvault agent running on FILE-SUN-01 as svc-store, with the command line specifying the Nightly job and the approved ingest.arcvault-backup.com target.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T240-00257",
+     "T240-00258"
+    ]
+   },
+   {
+    "claim": "The upload went through the configured proxy to ingest.arcvault-backup.com. Proxy and network records show approximately 640 MB sent client-to-server, consistent with the inventory description of Arcvault uploading several hundred MB.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T240-00264",
+     "T240-00266"
+    ]
+   },
+   {
+    "claim": "Shortly before the agent ran, the domain controller recorded a service-ticket event for svc-store from external IP 45.79.19.196, followed by a local svc-store service logon on FILE-SUN-01. This is unusual in the provided environment and warrants validation, but does not establish that it caused or controlled the upload.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T240-00221",
+     "T240-00231",
+     "T240-00257"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and connection records establish the destination and large client-to-server byte count, but do not reveal the uploaded files or their contents.",
+   "The evidence does not establish why the svc-store ticket event came from 45.79.19.196 or whether that event was connected to the local Arcvault job."
+  ],
+  "claims_not_established": [
+   "Whether the external-IP svc-store ticket event was legitimate, misattributed, or evidence of credential misuse.",
+   "Whether the uploaded data was the expected backup set, or whether any files were selected or altered for unauthorized transfer.",
+   "Whether the Arcvault job ran on its normal schedule and used its expected configuration."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Validate the 45.79.19.196 svc-store ticket event against domain-controller, firewall, and identity-provider records; determine the actual source and authentication context.",
+   "Obtain the Arcvault job schedule, run history, configuration, and logs for this execution, including the source-file manifest and upload result.",
+   "Review endpoint or backup audit data to verify the agent binary and configuration and identify the data included in the upload."
+  ],
+  "unrelated_findings": [
+   "Separate ticket: FILE-SUN-01 authenticated to WS-IDOYLE-01 as ian.doyle using NTLM at 13:48:21; investigate this direction of authentication against the remote-administration practice. This is not used to decide the alerted transfer. Records: T240-00316, T240-00317."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 7,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 28.3
+}

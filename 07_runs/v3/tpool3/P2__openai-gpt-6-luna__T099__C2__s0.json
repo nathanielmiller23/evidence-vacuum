@@ -1,0 +1,79 @@
+{
+ "scenario_id": "T099",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:44:34 UTC, ana.ruiz ran PowerShell to compress \\\\\\\\FILE-PIN-01\\\\Shared\\\\Clients into C:\\\\Users\\\\ana.ruiz\\\\AppData\\\\Local\\\\Temp\\\\c.zip; Sysmon then recorded creation of that archive.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T099-00307\",\n        \"T099-00308\",\n        \"T099-00309\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:50:57 UTC, the proxy recorded a 51,000,000-byte client-to-server transfer from WS-ARUIZ-01 to the unapproved dropzone-transfer.net service. A corresponding proxy connection record reports 51,000,372 originating bytes, and Sysmon attributes the connection to Firefox running as ana.ruiz.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T099-00399\",\n        \"T099-00400\",\n        \"T099-00401\",\n        \"T099-00402\"\n      ]\n    },\n    {\n      \"claim\": \"The archive of the Shared\\\\Clients directory shortly before a large outbound transfer to an unapproved file-transfer service strongly supports suspected data exfiltration, although the logs do not directly establish that the transferred payload was c.zip.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T099-00307\",\n        \"T099-00309\",\n        \"T099-00399\",\n        \"T099-00401\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available records show transfer size, destination, user, and client process, but do not expose the transferred payload or prove it was the archive.\",\n    \"The alert describes activity around 13:46 UTC, while the supplied records show the large transfer at 13:50:57 UTC; the evidence does not establish whether this timing difference reflects an approximate alert time or a separate event.\"\n  ],\n  \"claims_not_established\": [\n    \"That c.zip, or any specific client data, was the payload sent to dropzone-transfer.net.\",\n    \"The identity or intent of the recipient, or whether the transfer was authorized by the organization.\",\n    \"Whether the alert's stated 13:46 time corresponds to the 13:50:57 transfer in the records.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Endpoint evidence for c.zip, including its contents, size, hash, and any file-access or deletion activity.\",\n    \"Proxy or network records that identify the transferred object, request method, destination path, and complete transfer timing.\",\n    \"User and business-owner confirmation of whether the Shared\\\\Clients archive and use of dropzone-transfer.net were authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox.exe ran on WS-ARUIZ-01 and connected to desktop.dropbox.com; Dropbox is not among the organization's approved services. Track separately; it does not by itself establish the payload or destination of the alerted transfer. (T099-00239, T099-00247)\",\n    \"ana.ruiz, a non-IT-administrator, ran PowerShell Get-ADUser against the IT OU. This is separate from the alerted transfer and should be reviewed independently. (T099-00433, T099-00434)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 68763,
+    "output": 1275
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "At 13:44:34 UTC, ana.ruiz ran PowerShell to compress \\\\FILE-PIN-01\\Shared\\Clients into C:\\Users\\ana.ruiz\\AppData\\Local\\Temp\\c.zip; Sysmon then recorded creation of that archive.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T099-00307",
+     "T099-00308",
+     "T099-00309"
+    ]
+   },
+   {
+    "claim": "At 13:50:57 UTC, the proxy recorded a 51,000,000-byte client-to-server transfer from WS-ARUIZ-01 to the unapproved dropzone-transfer.net service. A corresponding proxy connection record reports 51,000,372 originating bytes, and Sysmon attributes the connection to Firefox running as ana.ruiz.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T099-00399",
+     "T099-00400",
+     "T099-00401",
+     "T099-00402"
+    ]
+   },
+   {
+    "claim": "The archive of the Shared\\Clients directory shortly before a large outbound transfer to an unapproved file-transfer service strongly supports suspected data exfiltration, although the logs do not directly establish that the transferred payload was c.zip.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T099-00307",
+     "T099-00309",
+     "T099-00399",
+     "T099-00401"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available records show transfer size, destination, user, and client process, but do not expose the transferred payload or prove it was the archive.",
+   "The alert describes activity around 13:46 UTC, while the supplied records show the large transfer at 13:50:57 UTC; the evidence does not establish whether this timing difference reflects an approximate alert time or a separate event."
+  ],
+  "claims_not_established": [
+   "That c.zip, or any specific client data, was the payload sent to dropzone-transfer.net.",
+   "The identity or intent of the recipient, or whether the transfer was authorized by the organization.",
+   "Whether the alert's stated 13:46 time corresponds to the 13:50:57 transfer in the records."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Endpoint evidence for c.zip, including its contents, size, hash, and any file-access or deletion activity.",
+   "Proxy or network records that identify the transferred object, request method, destination path, and complete transfer timing.",
+   "User and business-owner confirmation of whether the Shared\\Clients archive and use of dropzone-transfer.net were authorized."
+  ],
+  "unrelated_findings": [
+   "Dropbox.exe ran on WS-ARUIZ-01 and connected to desktop.dropbox.com; Dropbox is not among the organization's approved services. Track separately; it does not by itself establish the payload or destination of the alerted transfer. (T099-00239, T099-00247)",
+   "ana.ruiz, a non-IT-administrator, ran PowerShell Get-ADUser against the IT OU. This is separate from the alerted transfer and should be reviewed independently. (T099-00433, T099-00434)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 12.4
+}

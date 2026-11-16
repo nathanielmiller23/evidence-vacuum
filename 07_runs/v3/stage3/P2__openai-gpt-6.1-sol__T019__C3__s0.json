@@ -1,0 +1,101 @@
+{
+ "scenario_id": "T019",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6.1-sol",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.92,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:41:56 UTC, PowerShell running as maria.lopez executed Compress-Archive against \\\\\\\\FILE-HD-01\\\\Shared\\\\Clients, targeting C:\\\\Users\\\\maria.lopez\\\\AppData\\\\Local\\\\Temp\\\\c.zip. A file-creation event confirms creation of that archive path.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T019-00117\",\n        \"T019-00118\",\n        \"T019-00119\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:45:24 UTC, Explorer launched Chrome PID 4896 as maria.lopez with https://sendbox-files.io/ as its command-line destination, in the same logon session used for archive creation.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T019-00117\",\n        \"T019-00150\",\n        \"T019-00154\"\n      ]\n    },\n    {\n      \"claim\": \"At approximately 13:48:17 UTC, the proxy recorded an authenticated maria.lopez tunnel to sendbox-files.io:443 carrying 51,000,000 client-to-server bytes and 8,800 server-to-client bytes. Zeek independently recorded approximately 51 MB outbound on the workstation-to-proxy connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T019-00170\",\n        \"T019-00171\"\n      ]\n    },\n    {\n      \"claim\": \"Endpoint network events attribute that large-transfer connection, using source port 65454 and proxy destination 10.30.20.30:8080, to Chrome PID 4896 running as maria.lopez.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T019-00170\",\n        \"T019-00172\",\n        \"T019-00173\"\n      ]\n    },\n    {\n      \"claim\": \"The sequence of client-share archiving followed by a directly correlated 51 MB outbound browser transfer to sendbox-files.io supports suspected data exfiltration and a malicious disposition. The supplied inventory does not approve this service. This finding rests on the alerted transfer and its preceding staging activity, not unrelated anomalies.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T019-00117\",\n        \"T019-00119\",\n        \"T019-00150\",\n        \"T019-00170\",\n        \"T019-00171\",\n        \"T019-00172\",\n        \"T019-00173\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The sendbox connection is logged as a CONNECT tunnel, without an inspected HTTP request body or uploaded filename; its contents cannot be identified from these records (T019-00171).\",\n    \"The matching large-transfer records are timestamped approximately 13:48:17 UTC, rather than the alert's approximate 13:46 UTC time. Confirm the original alert's flow identifiers and timestamp semantics (T019-00170 through T019-00173).\",\n    \"The supplied collection-status metadata reports missing WS-LPARK-01 endpoint logs from 13:30 to 14:10 UTC. This does not remove the direct workstation, proxy, and network evidence supporting this assessment.\"\n  ],\n  \"claims_not_established\": [\n    \"That c.zip was the object transmitted, or that the transmitted data contained client or patient information; the archive creation and outbound tunnel are established separately (T019-00119, T019-00171).\",\n    \"That the archive completed successfully with all intended source files; file creation alone does not establish archive completeness (T019-00117, T019-00119).\",\n    \"Whether Maria personally initiated the activity, whether her session was compromised, or what the operator's intent was; execution and proxy authentication identify an account, not a physical actor (T019-00117, T019-00150, T019-00171).\",\n    \"That the remote application accepted and retained a complete uploaded file; CONNECT status 200 and byte counts do not establish application-level upload completion (T019-00171).\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Retrieve the original alert flow details to reconcile its approximate 13:46 UTC timestamp with T019-00170 through T019-00173.\",\n    \"Preserve c.zip, inspect its contents and size, and obtain relevant file-share access records to establish the staged dataset (T019-00117, T019-00119).\",\n    \"Preserve Chrome history, upload artifacts, and any available DLP or destination-side transaction records to identify the transmitted object and recipient (T019-00150, T019-00171).\",\n    \"Validate business purpose and authorization with the user and data owner while preserving the endpoint evidence associated with the archive and transfer (T019-00117, T019-00171).\"\n  ],\n  \"unrelated_findings\": [\n    \"Separately investigate two quiet executions of dotnet-sdk-installer.exe from the user's Temp directory after the transfer. These records do not establish malware or a connection to the alerted activity (T019-00181, T019-00210).\",\n    \"Separately review Tableau Online usage against the supplied service-approval inventory. Later browser requests include bootstrap, JavaScript, favicon, and render-tooltip operations; these are not the alerted sendbox transfer (T019-00257, T019-00258, T019-00264, T019-00268, T019-00272).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 49118,
+    "output": 1319
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.92,
+  "supporting_observations": [
+   {
+    "claim": "At 13:41:56 UTC, PowerShell running as maria.lopez executed Compress-Archive against \\\\FILE-HD-01\\Shared\\Clients, targeting C:\\Users\\maria.lopez\\AppData\\Local\\Temp\\c.zip. A file-creation event confirms creation of that archive path.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00117",
+     "T019-00118",
+     "T019-00119"
+    ]
+   },
+   {
+    "claim": "At 13:45:24 UTC, Explorer launched Chrome PID 4896 as maria.lopez with https://sendbox-files.io/ as its command-line destination, in the same logon session used for archive creation.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00117",
+     "T019-00150",
+     "T019-00154"
+    ]
+   },
+   {
+    "claim": "At approximately 13:48:17 UTC, the proxy recorded an authenticated maria.lopez tunnel to sendbox-files.io:443 carrying 51,000,000 client-to-server bytes and 8,800 server-to-client bytes. Zeek independently recorded approximately 51 MB outbound on the workstation-to-proxy connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00170",
+     "T019-00171"
+    ]
+   },
+   {
+    "claim": "Endpoint network events attribute that large-transfer connection, using source port 65454 and proxy destination 10.30.20.30:8080, to Chrome PID 4896 running as maria.lopez.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00170",
+     "T019-00172",
+     "T019-00173"
+    ]
+   },
+   {
+    "claim": "The sequence of client-share archiving followed by a directly correlated 51 MB outbound browser transfer to sendbox-files.io supports suspected data exfiltration and a malicious disposition. The supplied inventory does not approve this service. This finding rests on the alerted transfer and its preceding staging activity, not unrelated anomalies.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T019-00117",
+     "T019-00119",
+     "T019-00150",
+     "T019-00170",
+     "T019-00171",
+     "T019-00172",
+     "T019-00173"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The sendbox connection is logged as a CONNECT tunnel, without an inspected HTTP request body or uploaded filename; its contents cannot be identified from these records (T019-00171).",
+   "The matching large-transfer records are timestamped approximately 13:48:17 UTC, rather than the alert's approximate 13:46 UTC time. Confirm the original alert's flow identifiers and timestamp semantics (T019-00170 through T019-00173).",
+   "The supplied collection-status metadata reports missing WS-LPARK-01 endpoint logs from 13:30 to 14:10 UTC. This does not remove the direct workstation, proxy, and network evidence supporting this assessment."
+  ],
+  "claims_not_established": [
+   "That c.zip was the object transmitted, or that the transmitted data contained client or patient information; the archive creation and outbound tunnel are established separately (T019-00119, T019-00171).",
+   "That the archive completed successfully with all intended source files; file creation alone does not establish archive completeness (T019-00117, T019-00119).",
+   "Whether Maria personally initiated the activity, whether her session was compromised, or what the operator's intent was; execution and proxy authentication identify an account, not a physical actor (T019-00117, T019-00150, T019-00171).",
+   "That the remote application accepted and retained a complete uploaded file; CONNECT status 200 and byte counts do not establish application-level upload completion (T019-00171)."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Retrieve the original alert flow details to reconcile its approximate 13:46 UTC timestamp with T019-00170 through T019-00173.",
+   "Preserve c.zip, inspect its contents and size, and obtain relevant file-share access records to establish the staged dataset (T019-00117, T019-00119).",
+   "Preserve Chrome history, upload artifacts, and any available DLP or destination-side transaction records to identify the transmitted object and recipient (T019-00150, T019-00171).",
+   "Validate business purpose and authorization with the user and data owner while preserving the endpoint evidence associated with the archive and transfer (T019-00117, T019-00171)."
+  ],
+  "unrelated_findings": [
+   "Separately investigate two quiet executions of dotnet-sdk-installer.exe from the user's Temp directory after the transfer. These records do not establish malware or a connection to the alerted activity (T019-00181, T019-00210).",
+   "Separately review Tableau Online usage against the supplied service-approval inventory. Later browser requests include bootstrap, JavaScript, favicon, and render-tooltip operations; these are not the alerted sendbox transfer (T019-00257, T019-00258, T019-00264, T019-00268, T019-00272)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 18,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.6
+}

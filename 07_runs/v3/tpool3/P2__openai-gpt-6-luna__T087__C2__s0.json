@@ -1,0 +1,83 @@
+{
+ "scenario_id": "T087",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded creation of the account it_support, attributed to raj.patel.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T087-00111\"]\n    },\n    {\n      \"claim\": \"Seconds later, it_support was added to the group recorded as Administrators; the group SID ends in 512. This conflicts with the stated practice that temporary help-desk accounts use tmp.<name> and are never granted administrator rights.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T087-00111\", \"T087-00113\"]\n    },\n    {\n      \"claim\": \"Just before the account changes, WS-TWEBER-01 accepted an RDP logon for raj.patel from 203.0.113.17, despite the stated practice that remote administration is only from WS-RPATEL-01. A task created under that same workstation logon ID runs hidden, encoded PowerShell that decodes to a download-and-execute command referencing http://203.0.113.17/a.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T087-00074\", \"T087-00077\", \"T087-00114\"]\n    },\n    {\n      \"claim\": \"The account creation and group-addition events use logon ID 0x3d59c0c, whereas the RDP logon and scheduled-task event use 0xd62ced1. The available records therefore do not establish that the account changes came from that RDP session, although the account\u2019s privileged group assignment remains independently suspicious.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T087-00077\", \"T087-00111\", \"T087-00113\", \"T087-00114\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The account-change records identify raj.patel and a logon ID but do not identify the originating host or address for those changes.\",\n    \"The available records do not establish whether a legitimate change was authorized or whether raj.patel's credentials were being used by someone else.\",\n    \"The evidence does not show whether it_support subsequently logged on or what access was exercised.\"\n  ],\n  \"claims_not_established\": [\n    \"That the account creation and privilege assignment were performed through the observed RDP session.\",\n    \"That the named administrator personally performed the changes or that the activity had no approved change authorization.\",\n    \"That the scheduled task executed successfully or that the referenced script was retrieved.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate domain-controller logon records for logon ID 0x3d59c0c to determine the source host and address for the account changes.\",\n    \"Check change approvals and administrator confirmation for creation of it_support and its addition to the group recorded as Administrators.\",\n    \"Review it_support's subsequent authentication, group membership, and access activity; preserve the account and related audit records.\",\n    \"Collect task execution, PowerShell, network, and file evidence from WS-TWEBER-01 to determine whether the task executed and whether the account changes are connected.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 34872,
+    "output": 2115
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded creation of the account it_support, attributed to raj.patel.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T087-00111"
+    ]
+   },
+   {
+    "claim": "Seconds later, it_support was added to the group recorded as Administrators; the group SID ends in 512. This conflicts with the stated practice that temporary help-desk accounts use tmp.<name> and are never granted administrator rights.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T087-00111",
+     "T087-00113"
+    ]
+   },
+   {
+    "claim": "Just before the account changes, WS-TWEBER-01 accepted an RDP logon for raj.patel from 203.0.113.17, despite the stated practice that remote administration is only from WS-RPATEL-01. A task created under that same workstation logon ID runs hidden, encoded PowerShell that decodes to a download-and-execute command referencing http://203.0.113.17/a.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T087-00074",
+     "T087-00077",
+     "T087-00114"
+    ]
+   },
+   {
+    "claim": "The account creation and group-addition events use logon ID 0x3d59c0c, whereas the RDP logon and scheduled-task event use 0xd62ced1. The available records therefore do not establish that the account changes came from that RDP session, although the account\u2019s privileged group assignment remains independently suspicious.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T087-00077",
+     "T087-00111",
+     "T087-00113",
+     "T087-00114"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The account-change records identify raj.patel and a logon ID but do not identify the originating host or address for those changes.",
+   "The available records do not establish whether a legitimate change was authorized or whether raj.patel's credentials were being used by someone else.",
+   "The evidence does not show whether it_support subsequently logged on or what access was exercised."
+  ],
+  "claims_not_established": [
+   "That the account creation and privilege assignment were performed through the observed RDP session.",
+   "That the named administrator personally performed the changes or that the activity had no approved change authorization.",
+   "That the scheduled task executed successfully or that the referenced script was retrieved."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate domain-controller logon records for logon ID 0x3d59c0c to determine the source host and address for the account changes.",
+   "Check change approvals and administrator confirmation for creation of it_support and its addition to the group recorded as Administrators.",
+   "Review it_support's subsequent authentication, group membership, and access activity; preserve the account and related audit records.",
+   "Collect task execution, PowerShell, network, and file evidence from WS-TWEBER-01 to determine whether the task executed and whether the account changes are connected."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 22.0
+}

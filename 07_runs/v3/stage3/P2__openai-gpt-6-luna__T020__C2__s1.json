@@ -1,0 +1,79 @@
+{
+ "scenario_id": "T020",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 1,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"FILE-HD-01 ran the inventory-approved CobaltVault agent as svc-bkp with a Nightly job targeting ingest.cobaltvault.net.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T020-00278\", \"T020-00279\"]\n    },\n    {\n      \"claim\": \"The agent connected through the approved proxy to ingest.cobaltvault.net, and the proxy recorded about 640 MB of client-to-server tunnel traffic, consistent with the alert and the inventory description of CobaltVault uploads.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T020-00281\", \"T020-00285\", \"T020-00286\", \"T020-00287\", \"T020-00288\"]\n    },\n    {\n      \"claim\": \"Shortly before the agent started, the domain controller recorded a service-ticket event for svc-bkp requesting access to FILE-HD-01$, with source IP 23.129.64.210. This is unusual given the stated absence of VPN, but the event alone does not establish who used the ticket or whether it was used to initiate the upload.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T020-00264\", \"T020-00265\", \"T020-00278\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show the destination, process, account, and traffic volume, but not the files or data contained in the upload.\",\n    \"The Kerberos event identifies a public source IP for a ticket request; these records do not establish the person or system behind that address or link that request conclusively to the local service logon.\",\n    \"The available records do not include a CobaltVault job receipt, service configuration, or the agent binary's hash and signature.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the uploaded data was the expected backup content or sensitive data selected for exfiltration.\",\n    \"Whether the svc-bkp ticket request from 23.129.64.210 was authorized, misattributed, or evidence of credential compromise.\",\n    \"Whether the outbound transfer was initiated as part of the legitimate scheduled backup job.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Validate the 13:45:53 svc-bkp ticket request with domain-controller and network authentication records, including whether the source IP is an authorized service provider or other approved system.\",\n    \"Obtain CobaltVault job logs or a provider-side receipt identifying the job, uploaded objects, and completion status.\",\n    \"Verify the cvagent.exe signature and hash against the approved deployment, and review the service configuration and scheduled-job history.\",\n    \"Correlate file-access or backup-selection logs on FILE-HD-01 with the upload window to determine what data was transferred.\"\n  ],\n  \"unrelated_findings\": [\n    \"A lucy.park RDP session from WS-LPARK-01 to FILE-HD-01 is recorded separately from the backup transfer and merits review against the stated remote-administration practice. It does not determine this alert's disposition. (T020-00342, T020-00349)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 76049,
+    "output": 2482
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "FILE-HD-01 ran the inventory-approved CobaltVault agent as svc-bkp with a Nightly job targeting ingest.cobaltvault.net.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00278",
+     "T020-00279"
+    ]
+   },
+   {
+    "claim": "The agent connected through the approved proxy to ingest.cobaltvault.net, and the proxy recorded about 640 MB of client-to-server tunnel traffic, consistent with the alert and the inventory description of CobaltVault uploads.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00281",
+     "T020-00285",
+     "T020-00286",
+     "T020-00287",
+     "T020-00288"
+    ]
+   },
+   {
+    "claim": "Shortly before the agent started, the domain controller recorded a service-ticket event for svc-bkp requesting access to FILE-HD-01$, with source IP 23.129.64.210. This is unusual given the stated absence of VPN, but the event alone does not establish who used the ticket or whether it was used to initiate the upload.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T020-00264",
+     "T020-00265",
+     "T020-00278"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show the destination, process, account, and traffic volume, but not the files or data contained in the upload.",
+   "The Kerberos event identifies a public source IP for a ticket request; these records do not establish the person or system behind that address or link that request conclusively to the local service logon.",
+   "The available records do not include a CobaltVault job receipt, service configuration, or the agent binary's hash and signature."
+  ],
+  "claims_not_established": [
+   "Whether the uploaded data was the expected backup content or sensitive data selected for exfiltration.",
+   "Whether the svc-bkp ticket request from 23.129.64.210 was authorized, misattributed, or evidence of credential compromise.",
+   "Whether the outbound transfer was initiated as part of the legitimate scheduled backup job."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Validate the 13:45:53 svc-bkp ticket request with domain-controller and network authentication records, including whether the source IP is an authorized service provider or other approved system.",
+   "Obtain CobaltVault job logs or a provider-side receipt identifying the job, uploaded objects, and completion status.",
+   "Verify the cvagent.exe signature and hash against the approved deployment, and review the service configuration and scheduled-job history.",
+   "Correlate file-access or backup-selection logs on FILE-HD-01 with the upload window to determine what data was transferred."
+  ],
+  "unrelated_findings": [
+   "A lucy.park RDP session from WS-LPARK-01 to FILE-HD-01 is recorded separately from the backup transfer and merits review against the stated remote-administration practice. It does not determine this alert's disposition. (T020-00342, T020-00349)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 27.8
+}

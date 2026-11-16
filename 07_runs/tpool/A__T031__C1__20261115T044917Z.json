@@ -1,0 +1,97 @@
+{
+ "run_id": "A__T031__C1__20261115T044917Z",
+ "config": "A",
+ "scenario_id": "T031",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 6,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 6747,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.76,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Two network logon attempts for NWD\\\\leo.martins failed with bad-password status from 203.0.113.250 at 13:40 and 13:42 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T031-00002\", \"T031-00003\"]\n    },\n    {\n      \"claim\": \"At 13:43 UTC, a network logon for NWD\\\\leo.martins succeeded from the same IP address, using Kerberos.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T031-00005\"]\n    },\n    {\n      \"claim\": \"The authentication source address is not one of the hosts listed in the supplied inventory; the inventory also states there is no VPN and remote administration is only done from WS-SOKAFOR-01. This makes the successful logon anomalous and supports concern about unauthorized credential use.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T031-00002\", \"T031-00003\", \"T031-00005\"]\n    },\n    {\n      \"claim\": \"The successful event reports WorkstationName=DC-NWD-01 but IpAddress=203.0.113.250, so the event's workstation name does not match its reported source address.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T031-00005\"]\n    },\n    {\n      \"claim\": \"The WS-LMARTINS-01 records show Explorer writing UserAssist registry values whose paths contain encoded Firefox and Teams shortcut names; these records alone do not establish execution or malicious activity.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T031-00001\", \"T031-00004\", \"T031-00006\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records do not identify or provide endpoint telemetry for the system at 203.0.113.250.\",\n    \"The authentication events do not show what, if anything, the successful session accessed or did after authentication.\",\n    \"The supplied records cover only a few authentication events and UserAssist registry writes; they do not establish the complete account or host activity for the review window.\",\n    \"The success event's reported workstation name and source IP are inconsistent, and the available records do not explain why.\"\n  ],\n  \"claims_not_established\": [\n    \"Who controlled the source at 203.0.113.250 or whether it was an unauthorized system.\",\n    \"Whether the successful logon was initiated by Leo, another authorized user, or an attacker.\",\n    \"Whether the successful authentication led to access, persistence, data exposure, or other follow-on activity.\",\n    \"Whether the event's workstation name or source IP is inaccurate or reflects an intermediary.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate the source IP and event identifiers with network, firewall, proxy, and domain-controller telemetry to identify the origin and explain the workstation-name discrepancy.\",\n    \"Review DC-NWD-01 authentication and session-related logs, including subsequent activity associated with the successful logon ID 0x14a82d29.\",\n    \"Collect endpoint and account activity for WS-LMARTINS-01 and Leo's account around the event, including logons, processes, and access to network resources.\",\n    \"Verify with Leo and IT whether the successful network logon was expected, and check for any approved source or workflow not represented in the supplied inventory.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 2157,
+    "output": 1921,
+    "reasoning": 1122
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.76,
+  "supporting_observations": [
+   {
+    "claim": "Two network logon attempts for NWD\\leo.martins failed with bad-password status from 203.0.113.250 at 13:40 and 13:42 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T031-00002",
+     "T031-00003"
+    ]
+   },
+   {
+    "claim": "At 13:43 UTC, a network logon for NWD\\leo.martins succeeded from the same IP address, using Kerberos.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T031-00005"
+    ]
+   },
+   {
+    "claim": "The authentication source address is not one of the hosts listed in the supplied inventory; the inventory also states there is no VPN and remote administration is only done from WS-SOKAFOR-01. This makes the successful logon anomalous and supports concern about unauthorized credential use.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T031-00002",
+     "T031-00003",
+     "T031-00005"
+    ]
+   },
+   {
+    "claim": "The successful event reports WorkstationName=DC-NWD-01 but IpAddress=203.0.113.250, so the event's workstation name does not match its reported source address.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T031-00005"
+    ]
+   },
+   {
+    "claim": "The WS-LMARTINS-01 records show Explorer writing UserAssist registry values whose paths contain encoded Firefox and Teams shortcut names; these records alone do not establish execution or malicious activity.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T031-00001",
+     "T031-00004",
+     "T031-00006"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records do not identify or provide endpoint telemetry for the system at 203.0.113.250.",
+   "The authentication events do not show what, if anything, the successful session accessed or did after authentication.",
+   "The supplied records cover only a few authentication events and UserAssist registry writes; they do not establish the complete account or host activity for the review window.",
+   "The success event's reported workstation name and source IP are inconsistent, and the available records do not explain why."
+  ],
+  "claims_not_established": [
+   "Who controlled the source at 203.0.113.250 or whether it was an unauthorized system.",
+   "Whether the successful logon was initiated by Leo, another authorized user, or an attacker.",
+   "Whether the successful authentication led to access, persistence, data exposure, or other follow-on activity.",
+   "Whether the event's workstation name or source IP is inaccurate or reflects an intermediary."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate the source IP and event identifiers with network, firewall, proxy, and domain-controller telemetry to identify the origin and explain the workstation-name discrepancy.",
+   "Review DC-NWD-01 authentication and session-related logs, including subsequent activity associated with the successful logon ID 0x14a82d29.",
+   "Collect endpoint and account activity for WS-LMARTINS-01 and Leo's account around the event, including logons, processes, and access to network resources.",
+   "Verify with Leo and IT whether the successful network logon was expected, and check for any approved source or workflow not represented in the supplied inventory."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.5
+}

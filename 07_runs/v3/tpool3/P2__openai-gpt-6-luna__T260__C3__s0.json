@@ -1,0 +1,83 @@
+{
+ "scenario_id": "T260",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The large outbound transfer is attributable to the approved Arcvault backup agent running as svc-store on FILE-SUN-01; the recorded command targets ingest.arcvault-backup.com.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T260-00289\", \"T260-00293\", \"T260-00294\"]\n    },\n    {\n      \"claim\": \"The agent connected through the proxy to ingest.arcvault-backup.com, an approved offsite-backup destination, and the proxy recorded a client-to-server transfer of 640,000,000 bytes.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T260-00295\", \"T260-00300\"]\n    },\n    {\n      \"claim\": \"Network telemetry corroborates the large transfer from FILE-SUN-01: the agent's connection is logged on source port 49597 and Zeek records 640,000,426 bytes originating in that connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T260-00301\", \"T260-00302\", \"T260-00303\"]\n    },\n    {\n      \"claim\": \"The transfer matches the inventory description of the approved Arcvault agent uploading several hundred MB. The observed transfer begins at 13:48 UTC, slightly later than the alert's approximate 13:46 time.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T260-00293\", \"T260-00300\", \"T260-00302\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Winsec collection from DC-SUN-01 was unavailable for the review window, limiting independent domain-controller authentication corroboration.\",\n    \"The proxy and network records establish destination and transfer volume, but do not establish the contents of the encrypted transfer.\"\n  ],\n  \"claims_not_established\": [\n    \"The specific files or data included in the backup transfer are not established by these records.\",\n    \"The records do not independently confirm the backup job's schedule, intended dataset, or successful receipt at the backup service.\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [\n    \"If content-level validation is required, obtain the Arcvault job manifest and destination-side receipt for the run.\"\n  ],\n  \"unrelated_findings\": [\n    \"FILE-SUN-01 initiated an RDP connection to DC-SUN-01; inventory says remote administration is only performed from WS-IDOYLE-01. Investigate separately; this does not determine the backup-transfer disposition. (T260-00597, T260-00600)\",\n    \"FILE-SUN-01 made an SSH connection to PROXY-SUN-01, although SSH/remote-access services are not approved. Investigate separately. (T260-00601)\",\n    \"FILE-SUN-01 initiated an RPC connection to WS-ZADAMS-01. This is not the stated workstation-patching practice, which uses WS-IDOYLE-01; the records do not establish what action, if any, followed the RPC connection. Investigate separately. (T260-00409, T260-00410, T260-00411)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 59355,
+    "output": 2284
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "The large outbound transfer is attributable to the approved Arcvault backup agent running as svc-store on FILE-SUN-01; the recorded command targets ingest.arcvault-backup.com.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T260-00289",
+     "T260-00293",
+     "T260-00294"
+    ]
+   },
+   {
+    "claim": "The agent connected through the proxy to ingest.arcvault-backup.com, an approved offsite-backup destination, and the proxy recorded a client-to-server transfer of 640,000,000 bytes.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T260-00295",
+     "T260-00300"
+    ]
+   },
+   {
+    "claim": "Network telemetry corroborates the large transfer from FILE-SUN-01: the agent's connection is logged on source port 49597 and Zeek records 640,000,426 bytes originating in that connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T260-00301",
+     "T260-00302",
+     "T260-00303"
+    ]
+   },
+   {
+    "claim": "The transfer matches the inventory description of the approved Arcvault agent uploading several hundred MB. The observed transfer begins at 13:48 UTC, slightly later than the alert's approximate 13:46 time.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T260-00293",
+     "T260-00300",
+     "T260-00302"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Winsec collection from DC-SUN-01 was unavailable for the review window, limiting independent domain-controller authentication corroboration.",
+   "The proxy and network records establish destination and transfer volume, but do not establish the contents of the encrypted transfer."
+  ],
+  "claims_not_established": [
+   "The specific files or data included in the backup transfer are not established by these records.",
+   "The records do not independently confirm the backup job's schedule, intended dataset, or successful receipt at the backup service."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [
+   "If content-level validation is required, obtain the Arcvault job manifest and destination-side receipt for the run."
+  ],
+  "unrelated_findings": [
+   "FILE-SUN-01 initiated an RDP connection to DC-SUN-01; inventory says remote administration is only performed from WS-IDOYLE-01. Investigate separately; this does not determine the backup-transfer disposition. (T260-00597, T260-00600)",
+   "FILE-SUN-01 made an SSH connection to PROXY-SUN-01, although SSH/remote-access services are not approved. Investigate separately. (T260-00601)",
+   "FILE-SUN-01 initiated an RPC connection to WS-ZADAMS-01. This is not the stated workstation-patching practice, which uses WS-IDOYLE-01; the records do not establish what action, if any, followed the RPC connection. Investigate separately. (T260-00409, T260-00410, T260-00411)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 22.8
+}

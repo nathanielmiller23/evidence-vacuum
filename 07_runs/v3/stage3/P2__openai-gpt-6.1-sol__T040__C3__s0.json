@@ -1,0 +1,75 @@
+{
+ "scenario_id": "T040",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6.1-sol",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45:28.493 UTC, FILE-NWD-01 (10.40.20.20) initiated an HTTP connection from port 54014 to 10.40.20.30:8080, the explicit proxy identified in the supplied inventory. Zeek recorded 640,000,221 originating bytes (approximately 640 MB), 39,190 response bytes, and a duration of 12.24 seconds.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T040-00204\"\n      ]\n    },\n    {\n      \"claim\": \"The large proxy-bound connection matches the alerted host, approximate time, and transfer size. It establishes a large transfer to the proxy, but does not identify the ultimate external destination, originating process, account, or transferred content.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T040-00204\"\n      ]\n    },\n    {\n      \"claim\": \"A separate HTTP connection to the same proxy began approximately 60 milliseconds earlier and carried only 1,220 originating bytes. Neither connection record supplies a URL or destination domain that would distinguish approved backup traffic from unauthorized transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T040-00202\",\n        \"T040-00204\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied collection-status metadata reports that FILE-NWD-01 Windows Security and Sysmon logs were not collected from 13:30 through 14:10 UTC, covering the large transfer in T040-00204. Endpoint process and account attribution during that interval is therefore unavailable from those sensors.\",\n    \"The supplied collection-status metadata also reports a PROXY-NWD-01 proxy-log outage from 13:30 through 14:10 UTC. T040-00204 shows the client-to-proxy connection, not its ultimate destination or proxy transaction details.\",\n    \"Although network-sensor coverage is reported healthy, the supplied evidence does not include destination-domain, TLS, or HTTP transaction details attributable to the large connection in T040-00204.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the 640 MB transfer in T040-00204 was forwarded outside the organization, and to which destination.\",\n    \"Whether T040-00204 originated from the approved StratoSafe backup agent, another authorized application, or an unauthorized process.\",\n    \"Whether the transferred content was legitimate backup data or exfiltrated information.\",\n    \"Whether either separate anomaly listed in unrelated_findings has any causal connection to T040-00204; temporal proximity alone does not establish that connection.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover proxy transaction logs or alternate upstream network records for the connection 10.40.20.20:54014 to 10.40.20.30:8080 at 13:45:28 UTC, including ultimate destination, URL or CONNECT target, byte counts, and forwarding outcome.\",\n    \"Recover FILE-NWD-01 endpoint telemetry or equivalent EDR records identifying the process, command line, account, and process ancestry responsible for that connection.\",\n    \"Obtain StratoSafe job history and agent logs for the interval, including destination and uploaded byte counts, and correlate them with T040-00204 before assigning a benign disposition.\",\n    \"If available, examine retained packet capture or application audit records to determine the transfer's purpose and content.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate ticket: nora.blake launched mstsc.exe targeting FILE-NWD-01 from WS-NBLAKE-01, and endpoint/network records show an RDP connection to the server. This conflicts with the supplied practice restricting remote administration to WS-SOKAFOR-01, but does not establish a successful privileged logon or responsibility for the large transfer. Records: T040-00098, T040-00103, T040-00108.\",\n    \"Separate ticket: DC-NWD-01 recorded a service-ticket event for svc-archive targeting FILE-NWD-01 with client address 139.162.174.124 at 13:43:51 UTC. The public client address warrants investigation given the supplied no-VPN environment, but the record does not link that activity to the alerted transfer. Record: T040-00193.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 52378,
+    "output": 1024
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45:28.493 UTC, FILE-NWD-01 (10.40.20.20) initiated an HTTP connection from port 54014 to 10.40.20.30:8080, the explicit proxy identified in the supplied inventory. Zeek recorded 640,000,221 originating bytes (approximately 640 MB), 39,190 response bytes, and a duration of 12.24 seconds.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T040-00204"
+    ]
+   },
+   {
+    "claim": "The large proxy-bound connection matches the alerted host, approximate time, and transfer size. It establishes a large transfer to the proxy, but does not identify the ultimate external destination, originating process, account, or transferred content.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T040-00204"
+    ]
+   },
+   {
+    "claim": "A separate HTTP connection to the same proxy began approximately 60 milliseconds earlier and carried only 1,220 originating bytes. Neither connection record supplies a URL or destination domain that would distinguish approved backup traffic from unauthorized transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T040-00202",
+     "T040-00204"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied collection-status metadata reports that FILE-NWD-01 Windows Security and Sysmon logs were not collected from 13:30 through 14:10 UTC, covering the large transfer in T040-00204. Endpoint process and account attribution during that interval is therefore unavailable from those sensors.",
+   "The supplied collection-status metadata also reports a PROXY-NWD-01 proxy-log outage from 13:30 through 14:10 UTC. T040-00204 shows the client-to-proxy connection, not its ultimate destination or proxy transaction details.",
+   "Although network-sensor coverage is reported healthy, the supplied evidence does not include destination-domain, TLS, or HTTP transaction details attributable to the large connection in T040-00204."
+  ],
+  "claims_not_established": [
+   "Whether the 640 MB transfer in T040-00204 was forwarded outside the organization, and to which destination.",
+   "Whether T040-00204 originated from the approved StratoSafe backup agent, another authorized application, or an unauthorized process.",
+   "Whether the transferred content was legitimate backup data or exfiltrated information.",
+   "Whether either separate anomaly listed in unrelated_findings has any causal connection to T040-00204; temporal proximity alone does not establish that connection."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover proxy transaction logs or alternate upstream network records for the connection 10.40.20.20:54014 to 10.40.20.30:8080 at 13:45:28 UTC, including ultimate destination, URL or CONNECT target, byte counts, and forwarding outcome.",
+   "Recover FILE-NWD-01 endpoint telemetry or equivalent EDR records identifying the process, command line, account, and process ancestry responsible for that connection.",
+   "Obtain StratoSafe job history and agent logs for the interval, including destination and uploaded byte counts, and correlate them with T040-00204 before assigning a benign disposition.",
+   "If available, examine retained packet capture or application audit records to determine the transfer's purpose and content."
+  ],
+  "unrelated_findings": [
+   "Separate ticket: nora.blake launched mstsc.exe targeting FILE-NWD-01 from WS-NBLAKE-01, and endpoint/network records show an RDP connection to the server. This conflicts with the supplied practice restricting remote administration to WS-SOKAFOR-01, but does not establish a successful privileged logon or responsibility for the large transfer. Records: T040-00098, T040-00103, T040-00108.",
+   "Separate ticket: DC-NWD-01 recorded a service-ticket event for svc-archive targeting FILE-NWD-01 with client address 139.162.174.124 at 13:43:51 UTC. The public client address warrants investigation given the supplied no-VPN environment, but the record does not link that activity to the alerted transfer. Record: T040-00193."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 4,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 17.5
+}

@@ -1,0 +1,110 @@
+{
+ "scenario_id": "T135",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.9,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted periodic HTTPS activity is represented by repeated proxy CONNECT tunnels to update.routewise.co:443, including at 13:37:54, 13:43:03, 13:47:13, 13:53:05, 13:57:18, 14:02:38, and 14:07:36 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T135-00103\", \"T135-00164\", \"T135-00184\", \"T135-00219\", \"T135-00231\", \"T135-00245\", \"T135-00267\"]\n    },\n    {\n      \"claim\": \"The observed connections are roughly five minutes apart, consistent with the reported alert cadence and the inventory's stated RouteWise update-check cadence.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T135-00103\", \"T135-00164\", \"T135-00184\", \"T135-00219\", \"T135-00231\", \"T135-00245\", \"T135-00267\"]\n    },\n    {\n      \"claim\": \"The connections are attributed by endpoint telemetry to routewiseupd.exe running as kim.nguyen, and proxy records identify the same user; the executable is under the user's AppData\\\\Local\\\\RouteWise directory.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T135-00100\", \"T135-00105\", \"T135-00106\", \"T135-00165\", \"T135-00167\", \"T135-00220\", \"T135-00222\", \"T135-00232\", \"T135-00234\", \"T135-00246\", \"T135-00248\", \"T135-00268\", \"T135-00270\"]\n    },\n    {\n      \"claim\": \"The observed destination update.routewise.co differs from the inventory-listed approved update.routewise.com, and the observed per-user executable path differs from the inventory-listed C:\\\\Program Files\\\\RouteWise\\\\routewiseupd.exe path. These discrepancies warrant validation but do not by themselves establish maliciousness.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T135-00100\", \"T135-00103\", \"T135-00164\", \"T135-00219\", \"T135-00231\", \"T135-00245\", \"T135-00267\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records show CONNECT tunnel metadata, not the encrypted HTTPS contents or the identity of the server behind the tunnel.\",\n    \"The supplied records do not establish the executable's hash, signature, provenance, or whether it is an authorized RouteWise build.\",\n    \"The supplied records do not establish ownership or legitimacy of update.routewise.co, or explain its difference from the inventory-listed update.routewise.com.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether update.routewise.co is a legitimate RouteWise endpoint, a typo or alternate vendor domain, or an attacker-controlled lookalike.\",\n    \"Whether the per-user routewiseupd.exe is a legitimate installation or a masquerading/replaced executable.\",\n    \"Whether any malicious payload or other activity occurred inside the HTTPS tunnels.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Validate update.routewise.co with the RouteWise owner/vendor and obtain DNS, certificate, and domain-ownership details for the connection times.\",\n    \"Collect the routewiseupd.exe hash, Authenticode signature and status, file creation/download provenance, and installation/configuration details; compare them with an approved RouteWise build.\",\n    \"Review proxy TLS inspection or other available network telemetry for the tunnel contents and any related downloads.\"\n  ],\n  \"unrelated_findings\": [\n    \"A Dropbox updater executable ran briefly as SYSTEM on WS-KNGUYEN-01. Dropbox is not listed among approved services, but this record establishes only updater execution, not Dropbox synchronization or data transfer. (T135-00176, T135-00177, T135-00178, T135-00179)\",\n    \"DC-COP-01 issued kim.nguyen a service ticket for WS-PBECKER-01, followed by a network logon for kim.nguyen on WS-PBECKER-01. This is separate from the alerted RouteWise connections and merits contextual review. (T135-00273, T135-00274, T135-00275)\",\n    \"A UserAssist registry entry on WS-KNGUYEN-01 contains an encoded path that appears to refer to powershell.exe; the supplied records do not show a corresponding PowerShell process execution or command line. Review separately. (T135-00223)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 49277,
+    "output": 2469
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.9,
+  "supporting_observations": [
+   {
+    "claim": "The alerted periodic HTTPS activity is represented by repeated proxy CONNECT tunnels to update.routewise.co:443, including at 13:37:54, 13:43:03, 13:47:13, 13:53:05, 13:57:18, 14:02:38, and 14:07:36 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T135-00103",
+     "T135-00164",
+     "T135-00184",
+     "T135-00219",
+     "T135-00231",
+     "T135-00245",
+     "T135-00267"
+    ]
+   },
+   {
+    "claim": "The observed connections are roughly five minutes apart, consistent with the reported alert cadence and the inventory's stated RouteWise update-check cadence.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T135-00103",
+     "T135-00164",
+     "T135-00184",
+     "T135-00219",
+     "T135-00231",
+     "T135-00245",
+     "T135-00267"
+    ]
+   },
+   {
+    "claim": "The connections are attributed by endpoint telemetry to routewiseupd.exe running as kim.nguyen, and proxy records identify the same user; the executable is under the user's AppData\\Local\\RouteWise directory.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T135-00100",
+     "T135-00105",
+     "T135-00106",
+     "T135-00165",
+     "T135-00167",
+     "T135-00220",
+     "T135-00222",
+     "T135-00232",
+     "T135-00234",
+     "T135-00246",
+     "T135-00248",
+     "T135-00268",
+     "T135-00270"
+    ]
+   },
+   {
+    "claim": "The observed destination update.routewise.co differs from the inventory-listed approved update.routewise.com, and the observed per-user executable path differs from the inventory-listed C:\\Program Files\\RouteWise\\routewiseupd.exe path. These discrepancies warrant validation but do not by themselves establish maliciousness.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T135-00100",
+     "T135-00103",
+     "T135-00164",
+     "T135-00219",
+     "T135-00231",
+     "T135-00245",
+     "T135-00267"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records show CONNECT tunnel metadata, not the encrypted HTTPS contents or the identity of the server behind the tunnel.",
+   "The supplied records do not establish the executable's hash, signature, provenance, or whether it is an authorized RouteWise build.",
+   "The supplied records do not establish ownership or legitimacy of update.routewise.co, or explain its difference from the inventory-listed update.routewise.com."
+  ],
+  "claims_not_established": [
+   "Whether update.routewise.co is a legitimate RouteWise endpoint, a typo or alternate vendor domain, or an attacker-controlled lookalike.",
+   "Whether the per-user routewiseupd.exe is a legitimate installation or a masquerading/replaced executable.",
+   "Whether any malicious payload or other activity occurred inside the HTTPS tunnels."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Validate update.routewise.co with the RouteWise owner/vendor and obtain DNS, certificate, and domain-ownership details for the connection times.",
+   "Collect the routewiseupd.exe hash, Authenticode signature and status, file creation/download provenance, and installation/configuration details; compare them with an approved RouteWise build.",
+   "Review proxy TLS inspection or other available network telemetry for the tunnel contents and any related downloads."
+  ],
+  "unrelated_findings": [
+   "A Dropbox updater executable ran briefly as SYSTEM on WS-KNGUYEN-01. Dropbox is not listed among approved services, but this record establishes only updater execution, not Dropbox synchronization or data transfer. (T135-00176, T135-00177, T135-00178, T135-00179)",
+   "DC-COP-01 issued kim.nguyen a service ticket for WS-PBECKER-01, followed by a network logon for kim.nguyen on WS-PBECKER-01. This is separate from the alerted RouteWise connections and merits contextual review. (T135-00273, T135-00274, T135-00275)",
+   "A UserAssist registry entry on WS-KNGUYEN-01 contains an encoded path that appears to refer to powershell.exe; the supplied records do not show a corresponding PowerShell process execution or command line. Review separately. (T135-00223)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 34,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 28.3
+}

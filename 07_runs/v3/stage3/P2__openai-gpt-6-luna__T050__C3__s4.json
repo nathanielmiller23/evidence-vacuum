@@ -1,0 +1,87 @@
+{
+ "scenario_id": "T050",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 4,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.82,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:46 UTC, FILE-NWD-01 ran the approved StratoSafe agent from its inventoried path as svc-archive, with a command line specifying the Nightly job and approved ingest.stratosafe-backup.com destination.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T050-00237\",\n        \"T050-00238\"\n      ]\n    },\n    {\n      \"claim\": \"The transfer went through the proxy to ingest.stratosafe-backup.com; the proxy and Zeek records show about 640 MB of client-to-proxy bytes, consistent with the stated scale of approved offsite backups.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T050-00244\",\n        \"T050-00245\",\n        \"T050-00246\",\n        \"T050-00247\"\n      ]\n    },\n    {\n      \"claim\": \"Shortly before the backup process started, the domain controller recorded a Kerberos service-ticket event for svc-archive from 45.79.19.196, a non-private address. The available evidence does not establish why this request came from that address or whether it caused the subsequent backup activity.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T050-00223\",\n        \"T050-00224\",\n        \"T050-00237\"\n      ]\n    },\n    {\n      \"claim\": \"The authorized agent, account, destination, and transfer size support a benign backup explanation, but the external-source Kerberos event close in time to the transfer prevents confidently clearing the alerted activity without validation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T050-00223\",\n        \"T050-00237\",\n        \"T050-00239\",\n        \"T050-00244\",\n        \"T050-00245\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Winsec and Sysmon collection on WS-NBLAKE-01 was unavailable from 13:30 to 14:10 UTC. This limits visibility into activity on that workstation during that interval; the supplied coverage status does not indicate an outage for FILE-NWD-01 or the proxy.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether 45.79.19.196 is an authorized StratoSafe or other service address, or how it generated the svc-archive Kerberos event.\",\n    \"Whether the Kerberos event was causally related to the local svc-archive service logon and StratoSafe transfer.\",\n    \"Whether the uploaded files and backup job contents were expected and authorized.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Validate the source and context of the svc-archive Kerberos request at 13:45:33 UTC, including domain-controller, network-edge, and any relevant authentication-provider logs.\",\n    \"Confirm the StratoSafe job schedule, service-account authentication path, and backup manifest for the transfer.\",\n    \"Obtain StratoSafe-side records for the upload, including the authenticated tenant/account, received objects, and source connection details.\"\n  ],\n  \"unrelated_findings\": [\n    \"The Meridian integration-worker Java process on FILE-NWD-01 connected through the proxy to receiver.citrix.com. That service is not listed as approved; this is separate from the StratoSafe transfer and should be reviewed separately.\",\n    \"nora.blake launched Remote Desktop to FILE-NWD-01 and logged on there. The stated practice restricts remote administration to sam.okafor from WS-SOKAFOR-01; this activity occurred after the alerted transfer and does not determine its disposition.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 73275,
+    "output": 2583
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.82,
+  "supporting_observations": [
+   {
+    "claim": "At 13:46 UTC, FILE-NWD-01 ran the approved StratoSafe agent from its inventoried path as svc-archive, with a command line specifying the Nightly job and approved ingest.stratosafe-backup.com destination.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T050-00237",
+     "T050-00238"
+    ]
+   },
+   {
+    "claim": "The transfer went through the proxy to ingest.stratosafe-backup.com; the proxy and Zeek records show about 640 MB of client-to-proxy bytes, consistent with the stated scale of approved offsite backups.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T050-00244",
+     "T050-00245",
+     "T050-00246",
+     "T050-00247"
+    ]
+   },
+   {
+    "claim": "Shortly before the backup process started, the domain controller recorded a Kerberos service-ticket event for svc-archive from 45.79.19.196, a non-private address. The available evidence does not establish why this request came from that address or whether it caused the subsequent backup activity.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T050-00223",
+     "T050-00224",
+     "T050-00237"
+    ]
+   },
+   {
+    "claim": "The authorized agent, account, destination, and transfer size support a benign backup explanation, but the external-source Kerberos event close in time to the transfer prevents confidently clearing the alerted activity without validation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T050-00223",
+     "T050-00237",
+     "T050-00239",
+     "T050-00244",
+     "T050-00245"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Winsec and Sysmon collection on WS-NBLAKE-01 was unavailable from 13:30 to 14:10 UTC. This limits visibility into activity on that workstation during that interval; the supplied coverage status does not indicate an outage for FILE-NWD-01 or the proxy."
+  ],
+  "claims_not_established": [
+   "Whether 45.79.19.196 is an authorized StratoSafe or other service address, or how it generated the svc-archive Kerberos event.",
+   "Whether the Kerberos event was causally related to the local svc-archive service logon and StratoSafe transfer.",
+   "Whether the uploaded files and backup job contents were expected and authorized."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Validate the source and context of the svc-archive Kerberos request at 13:45:33 UTC, including domain-controller, network-edge, and any relevant authentication-provider logs.",
+   "Confirm the StratoSafe job schedule, service-account authentication path, and backup manifest for the transfer.",
+   "Obtain StratoSafe-side records for the upload, including the authenticated tenant/account, received objects, and source connection details."
+  ],
+  "unrelated_findings": [
+   "The Meridian integration-worker Java process on FILE-NWD-01 connected through the proxy to receiver.citrix.com. That service is not listed as approved; this is separate from the StratoSafe transfer and should be reviewed separately.",
+   "nora.blake launched Remote Desktop to FILE-NWD-01 and logged on there. The stated practice restricts remote administration to sam.okafor from WS-SOKAFOR-01; this activity occurred after the alerted transfer and does not determine its disposition."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 14,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 30.5
+}

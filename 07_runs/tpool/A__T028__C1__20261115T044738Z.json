@@ -1,0 +1,96 @@
+{
+ "run_id": "A__T028__C1__20261115T044738Z",
+ "config": "A",
+ "scenario_id": "T028",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 53,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 24989,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.84,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alert describes creation around 13:42 UTC, but the supplied account-creation event is timestamped 13:46:38 UTC on 2026-10-20.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T028-00019\"]\n    },\n    {\n      \"claim\": \"The account tmp.rwong was created by lucy.park. A domain-controller network logon for lucy.park from WS-LPARK-01 occurred shortly beforehand and has the same logon ID recorded on the account-creation event.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T028-00017\", \"T028-00019\"]\n    },\n    {\n      \"claim\": \"The new account was added to Temp-Staff. This matches the supplied description of the help desk's temporary-account practice, but the events do not establish the account's full effective privileges.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T028-00019\", \"T028-00020\"]\n    },\n    {\n      \"claim\": \"Lucy.park initiated an RDP connection from WS-LPARK-01 to FILE-HD-01 and logged on to the server interactively. The supplied environment context says remote administration is only done from WS-OHADDAD-01, making this access an unexplained policy mismatch.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T028-00001\", \"T028-00006\", \"T028-00007\"]\n    },\n    {\n      \"claim\": \"An Explorer UserAssist registry value on WS-LPARK-01 names powershell.exe. This suggests PowerShell may have been launched, but does not show its command line or prove what it did.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T028-00038\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not show the processes or commands run during Lucy.park's RDP session on FILE-HD-01; the server records shown cover logon and basic session startup only (T028-00007 through T028-00013).\",\n    \"The PowerShell-related evidence is a UserAssist registry value, not a process-creation event with a command line or script contents (T028-00038).\",\n    \"The supplied account events show creation and Temp-Staff membership, but do not provide a complete account-group or effective-privilege listing (T028-00019, T028-00020).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether Lucy.park's RDP access to FILE-HD-01 was authorized or had a legitimate support purpose (T028-00001, T028-00006, T028-00007).\",\n    \"Whether tmp.rwong was requested for a legitimate temporary worker and whether its full effective permissions were appropriate (T028-00019, T028-00020).\",\n    \"Whether PowerShell ran, and if so, what commands or scripts it executed (T028-00038).\",\n    \"Whether the account creation or the observed access was connected to the scheduled svc-claimsync password rotation; no such connection is established by the supplied records (T028-00017, T028-00019, T028-00020).\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Validate the tmp.rwong request, intended user, approval, and expected access with the help desk or relevant change/ticket records.\",\n    \"Review FILE-HD-01 process-creation, PowerShell, session, and file-access telemetry for Lucy.park's RDP session.\",\n    \"Check the domain directory for tmp.rwong's complete group memberships, enabled state, and effective privileges.\",\n    \"Confirm whether Lucy.park's RDP access to FILE-HD-01 was approved and why it originated from WS-LPARK-01 rather than the designated remote-administration workstation.\",\n    \"Retrieve endpoint process and PowerShell history around the PowerShell-related UserAssist entry on WS-LPARK-01.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 8997,
+    "output": 2748,
+    "reasoning": 1814
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.84,
+  "supporting_observations": [
+   {
+    "claim": "The alert describes creation around 13:42 UTC, but the supplied account-creation event is timestamped 13:46:38 UTC on 2026-10-20.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T028-00019"
+    ]
+   },
+   {
+    "claim": "The account tmp.rwong was created by lucy.park. A domain-controller network logon for lucy.park from WS-LPARK-01 occurred shortly beforehand and has the same logon ID recorded on the account-creation event.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T028-00017",
+     "T028-00019"
+    ]
+   },
+   {
+    "claim": "The new account was added to Temp-Staff. This matches the supplied description of the help desk's temporary-account practice, but the events do not establish the account's full effective privileges.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T028-00019",
+     "T028-00020"
+    ]
+   },
+   {
+    "claim": "Lucy.park initiated an RDP connection from WS-LPARK-01 to FILE-HD-01 and logged on to the server interactively. The supplied environment context says remote administration is only done from WS-OHADDAD-01, making this access an unexplained policy mismatch.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T028-00001",
+     "T028-00006",
+     "T028-00007"
+    ]
+   },
+   {
+    "claim": "An Explorer UserAssist registry value on WS-LPARK-01 names powershell.exe. This suggests PowerShell may have been launched, but does not show its command line or prove what it did.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T028-00038"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not show the processes or commands run during Lucy.park's RDP session on FILE-HD-01; the server records shown cover logon and basic session startup only (T028-00007 through T028-00013).",
+   "The PowerShell-related evidence is a UserAssist registry value, not a process-creation event with a command line or script contents (T028-00038).",
+   "The supplied account events show creation and Temp-Staff membership, but do not provide a complete account-group or effective-privilege listing (T028-00019, T028-00020)."
+  ],
+  "claims_not_established": [
+   "Whether Lucy.park's RDP access to FILE-HD-01 was authorized or had a legitimate support purpose (T028-00001, T028-00006, T028-00007).",
+   "Whether tmp.rwong was requested for a legitimate temporary worker and whether its full effective permissions were appropriate (T028-00019, T028-00020).",
+   "Whether PowerShell ran, and if so, what commands or scripts it executed (T028-00038).",
+   "Whether the account creation or the observed access was connected to the scheduled svc-claimsync password rotation; no such connection is established by the supplied records (T028-00017, T028-00019, T028-00020)."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Validate the tmp.rwong request, intended user, approval, and expected access with the help desk or relevant change/ticket records.",
+   "Review FILE-HD-01 process-creation, PowerShell, session, and file-access telemetry for Lucy.park's RDP session.",
+   "Check the domain directory for tmp.rwong's complete group memberships, enabled state, and effective privileges.",
+   "Confirm whether Lucy.park's RDP access to FILE-HD-01 was approved and why it originated from WS-LPARK-01 rather than the designated remote-administration workstation.",
+   "Retrieve endpoint process and PowerShell history around the PowerShell-related UserAssist entry on WS-LPARK-01."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 9,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 25.9
+}

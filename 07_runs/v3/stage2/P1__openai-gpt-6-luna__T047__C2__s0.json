@@ -1,0 +1,103 @@
+{
+ "scenario_id": "T047",
+ "condition": "C2",
+ "variant": "P1",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"A remote-interactive logon to WS-LMARTINS-01 was recorded for sam.okafor from 203.0.113.250; the same address appears in the Kerberos service-ticket and inbound RDP connection records.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T047-00060\",\n        \"T047-00063\",\n        \"T047-00064\",\n        \"T047-00065\"\n      ]\n    },\n    {\n      \"claim\": \"That remote administration is inconsistent with the supplied environment context, which says there is no VPN and remote administration is only done from WS-SOKAFOR-01.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T047-00063\",\n        \"T047-00064\",\n        \"T047-00065\"\n      ]\n    },\n    {\n      \"claim\": \"The domain controller recorded creation of sysmaint attributed to sam.okafor, followed immediately by addition of sysmaint to the group named Administrators.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T047-00081\",\n        \"T047-00082\"\n      ]\n    },\n    {\n      \"claim\": \"Adding a newly created account to Administrators conflicts with the supplied help-desk practice that temporary accounts are named ext.<name> and never receive administrator rights.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T047-00081\",\n        \"T047-00082\"\n      ]\n    },\n    {\n      \"claim\": \"A task named Microsoft\\\\Windows\\\\HealthCheck was registered on WS-LMARTINS-01 under sam.okafor. Its action invokes PowerShell with a hidden window and an encoded command that decodes to a download-and-execute expression for http://203.0.113.250/a.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T047-00083\"\n      ]\n    },\n    {\n      \"claim\": \"The task's download-and-execute action, combined with the unexpected remote logon and privileged account creation, supports a malicious-activity finding; the evidence does not establish that the task actually ran.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T047-00063\",\n        \"T047-00065\",\n        \"T047-00081\",\n        \"T047-00082\",\n        \"T047-00083\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The provided records do not show whether the scheduled task executed or whether the referenced script was retrieved.\",\n    \"The records attribute the account changes and task registration to sam.okafor, but do not independently establish who controlled the remote session or whether these actions were performed by the same actor.\",\n    \"The evidence is a selected time-window log extract; absence of an event in this extract does not establish that the event did not occur.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether sysmaint was subsequently used to log on or perform further actions.\",\n    \"Whether the task's PowerShell command executed, what the remote script contained, or whether it caused impact.\",\n    \"Who controlled the connection from 203.0.113.250 or whether that address reflects the true originating system.\",\n    \"Whether the activity was authorized through an exception not represented in the supplied change and asset context.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Collect scheduled-task execution history and related PowerShell, process-creation, and script-block telemetry from WS-LMARTINS-01.\",\n    \"Retrieve proxy, firewall, and endpoint network logs for requests to 203.0.113.250 and the path /a.ps1; preserve the script if available.\",\n    \"Review DC audit and authentication records around the account creation and group change, including subsequent activity by sysmaint.\",\n    \"Preserve and examine WS-LMARTINS-01 for remote-session, persistence, and account-management artifacts, and verify whether the remote access was authorized.\",\n    \"Confirm current sysmaint group membership and disable or contain the account and task pending investigation.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 27769,
+    "output": 2448
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "A remote-interactive logon to WS-LMARTINS-01 was recorded for sam.okafor from 203.0.113.250; the same address appears in the Kerberos service-ticket and inbound RDP connection records.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00060",
+     "T047-00063",
+     "T047-00064",
+     "T047-00065"
+    ]
+   },
+   {
+    "claim": "That remote administration is inconsistent with the supplied environment context, which says there is no VPN and remote administration is only done from WS-SOKAFOR-01.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T047-00063",
+     "T047-00064",
+     "T047-00065"
+    ]
+   },
+   {
+    "claim": "The domain controller recorded creation of sysmaint attributed to sam.okafor, followed immediately by addition of sysmaint to the group named Administrators.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00081",
+     "T047-00082"
+    ]
+   },
+   {
+    "claim": "Adding a newly created account to Administrators conflicts with the supplied help-desk practice that temporary accounts are named ext.<name> and never receive administrator rights.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T047-00081",
+     "T047-00082"
+    ]
+   },
+   {
+    "claim": "A task named Microsoft\\Windows\\HealthCheck was registered on WS-LMARTINS-01 under sam.okafor. Its action invokes PowerShell with a hidden window and an encoded command that decodes to a download-and-execute expression for http://203.0.113.250/a.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00083"
+    ]
+   },
+   {
+    "claim": "The task's download-and-execute action, combined with the unexpected remote logon and privileged account creation, supports a malicious-activity finding; the evidence does not establish that the task actually ran.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T047-00063",
+     "T047-00065",
+     "T047-00081",
+     "T047-00082",
+     "T047-00083"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The provided records do not show whether the scheduled task executed or whether the referenced script was retrieved.",
+   "The records attribute the account changes and task registration to sam.okafor, but do not independently establish who controlled the remote session or whether these actions were performed by the same actor.",
+   "The evidence is a selected time-window log extract; absence of an event in this extract does not establish that the event did not occur."
+  ],
+  "claims_not_established": [
+   "Whether sysmaint was subsequently used to log on or perform further actions.",
+   "Whether the task's PowerShell command executed, what the remote script contained, or whether it caused impact.",
+   "Who controlled the connection from 203.0.113.250 or whether that address reflects the true originating system.",
+   "Whether the activity was authorized through an exception not represented in the supplied change and asset context."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Collect scheduled-task execution history and related PowerShell, process-creation, and script-block telemetry from WS-LMARTINS-01.",
+   "Retrieve proxy, firewall, and endpoint network logs for requests to 203.0.113.250 and the path /a.ps1; preserve the script if available.",
+   "Review DC audit and authentication records around the account creation and group change, including subsequent activity by sysmaint.",
+   "Preserve and examine WS-LMARTINS-01 for remote-session, persistence, and account-management artifacts, and verify whether the remote access was authorized.",
+   "Confirm current sysmaint group membership and disable or contain the account and task pending investigation."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 17,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 24.9
+}

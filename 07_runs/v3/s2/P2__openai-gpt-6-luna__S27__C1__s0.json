@@ -1,0 +1,92 @@
+{
+ "scenario_id": "S27",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:42:53 UTC, dev.sharma added cole.price to the Remote Desktop Users group on DC-RB-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S27-00048\"]\n    },\n    {\n      \"claim\": \"This addition is inconsistent with the provided policy that Remote Desktop Users membership is restricted to IT: cole.price is identified as a vet tech, while dev.sharma is the only IT administrator. The change calendar instead specifies hana.ito receiving Billing-Share access, not cole.price receiving remote-access membership.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S27-00048\"]\n    },\n    {\n      \"claim\": \"About one minute after the group change, WS-CPRICE-01 recorded an Explorer UserAssist registry update for a path decoding to mstsc.exe under cole.price's user profile. This is consistent with launching the Remote Desktop client, but does not establish a successful connection or its destination.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S27-00060\"]\n    },\n    {\n      \"claim\": \"The group-change subject logon ID matches a dev.sharma network logon on DC-RB-01 whose source IP was 10.60.10.22. The available records do not identify that source host; elsewhere, WS-DSHARMA-01 is observed using 10.60.10.23.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S27-00047\", \"S27-00048\", \"S27-00052\", \"S27-00053\"]\n    },\n    {\n      \"claim\": \"WS-DSHARMA-01 initiated an RDP connection to FILE-RB-01 as dev.sharma shortly after the group change. This documents an administrator RDP session, but does not establish that cole.price connected to a server.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S27-00049\", \"S27-00052\", \"S27-00053\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The group-change event identifies the subject account and logon ID but does not show the executing process or a source hostname.\",\n    \"The supplied records do not show a successful RDP logon by cole.price or the destination of the mstsc.exe launch indicated by UserAssist.\",\n    \"The available evidence does not include ticket or change-approval records.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the group change had an approved ticket or was an administrator error.\",\n    \"Whether dev.sharma's credentials or session were misused.\",\n    \"Whether cole.price successfully connected to any host using RDP.\",\n    \"Whether the source IP 10.60.10.22 for the matching DC logon belongs to WS-DSHARMA-01.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Validate the change against ticketing and approval records, including whether cole.price was authorized for any remote-access membership.\",\n    \"Resolve the 10.60.10.22 source address to a host and correlate it with authentication and endpoint telemetry for dev.sharma.\",\n    \"Review DC-RB-01 security logs and relevant server RDP logs for cole.price logons, including attempts and session outcomes after the group change.\",\n    \"Confirm the current Remote Desktop Users membership and remove cole.price if the access is not authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-DSHARMA-01 used OpenSSH to connect to PROXY-RB-01 on port 22 as dev.sharma. The inventory says no other remote-access tools are approved; investigate this separately, and do not use it alone to decide the alerted group change. Records: S27-00004, S27-00007, S27-00066, S27-00069.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 15315,
+    "output": 2696
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "At 13:42:53 UTC, dev.sharma added cole.price to the Remote Desktop Users group on DC-RB-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S27-00048"
+    ]
+   },
+   {
+    "claim": "This addition is inconsistent with the provided policy that Remote Desktop Users membership is restricted to IT: cole.price is identified as a vet tech, while dev.sharma is the only IT administrator. The change calendar instead specifies hana.ito receiving Billing-Share access, not cole.price receiving remote-access membership.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S27-00048"
+    ]
+   },
+   {
+    "claim": "About one minute after the group change, WS-CPRICE-01 recorded an Explorer UserAssist registry update for a path decoding to mstsc.exe under cole.price's user profile. This is consistent with launching the Remote Desktop client, but does not establish a successful connection or its destination.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S27-00060"
+    ]
+   },
+   {
+    "claim": "The group-change subject logon ID matches a dev.sharma network logon on DC-RB-01 whose source IP was 10.60.10.22. The available records do not identify that source host; elsewhere, WS-DSHARMA-01 is observed using 10.60.10.23.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S27-00047",
+     "S27-00048",
+     "S27-00052",
+     "S27-00053"
+    ]
+   },
+   {
+    "claim": "WS-DSHARMA-01 initiated an RDP connection to FILE-RB-01 as dev.sharma shortly after the group change. This documents an administrator RDP session, but does not establish that cole.price connected to a server.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S27-00049",
+     "S27-00052",
+     "S27-00053"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The group-change event identifies the subject account and logon ID but does not show the executing process or a source hostname.",
+   "The supplied records do not show a successful RDP logon by cole.price or the destination of the mstsc.exe launch indicated by UserAssist.",
+   "The available evidence does not include ticket or change-approval records."
+  ],
+  "claims_not_established": [
+   "Whether the group change had an approved ticket or was an administrator error.",
+   "Whether dev.sharma's credentials or session were misused.",
+   "Whether cole.price successfully connected to any host using RDP.",
+   "Whether the source IP 10.60.10.22 for the matching DC logon belongs to WS-DSHARMA-01."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Validate the change against ticketing and approval records, including whether cole.price was authorized for any remote-access membership.",
+   "Resolve the 10.60.10.22 source address to a host and correlate it with authentication and endpoint telemetry for dev.sharma.",
+   "Review DC-RB-01 security logs and relevant server RDP logs for cole.price logons, including attempts and session outcomes after the group change.",
+   "Confirm the current Remote Desktop Users membership and remove cole.price if the access is not authorized."
+  ],
+  "unrelated_findings": [
+   "WS-DSHARMA-01 used OpenSSH to connect to PROXY-RB-01 on port 22 as dev.sharma. The inventory says no other remote-access tools are approved; investigate this separately, and do not use it alone to decide the alerted group change. Records: S27-00004, S27-00007, S27-00066, S27-00069."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 28.7
+}

@@ -1,0 +1,95 @@
+{
+ "scenario_id": "T219",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:44:31 UTC, mia.santos ran PowerShell to compress \\\\\\\\FILE-BLU-01\\\\Shared\\\\Clients into C:\\\\Users\\\\mia.santos\\\\AppData\\\\Local\\\\Temp\\\\c.zip; Sysmon recorded creation of that archive at 13:44:35 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T219-00127\",\n        \"T219-00129\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:50:42 UTC, the proxy recorded a 51,000,000-byte client-to-server transfer from WS-MSANTOS-01 to bigsend-drop.net over HTTPS. A corresponding Zeek record reports 51,000,388 originating bytes, and Sysmon attributes the proxy connection to Firefox running as mia.santos.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T219-00182\",\n        \"T219-00184\",\n        \"T219-00185\"\n      ]\n    },\n    {\n      \"claim\": \"The transfer destination, bigsend-drop.net, is not among the organization's approved file-sharing or cloud-storage services.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T219-00182\"\n      ]\n    },\n    {\n      \"claim\": \"The sequence of archiving client data from the file server and then sending tens of megabytes to an unapproved transfer destination strongly supports suspected data exfiltration. The logs do not directly prove that c.zip was the file transmitted.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T219-00127\",\n        \"T219-00129\",\n        \"T219-00182\",\n        \"T219-00184\",\n        \"T219-00185\"\n      ]\n    },\n    {\n      \"claim\": \"The large transfer is logged at 13:50:42 UTC, rather than around 13:46 UTC as described in the alert; the available 13:46 record shows GoogleUpdater.exe starting, not the large transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T219-00149\",\n        \"T219-00150\",\n        \"T219-00182\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and Zeek records provide destination and byte counts, but the available records do not show the transmitted payload or identify the uploaded file.\",\n    \"The supplied records do not establish who initiated or authorized the activity, or whether the transfer was blocked or completed beyond the connection and byte counts recorded.\",\n    \"The alert's approximate 13:46 UTC time does not match the logged large transfer time of 13:50:42 UTC.\"\n  ],\n  \"claims_not_established\": [\n    \"That c.zip, or any particular files from the Clients share, were included in the outbound transfer.\",\n    \"What data the outbound transfer contained, who received it, or whether the transfer was authorized.\",\n    \"Whether the activity was performed by mia.santos personally or by someone else using her session.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine WS-MSANTOS-01, including c.zip, browser artifacts, and Firefox process and download/upload history.\",\n    \"Review file-server access and audit records for the Clients share around 13:44 UTC to determine which files were accessed.\",\n    \"Obtain proxy transaction details or other available content-level telemetry for the bigsend-drop.net transfer, and identify the destination service and account.\",\n    \"Confirm with mia.santos and the relevant business owner whether the archive and transfer were authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox.exe and GoogleDriveFS.exe started in mia.santos's session; the inventory lists Microsoft 365/OneDrive as approved cloud storage, but does not list Dropbox or Google Drive. Track separately; these observations do not determine this alert. (T219-00073, T219-00082)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 57552,
+    "output": 1673
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "At 13:44:31 UTC, mia.santos ran PowerShell to compress \\\\FILE-BLU-01\\Shared\\Clients into C:\\Users\\mia.santos\\AppData\\Local\\Temp\\c.zip; Sysmon recorded creation of that archive at 13:44:35 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T219-00127",
+     "T219-00129"
+    ]
+   },
+   {
+    "claim": "At 13:50:42 UTC, the proxy recorded a 51,000,000-byte client-to-server transfer from WS-MSANTOS-01 to bigsend-drop.net over HTTPS. A corresponding Zeek record reports 51,000,388 originating bytes, and Sysmon attributes the proxy connection to Firefox running as mia.santos.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T219-00182",
+     "T219-00184",
+     "T219-00185"
+    ]
+   },
+   {
+    "claim": "The transfer destination, bigsend-drop.net, is not among the organization's approved file-sharing or cloud-storage services.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T219-00182"
+    ]
+   },
+   {
+    "claim": "The sequence of archiving client data from the file server and then sending tens of megabytes to an unapproved transfer destination strongly supports suspected data exfiltration. The logs do not directly prove that c.zip was the file transmitted.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T219-00127",
+     "T219-00129",
+     "T219-00182",
+     "T219-00184",
+     "T219-00185"
+    ]
+   },
+   {
+    "claim": "The large transfer is logged at 13:50:42 UTC, rather than around 13:46 UTC as described in the alert; the available 13:46 record shows GoogleUpdater.exe starting, not the large transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T219-00149",
+     "T219-00150",
+     "T219-00182"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and Zeek records provide destination and byte counts, but the available records do not show the transmitted payload or identify the uploaded file.",
+   "The supplied records do not establish who initiated or authorized the activity, or whether the transfer was blocked or completed beyond the connection and byte counts recorded.",
+   "The alert's approximate 13:46 UTC time does not match the logged large transfer time of 13:50:42 UTC."
+  ],
+  "claims_not_established": [
+   "That c.zip, or any particular files from the Clients share, were included in the outbound transfer.",
+   "What data the outbound transfer contained, who received it, or whether the transfer was authorized.",
+   "Whether the activity was performed by mia.santos personally or by someone else using her session."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine WS-MSANTOS-01, including c.zip, browser artifacts, and Firefox process and download/upload history.",
+   "Review file-server access and audit records for the Clients share around 13:44 UTC to determine which files were accessed.",
+   "Obtain proxy transaction details or other available content-level telemetry for the bigsend-drop.net transfer, and identify the destination service and account.",
+   "Confirm with mia.santos and the relevant business owner whether the archive and transfer were authorized."
+  ],
+  "unrelated_findings": [
+   "Dropbox.exe and GoogleDriveFS.exe started in mia.santos's session; the inventory lists Microsoft 365/OneDrive as approved cloud storage, but does not list Dropbox or Google Drive. Track separately; these observations do not determine this alert. (T219-00073, T219-00082)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 14,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 17.7
+}

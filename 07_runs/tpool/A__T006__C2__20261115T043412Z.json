@@ -1,0 +1,96 @@
+{
+ "run_id": "A__T006__C2__20261115T043412Z",
+ "config": "A",
+ "scenario_id": "T006",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 231,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 93557,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"During the alert window, WS-BCARTER-01 made repeated connections to the explicit proxy on port 8080. The sampled sessions occur at irregular intervals and include multiple sessions close together; these records do not identify the external destinations.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T006-00123\",\n        \"T006-00157\",\n        \"T006-00178\",\n        \"T006-00199\",\n        \"T006-00275\",\n        \"T006-00283\",\n        \"T006-00300\",\n        \"T006-00319\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:23 UTC, the proxy recorded a successful CONNECT to drive.google.com from WS-BCARTER-01. Google Drive is not among the approved services in the supplied inventory, but this connection was before the stated periodic-connection interval and does not by itself establish malicious activity.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T006-00016\"\n      ]\n    },\n    {\n      \"claim\": \"A Dropbox updater ran as SYSTEM on WS-BCARTER-01 at 14:11 UTC. Dropbox is not among the approved services in the supplied inventory; the process record alone does not establish that it was malicious or that it made the periodic connections.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T006-00339\",\n        \"T006-00340\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:46 UTC, the domain controller recorded Kerberos ticket activity for ben.carter originating from 10.30.10.24 and targeting WS-BCARTER-01$. The supplied evidence does not identify the host using 10.30.10.24 or show a corresponding successful logon on WS-BCARTER-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T006-00190\",\n        \"T006-00191\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The repeated Zeek records show connections from the workstation to the proxy, but do not supply the external destination or the initiating process for those sessions; for example, T006-00157 and T006-00319.\",\n    \"The available proxy record with an explicit external destination is the Google Drive connection at 13:23 UTC, outside the alert's stated periodic interval; it does not explain the later proxy sessions.\",\n    \"The connection byte counters in the proxy/Zeek records do not establish that files or other data were uploaded to an external service.\",\n    \"The supplied records do not provide a complete process-to-network attribution or a full account of endpoint file activity during the alert window.\"\n  ],\n  \"claims_not_established\": [\n    \"That the periodic proxy sessions reached an attacker-controlled or otherwise malicious destination.\",\n    \"That WS-BCARTER-01 uploaded sensitive data or otherwise exfiltrated information.\",\n    \"That Dropbox or Google Drive was responsible for the periodic sessions.\",\n    \"That the Dropbox updater was unauthorized in origin, tampered with, or malicious.\",\n    \"That the Kerberos activity from 10.30.10.24 represents unauthorized remote access.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Proxy logs for 13:20\u201314:20 UTC with the requested CONNECT destinations, timestamps, byte direction, and available user-agent or request metadata.\",\n    \"Endpoint network telemetry mapping each proxy session to its originating process, including process image, command line, user, and process ancestry.\",\n    \"Dropbox installation, file-signature, hash, configuration, and execution-history evidence to determine whether it is an authorized or altered installation.\",\n    \"Endpoint file and browser evidence for the interval, including file access, downloads, uploads, and any data staged for transfer.\",\n    \"Asset and authentication records identifying 10.30.10.24, plus corresponding logon events on WS-BCARTER-01.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 34690,
+    "output": 2581,
+    "reasoning": 1662
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "During the alert window, WS-BCARTER-01 made repeated connections to the explicit proxy on port 8080. The sampled sessions occur at irregular intervals and include multiple sessions close together; these records do not identify the external destinations.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T006-00123",
+     "T006-00157",
+     "T006-00178",
+     "T006-00199",
+     "T006-00275",
+     "T006-00283",
+     "T006-00300",
+     "T006-00319"
+    ]
+   },
+   {
+    "claim": "At 13:23 UTC, the proxy recorded a successful CONNECT to drive.google.com from WS-BCARTER-01. Google Drive is not among the approved services in the supplied inventory, but this connection was before the stated periodic-connection interval and does not by itself establish malicious activity.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T006-00016"
+    ]
+   },
+   {
+    "claim": "A Dropbox updater ran as SYSTEM on WS-BCARTER-01 at 14:11 UTC. Dropbox is not among the approved services in the supplied inventory; the process record alone does not establish that it was malicious or that it made the periodic connections.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T006-00339",
+     "T006-00340"
+    ]
+   },
+   {
+    "claim": "At 13:46 UTC, the domain controller recorded Kerberos ticket activity for ben.carter originating from 10.30.10.24 and targeting WS-BCARTER-01$. The supplied evidence does not identify the host using 10.30.10.24 or show a corresponding successful logon on WS-BCARTER-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T006-00190",
+     "T006-00191"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The repeated Zeek records show connections from the workstation to the proxy, but do not supply the external destination or the initiating process for those sessions; for example, T006-00157 and T006-00319.",
+   "The available proxy record with an explicit external destination is the Google Drive connection at 13:23 UTC, outside the alert's stated periodic interval; it does not explain the later proxy sessions.",
+   "The connection byte counters in the proxy/Zeek records do not establish that files or other data were uploaded to an external service.",
+   "The supplied records do not provide a complete process-to-network attribution or a full account of endpoint file activity during the alert window."
+  ],
+  "claims_not_established": [
+   "That the periodic proxy sessions reached an attacker-controlled or otherwise malicious destination.",
+   "That WS-BCARTER-01 uploaded sensitive data or otherwise exfiltrated information.",
+   "That Dropbox or Google Drive was responsible for the periodic sessions.",
+   "That the Dropbox updater was unauthorized in origin, tampered with, or malicious.",
+   "That the Kerberos activity from 10.30.10.24 represents unauthorized remote access."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Proxy logs for 13:20\u201314:20 UTC with the requested CONNECT destinations, timestamps, byte direction, and available user-agent or request metadata.",
+   "Endpoint network telemetry mapping each proxy session to its originating process, including process image, command line, user, and process ancestry.",
+   "Dropbox installation, file-signature, hash, configuration, and execution-history evidence to determine whether it is an authorized or altered installation.",
+   "Endpoint file and browser evidence for the interval, including file access, downloads, uploads, and any data staged for transfer.",
+   "Asset and authentication records identifying 10.30.10.24, plus corresponding logon events on WS-BCARTER-01."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 24.8
+}

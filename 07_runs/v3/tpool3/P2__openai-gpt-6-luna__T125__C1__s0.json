@@ -1,0 +1,123 @@
+{
+ "scenario_id": "T125",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted periodic HTTPS activity is visible from 13:40:36 through 14:10:22 UTC, with repeated proxy CONNECTs to update.routewise.co:443 at roughly five-minute intervals. The available records do not show this destination during 13:30\u201313:40.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T125-00164\",\n        \"T125-00183\",\n        \"T125-00221\",\n        \"T125-00231\",\n        \"T125-00241\",\n        \"T125-00250\",\n        \"T125-00265\"\n      ]\n    },\n    {\n      \"claim\": \"The first observed connection is associated with C:\\\\Users\\\\kim.nguyen\\\\AppData\\\\Local\\\\RouteWise\\\\routewiseupd.exe, running as kim.nguyen. This differs from the inventory's approved updater location, C:\\\\Program Files\\\\RouteWise\\\\routewiseupd.exe.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T125-00162\",\n        \"T125-00166\",\n        \"T125-00167\"\n      ]\n    },\n    {\n      \"claim\": \"The observed destination is update.routewise.co, whereas the inventory lists update.routewise.com as the approved update-check domain. The domain mismatch, together with the executable's different location, makes this activity suspicious.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T125-00164\",\n        \"T125-00183\",\n        \"T125-00221\",\n        \"T125-00231\",\n        \"T125-00241\",\n        \"T125-00250\",\n        \"T125-00265\"\n      ]\n    },\n    {\n      \"claim\": \"At the first observed update-domain connection, the proxy reports a Firefox user-agent even though the connection is associated with routewiseupd.exe. This is an additional inconsistency, though the records do not establish why that user-agent was used.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T125-00162\",\n        \"T125-00164\",\n        \"T125-00166\",\n        \"T125-00167\"\n      ]\n    },\n    {\n      \"claim\": \"The proxy logs the HTTPS CONNECT requests and the workstation's Sysmon network events show connections to the explicit proxy at 10.52.20.30:8080; together these records associate the recurring activity with the updater process.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T125-00164\",\n        \"T125-00165\",\n        \"T125-00166\",\n        \"T125-00167\",\n        \"T125-00183\",\n        \"T125-00184\",\n        \"T125-00221\",\n        \"T125-00222\",\n        \"T125-00231\",\n        \"T125-00234\",\n        \"T125-00241\",\n        \"T125-00244\",\n        \"T125-00250\",\n        \"T125-00253\",\n        \"T125-00265\",\n        \"T125-00268\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available records show the workstation connecting to the explicit proxy, not a direct connection to the external server; the proxy records provide the requested hostname and byte counts but not the destination IP.\",\n    \"The shown CONNECT records do not expose the HTTPS request paths or response contents, so the exchanged payload cannot be assessed from these records.\",\n    \"No file hash, signature-validation result, or malware analysis for the per-user routewiseupd.exe is provided.\",\n    \"The available records support recurring activity beginning at 13:40:36, but do not establish that the same destination was contacted at roughly five-minute intervals starting at 13:30.\"\n  ],\n  \"claims_not_established\": [\n    \"The records do not establish that the executable or its network responses are definitively malware.\",\n    \"The records do not establish whether update.routewise.co is controlled by the legitimate RouteWise vendor or by an unrelated party.\",\n    \"The records do not establish what data, if any, was sent in the HTTPS traffic or what content was returned.\",\n    \"The records do not establish that the observed file creation at 13:40:37 was malicious; it could also reflect updater behavior.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and preserve the per-user routewiseupd.exe and collect its hash, signature-validation details, and provenance; compare it with the inventory-approved updater.\",\n    \"Obtain DNS and proxy resolution details for update.routewise.co, domain ownership/reputation information, and any available TLS or proxy inspection data for the sessions.\",\n    \"Review endpoint process, file, persistence, and security-product telemetry around the updater's launch and file creation, and check whether the same binary or destination appears on other hosts.\",\n    \"Confirm with the RouteWise service owner whether the .co domain, per-user install location, and observed user-agent are legitimate.\"\n  ],\n  \"unrelated_findings\": [\n    \"Google Drive File Stream was launched on the workstation, and Firefox accessed drive.google.com. The inventory says no other cloud-storage services are approved; handle this separately and do not use it to decide the alerted RouteWise activity. (T125-00100, T125-00122, T125-00123)\",\n    \"GlobalProtect PanGPA.exe was launched, despite the inventory stating there is no VPN. These records do not show that a VPN connection was established; investigate separately. (T125-00097, T125-00098, T125-00099)\",\n    \"A successful SSH connection from FILE-COP-01 to WS-KNGUYEN-01 on port 22 is recorded, although the inventory says remote administration is only performed from WS-PBECKER-01. Investigate separately. (T125-00306)\",\n    \"Kim Nguyen launched PowerShell, which launched psql.exe with the username postgres; a PostgreSQL connection from the workstation to 10.52.10.24:5432 is also recorded. Investigate this separate activity in context. (T125-00111, T125-00113, T125-00114, T125-00115)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 48031,
+    "output": 3346
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "The alerted periodic HTTPS activity is visible from 13:40:36 through 14:10:22 UTC, with repeated proxy CONNECTs to update.routewise.co:443 at roughly five-minute intervals. The available records do not show this destination during 13:30\u201313:40.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T125-00164",
+     "T125-00183",
+     "T125-00221",
+     "T125-00231",
+     "T125-00241",
+     "T125-00250",
+     "T125-00265"
+    ]
+   },
+   {
+    "claim": "The first observed connection is associated with C:\\Users\\kim.nguyen\\AppData\\Local\\RouteWise\\routewiseupd.exe, running as kim.nguyen. This differs from the inventory's approved updater location, C:\\Program Files\\RouteWise\\routewiseupd.exe.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T125-00162",
+     "T125-00166",
+     "T125-00167"
+    ]
+   },
+   {
+    "claim": "The observed destination is update.routewise.co, whereas the inventory lists update.routewise.com as the approved update-check domain. The domain mismatch, together with the executable's different location, makes this activity suspicious.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T125-00164",
+     "T125-00183",
+     "T125-00221",
+     "T125-00231",
+     "T125-00241",
+     "T125-00250",
+     "T125-00265"
+    ]
+   },
+   {
+    "claim": "At the first observed update-domain connection, the proxy reports a Firefox user-agent even though the connection is associated with routewiseupd.exe. This is an additional inconsistency, though the records do not establish why that user-agent was used.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T125-00162",
+     "T125-00164",
+     "T125-00166",
+     "T125-00167"
+    ]
+   },
+   {
+    "claim": "The proxy logs the HTTPS CONNECT requests and the workstation's Sysmon network events show connections to the explicit proxy at 10.52.20.30:8080; together these records associate the recurring activity with the updater process.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T125-00164",
+     "T125-00165",
+     "T125-00166",
+     "T125-00167",
+     "T125-00183",
+     "T125-00184",
+     "T125-00221",
+     "T125-00222",
+     "T125-00231",
+     "T125-00234",
+     "T125-00241",
+     "T125-00244",
+     "T125-00250",
+     "T125-00253",
+     "T125-00265",
+     "T125-00268"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available records show the workstation connecting to the explicit proxy, not a direct connection to the external server; the proxy records provide the requested hostname and byte counts but not the destination IP.",
+   "The shown CONNECT records do not expose the HTTPS request paths or response contents, so the exchanged payload cannot be assessed from these records.",
+   "No file hash, signature-validation result, or malware analysis for the per-user routewiseupd.exe is provided.",
+   "The available records support recurring activity beginning at 13:40:36, but do not establish that the same destination was contacted at roughly five-minute intervals starting at 13:30."
+  ],
+  "claims_not_established": [
+   "The records do not establish that the executable or its network responses are definitively malware.",
+   "The records do not establish whether update.routewise.co is controlled by the legitimate RouteWise vendor or by an unrelated party.",
+   "The records do not establish what data, if any, was sent in the HTTPS traffic or what content was returned.",
+   "The records do not establish that the observed file creation at 13:40:37 was malicious; it could also reflect updater behavior."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and preserve the per-user routewiseupd.exe and collect its hash, signature-validation details, and provenance; compare it with the inventory-approved updater.",
+   "Obtain DNS and proxy resolution details for update.routewise.co, domain ownership/reputation information, and any available TLS or proxy inspection data for the sessions.",
+   "Review endpoint process, file, persistence, and security-product telemetry around the updater's launch and file creation, and check whether the same binary or destination appears on other hosts.",
+   "Confirm with the RouteWise service owner whether the .co domain, per-user install location, and observed user-agent are legitimate."
+  ],
+  "unrelated_findings": [
+   "Google Drive File Stream was launched on the workstation, and Firefox accessed drive.google.com. The inventory says no other cloud-storage services are approved; handle this separately and do not use it to decide the alerted RouteWise activity. (T125-00100, T125-00122, T125-00123)",
+   "GlobalProtect PanGPA.exe was launched, despite the inventory stating there is no VPN. These records do not show that a VPN connection was established; investigate separately. (T125-00097, T125-00098, T125-00099)",
+   "A successful SSH connection from FILE-COP-01 to WS-KNGUYEN-01 on port 22 is recorded, although the inventory says remote administration is only performed from WS-PBECKER-01. Investigate separately. (T125-00306)",
+   "Kim Nguyen launched PowerShell, which launched psql.exe with the username postgres; a PostgreSQL connection from the workstation to 10.52.10.24:5432 is also recorded. Investigate this separate activity in context. (T125-00111, T125-00113, T125-00114, T125-00115)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 37,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 39.3
+}

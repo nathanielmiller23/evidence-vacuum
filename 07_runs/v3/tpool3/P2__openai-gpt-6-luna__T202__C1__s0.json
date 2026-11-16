@@ -1,0 +1,77 @@
+{
+ "scenario_id": "T202",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted failures repeatedly target svc-inventory from FILE-BLU-01, with the same process path (lsass.exe), source address (10.54.20.20), and roughly one-minute cadence; this is consistent with the inventory job's documented re-authentication interval.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T202-00001\", \"T202-00003\", \"T202-00011\", \"T202-00016\", \"T202-00023\", \"T202-00035\"]\n    },\n    {\n      \"claim\": \"The failures report incorrect-password status (0xc000006a); corresponding domain-controller records also show that status, and Kerberos pre-authentication failures show status 0x18.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T202-00001\", \"T202-00002\", \"T202-00012\", \"T202-00016\", \"T202-00036\"]\n    },\n    {\n      \"claim\": \"The observed source and recurring failure pattern fit the scheduled svc-inventory password rotation and the documented need to manually update the InventorySync job afterward; the evidence does not show an unfamiliar source or a successful logon.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T202-00001\", \"T202-00011\", \"T202-00016\", \"T202-00035\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records cover failed authentication attempts only; they do not establish whether there were successful logons elsewhere in the review window.\",\n    \"The records do not include the password-rotation event, InventorySync configuration or execution logs, or evidence that the job's credential was updated.\"\n  ],\n  \"claims_not_established\": [\n    \"The logs do not confirm that the scheduled password rotation occurred at 13:30 UTC or that the repeated failures were definitively caused by the job retaining an old password.\",\n    \"The logs do not establish whether any successful svc-inventory authentication or other activity occurred outside the supplied records.\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [\n    \"As an operational follow-up, verify the password rotation and update the InventorySync job credential; check subsequent job and authentication logs for successful runs.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 6245,
+    "output": 1056
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "The alerted failures repeatedly target svc-inventory from FILE-BLU-01, with the same process path (lsass.exe), source address (10.54.20.20), and roughly one-minute cadence; this is consistent with the inventory job's documented re-authentication interval.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T202-00001",
+     "T202-00003",
+     "T202-00011",
+     "T202-00016",
+     "T202-00023",
+     "T202-00035"
+    ]
+   },
+   {
+    "claim": "The failures report incorrect-password status (0xc000006a); corresponding domain-controller records also show that status, and Kerberos pre-authentication failures show status 0x18.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T202-00001",
+     "T202-00002",
+     "T202-00012",
+     "T202-00016",
+     "T202-00036"
+    ]
+   },
+   {
+    "claim": "The observed source and recurring failure pattern fit the scheduled svc-inventory password rotation and the documented need to manually update the InventorySync job afterward; the evidence does not show an unfamiliar source or a successful logon.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T202-00001",
+     "T202-00011",
+     "T202-00016",
+     "T202-00035"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records cover failed authentication attempts only; they do not establish whether there were successful logons elsewhere in the review window.",
+   "The records do not include the password-rotation event, InventorySync configuration or execution logs, or evidence that the job's credential was updated."
+  ],
+  "claims_not_established": [
+   "The logs do not confirm that the scheduled password rotation occurred at 13:30 UTC or that the repeated failures were definitively caused by the job retaining an old password.",
+   "The logs do not establish whether any successful svc-inventory authentication or other activity occurred outside the supplied records."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [
+   "As an operational follow-up, verify the password rotation and update the InventorySync job credential; check subsequent job and authentication logs for successful runs."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 13.8
+}

@@ -1,0 +1,137 @@
+{
+ "scenario_id": "T125",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.86,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted periodic HTTPS activity is tied to routewiseupd.exe running from Kim Nguyen's user-profile AppData directory. The process started at 13:40:33 and made proxy-routed connections at approximately five-minute intervals through 14:10:22.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T125-00162\",\n        \"T125-00164\",\n        \"T125-00166\",\n        \"T125-00167\",\n        \"T125-00182\",\n        \"T125-00183\",\n        \"T125-00184\",\n        \"T125-00219\",\n        \"T125-00221\",\n        \"T125-00222\",\n        \"T125-00231\",\n        \"T125-00232\",\n        \"T125-00234\",\n        \"T125-00241\",\n        \"T125-00242\",\n        \"T125-00244\",\n        \"T125-00250\",\n        \"T125-00251\",\n        \"T125-00253\",\n        \"T125-00265\",\n        \"T125-00266\",\n        \"T125-00268\"\n      ]\n    },\n    {\n      \"claim\": \"The updater contacted update.routewise.co, whereas the inventory lists RouteWise's update service as update.routewise.com. The observed executable is also in AppData, rather than the inventoried C:\\\\Program Files\\\\RouteWise location.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T125-00162\",\n        \"T125-00164\",\n        \"T125-00166\",\n        \"T125-00167\",\n        \"T125-00183\",\n        \"T125-00184\"\n      ]\n    },\n    {\n      \"claim\": \"The updater's proxy connections report a Firefox user agent, despite endpoint telemetry attributing the connections to routewiseupd.exe.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T125-00164\",\n        \"T125-00166\",\n        \"T125-00167\",\n        \"T125-00183\",\n        \"T125-00184\"\n      ]\n    },\n    {\n      \"claim\": \"The same routewiseupd.exe process wrote a file at its own AppData path shortly after its first observed connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T125-00162\",\n        \"T125-00164\",\n        \"T125-00168\"\n      ]\n    },\n    {\n      \"claim\": \"Taken together, the periodicity resembles the approved updater's check cadence, but the lookalike domain, unexpected executable location, and mismatched user agent support treating this alerted activity as likely malicious rather than as the inventoried RouteWise updater.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T125-00162\",\n        \"T125-00164\",\n        \"T125-00166\",\n        \"T125-00167\",\n        \"T125-00168\",\n        \"T125-00183\",\n        \"T125-00184\",\n        \"T125-00221\",\n        \"T125-00222\",\n        \"T125-00231\",\n        \"T125-00234\",\n        \"T125-00241\",\n        \"T125-00244\",\n        \"T125-00250\",\n        \"T125-00253\",\n        \"T125-00265\",\n        \"T125-00268\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show the requested hostname and proxy tunnel metadata, but do not establish the external server's identity, certificate details, or the content exchanged over the updater's HTTPS connections.\",\n    \"The available process records do not provide a hash, signature-validation result, or file provenance for the AppData executable.\",\n    \"The supplied records show this updater's connections beginning at 13:40:36; they do not corroborate the alert's asserted activity from 13:30 through 13:40.\"\n  ],\n  \"claims_not_established\": [\n    \"The executable's contents are malicious or that it successfully installed or executed a malicious payload.\",\n    \"Who controls update.routewise.co, or whether the domain is malicious rather than an undocumented legitimate endpoint.\",\n    \"Whether any data was exfiltrated or any other compromise occurred.\",\n    \"Whether the executable was knowingly installed or used by Kim Nguyen.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Collect and analyze the executable and its hash, signature, creation/download provenance, and any related files or persistence mechanisms.\",\n    \"Obtain DNS, proxy, and TLS certificate or server-reputation evidence for update.routewise.co, and determine whether it is affiliated with the approved RouteWise service.\",\n    \"Review proxy and endpoint telemetry for the full alerted interval, including 13:30\u201313:40 UTC, and investigate related activity before and after the observed process lifetime.\",\n    \"Validate with the software owner or vendor whether this AppData installation path and update.routewise.co endpoint are legitimate.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate ticket: Google Drive File Stream ran on WS-KNGUYEN-01 and Firefox accessed drive.google.com; Google Drive is not among the listed approved cloud-storage services. This does not determine the RouteWise alert. (T125-00100, T125-00122, T125-00123, T125-00127, T125-00129, T125-00138)\",\n    \"Separate ticket: FILE-COP-01 established a TCP connection to WS-KNGUYEN-01 on port 22. The inventory says remote administration is only performed from WS-PBECKER-01; the records do not establish the purpose or authorization of this connection. (T125-00304, T125-00306)\",\n    \"Separate ticket: Kim Nguyen launched PowerShell, which launched psql with the command line -U postgres -d metrics; a PostgreSQL connection from the workstation to 10.52.10.24:5432 was also recorded. The available records do not establish the purpose or authorization. (T125-00111, T125-00113, T125-00114, T125-00115)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 48031,
+    "output": 3165
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.86,
+  "supporting_observations": [
+   {
+    "claim": "The alerted periodic HTTPS activity is tied to routewiseupd.exe running from Kim Nguyen's user-profile AppData directory. The process started at 13:40:33 and made proxy-routed connections at approximately five-minute intervals through 14:10:22.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T125-00162",
+     "T125-00164",
+     "T125-00166",
+     "T125-00167",
+     "T125-00182",
+     "T125-00183",
+     "T125-00184",
+     "T125-00219",
+     "T125-00221",
+     "T125-00222",
+     "T125-00231",
+     "T125-00232",
+     "T125-00234",
+     "T125-00241",
+     "T125-00242",
+     "T125-00244",
+     "T125-00250",
+     "T125-00251",
+     "T125-00253",
+     "T125-00265",
+     "T125-00266",
+     "T125-00268"
+    ]
+   },
+   {
+    "claim": "The updater contacted update.routewise.co, whereas the inventory lists RouteWise's update service as update.routewise.com. The observed executable is also in AppData, rather than the inventoried C:\\Program Files\\RouteWise location.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T125-00162",
+     "T125-00164",
+     "T125-00166",
+     "T125-00167",
+     "T125-00183",
+     "T125-00184"
+    ]
+   },
+   {
+    "claim": "The updater's proxy connections report a Firefox user agent, despite endpoint telemetry attributing the connections to routewiseupd.exe.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T125-00164",
+     "T125-00166",
+     "T125-00167",
+     "T125-00183",
+     "T125-00184"
+    ]
+   },
+   {
+    "claim": "The same routewiseupd.exe process wrote a file at its own AppData path shortly after its first observed connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T125-00162",
+     "T125-00164",
+     "T125-00168"
+    ]
+   },
+   {
+    "claim": "Taken together, the periodicity resembles the approved updater's check cadence, but the lookalike domain, unexpected executable location, and mismatched user agent support treating this alerted activity as likely malicious rather than as the inventoried RouteWise updater.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T125-00162",
+     "T125-00164",
+     "T125-00166",
+     "T125-00167",
+     "T125-00168",
+     "T125-00183",
+     "T125-00184",
+     "T125-00221",
+     "T125-00222",
+     "T125-00231",
+     "T125-00234",
+     "T125-00241",
+     "T125-00244",
+     "T125-00250",
+     "T125-00253",
+     "T125-00265",
+     "T125-00268"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show the requested hostname and proxy tunnel metadata, but do not establish the external server's identity, certificate details, or the content exchanged over the updater's HTTPS connections.",
+   "The available process records do not provide a hash, signature-validation result, or file provenance for the AppData executable.",
+   "The supplied records show this updater's connections beginning at 13:40:36; they do not corroborate the alert's asserted activity from 13:30 through 13:40."
+  ],
+  "claims_not_established": [
+   "The executable's contents are malicious or that it successfully installed or executed a malicious payload.",
+   "Who controls update.routewise.co, or whether the domain is malicious rather than an undocumented legitimate endpoint.",
+   "Whether any data was exfiltrated or any other compromise occurred.",
+   "Whether the executable was knowingly installed or used by Kim Nguyen."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Collect and analyze the executable and its hash, signature, creation/download provenance, and any related files or persistence mechanisms.",
+   "Obtain DNS, proxy, and TLS certificate or server-reputation evidence for update.routewise.co, and determine whether it is affiliated with the approved RouteWise service.",
+   "Review proxy and endpoint telemetry for the full alerted interval, including 13:30\u201313:40 UTC, and investigate related activity before and after the observed process lifetime.",
+   "Validate with the software owner or vendor whether this AppData installation path and update.routewise.co endpoint are legitimate."
+  ],
+  "unrelated_findings": [
+   "Separate ticket: Google Drive File Stream ran on WS-KNGUYEN-01 and Firefox accessed drive.google.com; Google Drive is not among the listed approved cloud-storage services. This does not determine the RouteWise alert. (T125-00100, T125-00122, T125-00123, T125-00127, T125-00129, T125-00138)",
+   "Separate ticket: FILE-COP-01 established a TCP connection to WS-KNGUYEN-01 on port 22. The inventory says remote administration is only performed from WS-PBECKER-01; the records do not establish the purpose or authorization of this connection. (T125-00304, T125-00306)",
+   "Separate ticket: Kim Nguyen launched PowerShell, which launched psql with the command line -U postgres -d metrics; a PostgreSQL connection from the workstation to 10.52.10.24:5432 was also recorded. The available records do not establish the purpose or authorization. (T125-00111, T125-00113, T125-00114, T125-00115)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 53,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 32.1
+}

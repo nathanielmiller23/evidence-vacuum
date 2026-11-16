@@ -1,0 +1,109 @@
+{
+ "scenario_id": "T285",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.86,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"WS-RDIAZ-01 ran gradebookproupd.exe as raul.diaz from the user's AppData location. The inventory identifies the approved GradeBook Pro updater at a different path under Program Files.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T285-00080\"]\n    },\n    {\n      \"claim\": \"The updater process created a file at its own executable path shortly after starting; the records do not establish why the file was created or whether it was modified.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T285-00080\", \"T285-00087\"]\n    },\n    {\n      \"claim\": \"Proxy records show repeated HTTPS CONNECT attempts to update.gradebookpro.co from 13:36 through 14:06. The inventory says the approved updater checks update.gradebookpro.com, so the observed hostname does not match the listed approved hostname.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T285-00082\", \"T285-00111\", \"T285-00118\", \"T285-00152\", \"T285-00166\", \"T285-00182\", \"T285-00212\"]\n    },\n    {\n      \"claim\": \"Sysmon network events attribute the repeated connections to the same gradebookproupd.exe process (PID 4892) connecting to the explicit proxy on port 8080. One corresponding proxy attempt returned status 502 rather than establishing a successful tunnel.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T285-00086\", \"T285-00114\", \"T285-00121\", \"T285-00155\", \"T285-00169\", \"T285-00152\", \"T285-00167\", \"T285-00185\", \"T285-00215\"]\n    },\n    {\n      \"claim\": \"The hostname mismatch and executable running from a user-profile location warrant investigation, but the available records do not establish that the updater or its destination is malicious.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T285-00080\", \"T285-00082\", \"T285-00087\", \"T285-00111\", \"T285-00118\", \"T285-00182\", \"T285-00212\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The updater connections are recorded as HTTPS tunnels through the proxy; the provided records do not expose the encrypted request or response contents.\",\n    \"The evidence contains no updater hash, signature-validation result, or provenance establishing whether the executable is an authorized installation.\",\n    \"The records show the hostname in proxy logs but do not establish whether update.gradebookpro.co is an authorized alias for the inventory-listed update.gradebookpro.com.\"\n  ],\n  \"claims_not_established\": [\n    \"That update.gradebookpro.co is malicious or controlled by an attacker.\",\n    \"That the updater executable is malicious, modified, or unauthorized; its location and file-creation event alone do not establish this.\",\n    \"That the HTTPS traffic delivered a payload, caused execution of downloaded content, or transferred sensitive data.\",\n    \"Whether the AppData installation path or the .co hostname is an approved GradeBook Pro configuration.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Obtain the updater file from WS-RDIAZ-01 and verify its hash, digital signature, provenance, and creation or modification history.\",\n    \"Confirm with the software owner or vendor whether update.gradebookpro.co is an authorized update endpoint and whether this per-user installation path is expected.\",\n    \"Collect endpoint and proxy evidence that can identify the TLS session contents or any files downloaded during the repeated connections.\",\n    \"Compare the executable and destination hostname with known-good GradeBook Pro installations and historical approved traffic.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-RDIAZ-01 accessed dl.dropboxusercontent.com through the proxy; Dropbox is not among the approved services listed in the environment context. This is outside the alerted GradeBook updater activity and should be handled separately. (T285-00171, T285-00172)\",\n    \"The host identified in the records as PROXY-ORC-01 attempted connections from 10.56.20.30 to WS-RDIAZ-01 on ports 22, 445, 8080, 8443, and 3389; the records show failed, rejected, or reset attempts. Review separately rather than using these attempts to decide this alert. (T285-00038, T285-00039, T285-00040, T285-00041, T285-00070, T285-00073, T285-00074)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 48343,
+    "output": 3119
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.86,
+  "supporting_observations": [
+   {
+    "claim": "WS-RDIAZ-01 ran gradebookproupd.exe as raul.diaz from the user's AppData location. The inventory identifies the approved GradeBook Pro updater at a different path under Program Files.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T285-00080"
+    ]
+   },
+   {
+    "claim": "The updater process created a file at its own executable path shortly after starting; the records do not establish why the file was created or whether it was modified.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T285-00080",
+     "T285-00087"
+    ]
+   },
+   {
+    "claim": "Proxy records show repeated HTTPS CONNECT attempts to update.gradebookpro.co from 13:36 through 14:06. The inventory says the approved updater checks update.gradebookpro.com, so the observed hostname does not match the listed approved hostname.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T285-00082",
+     "T285-00111",
+     "T285-00118",
+     "T285-00152",
+     "T285-00166",
+     "T285-00182",
+     "T285-00212"
+    ]
+   },
+   {
+    "claim": "Sysmon network events attribute the repeated connections to the same gradebookproupd.exe process (PID 4892) connecting to the explicit proxy on port 8080. One corresponding proxy attempt returned status 502 rather than establishing a successful tunnel.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T285-00086",
+     "T285-00114",
+     "T285-00121",
+     "T285-00155",
+     "T285-00169",
+     "T285-00152",
+     "T285-00167",
+     "T285-00185",
+     "T285-00215"
+    ]
+   },
+   {
+    "claim": "The hostname mismatch and executable running from a user-profile location warrant investigation, but the available records do not establish that the updater or its destination is malicious.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T285-00080",
+     "T285-00082",
+     "T285-00087",
+     "T285-00111",
+     "T285-00118",
+     "T285-00182",
+     "T285-00212"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The updater connections are recorded as HTTPS tunnels through the proxy; the provided records do not expose the encrypted request or response contents.",
+   "The evidence contains no updater hash, signature-validation result, or provenance establishing whether the executable is an authorized installation.",
+   "The records show the hostname in proxy logs but do not establish whether update.gradebookpro.co is an authorized alias for the inventory-listed update.gradebookpro.com."
+  ],
+  "claims_not_established": [
+   "That update.gradebookpro.co is malicious or controlled by an attacker.",
+   "That the updater executable is malicious, modified, or unauthorized; its location and file-creation event alone do not establish this.",
+   "That the HTTPS traffic delivered a payload, caused execution of downloaded content, or transferred sensitive data.",
+   "Whether the AppData installation path or the .co hostname is an approved GradeBook Pro configuration."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Obtain the updater file from WS-RDIAZ-01 and verify its hash, digital signature, provenance, and creation or modification history.",
+   "Confirm with the software owner or vendor whether update.gradebookpro.co is an authorized update endpoint and whether this per-user installation path is expected.",
+   "Collect endpoint and proxy evidence that can identify the TLS session contents or any files downloaded during the repeated connections.",
+   "Compare the executable and destination hostname with known-good GradeBook Pro installations and historical approved traffic."
+  ],
+  "unrelated_findings": [
+   "WS-RDIAZ-01 accessed dl.dropboxusercontent.com through the proxy; Dropbox is not among the approved services listed in the environment context. This is outside the alerted GradeBook updater activity and should be handled separately. (T285-00171, T285-00172)",
+   "The host identified in the records as PROXY-ORC-01 attempted connections from 10.56.20.30 to WS-RDIAZ-01 on ports 22, 445, 8080, 8443, and 3389; the records show failed, rejected, or reset attempts. Review separately rather than using these attempts to decide this alert. (T285-00038, T285-00039, T285-00040, T285-00041, T285-00070, T285-00073, T285-00074)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 26,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 32.3
+}

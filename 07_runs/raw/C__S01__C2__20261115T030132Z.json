@@ -1,0 +1,605 @@
+{
+ "run_id": "C__S01__C2__20261115T030132Z",
+ "config": "C",
+ "scenario_id": "S01",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "agent_setting_config": "settings.ev.toml",
+ "settings_sha": "d164a225cec03452",
+ "cuga_commit": "f6e2335aa326e1cfdeb6e80a350394f6ab8b7b72",
+ "max_tool_calls": 30,
+ "timeout_s": 400,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task": "Alert: Authentication monitoring: repeated failed domain logons involving account raj.iyer around 13:40 UTC on 2026-11-10. Review authentication activity between 13:20 and 14:20 UTC and decide whether it is malicious.\n\nEnvironment context (from the organization's asset and service inventory):\nOrganization: Lakeview Accounting (domain LAKEVIEW-ACCT / lakeview-acct.local), a small accounting office.\nHosts: workstations WS-DWELLS-01 (dana.wells, accountant), WS-RIYER-01 (raj.iyer, analyst), WS-KORTEGA-01 (kim.ortega, IT administrator), WS-TNGUYEN-01 (tara.nguyen, help desk); servers DC-LV-01 (domain controller, DNS), FILE-LV-01 (file server, finance shares, scheduled jobs), PROXY-LV-01 (explicit web proxy, port 8080; all web egress goes through it). There is no VPN; remote administration is only done from WS-KORTEGA-01 inside the office.\nAccounts: kim.ortega is the only IT administrator. tara.nguyen (help desk) can create domain accounts but is not an administrator. Service accounts: svc-backup (Vaultline backup agent on FILE-LV-01) and svc-reporting (ReportSync job on FILE-LV-01, runs every minute and re-authenticates on each run).\nChange calendar for 2026-11-10: the svc-reporting password is scheduled to be rotated by IT at 13:30 UTC (CHG-2291); the ReportSync job on FILE-LV-01 must then be updated manually with the new password. Monthly workstation patching by IT is scheduled during business hours.\nIT practices: kim.ortega patches workstations by remotely running \\\\FILE-LV-01\\IT\\scripts\\Install-MonthlyPatches.ps1 with PowerShell from WS-KORTEGA-01. The help desk creates temporary contractor accounts on request, always named temp.<name>, added only to the Contractors domain group; temporary accounts never receive administrator rights. No other account creation is expected.\nApproved software and services: Microsoft 365 / OneDrive; Vaultline (vaultline-backup.com) offsite backup; DataGrid Analytics desktop (installed in C:\\Program Files\\DataGrid\\Analytics\\ on analyst workstations), whose updater dgupdate.exe checks update.datagrid-analytics.com over HTTPS about every 5 minutes. No other file-sharing, cloud-storage or remote-access services are approved.\n\nObjective: Determine whether the available security evidence supports a malicious-activity finding, a benign disposition, or an insufficient-evidence determination.\n\nEvidence is available only through these tools: list_sources, query, get_record. Retrieve evidence with the tools before answering. You may make at most 30 tool calls.\n\nRespond with a single JSON object (no prose, no code fences) that conforms to this JSON schema. Output only the instance, not the schema:\n{\n \"type\": \"object\",\n \"additionalProperties\": false,\n \"required\": [\n  \"assessment\",\n  \"confidence\",\n  \"supporting_observations\",\n  \"known_telemetry_limitations\",\n  \"claims_not_established\",\n  \"recommended_action\",\n  \"additional_evidence_needed\"\n ],\n \"properties\": {\n  \"assessment\": {\n   \"type\": \"string\",\n   \"enum\": [\n    \"malicious\",\n    \"benign\",\n    \"insufficient_evidence\"\n   ]\n  },\n  \"confidence\": {\n   \"type\": \"number\",\n   \"minimum\": 0,\n   \"maximum\": 1,\n   \"description\": \"Probability that the assessment is correct.\"\n  },\n  \"supporting_observations\": {\n   \"type\": \"array\",\n   \"items\": {\n    \"type\": \"object\",\n    \"additionalProperties\": false,\n    \"required\": [\n     \"claim\",\n     \"claim_type\",\n     \"record_ids\"\n    ],\n    \"properties\": {\n     \"claim\": {\n      \"type\": \"string\"\n     },\n     \"claim_type\": {\n      \"type\": \"string\",\n      \"enum\": [\n       \"observed_fact\",\n       \"inferred_claim\"\n      ]\n     },\n     \"record_ids\": {\n      \"type\": \"array\",\n      \"items\": {\n       \"type\": \"string\"\n      }\n     }\n    }\n   }\n  },\n  \"known_telemetry_limitations\": {\n   \"type\": \"array\",\n   \"items\": {\n    \"type\": \"string\"\n   }\n  },\n  \"claims_not_established\": {\n   \"type\": \"array\",\n   \"items\": {\n    \"type\": \"string\"\n   },\n   \"description\": \"Material questions the available evidence cannot answer.\"\n  },\n  \"recommended_action\": {\n   \"type\": \"string\",\n   \"enum\": [\n    \"close\",\n    \"escalate\",\n    \"collect_more\"\n   ]\n  },\n  \"additional_evidence_needed\": {\n   \"type\": \"array\",\n   \"items\": {\n    \"type\": \"string\"\n   }\n  }\n }\n}",
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.84,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"A successful interactive logon for raj.iyer occurred on WS-RIYER-01 at 13:21 UTC, followed by standard user-session process activity.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S01-00001\", \"S01-00003\", \"S01-00005\"]\n    },\n    {\n      \"claim\": \"At 13:23 UTC, the domain controller recorded Kerberos ticket activity for raj.iyer from 10.20.10.23, and WS-RIYER-01 recorded a successful network logon attributed to WS-KORTEGA-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S01-00009\", \"S01-00010\", \"S01-00011\"]\n    },\n    {\n      \"claim\": \"A WMIC command queried the operating system caption, version, and architecture in raj.iyer\u2019s user session shortly after the network logon; the available records do not tie it to the scheduled patch script.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S01-00012\", \"S01-00013\"]\n    },\n    {\n      \"claim\": \"Chrome opened Google Drive, an unapproved service per the supplied environment context, and the proxy recorded a successful CONNECT tunnel. The record does not establish an upload or data transfer to Drive.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S01-00042\", \"S01-00044\"]\n    },\n    {\n      \"claim\": \"The proxy recorded a Reddit connection from WS-RIYER-01 during the review window; this is an unapproved destination in the supplied context but does not by itself establish malicious activity.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S01-00074\"]\n    },\n    {\n      \"claim\": \"At 14:10 UTC, OneDrive was launched and accessed, consistent with an approved service, although these records do not establish what data was accessed or transferred.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S01-00076\", \"S01-00078\", \"S01-00079\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The 4625 search for the review window returned no matching records, and the domain-controller 4771 search also returned no matching records; these empty results do not prove that all authentication failures were captured.\",\n    \"The available Windows Security records for raj.iyer show no events around the alert\u2019s stated 13:40 time; the returned records include successful logons and other activity, not the reported repeated failures.\",\n    \"Sysmon, Zeek connection, DNS, and SSL searches on FILE-LV-01 returned no records for the review window, limiting visibility into the reported service-account rotation and ReportSync job.\",\n    \"Zeek connection, DNS, and SSL queries for the window returned no records, so they provide no independent network corroboration.\",\n    \"The Google Drive proxy record is a CONNECT tunnel; the available record does not show file contents, upload activity, or whether sensitive data was transferred.\"\n  ],\n  \"claims_not_established\": [\n    \"That repeated failed domain logons for raj.iyer occurred around 13:40 UTC.\",\n    \"Whether the network logon from WS-KORTEGA-01 and subsequent WMIC activity were authorized IT patching or another activity.\",\n    \"Whether raj.iyer uploaded data to Google Drive or otherwise used it for exfiltration.\",\n    \"Whether the activity represents account compromise or malicious intent.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"The underlying authentication alert details and complete domain-controller authentication records for 13:20\u201314:20 UTC, including the events and source addresses that triggered the alert.\",\n    \"WS-KORTEGA-01 endpoint and PowerShell/SMB audit records, plus change or patching records, to verify who initiated the network logon and whether the scheduled patch procedure ran.\",\n    \"Proxy or cloud audit evidence identifying Google Drive actions and any upload or file-transfer details associated with raj.iyer.\",\n    \"Confirmation from the relevant users or IT staff about the WS-KORTEGA-01-to-WS-RIYER-01 activity and the Google Drive access.\"\n  ]\n}",
+   "cuga_error": null,
+   "valid": true,
+   "validation_errors": [],
+   "cuga_tool_calls": [
+    {
+     "name": "list_sources",
+     "arguments": {},
+     "result": "{\"sources\": [\"proxy\", \"sysmon\", \"winsec\", \"zeek_conn\", \"zeek_dns\", \"zeek_ssl\"], \"known_hosts\": [\"DC-LV-01\", \"WS-RIYER-01\"]}",
+     "app_name": "runtime_tools",
+     "operation_id": "list_sources",
+     "timestamp": "2026-11-14T21:01:45.972798",
+     "duration_ms": 1.0037422180175781,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "winsec",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z"
+     },
+     "result": "{\"total_matches\": 15, \"offset\": 0, \"returned\": 15, \"rows\": [{\"record_id\": \"S01-00001\", \"ts\": \"2026-11-10T13:21:23.902Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4624\", \"raw\": \"EventID=4624 SubjectUserName=SYSTEM SubjectDomainName=NT AUTHORITY SubjectLogonId=0x3e7 TargetUserName=raj.iyer TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x65863fb LogonType=2 LogonProcessName=User32 AuthenticationPackageName=Negotiate WorkstationName=WS-RIYER-01 ProcessId=0x1124 ProcessName=C:\\\\Windows\\\\System32\\\\winlogon.exe\"}, {\"record_id\": \"S01-00003\", \"ts\": \"2026-11-10T13:21:24.153Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4688\", \"raw\": \"EventID=4688 SubjectUserName=raj.iyer SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x65863fb NewProcessId=0x112c NewProcessName=C:\\\\Windows\\\\System32\\\\userinit.exe TokenElevationType=%%1938 ProcessId=0x1124 CommandLine=userinit.exe ParentProcessName=C:\\\\Windows\\\\System32\\\\winlogon.exe MandatoryLabel=S-1-16-8192\"}, {\"record_id\": \"S01-00005\", \"ts\": \"2026-11-10T13:21:24.378Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4688\", \"raw\": \"EventID=4688 SubjectUserName=raj.iyer SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x65863fb NewProcessId=0x1140 NewProcessName=C:\\\\Windows\\\\explorer.exe TokenElevationType=%%1938 ProcessId=0x112c CommandLine=explorer.exe ParentProcessName=C:\\\\Windows\\\\System32\\\\userinit.exe MandatoryLabel=S-1-16-8192\"}, {\"record_id\": \"S01-00007\", \"ts\": \"2026-11-10T13:21:29.217Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4689\", \"raw\": \"EventID=4689 SubjectUserName=raj.iyer SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x65863fb ProcessId=0x112c ProcessName=C:\\\\Windows\\\\System32\\\\userinit.exe\"}, {\"record_id\": \"S01-00009\", \"ts\": \"2026-11-10T13:23:13.346Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4768\", \"raw\": \"EventID=4768 TargetUserName=raj.iyer TargetDomainName=LAKEVIEW-ACCT.LOCAL TargetSid=S-1-5-21-2385958138-2898399751-1985109608-1002 ServiceName=krbtgt ServiceSid=S-1-5-21-2385958138-2898399751-1985109608-502 TicketOptions=0x10 TicketEncryptionType=0x11 PreAuthType=2 IpAddress=::ffff:10.20.10.23 IpPort=59368\"}, {\"record_id\": \"S01-00010\", \"ts\": \"2026-11-10T13:23:13.346Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=raj.iyer TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=WS-RIYER-01$ ServiceSid=S-1-5-21-2385958138-2898399751-1985109608-1006 TicketOptions=0x40810000 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.23 IpPort=59368\"}, {\"record_id\": \"S01-00011\", \"ts\": \"2026-11-10T13:23:16.137Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4624\", \"raw\": \"EventID=4624 SubjectUserName=SYSTEM SubjectDomainName=NT AUTHORITY SubjectLogonId=0x3e7 TargetUserName=raj.iyer TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x6589fd2 LogonType=3 LogonProcessName=Kerberos AuthenticationPackageName=Kerberos WorkstationName=WS-KORTEGA-01 ProcessId=0xf78 ProcessName=C:\\\\Windows\\\\System32\\\\lsass.exe IpAddress=::ffff:10.20.10.23 IpPort=54971\"}, {\"record_id\": \"S01-00013\", \"ts\": \"2026-11-10T13:23:34.041Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4688\", \"raw\": \"EventID=4688 SubjectUserName=raj.iyer SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x65863fb NewProcessId=0x1154 NewProcessName=C:\\\\Windows\\\\System32\\\\wbem\\\\WMIC.exe TokenElevationType=%%1938 ProcessId=0x1150 CommandLine=WMIC.exe os get Caption,Version,OSArchitecture /format:list ParentProcessName=C:\\\\Windows\\\\System32\\\\cmd.exe MandatoryLabel=S-1-16-8192\"}, {\"record_id\": \"S01-00016\", \"ts\": \"2026-11-10T13:23:43.033Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4688\", \"raw\": \"EventID=4688 SubjectUserName=raj.iyer SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x65863fb NewProcessId=0x1158 NewProcessName=C:\\\\Users\\\\raj.iyer\\\\AppData\\\\Roaming\\\\Zoom\\\\bin\\\\Zoom.exe TokenElevationType=%%1938 ProcessId=0x1140 CommandLine=\\\"C:\\\\Users\\\\raj.iyer\\\\AppData\\\\Roaming\\\\Zoom\\\\bin\\\\Zoom.exe\\\" --url=zoommtg://zoom.us/join?action=join&confno=5120 ParentProcessName=C:\\\\Windows\\\\explorer.exe MandatoryLabel=S-1-16-8192\"}, {\"record_id\": \"S01-00018\", \"ts\": \"2026-11-10T13:23:48.551Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4689\", \"raw\": \"EventID=4689 SubjectUserName=raj.iyer SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x65863fb ProcessId=0x1154 ProcessName=C:\\\\Windows\\\\System32\\\\wbem\\\\WMIC.exe\"}, {\"record_id\": \"S01-00019\", \"ts\": \"2026-11-10T13:24:11.026Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4634\", \"raw\": \"EventID=4634 TargetUserName=raj.iyer TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x6589fd2 LogonType=3\"}, {\"record_id\": \"S01-00024\", \"ts\": \"2026-11-10T13:24:21.395Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4688\", \"raw\": \"EventID=4688 SubjectUserName=raj.iyer SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x65863fb NewProcessId=0x116c NewProcessName=C:\\\\Program Files\\\\Mozilla Firefox\\\\firefox.exe TokenElevationType=%%1938 ProcessId=0x1140 CommandLine=\\\"C:\\\\Program Files\\\\Mozilla Firefox\\\\firefox.exe\\\" -osint -url https://jira.lakeview-acct.local/browse/PROJ-8367 ParentProcessName=C:\\\\Windows\\\\explorer.exe MandatoryLabel=S-1-16-8192\"}, {\"record_id\": \"S01-00037\", \"ts\": \"2026-11-10T13:25:00.862Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4688\", \"raw\": \"EventID=4688 SubjectUserName=raj.iyer SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x65863fb NewProcessId=0x1178 NewProcessName=C:\\\\Program Files\\\\Palo Alto Networks\\\\GlobalProtect\\\\PanGPA.exe TokenElevationType=%%1938 ProcessId=0x1140 CommandLine=\\\"C:\\\\Program Files\\\\Palo Alto Networks\\\\GlobalProtect\\\\PanGPA.exe\\\" ParentProcessName=C:\\\\Windows\\\\explorer.exe MandatoryLabel=S-1-16-8192\"}, {\"record_id\": \"S01-00042\", \"ts\": \"2026-11-10T13:26:21.584Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4688\", \"raw\": \"EventID=4688 SubjectUserName=raj.iyer SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x65863fb NewProcessId=0x115c NewProcessName=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe TokenElevationType=%%1938 ProcessId=0x1140 CommandLine=\\\"C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\\\" --single-argument https://drive.google.com/ ParentProcessName=C:\\\\Windows\\\\explorer.exe MandatoryLabel=S-1-16-8192\"}, {\"record_id\": \"S01-00077\", \"ts\": \"2026-11-10T14:10:20.918Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4688\", \"raw\": \"EventID=4688 SubjectUserName=raj.iyer SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x65863fb NewProcessId=0x11d4 NewProcessName=C:\\\\Users\\\\raj.iyer\\\\AppData\\\\Local\\\\Microsoft\\\\OneDrive\\\\OneDrive.exe TokenElevationType=%%1938 ProcessId=0x1140 CommandLine=\\\"C:\\\\Users\\\\raj.iyer\\\\AppData\\\\Local\\\\Microsoft\\\\OneDrive\\\\OneDrive.exe\\\" /background ParentProcessName=C:\\\\Windows\\\\explorer.exe MandatoryLabel=S-1-16-8192\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:01:48.470663",
+     "duration_ms": 1.5714168548583984,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "winsec",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z",
+      "contains": "4625"
+     },
+     "result": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:01:52.374688",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "sysmon",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z"
+     },
+     "result": "{\"total_matches\": 37, \"offset\": 0, \"returned\": 25, \"rows\": [{\"record_id\": \"S01-00002\", \"ts\": \"2026-11-10T13:21:24.020Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=4396 Image=C:\\\\Windows\\\\System32\\\\userinit.exe CommandLine=userinit.exe CurrentDirectory=C:\\\\Windows\\\\System32\\\\ User=LAKEVIEW-ACCT\\\\raj.iyer LogonId=0x65863fb IntegrityLevel=Medium ParentProcessId=4388 ParentImage=C:\\\\Windows\\\\System32\\\\winlogon.exe ParentCommandLine=winlogon.exe ParentUser=NT AUTHORITY\\\\SYSTEM\"}, {\"record_id\": \"S01-00004\", \"ts\": \"2026-11-10T13:21:24.322Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=4416 Image=C:\\\\Windows\\\\explorer.exe CommandLine=explorer.exe CurrentDirectory=C:\\\\Windows\\\\ User=LAKEVIEW-ACCT\\\\raj.iyer LogonId=0x65863fb IntegrityLevel=Medium ParentProcessId=4396 ParentImage=C:\\\\Windows\\\\System32\\\\userinit.exe ParentCommandLine=userinit.exe ParentUser=LAKEVIEW-ACCT\\\\raj.iyer\"}, {\"record_id\": \"S01-00006\", \"ts\": \"2026-11-10T13:21:29.069Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"5\", \"raw\": \"EventID=5 ProcessId=4396 Image=C:\\\\Windows\\\\System32\\\\userinit.exe User=LAKEVIEW-ACCT\\\\raj.iyer\"}, {\"record_id\": \"S01-00008\", \"ts\": \"2026-11-10T13:22:02.761Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"13\", \"raw\": \"EventID=13 EventType=SetValue ProcessId=4308 Image=C:\\\\Windows\\\\explorer.exe TargetObject=HKU\\\\S-1-5-21-2385958138-2898399751-1985109608-1002\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Explorer\\\\UserAssist\\\\{CEBFF5CD-ACE2-4F4F-9178-9926F41749EA}\\\\Count\\\\HRZR_EHACNGU:P:\\\\Cebtenz Svyrf\\\\Zbmvyyn Sversbk\\\\sversbk.rkr Details=Binary Data User=LAKEVIEW-ACCT\\\\raj.iyer\"}, {\"record_id\": \"S01-00012\", \"ts\": \"2026-11-10T13:23:33.888Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=4436 Image=C:\\\\Windows\\\\System32\\\\wbem\\\\WMIC.exe CommandLine=WMIC.exe os get Caption,Version,OSArchitecture /format:list CurrentDirectory=C:\\\\Windows\\\\System32\\\\ User=LAKEVIEW-ACCT\\\\raj.iyer LogonId=0x65863fb IntegrityLevel=Medium ParentProcessId=4432 ParentImage=C:\\\\Windows\\\\System32\\\\cmd.exe ParentCommandLine=C:\\\\Windows\\\\System32\\\\cmd.exe ParentUser=LAKEVIEW-ACCT\\\\raj.iyer\"}, {\"record_id\": \"S01-00014\", \"ts\": \"2026-11-10T13:23:42.710Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=4440 Image=C:\\\\Users\\\\raj.iyer\\\\AppData\\\\Roaming\\\\Zoom\\\\bin\\\\Zoom.exe CommandLine=\\\"C:\\\\Users\\\\raj.iyer\\\\AppData\\\\Roaming\\\\Zoom\\\\bin\\\\Zoom.exe\\\" --url=zoommtg://zoom.us/join?action=join&confno=5120 CurrentDirectory=C:\\\\Users\\\\raj.iyer\\\\AppData\\\\Roaming\\\\Zoom\\\\bin\\\\ User=LAKEVIEW-ACCT\\\\raj.iyer LogonId=0x65863fb IntegrityLevel=Medium ParentProcessId=4416 ParentImage=C:\\\\Windows\\\\explorer.exe ParentCommandLine=explorer.exe ParentUser=LAKEVIEW-ACCT\\\\raj.iyer\"}, {\"record_id\": \"S01-00015\", \"ts\": \"2026-11-10T13:23:42.890Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"7\", \"raw\": \"EventID=7 ProcessId=4440 Image=C:\\\\Users\\\\raj.iyer\\\\AppData\\\\Roaming\\\\Zoom\\\\bin\\\\Zoom.exe ImageLoaded=C:\\\\Users\\\\raj.iyer\\\\AppData\\\\Roaming\\\\Zoom\\\\bin\\\\zVideoApp.dll Signed=true Signature=Zoom Video Communications, Inc. SignatureStatus=Valid User=LAKEVIEW-ACCT\\\\raj.iyer\"}, {\"record_id\": \"S01-00017\", \"ts\": \"2026-11-10T13:23:48.444Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"5\", \"raw\": \"EventID=5 ProcessId=4436 Image=C:\\\\Windows\\\\System32\\\\wbem\\\\WMIC.exe User=LAKEVIEW-ACCT\\\\raj.iyer\"}, {\"record_id\": \"S01-00020\", \"ts\": \"2026-11-10T13:24:21.224Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=4460 Image=C:\\\\Program Files\\\\Mozilla Firefox\\\\firefox.exe CommandLine=\\\"C:\\\\Program Files\\\\Mozilla Firefox\\\\firefox.exe\\\" -osint -url https://jira.lakeview-acct.local/browse/PROJ-8367 CurrentDirectory=C:\\\\Users\\\\raj.iyer\\\\ User=LAKEVIEW-ACCT\\\\raj.iyer LogonId=0x65863fb IntegrityLevel=Medium ParentProcessId=4416 ParentImage=C:\\\\Windows\\\\explorer.exe ParentCommandLine=explorer.exe ParentUser=LAKEVIEW-ACCT\\\\raj.iyer\"}, {\"record_id\": \"S01-00021\", \"ts\": \"2026-11-10T13:24:21.345Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"7\", \"raw\": \"EventID=7 ProcessId=4460 Image=C:\\\\Program Files\\\\Mozilla Firefox\\\\firefox.exe ImageLoaded=C:\\\\Program Files\\\\Mozilla Firefox\\\\mozglue.dll Signed=true Signature=Mozilla Corporation SignatureStatus=Valid User=LAKEVIEW-ACCT\\\\raj.iyer\"}, {\"record_id\": \"S01-00022\", \"ts\": \"2026-11-10T13:24:21.354Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"7\", \"raw\": \"EventID=7 ProcessId=4460 Image=C:\\\\Program Files\\\\Mozilla Firefox\\\\firefox.exe ImageLoaded=C:\\\\Program Files\\\\Mozilla Firefox\\\\nss3.dll Signed=true Signature=Mozilla Corporation SignatureStatus=Valid User=LAKEVIEW-ACCT\\\\raj.iyer\"}, {\"record_id\": \"S01-00023\", \"ts\": \"2026-11-10T13:24:21.368Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"7\", \"raw\": \"EventID=7 ProcessId=4460 Image=C:\\\\Program Files\\\\Mozilla Firefox\\\\firefox.exe ImageLoaded=C:\\\\Program Files\\\\Mozilla Firefox\\\\lgpllibs.dll Signed=true Signature=Mozilla Corporation SignatureStatus=Valid User=LAKEVIEW-ACCT\\\\raj.iyer\"}, {\"record_id\": \"S01-00027\", \"ts\": \"2026-11-10T13:24:22.311Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=4460 Image=C:\\\\Program Files\\\\Mozilla Firefox\\\\firefox.exe User=LAKEVIEW-ACCT\\\\raj.iyer Protocol=tcp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.22 SourceHostname=WS-RIYER-01.lakeview-acct.local SourcePort=55128 DestinationIsIpv6=false DestinationIp=10.20.20.30 DestinationPort=8080 DestinationPortName=http-alt\"}, {\"record_id\": \"S01-00030\", \"ts\": \"2026-11-10T13:24:23.509Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=4460 Image=C:\\\\Program Files\\\\Mozilla Firefox\\\\firefox.exe User=LAKEVIEW-ACCT\\\\raj.iyer Protocol=tcp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.22 SourceHostname=WS-RIYER-01.lakeview-acct.local SourcePort=56874 DestinationIsIpv6=false DestinationIp=10.20.20.30 DestinationPort=8080 DestinationPortName=http-alt\"}, {\"record_id\": \"S01-00033\", \"ts\": \"2026-11-10T13:24:24.521Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=4460 Image=C:\\\\Program Files\\\\Mozilla Firefox\\\\firefox.exe User=LAKEVIEW-ACCT\\\\raj.iyer Protocol=tcp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.22 SourceHostname=WS-RIYER-01.lakeview-acct.local SourcePort=51035 DestinationIsIpv6=false DestinationIp=10.20.20.30 DestinationPort=8080 DestinationPortName=http-alt\"}, {\"record_id\": \"S01-00035\", \"ts\": \"2026-11-10T13:25:00.532Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=4472 Image=C:\\\\Program Files\\\\Palo Alto Networks\\\\GlobalProtect\\\\PanGPA.exe CommandLine=\\\"C:\\\\Program Files\\\\Palo Alto Networks\\\\GlobalProtect\\\\PanGPA.exe\\\" CurrentDirectory=C:\\\\Program Files\\\\Palo Alto Networks\\\\GlobalProtect\\\\ User=LAKEVIEW-ACCT\\\\raj.iyer LogonId=0x65863fb IntegrityLevel=Medium ParentProcessId=4416 ParentImage=C:\\\\Windows\\\\explorer.exe ParentCommandLine=explorer.exe ParentUser=LAKEVIEW-ACCT\\\\raj.iyer\"}, {\"record_id\": \"S01-00036\", \"ts\": \"2026-11-10T13:25:00.622Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"7\", \"raw\": \"EventID=7 ProcessId=4472 Image=C:\\\\Program Files\\\\Palo Alto Networks\\\\GlobalProtect\\\\PanGPA.exe ImageLoaded=C:\\\\Program Files\\\\Palo Alto Networks\\\\GlobalProtect\\\\PanGpHip.dll Signed=true Signature=Palo Alto Networks, Inc. SignatureStatus=Valid User=LAKEVIEW-ACCT\\\\raj.iyer\"}, {\"record_id\": \"S01-00038\", \"ts\": \"2026-11-10T13:26:21.411Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=4444 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe CommandLine=\\\"C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\\\" --single-argument https://drive.google.com/ CurrentDirectory=C:\\\\Users\\\\raj.iyer\\\\ User=LAKEVIEW-ACCT\\\\raj.iyer LogonId=0x65863fb IntegrityLevel=Medium ParentProcessId=4416 ParentImage=C:\\\\Windows\\\\explorer.exe ParentCommandLine=explorer.exe ParentUser=LAKEVIEW-ACCT\\\\raj.iyer\"}, {\"record_id\": \"S01-00039\", \"ts\": \"2026-11-10T13:26:21.544Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"7\", \"raw\": \"EventID=7 ProcessId=4444 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe ImageLoaded=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome_elf.dll Signed=true Signature=Google LLC SignatureStatus=Valid User=LAKEVIEW-ACCT\\\\raj.iyer\"}, {\"record_id\": \"S01-00040\", \"ts\": \"2026-11-10T13:26:21.553Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"7\", \"raw\": \"EventID=7 ProcessId=4444 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe ImageLoaded=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\libEGL.dll Signed=true Signature=Google LLC SignatureStatus=Valid User=LAKEVIEW-ACCT\\\\raj.iyer\"}, {\"record_id\": \"S01-00041\", \"ts\": \"2026-11-10T13:26:21.557Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"7\", \"raw\": \"EventID=7 ProcessId=4444 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe ImageLoaded=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\libGLESv2.dll Signed=true Signature=Google LLC SignatureStatus=Valid User=LAKEVIEW-ACCT\\\\raj.iyer\"}, {\"record_id\": \"S01-00043\", \"ts\": \"2026-11-10T13:26:32.051Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"13\", \"raw\": \"EventID=13 EventType=SetValue ProcessId=4308 Image=C:\\\\Windows\\\\explorer.exe TargetObject=HKU\\\\S-1-5-21-2385958138-2898399751-1985109608-1002\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Explorer\\\\UserAssist\\\\{CEBFF5CD-ACE2-4F4F-9178-9926F41749EA}\\\\Count\\\\HRZR_EHACNGU:P:\\\\Cebtenz Svyrf\\\\Tbbtyr\\\\Puebzr\\\\Nccyvpngvba\\\\puebzr.rkr Details=Binary Data User=LAKEVIEW-ACCT\\\\raj.iyer\"}, {\"record_id\": \"S01-00045\", \"ts\": \"2026-11-10T13:27:13.582Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=4444 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe User=LAKEVIEW-ACCT\\\\raj.iyer Protocol=tcp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.22 SourceHostname=WS-RIYER-01.lakeview-acct.local SourcePort=55268 DestinationIsIpv6=false DestinationIp=10.20.20.30 DestinationPort=8080 DestinationPortName=http-alt\"}, {\"record_id\": \"S01-00051\", \"ts\": \"2026-11-10T13:48:38.406Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=4444 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe User=LAKEVIEW-ACCT\\\\raj.iyer Protocol=tcp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.22 SourceHostname=WS-RIYER-01.lakeview-acct.local SourcePort=53659 DestinationIsIpv6=false DestinationIp=10.20.20.30 DestinationPort=8080 DestinationPortName=http-alt\"}, {\"record_id\": \"S01-00054\", \"ts\": \"2026-11-10T13:48:40.626Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=4444 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe User=LAKEVIEW-ACCT\\\\raj.iyer Protocol=tcp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.22 SourceHostname=WS-RIYER-01.lakeview-acct.local SourcePort=50920 DestinationIsIpv6=false DestinationIp=10.20.20.30 DestinationPort=8080 DestinationPortName=http-alt\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:02:09.107390",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "sysmon",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z",
+      "offset": 25
+     },
+     "result": "{\"total_matches\": 37, \"offset\": 25, \"returned\": 12, \"rows\": [{\"record_id\": \"S01-00058\", \"ts\": \"2026-11-10T13:48:41.498Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=4444 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe User=LAKEVIEW-ACCT\\\\raj.iyer Protocol=tcp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.22 SourceHostname=WS-RIYER-01.lakeview-acct.local SourcePort=51580 DestinationIsIpv6=false DestinationIp=10.20.20.30 DestinationPort=8080 DestinationPortName=http-alt\"}, {\"record_id\": \"S01-00061\", \"ts\": \"2026-11-10T13:54:31.879Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=4444 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe User=LAKEVIEW-ACCT\\\\raj.iyer Protocol=tcp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.22 SourceHostname=WS-RIYER-01.lakeview-acct.local SourcePort=49203 DestinationIsIpv6=false DestinationIp=10.20.20.30 DestinationPort=8080 DestinationPortName=http-alt\"}, {\"record_id\": \"S01-00064\", \"ts\": \"2026-11-10T13:54:33.683Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=4444 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe User=LAKEVIEW-ACCT\\\\raj.iyer Protocol=tcp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.22 SourceHostname=WS-RIYER-01.lakeview-acct.local SourcePort=54110 DestinationIsIpv6=false DestinationIp=10.20.20.30 DestinationPort=8080 DestinationPortName=http-alt\"}, {\"record_id\": \"S01-00069\", \"ts\": \"2026-11-10T13:54:34.561Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=4444 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe User=LAKEVIEW-ACCT\\\\raj.iyer Protocol=tcp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.22 SourceHostname=WS-RIYER-01.lakeview-acct.local SourcePort=57278 DestinationIsIpv6=false DestinationIp=10.20.20.30 DestinationPort=8080 DestinationPortName=http-alt\"}, {\"record_id\": \"S01-00070\", \"ts\": \"2026-11-10T13:54:34.878Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=4444 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe User=LAKEVIEW-ACCT\\\\raj.iyer Protocol=tcp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.22 SourceHostname=WS-RIYER-01.lakeview-acct.local SourcePort=57369 DestinationIsIpv6=false DestinationIp=10.20.20.30 DestinationPort=8080 DestinationPortName=http-alt\"}, {\"record_id\": \"S01-00073\", \"ts\": \"2026-11-10T13:54:35.235Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=4444 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe User=LAKEVIEW-ACCT\\\\raj.iyer Protocol=tcp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.22 SourceHostname=WS-RIYER-01.lakeview-acct.local SourcePort=54306 DestinationIsIpv6=false DestinationIp=10.20.20.30 DestinationPort=8080 DestinationPortName=http-alt\"}, {\"record_id\": \"S01-00075\", \"ts\": \"2026-11-10T14:08:13.165Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=4444 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe User=LAKEVIEW-ACCT\\\\raj.iyer Protocol=tcp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.22 SourceHostname=WS-RIYER-01.lakeview-acct.local SourcePort=51484 DestinationIsIpv6=false DestinationIp=10.20.20.30 DestinationPort=8080 DestinationPortName=http-alt\"}, {\"record_id\": \"S01-00076\", \"ts\": \"2026-11-10T14:10:20.859Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=4564 Image=C:\\\\Users\\\\raj.iyer\\\\AppData\\\\Local\\\\Microsoft\\\\OneDrive\\\\OneDrive.exe CommandLine=\\\"C:\\\\Users\\\\raj.iyer\\\\AppData\\\\Local\\\\Microsoft\\\\OneDrive\\\\OneDrive.exe\\\" /background CurrentDirectory=C:\\\\Users\\\\raj.iyer\\\\ User=LAKEVIEW-ACCT\\\\raj.iyer LogonId=0x65863fb IntegrityLevel=Medium ParentProcessId=4416 ParentImage=C:\\\\Windows\\\\explorer.exe ParentCommandLine=explorer.exe ParentUser=LAKEVIEW-ACCT\\\\raj.iyer\"}, {\"record_id\": \"S01-00080\", \"ts\": \"2026-11-10T14:10:23.293Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=4444 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe User=LAKEVIEW-ACCT\\\\raj.iyer Protocol=tcp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.22 SourceHostname=WS-RIYER-01.lakeview-acct.local SourcePort=65157 DestinationIsIpv6=false DestinationIp=10.20.20.30 DestinationPort=8080 DestinationPortName=http-alt\"}, {\"record_id\": \"S01-00083\", \"ts\": \"2026-11-10T14:10:24.874Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=4444 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe User=LAKEVIEW-ACCT\\\\raj.iyer Protocol=tcp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.22 SourceHostname=WS-RIYER-01.lakeview-acct.local SourcePort=54288 DestinationIsIpv6=false DestinationIp=10.20.20.30 DestinationPort=8080 DestinationPortName=http-alt\"}, {\"record_id\": \"S01-00088\", \"ts\": \"2026-11-10T14:10:25.600Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=4444 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe User=LAKEVIEW-ACCT\\\\raj.iyer Protocol=tcp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.22 SourceHostname=WS-RIYER-01.lakeview-acct.local SourcePort=61968 DestinationIsIpv6=false DestinationIp=10.20.20.30 DestinationPort=8080 DestinationPortName=http-alt\"}, {\"record_id\": \"S01-00089\", \"ts\": \"2026-11-10T14:10:25.830Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=4444 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe User=LAKEVIEW-ACCT\\\\raj.iyer Protocol=tcp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.22 SourceHostname=WS-RIYER-01.lakeview-acct.local SourcePort=61718 DestinationIsIpv6=false DestinationIp=10.20.20.30 DestinationPort=8080 DestinationPortName=http-alt\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:02:30.996928",
+     "duration_ms": 2.004384994506836,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "winsec",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z",
+      "contains": "raj.iyer"
+     },
+     "result": "{\"total_matches\": 15, \"offset\": 0, \"returned\": 15, \"rows\": [{\"record_id\": \"S01-00001\", \"ts\": \"2026-11-10T13:21:23.902Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4624\", \"raw\": \"EventID=4624 SubjectUserName=SYSTEM SubjectDomainName=NT AUTHORITY SubjectLogonId=0x3e7 TargetUserName=raj.iyer TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x65863fb LogonType=2 LogonProcessName=User32 AuthenticationPackageName=Negotiate WorkstationName=WS-RIYER-01 ProcessId=0x1124 ProcessName=C:\\\\Windows\\\\System32\\\\winlogon.exe\"}, {\"record_id\": \"S01-00003\", \"ts\": \"2026-11-10T13:21:24.153Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4688\", \"raw\": \"EventID=4688 SubjectUserName=raj.iyer SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x65863fb NewProcessId=0x112c NewProcessName=C:\\\\Windows\\\\System32\\\\userinit.exe TokenElevationType=%%1938 ProcessId=0x1124 CommandLine=userinit.exe ParentProcessName=C:\\\\Windows\\\\System32\\\\winlogon.exe MandatoryLabel=S-1-16-8192\"}, {\"record_id\": \"S01-00005\", \"ts\": \"2026-11-10T13:21:24.378Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4688\", \"raw\": \"EventID=4688 SubjectUserName=raj.iyer SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x65863fb NewProcessId=0x1140 NewProcessName=C:\\\\Windows\\\\explorer.exe TokenElevationType=%%1938 ProcessId=0x112c CommandLine=explorer.exe ParentProcessName=C:\\\\Windows\\\\System32\\\\userinit.exe MandatoryLabel=S-1-16-8192\"}, {\"record_id\": \"S01-00007\", \"ts\": \"2026-11-10T13:21:29.217Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4689\", \"raw\": \"EventID=4689 SubjectUserName=raj.iyer SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x65863fb ProcessId=0x112c ProcessName=C:\\\\Windows\\\\System32\\\\userinit.exe\"}, {\"record_id\": \"S01-00009\", \"ts\": \"2026-11-10T13:23:13.346Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4768\", \"raw\": \"EventID=4768 TargetUserName=raj.iyer TargetDomainName=LAKEVIEW-ACCT.LOCAL TargetSid=S-1-5-21-2385958138-2898399751-1985109608-1002 ServiceName=krbtgt ServiceSid=S-1-5-21-2385958138-2898399751-1985109608-502 TicketOptions=0x10 TicketEncryptionType=0x11 PreAuthType=2 IpAddress=::ffff:10.20.10.23 IpPort=59368\"}, {\"record_id\": \"S01-00010\", \"ts\": \"2026-11-10T13:23:13.346Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=raj.iyer TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=WS-RIYER-01$ ServiceSid=S-1-5-21-2385958138-2898399751-1985109608-1006 TicketOptions=0x40810000 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.23 IpPort=59368\"}, {\"record_id\": \"S01-00011\", \"ts\": \"2026-11-10T13:23:16.137Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4624\", \"raw\": \"EventID=4624 SubjectUserName=SYSTEM SubjectDomainName=NT AUTHORITY SubjectLogonId=0x3e7 TargetUserName=raj.iyer TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x6589fd2 LogonType=3 LogonProcessName=Kerberos AuthenticationPackageName=Kerberos WorkstationName=WS-KORTEGA-01 ProcessId=0xf78 ProcessName=C:\\\\Windows\\\\System32\\\\lsass.exe IpAddress=::ffff:10.20.10.23 IpPort=54971\"}, {\"record_id\": \"S01-00013\", \"ts\": \"2026-11-10T13:23:34.041Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4688\", \"raw\": \"EventID=4688 SubjectUserName=raj.iyer SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x65863fb NewProcessId=0x1154 NewProcessName=C:\\\\Windows\\\\System32\\\\wbem\\\\WMIC.exe TokenElevationType=%%1938 ProcessId=0x1150 CommandLine=WMIC.exe os get Caption,Version,OSArchitecture /format:list ParentProcessName=C:\\\\Windows\\\\System32\\\\cmd.exe MandatoryLabel=S-1-16-8192\"}, {\"record_id\": \"S01-00016\", \"ts\": \"2026-11-10T13:23:43.033Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4688\", \"raw\": \"EventID=4688 SubjectUserName=raj.iyer SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x65863fb NewProcessId=0x1158 NewProcessName=C:\\\\Users\\\\raj.iyer\\\\AppData\\\\Roaming\\\\Zoom\\\\bin\\\\Zoom.exe TokenElevationType=%%1938 ProcessId=0x1140 CommandLine=\\\"C:\\\\Users\\\\raj.iyer\\\\AppData\\\\Roaming\\\\Zoom\\\\bin\\\\Zoom.exe\\\" --url=zoommtg://zoom.us/join?action=join&confno=5120 ParentProcessName=C:\\\\Windows\\\\explorer.exe MandatoryLabel=S-1-16-8192\"}, {\"record_id\": \"S01-00018\", \"ts\": \"2026-11-10T13:23:48.551Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4689\", \"raw\": \"EventID=4689 SubjectUserName=raj.iyer SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x65863fb ProcessId=0x1154 ProcessName=C:\\\\Windows\\\\System32\\\\wbem\\\\WMIC.exe\"}, {\"record_id\": \"S01-00019\", \"ts\": \"2026-11-10T13:24:11.026Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4634\", \"raw\": \"EventID=4634 TargetUserName=raj.iyer TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x6589fd2 LogonType=3\"}, {\"record_id\": \"S01-00024\", \"ts\": \"2026-11-10T13:24:21.395Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4688\", \"raw\": \"EventID=4688 SubjectUserName=raj.iyer SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x65863fb NewProcessId=0x116c NewProcessName=C:\\\\Program Files\\\\Mozilla Firefox\\\\firefox.exe TokenElevationType=%%1938 ProcessId=0x1140 CommandLine=\\\"C:\\\\Program Files\\\\Mozilla Firefox\\\\firefox.exe\\\" -osint -url https://jira.lakeview-acct.local/browse/PROJ-8367 ParentProcessName=C:\\\\Windows\\\\explorer.exe MandatoryLabel=S-1-16-8192\"}, {\"record_id\": \"S01-00037\", \"ts\": \"2026-11-10T13:25:00.862Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4688\", \"raw\": \"EventID=4688 SubjectUserName=raj.iyer SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x65863fb NewProcessId=0x1178 NewProcessName=C:\\\\Program Files\\\\Palo Alto Networks\\\\GlobalProtect\\\\PanGPA.exe TokenElevationType=%%1938 ProcessId=0x1140 CommandLine=\\\"C:\\\\Program Files\\\\Palo Alto Networks\\\\GlobalProtect\\\\PanGPA.exe\\\" ParentProcessName=C:\\\\Windows\\\\explorer.exe MandatoryLabel=S-1-16-8192\"}, {\"record_id\": \"S01-00042\", \"ts\": \"2026-11-10T13:26:21.584Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4688\", \"raw\": \"EventID=4688 SubjectUserName=raj.iyer SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x65863fb NewProcessId=0x115c NewProcessName=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe TokenElevationType=%%1938 ProcessId=0x1140 CommandLine=\\\"C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\\\" --single-argument https://drive.google.com/ ParentProcessName=C:\\\\Windows\\\\explorer.exe MandatoryLabel=S-1-16-8192\"}, {\"record_id\": \"S01-00077\", \"ts\": \"2026-11-10T14:10:20.918Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4688\", \"raw\": \"EventID=4688 SubjectUserName=raj.iyer SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x65863fb NewProcessId=0x11d4 NewProcessName=C:\\\\Users\\\\raj.iyer\\\\AppData\\\\Local\\\\Microsoft\\\\OneDrive\\\\OneDrive.exe TokenElevationType=%%1938 ProcessId=0x1140 CommandLine=\\\"C:\\\\Users\\\\raj.iyer\\\\AppData\\\\Local\\\\Microsoft\\\\OneDrive\\\\OneDrive.exe\\\" /background ParentProcessName=C:\\\\Windows\\\\explorer.exe MandatoryLabel=S-1-16-8192\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:02:36.785918",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "proxy",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z"
+     },
+     "result": "{\"total_matches\": 35, \"offset\": 0, \"returned\": 25, \"rows\": [{\"record_id\": \"S01-00025\", \"ts\": \"2026-11-10T13:24:22.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer CONNECT www.linkedin.com:443 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0\\\" proxy_action=tunnel-setup ssl_bump=peek tunnel_id=PT-739bf1aa0fd90ea6 client_src_port=55128 tunnel_cs_bytes=1209 tunnel_sc_bytes=67553 tunnel_duration_ms=3000\"}, {\"record_id\": \"S01-00026\", \"ts\": \"2026-11-10T13:24:22.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"GET\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer GET https://www.linkedin.com/messaging/ status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0\\\" proxy_action=ssl-inspect ssl_bump=bump tunnel_id=PT-739bf1aa0fd90ea6 client_src_port=55128\"}, {\"record_id\": \"S01-00028\", \"ts\": \"2026-11-10T13:24:23.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer CONNECT static.licdn.com:443 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0\\\" proxy_action=tunnel-setup ssl_bump=peek tunnel_id=PT-6c99e81d73cd49ba client_src_port=56874 tunnel_cs_bytes=718 tunnel_sc_bytes=60579 tunnel_duration_ms=2182\"}, {\"record_id\": \"S01-00029\", \"ts\": \"2026-11-10T13:24:23.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"GET\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer GET https://static.licdn.com/aero-v1/sc/h/927545577b7d75f9/messaging-b83defb2.js status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0\\\" proxy_action=ssl-inspect ssl_bump=bump tunnel_id=PT-6c99e81d73cd49ba client_src_port=56874\"}, {\"record_id\": \"S01-00031\", \"ts\": \"2026-11-10T13:24:24.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer CONNECT static.licdn.com:443 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0\\\" proxy_action=tunnel-setup ssl_bump=peek tunnel_id=PT-9bcd4bfc3fc41022 client_src_port=51035 tunnel_cs_bytes=314 tunnel_sc_bytes=3122 tunnel_duration_ms=744\"}, {\"record_id\": \"S01-00032\", \"ts\": \"2026-11-10T13:24:24.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"GET\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer GET https://static.licdn.com/aero-v1/sc/h/9005645a63d80bff/voyager-web.css status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0\\\" proxy_action=ssl-inspect ssl_bump=bump tunnel_id=PT-9bcd4bfc3fc41022 client_src_port=51035\"}, {\"record_id\": \"S01-00034\", \"ts\": \"2026-11-10T13:24:25.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"GET\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer GET https://www.linkedin.com/favicon.ico status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0\\\" proxy_action=ssl-inspect ssl_bump=bump tunnel_id=PT-739bf1aa0fd90ea6 client_src_port=55128\"}, {\"record_id\": \"S01-00044\", \"ts\": \"2026-11-10T13:27:13.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer CONNECT drive.google.com:443 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36\\\" proxy_action=tunnel tunnel_cs_bytes=4594 tunnel_sc_bytes=10612 tunnel_duration_ms=3102\"}, {\"record_id\": \"S01-00049\", \"ts\": \"2026-11-10T13:48:38.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer CONNECT meetings.webex.com:443 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\\" proxy_action=tunnel-setup ssl_bump=peek tunnel_id=PT-e0f475dbd2de253e client_src_port=53659 tunnel_cs_bytes=2211 tunnel_sc_bytes=80562 tunnel_duration_ms=3377\"}, {\"record_id\": \"S01-00050\", \"ts\": \"2026-11-10T13:48:38.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"GET\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer GET https://meetings.webex.com/meet/0a2a1102 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\\" proxy_action=ssl-inspect ssl_bump=bump tunnel_id=PT-e0f475dbd2de253e client_src_port=53659\"}, {\"record_id\": \"S01-00052\", \"ts\": \"2026-11-10T13:48:40.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer CONNECT globalpage-prod.webex.com:443 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\\" proxy_action=tunnel-setup ssl_bump=peek tunnel_id=PT-759c8c09172f85d2 client_src_port=50920 tunnel_cs_bytes=445 tunnel_sc_bytes=122808 tunnel_duration_ms=1808\"}, {\"record_id\": \"S01-00053\", \"ts\": \"2026-11-10T13:48:40.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"GET\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer GET https://globalpage-prod.webex.com/meetings/1535d00f6fc2195a/app.js status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\\" proxy_action=ssl-inspect ssl_bump=bump tunnel_id=PT-759c8c09172f85d2 client_src_port=50920\"}, {\"record_id\": \"S01-00055\", \"ts\": \"2026-11-10T13:48:41.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer CONNECT meetings.webex.com:443 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\\" proxy_action=tunnel-setup ssl_bump=peek tunnel_id=PT-c68c98adb41ec1fd client_src_port=51580 tunnel_cs_bytes=353 tunnel_sc_bytes=26850 tunnel_duration_ms=753\"}, {\"record_id\": \"S01-00056\", \"ts\": \"2026-11-10T13:48:41.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"GET\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer GET https://meetings.webex.com/api/v1/meetings/afb1a6a8 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\\" proxy_action=ssl-inspect ssl_bump=bump tunnel_id=PT-c68c98adb41ec1fd client_src_port=51580\"}, {\"record_id\": \"S01-00057\", \"ts\": \"2026-11-10T13:48:41.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"GET\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer GET https://meetings.webex.com/favicon.ico status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\\" proxy_action=ssl-inspect ssl_bump=bump tunnel_id=PT-e0f475dbd2de253e client_src_port=53659\"}, {\"record_id\": \"S01-00059\", \"ts\": \"2026-11-10T13:54:31.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer CONNECT portal.azure.com:443 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\\" proxy_action=tunnel-setup ssl_bump=peek tunnel_id=PT-d95b940ab3114735 client_src_port=49203 tunnel_cs_bytes=3647 tunnel_sc_bytes=63952 tunnel_duration_ms=4008\"}, {\"record_id\": \"S01-00060\", \"ts\": \"2026-11-10T13:54:31.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"GET\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer GET https://portal.azure.com/ status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\\" proxy_action=ssl-inspect ssl_bump=bump tunnel_id=PT-d95b940ab3114735 client_src_port=49203\"}, {\"record_id\": \"S01-00062\", \"ts\": \"2026-11-10T13:54:33.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer CONNECT portal.azure.com:443 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\\" proxy_action=tunnel-setup ssl_bump=peek tunnel_id=PT-11192887b2d39470 client_src_port=54110 tunnel_cs_bytes=204 tunnel_sc_bytes=19489 tunnel_duration_ms=748\"}, {\"record_id\": \"S01-00063\", \"ts\": \"2026-11-10T13:54:33.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"GET\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer GET https://portal.azure.com/portal/73b08177/Content/Images/Logos/AzureLogo.svg status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\\" proxy_action=ssl-inspect ssl_bump=bump tunnel_id=PT-11192887b2d39470 client_src_port=54110\"}, {\"record_id\": \"S01-00065\", \"ts\": \"2026-11-10T13:54:34.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer CONNECT portal.azure.com:443 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\\" proxy_action=tunnel-setup ssl_bump=peek tunnel_id=PT-06ebbf83e10be60f client_src_port=57369 tunnel_cs_bytes=214 tunnel_sc_bytes=169 tunnel_duration_ms=735\"}, {\"record_id\": \"S01-00066\", \"ts\": \"2026-11-10T13:54:34.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer CONNECT portal.azure.com:443 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\\" proxy_action=tunnel-setup ssl_bump=peek tunnel_id=PT-350f26971e9af5b8 client_src_port=57278 tunnel_cs_bytes=154 tunnel_sc_bytes=21908 tunnel_duration_ms=761\"}, {\"record_id\": \"S01-00067\", \"ts\": \"2026-11-10T13:54:34.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"GET\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer GET https://portal.azure.com/portal/ab339c9c/Content/Dynamic/bundleMsPortalFxPortal.f431c7498199d0fa.js status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\\" proxy_action=ssl-inspect ssl_bump=bump tunnel_id=PT-350f26971e9af5b8 client_src_port=57278\"}, {\"record_id\": \"S01-00068\", \"ts\": \"2026-11-10T13:54:34.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"GET\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer GET https://portal.azure.com/portal/b050ebcf/Content/Dynamic/AzurePortalStyles.08f923ee.css status=304 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\\" proxy_action=ssl-inspect ssl_bump=bump tunnel_id=PT-06ebbf83e10be60f client_src_port=57369\"}, {\"record_id\": \"S01-00071\", \"ts\": \"2026-11-10T13:54:35.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer CONNECT portal.azure.com:443 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\\" proxy_action=tunnel-setup ssl_bump=peek tunnel_id=PT-807055507100e2f3 client_src_port=54306 tunnel_cs_bytes=176 tunnel_sc_bytes=141 tunnel_duration_ms=719\"}, {\"record_id\": \"S01-00072\", \"ts\": \"2026-11-10T13:54:35.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"GET\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer GET https://portal.azure.com/favicon.ico status=304 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\\" proxy_action=ssl-inspect ssl_bump=bump tunnel_id=PT-807055507100e2f3 client_src_port=54306\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:02:41.072593",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "proxy",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z",
+      "offset": 25
+     },
+     "result": "{\"total_matches\": 35, \"offset\": 25, \"returned\": 10, \"rows\": [{\"record_id\": \"S01-00074\", \"ts\": \"2026-11-10T14:08:13.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer CONNECT www.reddit.com:443 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36\\\" proxy_action=tunnel tunnel_cs_bytes=737 tunnel_sc_bytes=1927 tunnel_duration_ms=1600\"}, {\"record_id\": \"S01-00078\", \"ts\": \"2026-11-10T14:10:23.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer CONNECT onedrive.live.com:443 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\\" proxy_action=tunnel-setup ssl_bump=peek tunnel_id=PT-ca4edcc9549eb0c3 client_src_port=65157 tunnel_cs_bytes=1346 tunnel_sc_bytes=8924 tunnel_duration_ms=4186\"}, {\"record_id\": \"S01-00079\", \"ts\": \"2026-11-10T14:10:23.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"GET\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer GET https://onedrive.live.com/ status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\\" proxy_action=ssl-inspect ssl_bump=bump tunnel_id=PT-ca4edcc9549eb0c3 client_src_port=65157\"}, {\"record_id\": \"S01-00081\", \"ts\": \"2026-11-10T14:10:24.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer CONNECT login.microsoftonline.com:443 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\\" proxy_action=tunnel-setup ssl_bump=peek tunnel_id=PT-b042cd0bea78ceae client_src_port=54288 tunnel_cs_bytes=596 tunnel_sc_bytes=116578 tunnel_duration_ms=1785\"}, {\"record_id\": \"S01-00082\", \"ts\": \"2026-11-10T14:10:24.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"GET\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer GET https://login.microsoftonline.com/files/onedrive-f-edc9cb7c27158e0f.js status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\\" proxy_action=ssl-inspect ssl_bump=bump tunnel_id=PT-b042cd0bea78ceae client_src_port=54288\"}, {\"record_id\": \"S01-00084\", \"ts\": \"2026-11-10T14:10:25.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer CONNECT cdn.onenote.net:443 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\\" proxy_action=tunnel-setup ssl_bump=peek tunnel_id=PT-c2962621dfd3f995 client_src_port=61968 tunnel_cs_bytes=261 tunnel_sc_bytes=27259 tunnel_duration_ms=1201\"}, {\"record_id\": \"S01-00085\", \"ts\": \"2026-11-10T14:10:25.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer CONNECT onenote.officeapps.live.com:443 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\\" proxy_action=tunnel-setup ssl_bump=peek tunnel_id=PT-67ae691070d287be client_src_port=61718 tunnel_cs_bytes=212 tunnel_sc_bytes=42854 tunnel_duration_ms=713\"}, {\"record_id\": \"S01-00086\", \"ts\": \"2026-11-10T14:10:25.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"GET\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer GET https://cdn.onenote.net/onedrive/2999d06b39607b5b/images/od-logo.png status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\\" proxy_action=ssl-inspect ssl_bump=bump tunnel_id=PT-c2962621dfd3f995 client_src_port=61968\"}, {\"record_id\": \"S01-00087\", \"ts\": \"2026-11-10T14:10:25.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"GET\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer GET https://onenote.officeapps.live.com/files/onedrive-f-167337711a4e48d6.css status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\\" proxy_action=ssl-inspect ssl_bump=bump tunnel_id=PT-67ae691070d287be client_src_port=61718\"}, {\"record_id\": \"S01-00090\", \"ts\": \"2026-11-10T14:10:26.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"GET\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer GET https://onedrive.live.com/favicon.ico status=304 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\\" proxy_action=ssl-inspect ssl_bump=bump tunnel_id=PT-ca4edcc9549eb0c3 client_src_port=65157\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:02:47.528547",
+     "duration_ms": 1.001596450805664,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "winsec",
+      "host": "DC-LV-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z"
+     },
+     "result": "{\"total_matches\": 2, \"offset\": 0, \"returned\": 2, \"rows\": [{\"record_id\": \"S01-00009\", \"ts\": \"2026-11-10T13:23:13.346Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4768\", \"raw\": \"EventID=4768 TargetUserName=raj.iyer TargetDomainName=LAKEVIEW-ACCT.LOCAL TargetSid=S-1-5-21-2385958138-2898399751-1985109608-1002 ServiceName=krbtgt ServiceSid=S-1-5-21-2385958138-2898399751-1985109608-502 TicketOptions=0x10 TicketEncryptionType=0x11 PreAuthType=2 IpAddress=::ffff:10.20.10.23 IpPort=59368\"}, {\"record_id\": \"S01-00010\", \"ts\": \"2026-11-10T13:23:13.346Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=raj.iyer TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=WS-RIYER-01$ ServiceSid=S-1-5-21-2385958138-2898399751-1985109608-1006 TicketOptions=0x40810000 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.23 IpPort=59368\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:02:54.193761",
+     "duration_ms": 2.0046234130859375,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "zeek_conn",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z"
+     },
+     "result": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:02:59.331821",
+     "duration_ms": 15.629291534423828,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "zeek_dns",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z"
+     },
+     "result": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:03:06.115436",
+     "duration_ms": 2.0170211791992188,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "zeek_ssl",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z"
+     },
+     "result": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:03:18.061623",
+     "duration_ms": 2.016782760620117,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "sysmon",
+      "host": "WS-RIYER-01",
+      "time_from": "2026-11-10T13:30:00Z",
+      "time_to": "2026-11-10T13:50:00Z"
+     },
+     "result": "{\"total_matches\": 3, \"offset\": 0, \"returned\": 3, \"rows\": [{\"record_id\": \"S01-00051\", \"ts\": \"2026-11-10T13:48:38.406Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=4444 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe User=LAKEVIEW-ACCT\\\\raj.iyer Protocol=tcp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.22 SourceHostname=WS-RIYER-01.lakeview-acct.local SourcePort=53659 DestinationIsIpv6=false DestinationIp=10.20.20.30 DestinationPort=8080 DestinationPortName=http-alt\"}, {\"record_id\": \"S01-00054\", \"ts\": \"2026-11-10T13:48:40.626Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=4444 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe User=LAKEVIEW-ACCT\\\\raj.iyer Protocol=tcp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.22 SourceHostname=WS-RIYER-01.lakeview-acct.local SourcePort=50920 DestinationIsIpv6=false DestinationIp=10.20.20.30 DestinationPort=8080 DestinationPortName=http-alt\"}, {\"record_id\": \"S01-00058\", \"ts\": \"2026-11-10T13:48:41.498Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=4444 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe User=LAKEVIEW-ACCT\\\\raj.iyer Protocol=tcp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.22 SourceHostname=WS-RIYER-01.lakeview-acct.local SourcePort=51580 DestinationIsIpv6=false DestinationIp=10.20.20.30 DestinationPort=8080 DestinationPortName=http-alt\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:03:29.391444",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "sysmon",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z",
+      "contains": "Install-MonthlyPatches"
+     },
+     "result": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:03:50.421205",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "winsec",
+      "host": "DC-LV-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z",
+      "contains": "4771"
+     },
+     "result": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:03:59.090765",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "sysmon",
+      "host": "FILE-LV-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z"
+     },
+     "result": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:04:14.130089",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    }
+   ]
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.84,
+  "supporting_observations": [
+   {
+    "claim": "A successful interactive logon for raj.iyer occurred on WS-RIYER-01 at 13:21 UTC, followed by standard user-session process activity.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S01-00001",
+     "S01-00003",
+     "S01-00005"
+    ]
+   },
+   {
+    "claim": "At 13:23 UTC, the domain controller recorded Kerberos ticket activity for raj.iyer from 10.20.10.23, and WS-RIYER-01 recorded a successful network logon attributed to WS-KORTEGA-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S01-00009",
+     "S01-00010",
+     "S01-00011"
+    ]
+   },
+   {
+    "claim": "A WMIC command queried the operating system caption, version, and architecture in raj.iyer\u2019s user session shortly after the network logon; the available records do not tie it to the scheduled patch script.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S01-00012",
+     "S01-00013"
+    ]
+   },
+   {
+    "claim": "Chrome opened Google Drive, an unapproved service per the supplied environment context, and the proxy recorded a successful CONNECT tunnel. The record does not establish an upload or data transfer to Drive.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S01-00042",
+     "S01-00044"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a Reddit connection from WS-RIYER-01 during the review window; this is an unapproved destination in the supplied context but does not by itself establish malicious activity.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S01-00074"
+    ]
+   },
+   {
+    "claim": "At 14:10 UTC, OneDrive was launched and accessed, consistent with an approved service, although these records do not establish what data was accessed or transferred.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S01-00076",
+     "S01-00078",
+     "S01-00079"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The 4625 search for the review window returned no matching records, and the domain-controller 4771 search also returned no matching records; these empty results do not prove that all authentication failures were captured.",
+   "The available Windows Security records for raj.iyer show no events around the alert\u2019s stated 13:40 time; the returned records include successful logons and other activity, not the reported repeated failures.",
+   "Sysmon, Zeek connection, DNS, and SSL searches on FILE-LV-01 returned no records for the review window, limiting visibility into the reported service-account rotation and ReportSync job.",
+   "Zeek connection, DNS, and SSL queries for the window returned no records, so they provide no independent network corroboration.",
+   "The Google Drive proxy record is a CONNECT tunnel; the available record does not show file contents, upload activity, or whether sensitive data was transferred."
+  ],
+  "claims_not_established": [
+   "That repeated failed domain logons for raj.iyer occurred around 13:40 UTC.",
+   "Whether the network logon from WS-KORTEGA-01 and subsequent WMIC activity were authorized IT patching or another activity.",
+   "Whether raj.iyer uploaded data to Google Drive or otherwise used it for exfiltration.",
+   "Whether the activity represents account compromise or malicious intent."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "The underlying authentication alert details and complete domain-controller authentication records for 13:20\u201314:20 UTC, including the events and source addresses that triggered the alert.",
+   "WS-KORTEGA-01 endpoint and PowerShell/SMB audit records, plus change or patching records, to verify who initiated the network logon and whether the scheduled patch procedure ran.",
+   "Proxy or cloud audit evidence identifying Google Drive actions and any upload or file-transfer details associated with raj.iyer.",
+   "Confirmation from the relevant users or IT staff about the WS-KORTEGA-01-to-WS-RIYER-01 activity and the Google Drive access."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 14,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 197.0,
+ "our_tool_calls": [
+  {
+   "i": 1,
+   "t": 1794711705.972798,
+   "tool": "list_sources",
+   "args": {},
+   "n_chars": 123,
+   "result_preview": "{\"sources\": [\"proxy\", \"sysmon\", \"winsec\", \"zeek_conn\", \"zeek_dns\", \"zeek_ssl\"], \"known_hosts\": [\"DC-LV-01\", \"WS-RIYER-01\"]}"
+  },
+  {
+   "i": 2,
+   "t": 1794711708.4706633,
+   "tool": "query",
+   "args": {
+    "source": "winsec",
+    "host": "",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 0
+   },
+   "n_chars": 6852,
+   "result_preview": "{\"total_matches\": 15, \"offset\": 0, \"returned\": 15, \"rows\": [{\"record_id\": \"S01-00001\", \"ts\": \"2026-11-10T13:21:23.902Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4624\", \"raw\": \"EventID=4624 SubjectUserName=SYSTEM SubjectDomainName=NT AUTHORITY SubjectLogonId=0x3e7 TargetUserName=raj.iyer TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x65863fb LogonType=2 LogonProcessName=User32 AuthenticationPackageName=Negotiate WorkstationName=WS-RIYER-01 ProcessId=0x1124 ProcessName=C:\\\\Window"
+  },
+  {
+   "i": 3,
+   "t": 1794711712.3746881,
+   "tool": "query",
+   "args": {
+    "source": "winsec",
+    "host": "",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "4625",
+    "offset": 0
+   },
+   "n_chars": 60,
+   "result_preview": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}"
+  },
+  {
+   "i": 4,
+   "t": 1794711729.10739,
+   "tool": "query",
+   "args": {
+    "source": "sysmon",
+    "host": "",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 0
+   },
+   "n_chars": 11259,
+   "result_preview": "{\"total_matches\": 37, \"offset\": 0, \"returned\": 25, \"rows\": [{\"record_id\": \"S01-00002\", \"ts\": \"2026-11-10T13:21:24.020Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=4396 Image=C:\\\\Windows\\\\System32\\\\userinit.exe CommandLine=userinit.exe CurrentDirectory=C:\\\\Windows\\\\System32\\\\ User=LAKEVIEW-ACCT\\\\raj.iyer LogonId=0x65863fb IntegrityLevel=Medium ParentProcessId=4388 ParentImage=C:\\\\Windows\\\\System32\\\\winlogon.exe ParentCommandLine=winlogon.exe ParentU"
+  },
+  {
+   "i": 5,
+   "t": 1794711750.9969285,
+   "tool": "query",
+   "args": {
+    "source": "sysmon",
+    "host": "",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 25
+   },
+   "n_chars": 5964,
+   "result_preview": "{\"total_matches\": 37, \"offset\": 25, \"returned\": 12, \"rows\": [{\"record_id\": \"S01-00058\", \"ts\": \"2026-11-10T13:48:41.498Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=4444 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe User=LAKEVIEW-ACCT\\\\raj.iyer Protocol=tcp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.22 SourceHostname=WS-RIYER-01.lakeview-acct.local SourcePort=51580 DestinationIsIpv6=false DestinationIp=10.20.20.30 Destina"
+  },
+  {
+   "i": 6,
+   "t": 1794711756.7859182,
+   "tool": "query",
+   "args": {
+    "source": "winsec",
+    "host": "",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "raj.iyer",
+    "offset": 0
+   },
+   "n_chars": 6852,
+   "result_preview": "{\"total_matches\": 15, \"offset\": 0, \"returned\": 15, \"rows\": [{\"record_id\": \"S01-00001\", \"ts\": \"2026-11-10T13:21:23.902Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4624\", \"raw\": \"EventID=4624 SubjectUserName=SYSTEM SubjectDomainName=NT AUTHORITY SubjectLogonId=0x3e7 TargetUserName=raj.iyer TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x65863fb LogonType=2 LogonProcessName=User32 AuthenticationPackageName=Negotiate WorkstationName=WS-RIYER-01 ProcessId=0x1124 ProcessName=C:\\\\Window"
+  },
+  {
+   "i": 7,
+   "t": 1794711761.0725932,
+   "tool": "query",
+   "args": {
+    "source": "proxy",
+    "host": "",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 0
+   },
+   "n_chars": 11877,
+   "result_preview": "{\"total_matches\": 35, \"offset\": 0, \"returned\": 25, \"rows\": [{\"record_id\": \"S01-00025\", \"ts\": \"2026-11-10T13:24:22.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer CONNECT www.linkedin.com:443 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0\\\" proxy_action=tunnel-setup ssl_bump=peek tunnel_id=PT-739bf1aa0fd90ea6 client_src_port=55128 tunnel_cs_bytes=1209 tunnel_sc_bytes"
+  },
+  {
+   "i": 8,
+   "t": 1794711767.528547,
+   "tool": "query",
+   "args": {
+    "source": "proxy",
+    "host": "",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 25
+   },
+   "n_chars": 4845,
+   "result_preview": "{\"total_matches\": 35, \"offset\": 25, \"returned\": 10, \"rows\": [{\"record_id\": \"S01-00074\", \"ts\": \"2026-11-10T14:08:13.000Z\", \"host\": \"WS-RIYER-01\", \"source\": \"proxy\", \"event_type\": \"CONNECT\", \"raw\": \"client=10.20.10.22 user=LAKEVIEW-ACCT\\\\raj.iyer CONNECT www.reddit.com:443 status=200 ua=\\\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36\\\" proxy_action=tunnel tunnel_cs_bytes=737 tunnel_sc_bytes=1927 tunnel_duration_ms=1600\"}, {\"record_i"
+  },
+  {
+   "i": 9,
+   "t": 1794711774.1937618,
+   "tool": "query",
+   "args": {
+    "source": "winsec",
+    "host": "DC-LV-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 0
+   },
+   "n_chars": 884,
+   "result_preview": "{\"total_matches\": 2, \"offset\": 0, \"returned\": 2, \"rows\": [{\"record_id\": \"S01-00009\", \"ts\": \"2026-11-10T13:23:13.346Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4768\", \"raw\": \"EventID=4768 TargetUserName=raj.iyer TargetDomainName=LAKEVIEW-ACCT.LOCAL TargetSid=S-1-5-21-2385958138-2898399751-1985109608-1002 ServiceName=krbtgt ServiceSid=S-1-5-21-2385958138-2898399751-1985109608-502 TicketOptions=0x10 TicketEncryptionType=0x11 PreAuthType=2 IpAddress=::ffff:10.20.10.23 IpPort=59368\"}, "
+  },
+  {
+   "i": 10,
+   "t": 1794711779.3318212,
+   "tool": "query",
+   "args": {
+    "source": "zeek_conn",
+    "host": "",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 0
+   },
+   "n_chars": 60,
+   "result_preview": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}"
+  },
+  {
+   "i": 11,
+   "t": 1794711786.1154363,
+   "tool": "query",
+   "args": {
+    "source": "zeek_dns",
+    "host": "",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 0
+   },
+   "n_chars": 60,
+   "result_preview": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}"
+  },
+  {
+   "i": 12,
+   "t": 1794711798.0616238,
+   "tool": "query",
+   "args": {
+    "source": "zeek_ssl",
+    "host": "",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 0
+   },
+   "n_chars": 60,
+   "result_preview": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}"
+  },
+  {
+   "i": 13,
+   "t": 1794711809.3914444,
+   "tool": "query",
+   "args": {
+    "source": "sysmon",
+    "host": "WS-RIYER-01",
+    "time_from": "2026-11-10T13:30:00Z",
+    "time_to": "2026-11-10T13:50:00Z",
+    "contains": "",
+    "offset": 0
+   },
+   "n_chars": 1513,
+   "result_preview": "{\"total_matches\": 3, \"offset\": 0, \"returned\": 3, \"rows\": [{\"record_id\": \"S01-00051\", \"ts\": \"2026-11-10T13:48:38.406Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=4444 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe User=LAKEVIEW-ACCT\\\\raj.iyer Protocol=tcp Initiated=true SourceIsIpv6=false SourceIp=10.20.10.22 SourceHostname=WS-RIYER-01.lakeview-acct.local SourcePort=53659 DestinationIsIpv6=false DestinationIp=10.20.20.30 Destinatio"
+  },
+  {
+   "i": 14,
+   "t": 1794711830.4212053,
+   "tool": "query",
+   "args": {
+    "source": "sysmon",
+    "host": "",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "Install-MonthlyPatches",
+    "offset": 0
+   },
+   "n_chars": 60,
+   "result_preview": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}"
+  },
+  {
+   "i": 15,
+   "t": 1794711839.0907655,
+   "tool": "query",
+   "args": {
+    "source": "winsec",
+    "host": "DC-LV-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "4771",
+    "offset": 0
+   },
+   "n_chars": 60,
+   "result_preview": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}"
+  },
+  {
+   "i": 16,
+   "t": 1794711854.1300895,
+   "tool": "query",
+   "args": {
+    "source": "sysmon",
+    "host": "FILE-LV-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 0
+   },
+   "n_chars": 60,
+   "result_preview": "{\"total_matches\": 0, \"offset\": 0, \"returned\": 0, \"rows\": []}"
+  }
+ ]
+}

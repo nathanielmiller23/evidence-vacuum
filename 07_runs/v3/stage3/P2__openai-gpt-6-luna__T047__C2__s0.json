@@ -1,0 +1,82 @@
+{
+ "scenario_id": "T047",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:43:55 UTC, the domain controller recorded creation of the alerted account sysmaint by sam.okafor.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T047-00081\"\n      ]\n    },\n    {\n      \"claim\": \"One second later, sysmaint was added to the NWD Administrators group, contrary to the supplied practice that temporary help-desk accounts are not given administrator rights.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T047-00082\"\n      ]\n    },\n    {\n      \"claim\": \"Shortly before the account creation, sam.okafor logged on to WS-LMARTINS-01 with LogonType 10 from address 203.0.113.250; the workstation also recorded an inbound RDP connection from that address. This does not match the supplied remote-administration practice.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T047-00060\",\n        \"T047-00063\",\n        \"T047-00064\",\n        \"T047-00065\"\n      ]\n    },\n    {\n      \"claim\": \"The sam.okafor session on WS-LMARTINS-01 created a scheduled task named HealthCheck whose action runs hidden PowerShell with an encoded command. The command decodes to an instruction to fetch and invoke a script from http://203.0.113.250/a.ps1.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T047-00083\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The account-creation and group-addition events do not include a source IP or establish that their logon session is the same session as the sam.okafor interactive logon recorded on WS-LMARTINS-01.\",\n    \"The task-creation record does not establish that the task ran, that the script was successfully retrieved, or what the script contained.\",\n    \"The available records do not identify who controlled the source address 203.0.113.250.\"\n  ],\n  \"claims_not_established\": [\n    \"That the scheduled task executed or that its remote script was successfully downloaded or invoked.\",\n    \"That sysmaint was subsequently used, or what access or actions it performed.\",\n    \"That the account creation, administrator-group addition, RDP logon, and scheduled-task creation were all performed by the same operator or through the same compromised session.\",\n    \"That data was accessed, altered, or exfiltrated.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Review domain-controller logon and directory auditing around 13:39\u201313:44 UTC to identify the session and source associated with the sysmaint creation and administrator-group addition.\",\n    \"Collect task execution history, PowerShell and script-block logs, and endpoint file or download telemetry for WS-LMARTINS-01; recover and analyze the referenced script if available.\",\n    \"Review firewall, proxy, and network telemetry for connections involving 203.0.113.250, including whether the task's URL was requested.\",\n    \"Verify the authorization and provenance of sam.okafor's RDP session and investigate whether the account or credentials were compromised.\",\n    \"Contain or disable sysmaint and remove its administrator membership pending verification; preserve relevant endpoint and domain-controller evidence.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 27903,
+    "output": 1961
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:43:55 UTC, the domain controller recorded creation of the alerted account sysmaint by sam.okafor.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00081"
+    ]
+   },
+   {
+    "claim": "One second later, sysmaint was added to the NWD Administrators group, contrary to the supplied practice that temporary help-desk accounts are not given administrator rights.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00082"
+    ]
+   },
+   {
+    "claim": "Shortly before the account creation, sam.okafor logged on to WS-LMARTINS-01 with LogonType 10 from address 203.0.113.250; the workstation also recorded an inbound RDP connection from that address. This does not match the supplied remote-administration practice.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T047-00060",
+     "T047-00063",
+     "T047-00064",
+     "T047-00065"
+    ]
+   },
+   {
+    "claim": "The sam.okafor session on WS-LMARTINS-01 created a scheduled task named HealthCheck whose action runs hidden PowerShell with an encoded command. The command decodes to an instruction to fetch and invoke a script from http://203.0.113.250/a.ps1.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T047-00083"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The account-creation and group-addition events do not include a source IP or establish that their logon session is the same session as the sam.okafor interactive logon recorded on WS-LMARTINS-01.",
+   "The task-creation record does not establish that the task ran, that the script was successfully retrieved, or what the script contained.",
+   "The available records do not identify who controlled the source address 203.0.113.250."
+  ],
+  "claims_not_established": [
+   "That the scheduled task executed or that its remote script was successfully downloaded or invoked.",
+   "That sysmaint was subsequently used, or what access or actions it performed.",
+   "That the account creation, administrator-group addition, RDP logon, and scheduled-task creation were all performed by the same operator or through the same compromised session.",
+   "That data was accessed, altered, or exfiltrated."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Review domain-controller logon and directory auditing around 13:39\u201313:44 UTC to identify the session and source associated with the sysmaint creation and administrator-group addition.",
+   "Collect task execution history, PowerShell and script-block logs, and endpoint file or download telemetry for WS-LMARTINS-01; recover and analyze the referenced script if available.",
+   "Review firewall, proxy, and network telemetry for connections involving 203.0.113.250, including whether the task's URL was requested.",
+   "Verify the authorization and provenance of sam.okafor's RDP session and investigate whether the account or credentials were compromised.",
+   "Contain or disable sysmaint and remove its administrator membership pending verification; preserve relevant endpoint and domain-controller evidence."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 7,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 19.3
+}

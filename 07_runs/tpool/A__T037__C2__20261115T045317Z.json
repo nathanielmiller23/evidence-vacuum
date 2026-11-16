@@ -1,0 +1,90 @@
+{
+ "run_id": "A__T037__C2__20261115T045317Z",
+ "config": "A",
+ "scenario_id": "T037",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 120,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 48210,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:41:49 UTC, the domain controller recorded creation of the NWD account sysmaint by subject sam.okafor. The account was assigned primary group ID 513.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T037-00109\"]\n    },\n    {\n      \"claim\": \"About two seconds later, the domain controller recorded sysmaint being added to the Administrators group by sam.okafor, with the same subject logon ID as the account-creation event.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T037-00109\", \"T037-00110\"]\n    },\n    {\n      \"claim\": \"The account name and administrator membership are inconsistent with the stated help-desk temporary-account practice, which uses ext.<name> accounts that are not administrators. This raises concern, but does not establish that sysmaint was intended to be a temporary account or that the action was unauthorized.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T037-00109\", \"T037-00110\"]\n    },\n    {\n      \"claim\": \"WS-LMARTINS-01 made LDAP and Kerberos-related domain-controller connections shortly before the account events. These records show nearby machine-account/domain activity, but do not tie that activity to the account changes or identify the workstation as the source of the changes.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T037-00100\", \"T037-00103\", \"T037-00106\", \"T037-00109\", \"T037-00110\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not map subject logon ID 0x11d4adcd to a logon session, source host, or originating process.\",\n    \"The records establish that sam.okafor is named as the subject of both domain changes, but do not establish whether sam.okafor personally initiated them or whether the activity was authorized.\",\n    \"The supplied endpoint and network records do not provide a direct, causal link between WS-LMARTINS-01 activity and the account creation or group change.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether sysmaint was approved or covered by a change request.\",\n    \"Whether sam.okafor's credentials or session were compromised or used by another person.\",\n    \"Which host and process initiated the account creation and administrator-group addition.\",\n    \"Whether sysmaint was used after creation, and whether any subsequent activity was malicious.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Retrieve the full domain-controller logon and account-management audit trail around 13:41 UTC, including events that identify the session associated with logon ID 0x11d4adcd and its source.\",\n    \"Check change-management records and confirm with sam.okafor whether sysmaint creation and administrator membership were approved.\",\n    \"Review WS-SOKAFOR-01 and WS-LMARTINS-01 process, interactive logon, and remote-administration telemetry around the event times.\",\n    \"Review sysmaint's subsequent logons, privilege use, group memberships, and account configuration.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 18281,
+    "output": 2086,
+    "reasoning": 1351
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "At 13:41:49 UTC, the domain controller recorded creation of the NWD account sysmaint by subject sam.okafor. The account was assigned primary group ID 513.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00109"
+    ]
+   },
+   {
+    "claim": "About two seconds later, the domain controller recorded sysmaint being added to the Administrators group by sam.okafor, with the same subject logon ID as the account-creation event.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00109",
+     "T037-00110"
+    ]
+   },
+   {
+    "claim": "The account name and administrator membership are inconsistent with the stated help-desk temporary-account practice, which uses ext.<name> accounts that are not administrators. This raises concern, but does not establish that sysmaint was intended to be a temporary account or that the action was unauthorized.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T037-00109",
+     "T037-00110"
+    ]
+   },
+   {
+    "claim": "WS-LMARTINS-01 made LDAP and Kerberos-related domain-controller connections shortly before the account events. These records show nearby machine-account/domain activity, but do not tie that activity to the account changes or identify the workstation as the source of the changes.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00100",
+     "T037-00103",
+     "T037-00106",
+     "T037-00109",
+     "T037-00110"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not map subject logon ID 0x11d4adcd to a logon session, source host, or originating process.",
+   "The records establish that sam.okafor is named as the subject of both domain changes, but do not establish whether sam.okafor personally initiated them or whether the activity was authorized.",
+   "The supplied endpoint and network records do not provide a direct, causal link between WS-LMARTINS-01 activity and the account creation or group change."
+  ],
+  "claims_not_established": [
+   "Whether sysmaint was approved or covered by a change request.",
+   "Whether sam.okafor's credentials or session were compromised or used by another person.",
+   "Which host and process initiated the account creation and administrator-group addition.",
+   "Whether sysmaint was used after creation, and whether any subsequent activity was malicious."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Retrieve the full domain-controller logon and account-management audit trail around 13:41 UTC, including events that identify the session associated with logon ID 0x11d4adcd and its source.",
+   "Check change-management records and confirm with sam.okafor whether sysmaint creation and administrator membership were approved.",
+   "Review WS-SOKAFOR-01 and WS-LMARTINS-01 process, interactive logon, and remote-administration telemetry around the event times.",
+   "Review sysmaint's subsequent logons, privilege use, group memberships, and account configuration."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.6
+}

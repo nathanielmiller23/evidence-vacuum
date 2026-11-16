@@ -1,0 +1,85 @@
+{
+ "scenario_id": "T289",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:46:42 UTC, a proxy tunnel from WS-ACOLE-01 under amy.cole connected to megadrop-files.com and recorded 51,000,000 client-to-server bytes, versus 8,800 server-to-client bytes.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T289-00239\"\n      ]\n    },\n    {\n      \"claim\": \"The corresponding proxy connection recorded about 51 MB of client-originated traffic and completed; endpoint network telemetry attributes the connection to Chrome running as amy.cole.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T289-00240\",\n        \"T289-00241\",\n        \"T289-00242\"\n      ]\n    },\n    {\n      \"claim\": \"About five minutes before the transfer, amy.cole ran PowerShell to compress \\\\\\\\FILE-ORC-01\\\\Shared\\\\Clients into C:\\\\Users\\\\amy.cole\\\\AppData\\\\Local\\\\Temp\\\\c.zip, and telemetry recorded creation of that archive.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T289-00219\",\n        \"T289-00220\",\n        \"T289-00221\"\n      ]\n    },\n    {\n      \"claim\": \"The large outbound transfer shortly after creating an archive of shared client files, combined with use of a file-transfer destination not approved in the provided environment context, strongly supports likely data exfiltration. The records do not prove that c.zip was the transferred content.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T289-00219\",\n        \"T289-00221\",\n        \"T289-00239\",\n        \"T289-00240\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy record describes a CONNECT tunnel and byte counts, but the supplied records do not expose the uploaded filename, request path, or payload contents (T289-00239; T289-00240).\",\n    \"The archive creation is recorded, but the supplied evidence does not directly link that file to the outbound tunnel or show its contents (T289-00219; T289-00221; T289-00239).\"\n  ],\n  \"claims_not_established\": [\n    \"That c.zip, or any particular file or data set, was the content of the 51 MB transfer.\",\n    \"That the remote service successfully stored or retained the transferred data.\",\n    \"Whether amy.cole personally initiated or authorized the transfer, or whether another party controlled the browser session.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Retrieve endpoint file-access and process telemetry around 13:40\u201313:47 UTC to determine what was read for compression and whether c.zip was accessed by Chrome.\",\n    \"Acquire the c.zip file, if available, and compare its size, contents, and hashes with endpoint or proxy evidence.\",\n    \"Obtain proxy or destination-side transaction records that identify the uploaded object and confirm whether the transfer was accepted.\",\n    \"Interview amy.cole and verify whether the archive and transfer had an approved business purpose.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:36, amy.cole launched sqlcmd from PowerShell to query the Users table on DB-SRV-01; this is suspicious and warrants a separate review, but the supplied evidence does not establish that it was part of the alerted transfer (T289-00179; T289-00187; T289-00188).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 61290,
+    "output": 1833
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "At 13:46:42 UTC, a proxy tunnel from WS-ACOLE-01 under amy.cole connected to megadrop-files.com and recorded 51,000,000 client-to-server bytes, versus 8,800 server-to-client bytes.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T289-00239"
+    ]
+   },
+   {
+    "claim": "The corresponding proxy connection recorded about 51 MB of client-originated traffic and completed; endpoint network telemetry attributes the connection to Chrome running as amy.cole.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T289-00240",
+     "T289-00241",
+     "T289-00242"
+    ]
+   },
+   {
+    "claim": "About five minutes before the transfer, amy.cole ran PowerShell to compress \\\\FILE-ORC-01\\Shared\\Clients into C:\\Users\\amy.cole\\AppData\\Local\\Temp\\c.zip, and telemetry recorded creation of that archive.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T289-00219",
+     "T289-00220",
+     "T289-00221"
+    ]
+   },
+   {
+    "claim": "The large outbound transfer shortly after creating an archive of shared client files, combined with use of a file-transfer destination not approved in the provided environment context, strongly supports likely data exfiltration. The records do not prove that c.zip was the transferred content.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T289-00219",
+     "T289-00221",
+     "T289-00239",
+     "T289-00240"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy record describes a CONNECT tunnel and byte counts, but the supplied records do not expose the uploaded filename, request path, or payload contents (T289-00239; T289-00240).",
+   "The archive creation is recorded, but the supplied evidence does not directly link that file to the outbound tunnel or show its contents (T289-00219; T289-00221; T289-00239)."
+  ],
+  "claims_not_established": [
+   "That c.zip, or any particular file or data set, was the content of the 51 MB transfer.",
+   "That the remote service successfully stored or retained the transferred data.",
+   "Whether amy.cole personally initiated or authorized the transfer, or whether another party controlled the browser session."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Retrieve endpoint file-access and process telemetry around 13:40\u201313:47 UTC to determine what was read for compression and whether c.zip was accessed by Chrome.",
+   "Acquire the c.zip file, if available, and compare its size, contents, and hashes with endpoint or proxy evidence.",
+   "Obtain proxy or destination-side transaction records that identify the uploaded object and confirm whether the transfer was accepted.",
+   "Interview amy.cole and verify whether the archive and transfer had an approved business purpose."
+  ],
+  "unrelated_findings": [
+   "At 13:36, amy.cole launched sqlcmd from PowerShell to query the Users table on DB-SRV-01; this is suspicious and warrants a separate review, but the supplied evidence does not establish that it was part of the alerted transfer (T289-00179; T289-00187; T289-00188)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.1
+}

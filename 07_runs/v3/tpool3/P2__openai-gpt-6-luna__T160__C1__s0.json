@@ -1,0 +1,94 @@
+{
+ "scenario_id": "T160",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.86,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The large transfer occurred at about 13:48:58 UTC, later than the alert's approximate 13:46 time. The proxy recorded 640,000,000 client-to-server bytes to ingest.safeharbor-backup.net, and Zeek recorded approximately the same volume from FILE-MAP-01 to the proxy.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T160-00277\",\n        \"T160-00278\"\n      ]\n    },\n    {\n      \"claim\": \"The transfer was attributed to C:\\\\Program Files\\\\Safeharbor\\\\agent.exe running as MAPLEHILL\\\\svc-vault, with a command line specifying the Nightly job and the approved Safeharbor ingest target.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T160-00270\",\n        \"T160-00271\",\n        \"T160-00272\",\n        \"T160-00275\",\n        \"T160-00276\",\n        \"T160-00279\",\n        \"T160-00280\"\n      ]\n    },\n    {\n      \"claim\": \"The observed destination, agent path, and transfer size match the inventory's description of the approved Safeharbor backup service, so the transfer is consistent with a benign backup.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T160-00270\",\n        \"T160-00271\",\n        \"T160-00277\",\n        \"T160-00278\"\n      ]\n    },\n    {\n      \"claim\": \"Shortly before the backup agent started, the domain controller recorded a Kerberos service-ticket event for svc-vault with source address 139.162.174.124; shortly afterward, FILE-MAP-01 logged a local service logon for svc-vault and the backup agent started. This sequence is unexplained by the available records and warrants validation, but does not by itself establish that the backup transfer was malicious.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T160-00261\",\n        \"T160-00262\",\n        \"T160-00270\",\n        \"T160-00271\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and network records establish the destination and byte volume, but do not show what files or data were transferred.\",\n    \"The logs do not establish why the svc-vault Kerberos event lists a public source address or whether it is connected to the subsequent local service logon and backup job.\",\n    \"The available records do not independently verify the Safeharbor agent binary's integrity or the backup job's schedule and authorization.\"\n  ],\n  \"claims_not_established\": [\n    \"That the 640,000,000-byte transfer contained sensitive or unauthorized data.\",\n    \"That the svc-vault service-ticket event from 139.162.174.124 was legitimate or malicious, or that it caused the backup agent to run.\",\n    \"That the transfer was an exfiltration event rather than the expected offsite backup.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Validate the svc-vault Kerberos event at 13:48:19 UTC, including the source address, authentication context, and whether that source is expected.\",\n    \"Review service and scheduled-job execution records to confirm the Safeharbor job was scheduled and initiated as expected.\",\n    \"Check Safeharbor backup-side records for the job identity, uploaded object/file manifest, and confirmation that this volume and timing are expected.\",\n    \"Verify the agent binary's signature and hash against the organization's approved version.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:45:38 UTC, FILE-MAP-01 accessed receiver.citrix.com through the proxy with a Wget user agent; this is not the later Safeharbor bulk transfer and is not an approved service in the supplied inventory. Review separately. (T160-00230, T160-00231)\",\n    \"At 13:54 UTC, help-desk user greta.lund initiated an RDP session to FILE-MAP-01 from WS-GLUND-01, although the supplied practice says remote administration is only performed from WS-AHASSAN-01. This is outside the alerted transfer; review separately. (T160-00338, T160-00342, T160-00352)\",\n    \"At 14:01 UTC, FILE-MAP-01 accessed downloads.cloud.com through the proxy with a Wget user agent; this is not the alerted bulk transfer and is not an approved service in the supplied inventory. Review separately. (T160-00390, T160-00391)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 73911,
+    "output": 2879
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.86,
+  "supporting_observations": [
+   {
+    "claim": "The large transfer occurred at about 13:48:58 UTC, later than the alert's approximate 13:46 time. The proxy recorded 640,000,000 client-to-server bytes to ingest.safeharbor-backup.net, and Zeek recorded approximately the same volume from FILE-MAP-01 to the proxy.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T160-00277",
+     "T160-00278"
+    ]
+   },
+   {
+    "claim": "The transfer was attributed to C:\\Program Files\\Safeharbor\\agent.exe running as MAPLEHILL\\svc-vault, with a command line specifying the Nightly job and the approved Safeharbor ingest target.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T160-00270",
+     "T160-00271",
+     "T160-00272",
+     "T160-00275",
+     "T160-00276",
+     "T160-00279",
+     "T160-00280"
+    ]
+   },
+   {
+    "claim": "The observed destination, agent path, and transfer size match the inventory's description of the approved Safeharbor backup service, so the transfer is consistent with a benign backup.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T160-00270",
+     "T160-00271",
+     "T160-00277",
+     "T160-00278"
+    ]
+   },
+   {
+    "claim": "Shortly before the backup agent started, the domain controller recorded a Kerberos service-ticket event for svc-vault with source address 139.162.174.124; shortly afterward, FILE-MAP-01 logged a local service logon for svc-vault and the backup agent started. This sequence is unexplained by the available records and warrants validation, but does not by itself establish that the backup transfer was malicious.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T160-00261",
+     "T160-00262",
+     "T160-00270",
+     "T160-00271"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and network records establish the destination and byte volume, but do not show what files or data were transferred.",
+   "The logs do not establish why the svc-vault Kerberos event lists a public source address or whether it is connected to the subsequent local service logon and backup job.",
+   "The available records do not independently verify the Safeharbor agent binary's integrity or the backup job's schedule and authorization."
+  ],
+  "claims_not_established": [
+   "That the 640,000,000-byte transfer contained sensitive or unauthorized data.",
+   "That the svc-vault service-ticket event from 139.162.174.124 was legitimate or malicious, or that it caused the backup agent to run.",
+   "That the transfer was an exfiltration event rather than the expected offsite backup."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Validate the svc-vault Kerberos event at 13:48:19 UTC, including the source address, authentication context, and whether that source is expected.",
+   "Review service and scheduled-job execution records to confirm the Safeharbor job was scheduled and initiated as expected.",
+   "Check Safeharbor backup-side records for the job identity, uploaded object/file manifest, and confirmation that this volume and timing are expected.",
+   "Verify the agent binary's signature and hash against the organization's approved version."
+  ],
+  "unrelated_findings": [
+   "At 13:45:38 UTC, FILE-MAP-01 accessed receiver.citrix.com through the proxy with a Wget user agent; this is not the later Safeharbor bulk transfer and is not an approved service in the supplied inventory. Review separately. (T160-00230, T160-00231)",
+   "At 13:54 UTC, help-desk user greta.lund initiated an RDP session to FILE-MAP-01 from WS-GLUND-01, although the supplied practice says remote administration is only performed from WS-AHASSAN-01. This is outside the alerted transfer; review separately. (T160-00338, T160-00342, T160-00352)",
+   "At 14:01 UTC, FILE-MAP-01 accessed downloads.cloud.com through the proxy with a Wget user agent; this is not the alerted bulk transfer and is not an approved service in the supplied inventory. Review separately. (T160-00390, T160-00391)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 17,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 32.0
+}

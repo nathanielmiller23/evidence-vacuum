@@ -1,0 +1,95 @@
+{
+ "run_id": "A__T037__C3__20261115T045318Z",
+ "config": "A",
+ "scenario_id": "T037",
+ "condition": "C3",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 120,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 49234,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded creation of the NWD account sysmaint at 13:41:49, with sam.okafor as the logged subject.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T037-00109\"]\n    },\n    {\n      \"claim\": \"About three seconds later, the domain controller recorded sysmaint being added to the Administrators group. The subject and logon ID match those in the account-creation event.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T037-00109\", \"T037-00110\"]\n    },\n    {\n      \"claim\": \"The account and group assignment do not match the documented help-desk temporary-account pattern: sysmaint is not named ext.<name> and was added to Administrators rather than only Freelancers.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T037-00109\", \"T037-00110\"]\n    },\n    {\n      \"claim\": \"WS-LMARTINS-01 made LDAP connections to the domain controller shortly before the account was created, but these records do not identify the account-creation actor or link those connections to the change.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T037-00106\", \"T037-00109\"]\n    },\n    {\n      \"claim\": \"The available records show the logged subject as sam.okafor, but do not establish that sam.okafor personally initiated the action or identify the originating host.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T037-00109\", \"T037-00110\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Winsec and Sysmon collection for WS-LMARTINS-01 was unavailable from 13:30 to 14:10 UTC because of a log-collection outage, limiting visibility into endpoint activity around the account creation.\",\n    \"The supplied account events do not identify the source host or process for the change, and the available WS-LMARTINS-01 LDAP records do not establish a connection to it.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the account creation and administrator-group assignment were approved or part of an emergency change.\",\n    \"Whether sam.okafor personally performed the action, or whether the account was used by someone else or through compromised credentials.\",\n    \"Which host and process originated the account-management action.\",\n    \"Whether the LDAP activity from WS-LMARTINS-01 was related to the account creation.\",\n    \"Whether sysmaint was subsequently used to log on, access resources, or perform further actions.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Retrieve domain-controller logon and account-management audit events that can map logon ID 0x11d4adcd to its originating session and host.\",\n    \"Collect available endpoint, PowerShell, and remote-administration records from WS-SOKAFOR-01 and WS-LMARTINS-01 for the review period, including any recovered data from the collection outage.\",\n    \"Check change tickets or other approval records for creation of sysmaint and its addition to Administrators; confirm the action with sam.okafor.\",\n    \"Review subsequent authentication, group-membership, and resource-access activity for sysmaint.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 18643,
+    "output": 2430,
+    "reasoning": 1665
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded creation of the NWD account sysmaint at 13:41:49, with sam.okafor as the logged subject.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00109"
+    ]
+   },
+   {
+    "claim": "About three seconds later, the domain controller recorded sysmaint being added to the Administrators group. The subject and logon ID match those in the account-creation event.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00109",
+     "T037-00110"
+    ]
+   },
+   {
+    "claim": "The account and group assignment do not match the documented help-desk temporary-account pattern: sysmaint is not named ext.<name> and was added to Administrators rather than only Freelancers.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T037-00109",
+     "T037-00110"
+    ]
+   },
+   {
+    "claim": "WS-LMARTINS-01 made LDAP connections to the domain controller shortly before the account was created, but these records do not identify the account-creation actor or link those connections to the change.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00106",
+     "T037-00109"
+    ]
+   },
+   {
+    "claim": "The available records show the logged subject as sam.okafor, but do not establish that sam.okafor personally initiated the action or identify the originating host.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T037-00109",
+     "T037-00110"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Winsec and Sysmon collection for WS-LMARTINS-01 was unavailable from 13:30 to 14:10 UTC because of a log-collection outage, limiting visibility into endpoint activity around the account creation.",
+   "The supplied account events do not identify the source host or process for the change, and the available WS-LMARTINS-01 LDAP records do not establish a connection to it."
+  ],
+  "claims_not_established": [
+   "Whether the account creation and administrator-group assignment were approved or part of an emergency change.",
+   "Whether sam.okafor personally performed the action, or whether the account was used by someone else or through compromised credentials.",
+   "Which host and process originated the account-management action.",
+   "Whether the LDAP activity from WS-LMARTINS-01 was related to the account creation.",
+   "Whether sysmaint was subsequently used to log on, access resources, or perform further actions."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Retrieve domain-controller logon and account-management audit events that can map logon ID 0x11d4adcd to its originating session and host.",
+   "Collect available endpoint, PowerShell, and remote-administration records from WS-SOKAFOR-01 and WS-LMARTINS-01 for the review period, including any recovered data from the collection outage.",
+   "Check change tickets or other approval records for creation of sysmaint and its addition to Administrators; confirm the action with sam.okafor.",
+   "Review subsequent authentication, group-membership, and resource-access activity for sysmaint."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 9,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.6
+}

@@ -1,0 +1,96 @@
+{
+ "scenario_id": "T287",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:42:42 UTC, the domain controller recorded creation of the account sysops by sean.byrne.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T287-00148\"]\n    },\n    {\n      \"claim\": \"About one second later, sean.byrne added sysops to the Administrators group. This conflicts with the stated help-desk practice that temporary accounts receive no administrator rights.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T287-00149\"]\n    },\n    {\n      \"claim\": \"At 13:39 UTC, WS-RDIAZ-01 accepted an RDP connection from 198.51.100.77 that logged in as sean.byrne; the environment says remote administration is only performed from WS-SBYRNE-01 and there is no VPN.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T287-00136\", \"T287-00137\", \"T287-00138\"]\n    },\n    {\n      \"claim\": \"At 13:42:49 UTC, a scheduled task was registered on WS-RDIAZ-01 in sean.byrne's session. Its command runs hidden PowerShell with an encoded argument that decodes to a command to retrieve and execute a script from http://198.51.100.77/a.ps1\u2014the same address as the RDP source.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T287-00150\", \"T287-00136\", \"T287-00138\"]\n    },\n    {\n      \"claim\": \"The near-timing of the sysops account creation and administrator-group addition, together with the unauthorized-looking RDP session and task command targeting the same source address, supports treating the alerted account activity as malicious.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T287-00148\", \"T287-00149\", \"T287-00136\", \"T287-00138\", \"T287-00150\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy logs for the proxy host were not collected from 13:30 to 14:20 UTC because of a collection outage; proxy activity during that interval cannot be assessed.\",\n    \"The supplied records show the account-change events and task registration, but do not show the task executing or the script being retrieved.\",\n    \"The supplied account-change events do not identify the originating workstation or source IP.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether sean.byrne performed or authorized these actions, or whether the account was compromised or impersonated.\",\n    \"Whether sysops was subsequently used to log in or perform actions.\",\n    \"Whether the scheduled task ran successfully or the referenced script was downloaded or executed.\",\n    \"Whether the RDP source address represents an actual external actor; the records establish the address observed by the workstation, not who controlled it.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Investigate the sysops account immediately, including current group memberships, logons, and activity; disable or restrict it pending authorization validation.\",\n    \"Review DC authentication and directory-service audit records around 13:42 UTC to identify the source and session associated with the account creation and group change.\",\n    \"Collect WS-RDIAZ-01 scheduled-task execution history, PowerShell logs, process creation, and file/network evidence to determine whether the task or script ran.\",\n    \"Validate the RDP session and account changes directly with sean.byrne, and check for an approved change or incident record.\",\n    \"Investigate the RDP source address and any associated infrastructure or activity on WS-RDIAZ-01.\"\n  ],\n  \"unrelated_findings\": [\n    \"GlobalProtect PanGPS.exe started on WS-RDIAZ-01, although the inventory says the organization has no VPN; validate this separately. This finding does not determine the sysops alert disposition. (T287-00058, T287-00059)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 36907,
+    "output": 2617
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "At 13:42:42 UTC, the domain controller recorded creation of the account sysops by sean.byrne.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T287-00148"
+    ]
+   },
+   {
+    "claim": "About one second later, sean.byrne added sysops to the Administrators group. This conflicts with the stated help-desk practice that temporary accounts receive no administrator rights.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T287-00149"
+    ]
+   },
+   {
+    "claim": "At 13:39 UTC, WS-RDIAZ-01 accepted an RDP connection from 198.51.100.77 that logged in as sean.byrne; the environment says remote administration is only performed from WS-SBYRNE-01 and there is no VPN.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T287-00136",
+     "T287-00137",
+     "T287-00138"
+    ]
+   },
+   {
+    "claim": "At 13:42:49 UTC, a scheduled task was registered on WS-RDIAZ-01 in sean.byrne's session. Its command runs hidden PowerShell with an encoded argument that decodes to a command to retrieve and execute a script from http://198.51.100.77/a.ps1\u2014the same address as the RDP source.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T287-00150",
+     "T287-00136",
+     "T287-00138"
+    ]
+   },
+   {
+    "claim": "The near-timing of the sysops account creation and administrator-group addition, together with the unauthorized-looking RDP session and task command targeting the same source address, supports treating the alerted account activity as malicious.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T287-00148",
+     "T287-00149",
+     "T287-00136",
+     "T287-00138",
+     "T287-00150"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy logs for the proxy host were not collected from 13:30 to 14:20 UTC because of a collection outage; proxy activity during that interval cannot be assessed.",
+   "The supplied records show the account-change events and task registration, but do not show the task executing or the script being retrieved.",
+   "The supplied account-change events do not identify the originating workstation or source IP."
+  ],
+  "claims_not_established": [
+   "Whether sean.byrne performed or authorized these actions, or whether the account was compromised or impersonated.",
+   "Whether sysops was subsequently used to log in or perform actions.",
+   "Whether the scheduled task ran successfully or the referenced script was downloaded or executed.",
+   "Whether the RDP source address represents an actual external actor; the records establish the address observed by the workstation, not who controlled it."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Investigate the sysops account immediately, including current group memberships, logons, and activity; disable or restrict it pending authorization validation.",
+   "Review DC authentication and directory-service audit records around 13:42 UTC to identify the source and session associated with the account creation and group change.",
+   "Collect WS-RDIAZ-01 scheduled-task execution history, PowerShell logs, process creation, and file/network evidence to determine whether the task or script ran.",
+   "Validate the RDP session and account changes directly with sean.byrne, and check for an approved change or incident record.",
+   "Investigate the RDP source address and any associated infrastructure or activity on WS-RDIAZ-01."
+  ],
+  "unrelated_findings": [
+   "GlobalProtect PanGPS.exe started on WS-RDIAZ-01, although the inventory says the organization has no VPN; validate this separately. This finding does not determine the sysops alert disposition. (T287-00058, T287-00059)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 27.7
+}

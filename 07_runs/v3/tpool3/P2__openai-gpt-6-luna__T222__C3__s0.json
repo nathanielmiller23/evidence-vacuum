@@ -1,0 +1,64 @@
+{
+ "scenario_id": "T222",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:56:13 UTC, a Windows event 4648 on WS-MFISCHER-01 recorded SYSTEM running PowerShell with explicit credentials targeting svc-ledger on FILE-SUN-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T222-00037\"\n      ]\n    },\n    {\n      \"claim\": \"This credential use is out of the documented pattern: svc-ledger is assigned to a LedgerSync job on FILE-SUN-01, while the documented workstation patching originates from WS-IDOYLE-01. The event alone does not establish that the use was malicious or that authentication succeeded.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T222-00037\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Winsec and Sysmon collection were unavailable on DC-SUN-01 and FILE-SUN-01 from 13:20 to 14:15 UTC, covering the alerted period. Domain-controller authentication outcomes and file-server activity in that interval therefore cannot be reviewed.\",\n    \"The available record is an explicit-credentials event on WS-MFISCHER-01; it does not by itself confirm a successful or failed domain logon.\",\n    \"The alert describes repeated failed logons, but the available evidence contains no records establishing those failures or their count.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether repeated failed domain logons for svc-ledger occurred during the alert window.\",\n    \"Whether the credential use recorded on WS-MFISCHER-01 was authorized, related to the scheduled password rotation, or connected to the alerted failures.\",\n    \"Whether any authentication attempt succeeded, and who initiated the recorded process.\",\n    \"Whether LedgerSync was updated after the scheduled password rotation.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover or obtain DC-SUN-01 authentication logs for 13:20\u201314:15 UTC, including failure and success events for svc-ledger.\",\n    \"Obtain FILE-SUN-01 security and process telemetry for the same interval to determine whether svc-ledger authenticated and whether LedgerSync was running or updated.\",\n    \"Collect WS-MFISCHER-01 process and logon context for the PowerShell event, including its parent process, initiating user/session, command line, and related authentication events.\",\n    \"Verify the password-rotation and LedgerSync update records for the scheduled 13:30 UTC change.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 1829,
+    "output": 1547
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "At 13:56:13 UTC, a Windows event 4648 on WS-MFISCHER-01 recorded SYSTEM running PowerShell with explicit credentials targeting svc-ledger on FILE-SUN-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T222-00037"
+    ]
+   },
+   {
+    "claim": "This credential use is out of the documented pattern: svc-ledger is assigned to a LedgerSync job on FILE-SUN-01, while the documented workstation patching originates from WS-IDOYLE-01. The event alone does not establish that the use was malicious or that authentication succeeded.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T222-00037"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Winsec and Sysmon collection were unavailable on DC-SUN-01 and FILE-SUN-01 from 13:20 to 14:15 UTC, covering the alerted period. Domain-controller authentication outcomes and file-server activity in that interval therefore cannot be reviewed.",
+   "The available record is an explicit-credentials event on WS-MFISCHER-01; it does not by itself confirm a successful or failed domain logon.",
+   "The alert describes repeated failed logons, but the available evidence contains no records establishing those failures or their count."
+  ],
+  "claims_not_established": [
+   "Whether repeated failed domain logons for svc-ledger occurred during the alert window.",
+   "Whether the credential use recorded on WS-MFISCHER-01 was authorized, related to the scheduled password rotation, or connected to the alerted failures.",
+   "Whether any authentication attempt succeeded, and who initiated the recorded process.",
+   "Whether LedgerSync was updated after the scheduled password rotation."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover or obtain DC-SUN-01 authentication logs for 13:20\u201314:15 UTC, including failure and success events for svc-ledger.",
+   "Obtain FILE-SUN-01 security and process telemetry for the same interval to determine whether svc-ledger authenticated and whether LedgerSync was running or updated.",
+   "Collect WS-MFISCHER-01 process and logon context for the PowerShell event, including its parent process, initiating user/session, command line, and related authentication events.",
+   "Verify the password-rotation and LedgerSync update records for the scheduled 13:30 UTC change."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 2,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 16.6
+}

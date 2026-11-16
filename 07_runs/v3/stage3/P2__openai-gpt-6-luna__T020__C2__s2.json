@@ -1,0 +1,76 @@
+{
+ "scenario_id": "T020",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 2,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The large transfer is associated with the approved CobaltVault backup agent: cvagent.exe ran from its installed path as svc-bkp with a Nightly job targeting ingest.cobaltvault.net, and its process ID is tied to proxy traffic to the same destination.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T020-00278\",\n        \"T020-00281\",\n        \"T020-00283\",\n        \"T020-00284\"\n      ]\n    },\n    {\n      \"claim\": \"The proxy recorded approximately 640 MB sent to ingest.cobaltvault.net, consistent with the alert\u2019s reported large outbound transfer and the inventory\u2019s stated expected backup-upload size.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T020-00285\",\n        \"T020-00286\"\n      ]\n    },\n    {\n      \"claim\": \"Shortly before the backup agent ran, the domain controller recorded a service-ticket request for svc-bkp to FILE-HD-01 from 23.129.64.210, an external IP. This is concerning in an environment with no VPN, but the available records do not establish who initiated it or whether it caused the backup transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T020-00264\",\n        \"T020-00265\",\n        \"T020-00278\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show the transfer destination, volume, process, and account, but do not show which files were uploaded or whether their contents were authorized.\",\n    \"The records do not establish the provenance of the svc-bkp ticket request from 23.129.64.210 or a causal link between that request and the backup agent run.\"\n  ],\n  \"claims_not_established\": [\n    \"That the transfer contained stolen, sensitive, or otherwise unauthorized data.\",\n    \"That the external-IP svc-bkp ticket request was legitimate, or that it was responsible for the observed transfer.\",\n    \"That the backup job\u2019s schedule, input set, and resulting upload match the organization\u2019s expected backup activity for this run.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Validate the 23.129.64.210 authentication and ticket activity against domain-controller and network perimeter logs; identify the client and authentication path.\",\n    \"Review CobaltVault job history, backup manifests, uploaded object metadata, and expected schedule to confirm the 640 MB run and its contents.\",\n    \"Verify svc-bkp service configuration and credential use around the run, including whether the service logon and agent execution were expected.\"\n  ],\n  \"unrelated_findings\": [\n    \"lucy.park connected to FILE-HD-01 over RDP from WS-LPARK-01 and established an interactive logon. This warrants a separate review because remote administration is stated to be limited to WS-OHADDAD-01; it does not determine the disposition of the alerted backup transfer. (T020-00341, T020-00342, T020-00344, T020-00349)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 76049,
+    "output": 2088
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "The large transfer is associated with the approved CobaltVault backup agent: cvagent.exe ran from its installed path as svc-bkp with a Nightly job targeting ingest.cobaltvault.net, and its process ID is tied to proxy traffic to the same destination.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00278",
+     "T020-00281",
+     "T020-00283",
+     "T020-00284"
+    ]
+   },
+   {
+    "claim": "The proxy recorded approximately 640 MB sent to ingest.cobaltvault.net, consistent with the alert\u2019s reported large outbound transfer and the inventory\u2019s stated expected backup-upload size.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00285",
+     "T020-00286"
+    ]
+   },
+   {
+    "claim": "Shortly before the backup agent ran, the domain controller recorded a service-ticket request for svc-bkp to FILE-HD-01 from 23.129.64.210, an external IP. This is concerning in an environment with no VPN, but the available records do not establish who initiated it or whether it caused the backup transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00264",
+     "T020-00265",
+     "T020-00278"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show the transfer destination, volume, process, and account, but do not show which files were uploaded or whether their contents were authorized.",
+   "The records do not establish the provenance of the svc-bkp ticket request from 23.129.64.210 or a causal link between that request and the backup agent run."
+  ],
+  "claims_not_established": [
+   "That the transfer contained stolen, sensitive, or otherwise unauthorized data.",
+   "That the external-IP svc-bkp ticket request was legitimate, or that it was responsible for the observed transfer.",
+   "That the backup job\u2019s schedule, input set, and resulting upload match the organization\u2019s expected backup activity for this run."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Validate the 23.129.64.210 authentication and ticket activity against domain-controller and network perimeter logs; identify the client and authentication path.",
+   "Review CobaltVault job history, backup manifests, uploaded object metadata, and expected schedule to confirm the 640 MB run and its contents.",
+   "Verify svc-bkp service configuration and credential use around the run, including whether the service logon and agent execution were expected."
+  ],
+  "unrelated_findings": [
+   "lucy.park connected to FILE-HD-01 over RDP from WS-LPARK-01 and established an interactive logon. This warrants a separate review because remote administration is stated to be limited to WS-OHADDAD-01; it does not determine the disposition of the alerted backup transfer. (T020-00341, T020-00342, T020-00344, T020-00349)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 9,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 24.5
+}

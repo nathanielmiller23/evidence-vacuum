@@ -1,0 +1,73 @@
+{
+ "scenario_id": "T279",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:48:11 UTC, WS-ACOLE-01 sent 51,000,299 bytes to the explicit web proxy at 10.56.20.30:8080 over HTTP; the connection lasted about 25 seconds and returned 8,898 bytes. This supports that a large client-to-proxy transfer occurred, but does not identify its ultimate destination.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T279-00228\"]\n    },\n    {\n      \"claim\": \"Shortly before the transfer, WS-ACOLE-01's machine account obtained Kerberos service tickets for FILE-ORC-01. The records establish the ticket requests, not that files were accessed or that this activity supplied data for the upload.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T279-00220\", \"T279-00225\"]\n    },\n    {\n      \"claim\": \"The available evidence does not tie the large transfer to a particular process, user action, file, or approved service, so it cannot establish whether the transfer was malicious or legitimate.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T279-00228\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The Zeek connection record shows bytes exchanged with the proxy but provides no destination hostname, URL, proxy decision, or authenticated identity for the request (T279-00228).\",\n    \"The supplied records do not identify the process responsible for the transfer or its content; the nearby Kerberos records show service-ticket requests, not file access or transfer contents (T279-00220, T279-00225, T279-00228).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the upload went to OneDrive/Microsoft 365 or another destination.\",\n    \"Which process and user initiated the transfer.\",\n    \"What data was sent, whether it was sensitive, and whether the transfer was authorized.\",\n    \"Whether the FILE-ORC-01 ticket requests were related to the upload.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Proxy request and authentication logs for the connection, including destination host or URL, user, policy/category, and disposition.\",\n    \"Endpoint EDR or equivalent process-network telemetry for WS-ACOLE-01 at 13:48 UTC, including process ancestry and command line.\",\n    \"File access, staging, and data-loss-prevention records around the transfer to identify the uploaded content and its source.\",\n    \"Microsoft 365/OneDrive audit or sync logs to determine whether this was an approved upload.\"\n  ],\n  \"unrelated_findings\": [\n    \"Explorer loaded an unsigned 7-Zip DLL earlier in the review window. The supplied evidence does not link that event to the alerted transfer; assess separately if needed (T279-00001).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 25215,
+    "output": 1968
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "At 13:48:11 UTC, WS-ACOLE-01 sent 51,000,299 bytes to the explicit web proxy at 10.56.20.30:8080 over HTTP; the connection lasted about 25 seconds and returned 8,898 bytes. This supports that a large client-to-proxy transfer occurred, but does not identify its ultimate destination.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T279-00228"
+    ]
+   },
+   {
+    "claim": "Shortly before the transfer, WS-ACOLE-01's machine account obtained Kerberos service tickets for FILE-ORC-01. The records establish the ticket requests, not that files were accessed or that this activity supplied data for the upload.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T279-00220",
+     "T279-00225"
+    ]
+   },
+   {
+    "claim": "The available evidence does not tie the large transfer to a particular process, user action, file, or approved service, so it cannot establish whether the transfer was malicious or legitimate.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T279-00228"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The Zeek connection record shows bytes exchanged with the proxy but provides no destination hostname, URL, proxy decision, or authenticated identity for the request (T279-00228).",
+   "The supplied records do not identify the process responsible for the transfer or its content; the nearby Kerberos records show service-ticket requests, not file access or transfer contents (T279-00220, T279-00225, T279-00228)."
+  ],
+  "claims_not_established": [
+   "Whether the upload went to OneDrive/Microsoft 365 or another destination.",
+   "Which process and user initiated the transfer.",
+   "What data was sent, whether it was sensitive, and whether the transfer was authorized.",
+   "Whether the FILE-ORC-01 ticket requests were related to the upload."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Proxy request and authentication logs for the connection, including destination host or URL, user, policy/category, and disposition.",
+   "Endpoint EDR or equivalent process-network telemetry for WS-ACOLE-01 at 13:48 UTC, including process ancestry and command line.",
+   "File access, staging, and data-loss-prevention records around the transfer to identify the uploaded content and its source.",
+   "Microsoft 365/OneDrive audit or sync logs to determine whether this was an approved upload."
+  ],
+  "unrelated_findings": [
+   "Explorer loaded an unsigned 7-Zip DLL earlier in the review window. The supplied evidence does not link that event to the alerted transfer; assess separately if needed (T279-00001)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 4,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 22.1
+}

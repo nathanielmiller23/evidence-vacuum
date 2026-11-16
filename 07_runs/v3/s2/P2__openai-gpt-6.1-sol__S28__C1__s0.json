@@ -1,0 +1,83 @@
+{
+ "scenario_id": "S28",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6.1-sol",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.95,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:42:41 UTC, dev.sharma added hana.ito to Billing-Share on DC-RB-01. This is the group addition matching the alert time.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"S28-00018\"\n      ]\n    },\n    {\n      \"claim\": \"The group change used logon ID 0x1307103b, matching dev.sharma's Kerberos network logon to DC-RB-01 from 10.60.10.23. Endpoint network telemetry identifies that address as WS-DSHARMA-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"S28-00016\",\n        \"S28-00018\",\n        \"S28-00021\"\n      ]\n    },\n    {\n      \"claim\": \"The observed member, target group, administrator account, and source workstation match the supplied change calendar and group-management practices: afternoon Billing-Share access for hana.ito, administered by dev.sharma from WS-DSHARMA-01. This supports a benign disposition.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"S28-00016\",\n        \"S28-00018\",\n        \"S28-00021\"\n      ]\n    },\n    {\n      \"claim\": \"The subsequent RDP connection to DC-RB-01 originated from WS-DSHARMA-01 as dev.sharma. It began after the group addition and used a different destination logon ID, 0x13076620; it should not be treated as the session that performed the change.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"S28-00018\",\n        \"S28-00019\",\n        \"S28-00021\",\n        \"S28-00022\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"S28-00018 identifies the group-change actor and session but does not identify the initiating management process or command.\",\n    \"The supplied change calendar corroborates the purpose of S28-00018, but no underlying approval ticket is included.\"\n  ],\n  \"claims_not_established\": [\n    \"The logs attribute the change to dev.sharma's account, not independently to the human operator (S28-00016, S28-00018).\",\n    \"The alerted event does not establish that hana.ito received Remote Desktop Users membership; its recorded target is Billing-Share (S28-00018).\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [\n    \"No additional evidence is necessary for the supported benign disposition; optionally attach the onboarding approval ticket to document authorization for the Billing-Share addition (S28-00018).\"\n  ],\n  \"unrelated_findings\": [\n    \"Separately review process creation while the administrator workstation was apparently locked: lock at 13:47:41, mstsc.exe launch toward FILE-RB-01 at 13:49:34, and unlock at 13:59:53. This timing does not establish compromise or invalidate the earlier group change (S28-00033, S28-00034, S28-00038, S28-00050).\",\n    \"Separately validate software/service inventory exceptions: Firefox accessed zoom.us and ZSATray.exe executed, neither of which appears in the supplied approved-software list. These records do not establish malicious remote access (S28-00009, S28-00014, S28-00030, S28-00032).\",\n    \"On WS-HITO-01, UserAssist values reference PowerShell and mstsc.exe after ROT13 decoding. These registry updates provide no commands, destinations, or evidence of successful server administration and do not explain the earlier group addition (S28-00043, S28-00054).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 9464,
+    "output": 948
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.95,
+  "supporting_observations": [
+   {
+    "claim": "At 13:42:41 UTC, dev.sharma added hana.ito to Billing-Share on DC-RB-01. This is the group addition matching the alert time.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S28-00018"
+    ]
+   },
+   {
+    "claim": "The group change used logon ID 0x1307103b, matching dev.sharma's Kerberos network logon to DC-RB-01 from 10.60.10.23. Endpoint network telemetry identifies that address as WS-DSHARMA-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S28-00016",
+     "S28-00018",
+     "S28-00021"
+    ]
+   },
+   {
+    "claim": "The observed member, target group, administrator account, and source workstation match the supplied change calendar and group-management practices: afternoon Billing-Share access for hana.ito, administered by dev.sharma from WS-DSHARMA-01. This supports a benign disposition.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S28-00016",
+     "S28-00018",
+     "S28-00021"
+    ]
+   },
+   {
+    "claim": "The subsequent RDP connection to DC-RB-01 originated from WS-DSHARMA-01 as dev.sharma. It began after the group addition and used a different destination logon ID, 0x13076620; it should not be treated as the session that performed the change.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S28-00018",
+     "S28-00019",
+     "S28-00021",
+     "S28-00022"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "S28-00018 identifies the group-change actor and session but does not identify the initiating management process or command.",
+   "The supplied change calendar corroborates the purpose of S28-00018, but no underlying approval ticket is included."
+  ],
+  "claims_not_established": [
+   "The logs attribute the change to dev.sharma's account, not independently to the human operator (S28-00016, S28-00018).",
+   "The alerted event does not establish that hana.ito received Remote Desktop Users membership; its recorded target is Billing-Share (S28-00018)."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [
+   "No additional evidence is necessary for the supported benign disposition; optionally attach the onboarding approval ticket to document authorization for the Billing-Share addition (S28-00018)."
+  ],
+  "unrelated_findings": [
+   "Separately review process creation while the administrator workstation was apparently locked: lock at 13:47:41, mstsc.exe launch toward FILE-RB-01 at 13:49:34, and unlock at 13:59:53. This timing does not establish compromise or invalidate the earlier group change (S28-00033, S28-00034, S28-00038, S28-00050).",
+   "Separately validate software/service inventory exceptions: Firefox accessed zoom.us and ZSATray.exe executed, neither of which appears in the supplied approved-software list. These records do not establish malicious remote access (S28-00009, S28-00014, S28-00030, S28-00032).",
+   "On WS-HITO-01, UserAssist values reference PowerShell and mstsc.exe after ROT13 decoding. These registry updates provide no commands, destinations, or evidence of successful server administration and do not explain the earlier group addition (S28-00043, S28-00054)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 15.5
+}

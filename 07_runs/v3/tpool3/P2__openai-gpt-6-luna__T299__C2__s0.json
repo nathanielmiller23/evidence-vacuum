@@ -1,0 +1,88 @@
+{
+ "scenario_id": "T299",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:48:41 UTC, the proxy recorded a Chrome CONNECT tunnel from WS-ACOLE-01 (user ORCHARD\\\\amy.cole) to megadrop-files.com with 51,000,000 client-to-server bytes and only 8,800 server-to-client bytes.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T299-00193\"]\n    },\n    {\n      \"claim\": \"The network connection is corroborated by Zeek, which recorded 51,000,222 originating bytes for the connection through the proxy; endpoint telemetry attributes that proxy connection to Chrome running as amy.cole.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T299-00194\", \"T299-00195\", \"T299-00196\"]\n    },\n    {\n      \"claim\": \"About five minutes before the large transfer, amy.cole used PowerShell to compress \\\\\\\\FILE-ORC-01\\\\Shared\\\\Clients into C:\\\\Users\\\\amy.cole\\\\AppData\\\\Local\\\\Temp\\\\c.zip; telemetry records creation of that archive.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T299-00158\", \"T299-00159\", \"T299-00160\"]\n    },\n    {\n      \"claim\": \"The transfer to megadrop-files.com is strongly consistent with unauthorized data exfiltration: it was a large outbound transfer to an unapproved file-sharing service, shortly after creation of an archive from a shared Clients path. The available records do not prove that c.zip was the uploaded file.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T299-00158\", \"T299-00160\", \"T299-00193\", \"T299-00195\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records a CONNECT tunnel and byte counts, but the available records do not expose the HTTPS request path, uploaded filename, or transfer contents.\",\n    \"The evidence does not directly link the created c.zip file to the megadrop-files.com transfer.\",\n    \"The available telemetry does not establish whether the transfer was authorized or who controlled the destination account.\"\n  ],\n  \"claims_not_established\": [\n    \"That c.zip, or any particular file, was uploaded in the alerted transfer.\",\n    \"What data the archive or transfer contained, or whether it included sensitive or regulated information.\",\n    \"Whether amy.cole intended or was authorized to make this transfer, or who received the data.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine c.zip, including its hash, contents, creation metadata, and any endpoint or antivirus scan results.\",\n    \"Collect browser history, endpoint telemetry, and any available TLS inspection or proxy request details to identify the uploaded object and destination account.\",\n    \"Review FILE-ORC-01 access auditing for amy.cole's reads of Shared\\\\Clients and identify the specific files accessed before the transfer.\",\n    \"Confirm with the user and relevant data owner whether the transfer was authorized; preserve relevant endpoint and proxy logs.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 14:04:05 UTC, WS-ACOLE-01 recorded explicit credential use for svc-grades targeting PROXY-ORC-01 from taskhostw.exe. The inventory places the GradeSync job on FILE-ORC-01; this activity is separate from the alerted transfer and its success is not established. (T299-00266)\",\n    \"WS-ACOLE-01 launched Palo Alto GlobalProtect PanGPS.exe, although the inventory states there is no VPN. This is an unrelated software/policy lead, not evidence about the alerted transfer. (T299-00262, T299-00263)\",\n    \"Chrome made a small CONNECT request to drive.google.com. Google Drive is not among the approved services; this is separate from the megadrop-files.com transfer and does not decide this alert. (T299-00207, T299-00208, T299-00209)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 39019,
+    "output": 1756
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "At 13:48:41 UTC, the proxy recorded a Chrome CONNECT tunnel from WS-ACOLE-01 (user ORCHARD\\amy.cole) to megadrop-files.com with 51,000,000 client-to-server bytes and only 8,800 server-to-client bytes.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T299-00193"
+    ]
+   },
+   {
+    "claim": "The network connection is corroborated by Zeek, which recorded 51,000,222 originating bytes for the connection through the proxy; endpoint telemetry attributes that proxy connection to Chrome running as amy.cole.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T299-00194",
+     "T299-00195",
+     "T299-00196"
+    ]
+   },
+   {
+    "claim": "About five minutes before the large transfer, amy.cole used PowerShell to compress \\\\FILE-ORC-01\\Shared\\Clients into C:\\Users\\amy.cole\\AppData\\Local\\Temp\\c.zip; telemetry records creation of that archive.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T299-00158",
+     "T299-00159",
+     "T299-00160"
+    ]
+   },
+   {
+    "claim": "The transfer to megadrop-files.com is strongly consistent with unauthorized data exfiltration: it was a large outbound transfer to an unapproved file-sharing service, shortly after creation of an archive from a shared Clients path. The available records do not prove that c.zip was the uploaded file.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T299-00158",
+     "T299-00160",
+     "T299-00193",
+     "T299-00195"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records a CONNECT tunnel and byte counts, but the available records do not expose the HTTPS request path, uploaded filename, or transfer contents.",
+   "The evidence does not directly link the created c.zip file to the megadrop-files.com transfer.",
+   "The available telemetry does not establish whether the transfer was authorized or who controlled the destination account."
+  ],
+  "claims_not_established": [
+   "That c.zip, or any particular file, was uploaded in the alerted transfer.",
+   "What data the archive or transfer contained, or whether it included sensitive or regulated information.",
+   "Whether amy.cole intended or was authorized to make this transfer, or who received the data."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine c.zip, including its hash, contents, creation metadata, and any endpoint or antivirus scan results.",
+   "Collect browser history, endpoint telemetry, and any available TLS inspection or proxy request details to identify the uploaded object and destination account.",
+   "Review FILE-ORC-01 access auditing for amy.cole's reads of Shared\\Clients and identify the specific files accessed before the transfer.",
+   "Confirm with the user and relevant data owner whether the transfer was authorized; preserve relevant endpoint and proxy logs."
+  ],
+  "unrelated_findings": [
+   "At 14:04:05 UTC, WS-ACOLE-01 recorded explicit credential use for svc-grades targeting PROXY-ORC-01 from taskhostw.exe. The inventory places the GradeSync job on FILE-ORC-01; this activity is separate from the alerted transfer and its success is not established. (T299-00266)",
+   "WS-ACOLE-01 launched Palo Alto GlobalProtect PanGPS.exe, although the inventory states there is no VPN. This is an unrelated software/policy lead, not evidence about the alerted transfer. (T299-00262, T299-00263)",
+   "Chrome made a small CONNECT request to drive.google.com. Google Drive is not among the approved services; this is separate from the megadrop-files.com transfer and does not decide this alert. (T299-00207, T299-00208, T299-00209)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.2
+}

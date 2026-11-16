@@ -1,0 +1,118 @@
+{
+ "run_id": "A__T051__C1__20261115T050155Z",
+ "config": "A",
+ "scenario_id": "T051",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 38,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 17568,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.93,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Five interactive logon attempts for leo.martins failed on WS-LMARTINS-01 between 13:30:32 and 13:30:56 UTC; each reports an incorrect password.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T051-00001\", \"T051-00002\", \"T051-00003\", \"T051-00004\", \"T051-00005\"]\n    },\n    {\n      \"claim\": \"After two failed network logons for leo.martins, the domain controller recorded a successful network logon for the account from 203.0.113.250 at 13:48:06 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T051-00007\", \"T051-00008\", \"T051-00009\"]\n    },\n    {\n      \"claim\": \"The successful network logon from 203.0.113.250 is inconsistent with the supplied environment context that there is no VPN and remote administration is only performed from WS-SOKAFOR-01; this makes the success suspicious.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T051-00009\"]\n    },\n    {\n      \"claim\": \"A few minutes later, the domain controller issued a Kerberos ticket for leo.martins from 10.40.10.23 to WS-NBLAKE-01, followed by a successful network logon for the account on WS-NBLAKE-01 from that address.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T051-00013\", \"T051-00014\", \"T051-00015\"]\n    },\n    {\n      \"claim\": \"The external-address success and subsequent authentication to WS-NBLAKE-01 warrant investigation as potentially unauthorized account use; the records do not establish that these events share the same actor or session.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T051-00009\", \"T051-00013\", \"T051-00014\", \"T051-00015\"]\n    },\n    {\n      \"claim\": \"WS-LMARTINS-01 recorded ordinary-looking user activity, including Explorer registry updates and a proxy connection to www.bing.com; this does not explain or validate the successful network logon from 203.0.113.250.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T051-00006\", \"T051-00010\", \"T051-00011\", \"T051-00012\", \"T051-00016\", \"T051-00017\", \"T051-00037\", \"T051-00038\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The DC event records the source address and a successful network logon, but the provided logs do not identify the remote client device or the resource accessed.\",\n    \"The records do not link the external-address logon, the later WS-NBLAKE-01 authentication, and local activity on WS-LMARTINS-01 to one session or actor.\",\n    \"The address 203.0.113.250 is in a documentation-only address range; it may be sanitized, so its real-world ownership or routability cannot be determined from these records.\",\n    \"The supplied window contains selected events, not complete authentication, endpoint, network, or account-change telemetry.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the successful logon from 203.0.113.250 was authorized or whether the address represents a sanitized value.\",\n    \"Whether the successful network logon was initiated by leo.martins, an attacker, or an intermediary.\",\n    \"Whether the later WS-NBLAKE-01 authentication was legitimate help-desk activity or related to the external-address logon.\",\n    \"Whether any data was accessed, copied, or exfiltrated, or whether the account or hosts were otherwise compromised.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Validate the source address against firewall, NAT, DHCP, proxy, and network flow records, accounting for possible log sanitization.\",\n    \"Review complete DC authentication and account-change events around the time, including source workstation details and any related successful or failed logons.\",\n    \"Collect endpoint logon-session, process, and network telemetry from WS-LMARTINS-01 and WS-NBLAKE-01 around the relevant events.\",\n    \"Confirm with leo.martins and the help desk whether the logons and activity were expected; verify any applicable remote-access or exception records.\",\n    \"Review access to resources following the successful logons and investigate for unauthorized changes or data access.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 6168,
+    "output": 2074,
+    "reasoning": 1024
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.93,
+  "supporting_observations": [
+   {
+    "claim": "Five interactive logon attempts for leo.martins failed on WS-LMARTINS-01 between 13:30:32 and 13:30:56 UTC; each reports an incorrect password.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T051-00001",
+     "T051-00002",
+     "T051-00003",
+     "T051-00004",
+     "T051-00005"
+    ]
+   },
+   {
+    "claim": "After two failed network logons for leo.martins, the domain controller recorded a successful network logon for the account from 203.0.113.250 at 13:48:06 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T051-00007",
+     "T051-00008",
+     "T051-00009"
+    ]
+   },
+   {
+    "claim": "The successful network logon from 203.0.113.250 is inconsistent with the supplied environment context that there is no VPN and remote administration is only performed from WS-SOKAFOR-01; this makes the success suspicious.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T051-00009"
+    ]
+   },
+   {
+    "claim": "A few minutes later, the domain controller issued a Kerberos ticket for leo.martins from 10.40.10.23 to WS-NBLAKE-01, followed by a successful network logon for the account on WS-NBLAKE-01 from that address.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T051-00013",
+     "T051-00014",
+     "T051-00015"
+    ]
+   },
+   {
+    "claim": "The external-address success and subsequent authentication to WS-NBLAKE-01 warrant investigation as potentially unauthorized account use; the records do not establish that these events share the same actor or session.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T051-00009",
+     "T051-00013",
+     "T051-00014",
+     "T051-00015"
+    ]
+   },
+   {
+    "claim": "WS-LMARTINS-01 recorded ordinary-looking user activity, including Explorer registry updates and a proxy connection to www.bing.com; this does not explain or validate the successful network logon from 203.0.113.250.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T051-00006",
+     "T051-00010",
+     "T051-00011",
+     "T051-00012",
+     "T051-00016",
+     "T051-00017",
+     "T051-00037",
+     "T051-00038"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The DC event records the source address and a successful network logon, but the provided logs do not identify the remote client device or the resource accessed.",
+   "The records do not link the external-address logon, the later WS-NBLAKE-01 authentication, and local activity on WS-LMARTINS-01 to one session or actor.",
+   "The address 203.0.113.250 is in a documentation-only address range; it may be sanitized, so its real-world ownership or routability cannot be determined from these records.",
+   "The supplied window contains selected events, not complete authentication, endpoint, network, or account-change telemetry."
+  ],
+  "claims_not_established": [
+   "Whether the successful logon from 203.0.113.250 was authorized or whether the address represents a sanitized value.",
+   "Whether the successful network logon was initiated by leo.martins, an attacker, or an intermediary.",
+   "Whether the later WS-NBLAKE-01 authentication was legitimate help-desk activity or related to the external-address logon.",
+   "Whether any data was accessed, copied, or exfiltrated, or whether the account or hosts were otherwise compromised."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Validate the source address against firewall, NAT, DHCP, proxy, and network flow records, accounting for possible log sanitization.",
+   "Review complete DC authentication and account-change events around the time, including source workstation details and any related successful or failed logons.",
+   "Collect endpoint logon-session, process, and network telemetry from WS-LMARTINS-01 and WS-NBLAKE-01 around the relevant events.",
+   "Confirm with leo.martins and the help desk whether the logons and activity were expected; verify any applicable remote-access or exception records.",
+   "Review access to resources following the successful logons and investigate for unauthorized changes or data access."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 24,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.1
+}

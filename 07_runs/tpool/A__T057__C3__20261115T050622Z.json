@@ -1,0 +1,88 @@
+{
+ "run_id": "A__T057__C3__20261115T050622Z",
+ "config": "A",
+ "scenario_id": "T057",
+ "condition": "C3",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 116,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 49475,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.87,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:46:49 UTC, the domain controller logged creation of the account sysmaint, with sam.okafor as the subject.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T057-00089\"]\n    },\n    {\n      \"claim\": \"Two seconds later, the domain controller logged sysmaint being added to the group named Administrators by sam.okafor; the account-creation and group-addition events share the same subject logon ID.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T057-00089\", \"T057-00090\"]\n    },\n    {\n      \"claim\": \"The creation and elevation are inconsistent with the stated account-management practice: help-desk temporary accounts use the ext.<name> naming convention and are not granted administrator rights. No account creation is listed in the supplied change calendar.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T057-00089\", \"T057-00090\"]\n    },\n    {\n      \"claim\": \"The available account events do not identify the source host or address for the subject logon, so they do not establish where the action originated.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T057-00089\", \"T057-00090\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Winsec and Sysmon collection on WS-LMARTINS-01 was unavailable from 13:30 to 14:10 UTC, limiting endpoint-level review during much of the requested window.\",\n    \"The account creation and group-addition records identify sam.okafor and a shared logon ID, but do not include a source host or source address.\",\n    \"The available records do not include a logon event correlating subject logon ID 0x13ef891e to its originating session.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether sam.okafor personally performed the actions or the account/session was used by someone else.\",\n    \"Whether there was an unrecorded approval or business justification for creating and elevating sysmaint.\",\n    \"Which host or address originated the session used for the account changes.\",\n    \"Whether sysmaint was subsequently used, and what access or other group memberships it received.\",\n    \"Whether the network activity from WS-LMARTINS-01 was related to these account changes.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Retrieve DC-NWD-01 logon and authentication events for subject logon ID 0x13ef891e, including source address, workstation, logon type, and privileges.\",\n    \"Review domain-controller and identity-management audit records for the sysmaint object's creation details, subsequent changes, group memberships, and sign-in activity.\",\n    \"Check change approvals and confirm with sam.okafor whether the account creation and elevation were authorized.\",\n    \"Review endpoint and authentication telemetry from WS-SOKAFOR-01 and DC-NWD-01 around 13:46 UTC, and restore or obtain any available WS-LMARTINS-01 telemetry for the collection outage.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 18502,
+    "output": 2141,
+    "reasoning": 1424
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.87,
+  "supporting_observations": [
+   {
+    "claim": "At 13:46:49 UTC, the domain controller logged creation of the account sysmaint, with sam.okafor as the subject.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T057-00089"
+    ]
+   },
+   {
+    "claim": "Two seconds later, the domain controller logged sysmaint being added to the group named Administrators by sam.okafor; the account-creation and group-addition events share the same subject logon ID.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T057-00089",
+     "T057-00090"
+    ]
+   },
+   {
+    "claim": "The creation and elevation are inconsistent with the stated account-management practice: help-desk temporary accounts use the ext.<name> naming convention and are not granted administrator rights. No account creation is listed in the supplied change calendar.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T057-00089",
+     "T057-00090"
+    ]
+   },
+   {
+    "claim": "The available account events do not identify the source host or address for the subject logon, so they do not establish where the action originated.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T057-00089",
+     "T057-00090"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Winsec and Sysmon collection on WS-LMARTINS-01 was unavailable from 13:30 to 14:10 UTC, limiting endpoint-level review during much of the requested window.",
+   "The account creation and group-addition records identify sam.okafor and a shared logon ID, but do not include a source host or source address.",
+   "The available records do not include a logon event correlating subject logon ID 0x13ef891e to its originating session."
+  ],
+  "claims_not_established": [
+   "Whether sam.okafor personally performed the actions or the account/session was used by someone else.",
+   "Whether there was an unrecorded approval or business justification for creating and elevating sysmaint.",
+   "Which host or address originated the session used for the account changes.",
+   "Whether sysmaint was subsequently used, and what access or other group memberships it received.",
+   "Whether the network activity from WS-LMARTINS-01 was related to these account changes."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Retrieve DC-NWD-01 logon and authentication events for subject logon ID 0x13ef891e, including source address, workstation, logon type, and privileges.",
+   "Review domain-controller and identity-management audit records for the sysmaint object's creation details, subsequent changes, group memberships, and sign-in activity.",
+   "Check change approvals and confirm with sam.okafor whether the account creation and elevation were authorized.",
+   "Review endpoint and authentication telemetry from WS-SOKAFOR-01 and DC-NWD-01 around 13:46 UTC, and restore or obtain any available WS-LMARTINS-01 telemetry for the collection outage."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 7,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.7
+}

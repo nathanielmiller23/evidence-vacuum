@@ -1,0 +1,78 @@
+{
+ "scenario_id": "T020",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.82,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:46:45 UTC, FILE-HD-01 started the approved CobaltVault agent as HARBOR-DENTAL\\\\svc-bkp, with the Nightly job targeting ingest.cobaltvault.net.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T020-00278\", \"T020-00279\"]\n    },\n    {\n      \"claim\": \"The agent connected through the explicit proxy to the approved CobaltVault endpoint, and the proxy recorded 640,000,000 client-to-server tunnel bytes; this is consistent with the described backup uploads of several hundred MB.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T020-00281\", \"T020-00285\", \"T020-00286\", \"T020-00287\", \"T020-00288\"]\n    },\n    {\n      \"claim\": \"Seconds before the agent launch, a domain-controller Kerberos record shows svc-bkp requesting a ticket for FILE-HD-01$ from 23.129.64.210, an external IP. The inventory says there is no VPN, so this account activity is anomalous and needs explanation, although the records do not establish that it caused or authorized the upload.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T020-00264\", \"T020-00265\", \"T020-00278\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and Zeek records show tunnel byte counts and destination, but do not reveal the uploaded files or their contents.\",\n    \"The available records do not include CobaltVault job-console results, backup manifests, or an authoritative record of the scheduled job and its expected start time.\",\n    \"The Kerberos ticket record identifies an external source IP for svc-bkp, but the available evidence does not establish who controlled that source, how the ticket was obtained, or whether it was used by the backup process.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the 640 MB transfer contained only authorized backup data.\",\n    \"Whether the external-IP svc-bkp ticket event was legitimate, compromised-account activity, or related to the CobaltVault run.\",\n    \"Whether this specific backup run was authorized and expected at that time.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Verify the svc-bkp Kerberos event with domain-controller authentication records and network records for source 23.129.64.210; determine whether the source is expected and whether the ticket was used.\",\n    \"Obtain CobaltVault job logs and backup manifests for the Nightly run, including the files selected, destination, completion status, and expected schedule.\",\n    \"Confirm the agent binary\u2019s integrity and signature and compare this run\u2019s command line, account, destination, and volume with known-good backup runs.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-LPARK-01 initiated an RDP session to FILE-HD-01 and lucy.park logged on interactively. This is outside the alerted upload and appears inconsistent with the stated remote-administration practice; review separately. Records: T020-00342, T020-00349.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 76049,
+    "output": 2268
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.82,
+  "supporting_observations": [
+   {
+    "claim": "At 13:46:45 UTC, FILE-HD-01 started the approved CobaltVault agent as HARBOR-DENTAL\\svc-bkp, with the Nightly job targeting ingest.cobaltvault.net.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00278",
+     "T020-00279"
+    ]
+   },
+   {
+    "claim": "The agent connected through the explicit proxy to the approved CobaltVault endpoint, and the proxy recorded 640,000,000 client-to-server tunnel bytes; this is consistent with the described backup uploads of several hundred MB.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00281",
+     "T020-00285",
+     "T020-00286",
+     "T020-00287",
+     "T020-00288"
+    ]
+   },
+   {
+    "claim": "Seconds before the agent launch, a domain-controller Kerberos record shows svc-bkp requesting a ticket for FILE-HD-01$ from 23.129.64.210, an external IP. The inventory says there is no VPN, so this account activity is anomalous and needs explanation, although the records do not establish that it caused or authorized the upload.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T020-00264",
+     "T020-00265",
+     "T020-00278"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and Zeek records show tunnel byte counts and destination, but do not reveal the uploaded files or their contents.",
+   "The available records do not include CobaltVault job-console results, backup manifests, or an authoritative record of the scheduled job and its expected start time.",
+   "The Kerberos ticket record identifies an external source IP for svc-bkp, but the available evidence does not establish who controlled that source, how the ticket was obtained, or whether it was used by the backup process."
+  ],
+  "claims_not_established": [
+   "Whether the 640 MB transfer contained only authorized backup data.",
+   "Whether the external-IP svc-bkp ticket event was legitimate, compromised-account activity, or related to the CobaltVault run.",
+   "Whether this specific backup run was authorized and expected at that time."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Verify the svc-bkp Kerberos event with domain-controller authentication records and network records for source 23.129.64.210; determine whether the source is expected and whether the ticket was used.",
+   "Obtain CobaltVault job logs and backup manifests for the Nightly run, including the files selected, destination, completion status, and expected schedule.",
+   "Confirm the agent binary\u2019s integrity and signature and compare this run\u2019s command line, account, destination, and volume with known-good backup runs."
+  ],
+  "unrelated_findings": [
+   "WS-LPARK-01 initiated an RDP session to FILE-HD-01 and lucy.park logged on interactively. This is outside the alerted upload and appears inconsistent with the stated remote-administration practice; review separately. Records: T020-00342, T020-00349."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 24.5
+}

@@ -1,0 +1,109 @@
+{
+ "scenario_id": "T123",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"On WS-DREYES-01, Word opened C:\\\\Users\\\\dan.reyes\\\\Downloads\\\\Statement.docm; shortly afterward, Word launched PowerShell in the same user's session.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T123-00214\", \"T123-00217\", \"T123-00218\", \"T123-00219\"]\n    },\n    {\n      \"claim\": \"The PowerShell command used -nop, -w hidden, and -enc. The encoded command decodes to an expression that downloads and executes a script from raw.githubusercontent.com/copperline-it/tools/main/u.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T123-00218\", \"T123-00219\"]\n    },\n    {\n      \"claim\": \"Proxy telemetry records a successful GET for that exact u.ps1 URL, and network events associate the proxy connections with the PowerShell process.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T123-00222\", \"T123-00224\", \"T123-00225\", \"T123-00226\", \"T123-00227\", \"T123-00228\"]\n    },\n    {\n      \"claim\": \"PowerShell then launched rundll32 to call Init in C:\\\\Users\\\\dan.reyes\\\\AppData\\\\Roaming\\\\svchelper.dll.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T123-00232\", \"T123-00233\"]\n    },\n    {\n      \"claim\": \"The Word-to-hidden-PowerShell-to-downloaded-script-to-rundll32 sequence is strongly indicative of malicious execution, rather than an ordinary visible PowerShell window.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T123-00214\", \"T123-00217\", \"T123-00218\", \"T123-00222\", \"T123-00232\"]\n    },\n    {\n      \"claim\": \"The logged PowerShell activity began at 13:44:55 UTC, several minutes after the reported approximate time of 13:40 UTC; a 13:40:28 event instead records a certificate-based Kerberos request for the workstation account.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T123-00193\", \"T123-00218\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show the encoded command and fetched URL, but do not include the contents of u.ps1 or the svchelper.dll payload (T123-00218, T123-00222, T123-00232).\",\n    \"The available records do not establish what caused Statement.docm to be opened or whether the user intentionally initiated the sequence (T123-00214, T123-00217, T123-00218).\",\n    \"The reported time is approximate; the observed PowerShell launch is at 13:44:55 UTC, not 13:40 UTC (T123-00193, T123-00218).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the user knowingly opened or enabled content in Statement.docm.\",\n    \"The full behavior or capabilities of u.ps1 and svchelper.dll, or whether the attempted execution achieved persistence, credential theft, or other impact.\",\n    \"Whether data was accessed or exfiltrated as a result of this activity.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and acquire Statement.docm, u.ps1, svchelper.dll, and relevant temporary files; obtain hashes, signatures, and content for analysis.\",\n    \"Collect endpoint forensic and security-product telemetry for Word, PowerShell, rundll32, file creation, persistence, and subsequent activity on WS-DREYES-01.\",\n    \"Review proxy inspection or retained network content for the downloaded script and correlate the activity with any available user report or confirmation.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate review: WS-DREYES-01 requested Kerberos tickets for kim.nguyen and WS-KNGUYEN-01$, followed by a successful network logon for kim.nguyen on WS-KNGUYEN-01 from WS-DREYES-01. This is outside the alerted PowerShell execution and should be assessed separately (T123-00171, T123-00172, T123-00175).\",\n    \"Separate review: Cisco AnyConnect vpnui.exe was launched on WS-DREYES-01, although the inventory says the organization has no VPN and remote administration is limited to WS-PBECKER-01. The records show the client launch, not a successful VPN connection (T123-00180, T123-00181, T123-00182).\",\n    \"Separate review: dan.reyes's Chrome session accessed drive.google.com, a file-sharing/cloud-storage service not listed as approved in the provided inventory (T123-00176, T123-00177, T123-00179).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 65468,
+    "output": 2809
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "On WS-DREYES-01, Word opened C:\\Users\\dan.reyes\\Downloads\\Statement.docm; shortly afterward, Word launched PowerShell in the same user's session.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T123-00214",
+     "T123-00217",
+     "T123-00218",
+     "T123-00219"
+    ]
+   },
+   {
+    "claim": "The PowerShell command used -nop, -w hidden, and -enc. The encoded command decodes to an expression that downloads and executes a script from raw.githubusercontent.com/copperline-it/tools/main/u.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T123-00218",
+     "T123-00219"
+    ]
+   },
+   {
+    "claim": "Proxy telemetry records a successful GET for that exact u.ps1 URL, and network events associate the proxy connections with the PowerShell process.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T123-00222",
+     "T123-00224",
+     "T123-00225",
+     "T123-00226",
+     "T123-00227",
+     "T123-00228"
+    ]
+   },
+   {
+    "claim": "PowerShell then launched rundll32 to call Init in C:\\Users\\dan.reyes\\AppData\\Roaming\\svchelper.dll.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T123-00232",
+     "T123-00233"
+    ]
+   },
+   {
+    "claim": "The Word-to-hidden-PowerShell-to-downloaded-script-to-rundll32 sequence is strongly indicative of malicious execution, rather than an ordinary visible PowerShell window.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T123-00214",
+     "T123-00217",
+     "T123-00218",
+     "T123-00222",
+     "T123-00232"
+    ]
+   },
+   {
+    "claim": "The logged PowerShell activity began at 13:44:55 UTC, several minutes after the reported approximate time of 13:40 UTC; a 13:40:28 event instead records a certificate-based Kerberos request for the workstation account.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T123-00193",
+     "T123-00218"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show the encoded command and fetched URL, but do not include the contents of u.ps1 or the svchelper.dll payload (T123-00218, T123-00222, T123-00232).",
+   "The available records do not establish what caused Statement.docm to be opened or whether the user intentionally initiated the sequence (T123-00214, T123-00217, T123-00218).",
+   "The reported time is approximate; the observed PowerShell launch is at 13:44:55 UTC, not 13:40 UTC (T123-00193, T123-00218)."
+  ],
+  "claims_not_established": [
+   "Whether the user knowingly opened or enabled content in Statement.docm.",
+   "The full behavior or capabilities of u.ps1 and svchelper.dll, or whether the attempted execution achieved persistence, credential theft, or other impact.",
+   "Whether data was accessed or exfiltrated as a result of this activity."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and acquire Statement.docm, u.ps1, svchelper.dll, and relevant temporary files; obtain hashes, signatures, and content for analysis.",
+   "Collect endpoint forensic and security-product telemetry for Word, PowerShell, rundll32, file creation, persistence, and subsequent activity on WS-DREYES-01.",
+   "Review proxy inspection or retained network content for the downloaded script and correlate the activity with any available user report or confirmation."
+  ],
+  "unrelated_findings": [
+   "Separate review: WS-DREYES-01 requested Kerberos tickets for kim.nguyen and WS-KNGUYEN-01$, followed by a successful network logon for kim.nguyen on WS-KNGUYEN-01 from WS-DREYES-01. This is outside the alerted PowerShell execution and should be assessed separately (T123-00171, T123-00172, T123-00175).",
+   "Separate review: Cisco AnyConnect vpnui.exe was launched on WS-DREYES-01, although the inventory says the organization has no VPN and remote administration is limited to WS-PBECKER-01. The records show the client launch, not a successful VPN connection (T123-00180, T123-00181, T123-00182).",
+   "Separate review: dan.reyes's Chrome session accessed drive.google.com, a file-sharing/cloud-storage service not listed as approved in the provided inventory (T123-00176, T123-00177, T123-00179)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 21,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 30.2
+}

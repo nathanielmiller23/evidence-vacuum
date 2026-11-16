@@ -1,0 +1,112 @@
+{
+ "scenario_id": "T165",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.84,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted periodic HTTPS-proxy activity is attributable to casebinderupd.exe running from Noah Kim's user AppData directory, rather than the inventory-listed C:\\\\Program Files\\\\CaseBinder\\\\casebinderupd.exe path.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T165-00118\",\n        \"T165-00137\",\n        \"T165-00138\",\n        \"T165-00227\",\n        \"T165-00228\",\n        \"T165-00236\",\n        \"T165-00237\"\n      ]\n    },\n    {\n      \"claim\": \"The process repeatedly requested update.casebinder.co:443, while the inventory identifies update.casebinder.com as the approved CaseBinder updater endpoint. These are different hostnames.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T165-00139\",\n        \"T165-00181\",\n        \"T165-00210\",\n        \"T165-00229\",\n        \"T165-00235\",\n        \"T165-00242\"\n      ]\n    },\n    {\n      \"claim\": \"Successful proxy tunnels to update.casebinder.co recur at roughly five-minute intervals, including 13:42:26, 13:47:24, 13:52:06, 13:57:27, 14:02:20, and 14:06:33 UTC; a later attempt at 14:12:02 was denied with status 407.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T165-00139\",\n        \"T165-00181\",\n        \"T165-00210\",\n        \"T165-00229\",\n        \"T165-00235\",\n        \"T165-00242\",\n        \"T165-00262\"\n      ]\n    },\n    {\n      \"claim\": \"The AppData-resident executable created a file at its own executable path shortly after launch. This is unusual in combination with the path and hostname discrepancies, but the record alone does not establish what was written or why.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T165-00118\",\n        \"T165-00120\"\n      ]\n    },\n    {\n      \"claim\": \"The combination of a user-profile executable impersonating the approved updater, repeated connections to a different hostname, and the periodic pattern supports treating the alerted activity as likely malicious and escalating it.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T165-00118\",\n        \"T165-00139\",\n        \"T165-00181\",\n        \"T165-00210\",\n        \"T165-00229\",\n        \"T165-00235\",\n        \"T165-00242\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The provided records do not include a hash, digital-signature result, or file provenance for the AppData-resident executable.\",\n    \"The provided records show proxy CONNECT activity but do not establish the TLS certificate, server ownership, or content transferred from update.casebinder.co.\",\n    \"The listed WS-GLUND-01 winsec and sysmon collection outage is outside the alerted host; the supplied sensor status reports collection as okay for WS-NKIM-01 during the review window.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether update.casebinder.co is controlled by the CaseBinder vendor, is a legitimate alternate endpoint, or is malicious infrastructure.\",\n    \"Whether the executable is an unauthorized or modified copy, what its contents are, or whether it performed actions beyond the recorded connections.\",\n    \"Whether any data was exfiltrated or any payload was downloaded during the proxy tunnels.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze the AppData-resident executable; record its hash, signature, timestamps, and provenance, and compare it with the approved CaseBinder installation.\",\n    \"Validate update.casebinder.co with the CaseBinder vendor and review domain registration, DNS history, TLS certificate, and threat-intelligence context.\",\n    \"Retrieve detailed proxy/TLS records for the repeated tunnels, including any available request/response metadata and transferred content.\",\n    \"Review endpoint file and persistence history around the executable's launch and self-path file creation.\"\n  ],\n  \"unrelated_findings\": [\n    \"Google Drive was opened in Chrome and accessed through the proxy; Google Drive is not among the organization's approved file-sharing services. Handle separately; it does not determine the disposition of the alerted connections. (T165-00019, T165-00024, T165-00025)\",\n    \"GlobalProtect and Cisco AnyConnect processes were observed on WS-NKIM-01 despite the stated no-VPN environment. This is separate from the alerted updater activity. (T165-00016, T165-00018, T165-00221, T165-00222)\",\n    \"DC-MAP-01 initiated unsuccessful or unanswered connection attempts toward WS-NKIM-01 on ports 443 and 22. These are separate from the alerted outbound proxy activity. (T165-00177, T165-00178, T165-00179, T165-00180)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 44860,
+    "output": 2399
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.84,
+  "supporting_observations": [
+   {
+    "claim": "The alerted periodic HTTPS-proxy activity is attributable to casebinderupd.exe running from Noah Kim's user AppData directory, rather than the inventory-listed C:\\Program Files\\CaseBinder\\casebinderupd.exe path.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T165-00118",
+     "T165-00137",
+     "T165-00138",
+     "T165-00227",
+     "T165-00228",
+     "T165-00236",
+     "T165-00237"
+    ]
+   },
+   {
+    "claim": "The process repeatedly requested update.casebinder.co:443, while the inventory identifies update.casebinder.com as the approved CaseBinder updater endpoint. These are different hostnames.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T165-00139",
+     "T165-00181",
+     "T165-00210",
+     "T165-00229",
+     "T165-00235",
+     "T165-00242"
+    ]
+   },
+   {
+    "claim": "Successful proxy tunnels to update.casebinder.co recur at roughly five-minute intervals, including 13:42:26, 13:47:24, 13:52:06, 13:57:27, 14:02:20, and 14:06:33 UTC; a later attempt at 14:12:02 was denied with status 407.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T165-00139",
+     "T165-00181",
+     "T165-00210",
+     "T165-00229",
+     "T165-00235",
+     "T165-00242",
+     "T165-00262"
+    ]
+   },
+   {
+    "claim": "The AppData-resident executable created a file at its own executable path shortly after launch. This is unusual in combination with the path and hostname discrepancies, but the record alone does not establish what was written or why.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T165-00118",
+     "T165-00120"
+    ]
+   },
+   {
+    "claim": "The combination of a user-profile executable impersonating the approved updater, repeated connections to a different hostname, and the periodic pattern supports treating the alerted activity as likely malicious and escalating it.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T165-00118",
+     "T165-00139",
+     "T165-00181",
+     "T165-00210",
+     "T165-00229",
+     "T165-00235",
+     "T165-00242"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The provided records do not include a hash, digital-signature result, or file provenance for the AppData-resident executable.",
+   "The provided records show proxy CONNECT activity but do not establish the TLS certificate, server ownership, or content transferred from update.casebinder.co.",
+   "The listed WS-GLUND-01 winsec and sysmon collection outage is outside the alerted host; the supplied sensor status reports collection as okay for WS-NKIM-01 during the review window."
+  ],
+  "claims_not_established": [
+   "Whether update.casebinder.co is controlled by the CaseBinder vendor, is a legitimate alternate endpoint, or is malicious infrastructure.",
+   "Whether the executable is an unauthorized or modified copy, what its contents are, or whether it performed actions beyond the recorded connections.",
+   "Whether any data was exfiltrated or any payload was downloaded during the proxy tunnels."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze the AppData-resident executable; record its hash, signature, timestamps, and provenance, and compare it with the approved CaseBinder installation.",
+   "Validate update.casebinder.co with the CaseBinder vendor and review domain registration, DNS history, TLS certificate, and threat-intelligence context.",
+   "Retrieve detailed proxy/TLS records for the repeated tunnels, including any available request/response metadata and transferred content.",
+   "Review endpoint file and persistence history around the executable's launch and self-path file creation."
+  ],
+  "unrelated_findings": [
+   "Google Drive was opened in Chrome and accessed through the proxy; Google Drive is not among the organization's approved file-sharing services. Handle separately; it does not determine the disposition of the alerted connections. (T165-00019, T165-00024, T165-00025)",
+   "GlobalProtect and Cisco AnyConnect processes were observed on WS-NKIM-01 despite the stated no-VPN environment. This is separate from the alerted updater activity. (T165-00016, T165-00018, T165-00221, T165-00222)",
+   "DC-MAP-01 initiated unsuccessful or unanswered connection attempts toward WS-NKIM-01 on ports 443 and 22. These are separate from the alerted outbound proxy activity. (T165-00177, T165-00178, T165-00179, T165-00180)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 29,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 22.2
+}

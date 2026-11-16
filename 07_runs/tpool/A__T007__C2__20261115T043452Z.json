@@ -1,0 +1,84 @@
+{
+ "run_id": "A__T007__C2__20261115T043452Z",
+ "config": "A",
+ "scenario_id": "T007",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 199,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 77815,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.86,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:41:49 UTC, the domain controller logged creation of the account it_helper; the event names omar.haddad as the subject.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T007-00092\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:41:56 UTC, the domain controller logged it_helper being added to the Administrators group; the event also names omar.haddad as the subject.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T007-00093\"\n      ]\n    },\n    {\n      \"claim\": \"The account name does not follow the documented tmp.<name> convention for temporary accounts, and it was added to Administrators, contrary to the stated practice that temporary accounts never receive administrator rights.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T007-00092\",\n        \"T007-00093\"\n      ]\n    },\n    {\n      \"claim\": \"WS-BCARTER-01 made an LDAP connection to DC-HD-01 shortly after the account changes, but the available network record does not identify the user or show that this connection caused either change.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T007-00099\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The account-change records identify omar.haddad and a subject logon ID, but the supplied records do not map that logon ID to a source host or IP address. (T007-00092, T007-00093)\",\n    \"The WS-BCARTER-01 LDAP record shows a connection to the domain controller, not the LDAP operation or the identity that performed it. (T007-00099)\"\n  ],\n  \"claims_not_established\": [\n    \"Whether creation of it_helper and its Administrators membership were authorized or malicious.\",\n    \"Whether omar.haddad personally initiated the changes, or whether the named identity or session was misused.\",\n    \"Which host originated the account changes and whether the activity came from the approved remote-administration workstation.\",\n    \"Whether it_helper was subsequently used to access systems or perform further actions.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate the subject logon ID in the account-change events with domain-controller logon records, including source host and IP.\",\n    \"Review WS-OHADDAD-01 and WS-BCARTER-01 endpoint, authentication, and process telemetry around 13:41\u201313:43 UTC.\",\n    \"Verify whether there was an approved change or other authorization for creating it_helper and granting it Administrators membership.\",\n    \"Check the account's current status, group memberships, and subsequent authentication and activity.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 29825,
+    "output": 1827,
+    "reasoning": 1165
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.86,
+  "supporting_observations": [
+   {
+    "claim": "At 13:41:49 UTC, the domain controller logged creation of the account it_helper; the event names omar.haddad as the subject.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T007-00092"
+    ]
+   },
+   {
+    "claim": "At 13:41:56 UTC, the domain controller logged it_helper being added to the Administrators group; the event also names omar.haddad as the subject.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T007-00093"
+    ]
+   },
+   {
+    "claim": "The account name does not follow the documented tmp.<name> convention for temporary accounts, and it was added to Administrators, contrary to the stated practice that temporary accounts never receive administrator rights.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T007-00092",
+     "T007-00093"
+    ]
+   },
+   {
+    "claim": "WS-BCARTER-01 made an LDAP connection to DC-HD-01 shortly after the account changes, but the available network record does not identify the user or show that this connection caused either change.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T007-00099"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The account-change records identify omar.haddad and a subject logon ID, but the supplied records do not map that logon ID to a source host or IP address. (T007-00092, T007-00093)",
+   "The WS-BCARTER-01 LDAP record shows a connection to the domain controller, not the LDAP operation or the identity that performed it. (T007-00099)"
+  ],
+  "claims_not_established": [
+   "Whether creation of it_helper and its Administrators membership were authorized or malicious.",
+   "Whether omar.haddad personally initiated the changes, or whether the named identity or session was misused.",
+   "Which host originated the account changes and whether the activity came from the approved remote-administration workstation.",
+   "Whether it_helper was subsequently used to access systems or perform further actions."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate the subject logon ID in the account-change events with domain-controller logon records, including source host and IP.",
+   "Review WS-OHADDAD-01 and WS-BCARTER-01 endpoint, authentication, and process telemetry around 13:41\u201313:43 UTC.",
+   "Verify whether there was an approved change or other authorization for creating it_helper and granting it Administrators membership.",
+   "Check the account's current status, group memberships, and subsequent authentication and activity."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 5,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 17.8
+}

@@ -1,0 +1,93 @@
+{
+ "scenario_id": "T087",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:43:20 UTC, DC-PIN-01 recorded creation of the alerted account it_support by raj.patel.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T087-00111\"]\n    },\n    {\n      \"claim\": \"About one second later, it_support was added to the Administrators group by raj.patel, giving the new account administrative membership rather than the temporary-account pattern described in the environment context.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T087-00113\"]\n    },\n    {\n      \"claim\": \"About 20 seconds before account creation, raj.patel logged on to WS-TWEBER-01 via RDP from 203.0.113.17; the inventory says remote administration is only performed from WS-RPATEL-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T087-00074\", \"T087-00075\", \"T087-00077\"]\n    },\n    {\n      \"claim\": \"Shortly after the account changes, a task created on WS-TWEBER-01 under raj.patel was configured to run hidden PowerShell with an encoded command that fetches a script from http://203.0.113.17/a.ps1. This is suspicious corroborating activity, though the records do not prove it was caused by or used the new account.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T087-00114\"]\n    },\n    {\n      \"claim\": \"The account creation and administrator-group addition, combined with the unusual RDP logon and suspicious task, support treating the alerted account activity as malicious rather than a routine temporary-account workflow.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T087-00111\", \"T087-00113\", \"T087-00074\", \"T087-00077\", \"T087-00114\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy logs were not collected from 13:20 to 14:00 UTC because of a collection outage, limiting visibility into proxy activity during part of the review window.\",\n    \"The account-creation record identifies raj.patel as the subject but does not identify the originating workstation or source address.\",\n    \"The records show task registration and its configured command, but do not establish whether the task ran or whether the remote script was retrieved or executed.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether raj.patel personally performed or authorized the account creation, group addition, RDP logon, or task creation.\",\n    \"Whether the account it_support was used after creation or whether the suspicious task was related to that account.\",\n    \"Whether the configured remote script was successfully downloaded or executed.\",\n    \"Whether 203.0.113.17 was the actual origin of the account-management activity; the account-creation event does not record its source.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate DC-PIN-01 authentication and directory audit records around 13:43 UTC to identify the source session and workstation for the account creation and group change.\",\n    \"Validate the RDP logon and account-management actions with raj.patel through an independent channel, and determine whether they were authorized.\",\n    \"Collect WS-TWEBER-01 task execution history, PowerShell logging, and network evidence to determine whether the configured script ran and what it did.\",\n    \"Review the new account's subsequent logons, group membership changes, and activity, and preserve the account and endpoint evidence.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-TWEBER-01 user tom.weber launched Tableau and Power BI Desktop and made database connections; DBeaver was also launched, with PostgreSQL and TDS connections observed. These are outside the account-management finding and may warrant separate review against the software and service inventory. (T087-00089, T087-00092, T087-00094, T087-00097, T087-00101, T087-00102)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 35135,
+    "output": 2890
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "At 13:43:20 UTC, DC-PIN-01 recorded creation of the alerted account it_support by raj.patel.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T087-00111"
+    ]
+   },
+   {
+    "claim": "About one second later, it_support was added to the Administrators group by raj.patel, giving the new account administrative membership rather than the temporary-account pattern described in the environment context.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T087-00113"
+    ]
+   },
+   {
+    "claim": "About 20 seconds before account creation, raj.patel logged on to WS-TWEBER-01 via RDP from 203.0.113.17; the inventory says remote administration is only performed from WS-RPATEL-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T087-00074",
+     "T087-00075",
+     "T087-00077"
+    ]
+   },
+   {
+    "claim": "Shortly after the account changes, a task created on WS-TWEBER-01 under raj.patel was configured to run hidden PowerShell with an encoded command that fetches a script from http://203.0.113.17/a.ps1. This is suspicious corroborating activity, though the records do not prove it was caused by or used the new account.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T087-00114"
+    ]
+   },
+   {
+    "claim": "The account creation and administrator-group addition, combined with the unusual RDP logon and suspicious task, support treating the alerted account activity as malicious rather than a routine temporary-account workflow.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T087-00111",
+     "T087-00113",
+     "T087-00074",
+     "T087-00077",
+     "T087-00114"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy logs were not collected from 13:20 to 14:00 UTC because of a collection outage, limiting visibility into proxy activity during part of the review window.",
+   "The account-creation record identifies raj.patel as the subject but does not identify the originating workstation or source address.",
+   "The records show task registration and its configured command, but do not establish whether the task ran or whether the remote script was retrieved or executed."
+  ],
+  "claims_not_established": [
+   "Whether raj.patel personally performed or authorized the account creation, group addition, RDP logon, or task creation.",
+   "Whether the account it_support was used after creation or whether the suspicious task was related to that account.",
+   "Whether the configured remote script was successfully downloaded or executed.",
+   "Whether 203.0.113.17 was the actual origin of the account-management activity; the account-creation event does not record its source."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate DC-PIN-01 authentication and directory audit records around 13:43 UTC to identify the source session and workstation for the account creation and group change.",
+   "Validate the RDP logon and account-management actions with raj.patel through an independent channel, and determine whether they were authorized.",
+   "Collect WS-TWEBER-01 task execution history, PowerShell logging, and network evidence to determine whether the configured script ran and what it did.",
+   "Review the new account's subsequent logons, group membership changes, and activity, and preserve the account and endpoint evidence."
+  ],
+  "unrelated_findings": [
+   "WS-TWEBER-01 user tom.weber launched Tableau and Power BI Desktop and made database connections; DBeaver was also launched, with PostgreSQL and TDS connections observed. These are outside the account-management finding and may warrant separate review against the software and service inventory. (T087-00089, T087-00092, T087-00094, T087-00097, T087-00101, T087-00102)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 31.5
+}

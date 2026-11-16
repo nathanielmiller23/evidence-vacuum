@@ -1,0 +1,145 @@
+{
+ "run_id": "A__T012__C1__20261115T043740Z",
+ "config": "A",
+ "scenario_id": "T012",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 39,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 18251,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Repeated failures for svc-claimsync occurred from FILE-HD-01 between 13:33 and 13:48 UTC. The events identify logon type 3, FILE-HD-01 as the workstation, and incorrect-password status 0xc000006a.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T012-00001\",\n        \"T012-00004\",\n        \"T012-00007\",\n        \"T012-00009\",\n        \"T012-00011\",\n        \"T012-00014\",\n        \"T012-00016\",\n        \"T012-00018\",\n        \"T012-00020\",\n        \"T012-00023\",\n        \"T012-00025\",\n        \"T012-00027\",\n        \"T012-00029\",\n        \"T012-00032\",\n        \"T012-00035\",\n        \"T012-00037\"\n      ]\n    },\n    {\n      \"claim\": \"Domain-controller records corroborate failed authentication for svc-claimsync from FILE-HD-01, including NTLM credential failures and Kerberos pre-authentication failures.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T012-00002\",\n        \"T012-00003\",\n        \"T012-00005\",\n        \"T012-00006\",\n        \"T012-00008\",\n        \"T012-00010\",\n        \"T012-00012\",\n        \"T012-00013\",\n        \"T012-00015\",\n        \"T012-00017\",\n        \"T012-00019\",\n        \"T012-00021\",\n        \"T012-00022\",\n        \"T012-00024\",\n        \"T012-00026\",\n        \"T012-00028\",\n        \"T012-00030\",\n        \"T012-00031\",\n        \"T012-00033\",\n        \"T012-00034\",\n        \"T012-00036\",\n        \"T012-00038\"\n      ]\n    },\n    {\n      \"claim\": \"The failures recur at roughly one-minute intervals and begin shortly after the scheduled 13:30 UTC password rotation. This timing and the FILE-HD-01 source are consistent with the inventory-described ClaimSync job continuing to use an outdated password, but do not prove that explanation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T012-00001\",\n        \"T012-00004\",\n        \"T012-00007\",\n        \"T012-00009\",\n        \"T012-00011\",\n        \"T012-00014\",\n        \"T012-00016\",\n        \"T012-00018\",\n        \"T012-00020\",\n        \"T012-00023\",\n        \"T012-00025\",\n        \"T012-00027\",\n        \"T012-00029\",\n        \"T012-00032\",\n        \"T012-00035\",\n        \"T012-00037\"\n      ]\n    },\n    {\n      \"claim\": \"At 14:07 UTC, WS-OHADDAD-01 recorded an explicit-credentials event under SYSTEM using svc-claimsync credentials for PROXY-HD-01; the process was identified as C:\\\\Program Files\\\\Commvault\\\\ContentStore\\\\Base\\\\GxCVD.exe. This is a distinct use of the service account from the repeated FILE-HD-01 failures and warrants investigation against the supplied inventory.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T012-00039\"\n      ]\n    },\n    {\n      \"claim\": \"The evidence is not sufficient to classify the activity as malicious or benign: the repeated failures fit the scheduled rotation scenario, while the separate explicit-credentials event from the administrator workstation is unexplained. The explicit-credentials event alone does not establish that authentication succeeded.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T012-00001\",\n        \"T012-00018\",\n        \"T012-00037\",\n        \"T012-00039\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records show failed authentication events and one explicit-credentials event, but do not show whether the 14:07 proxy authentication succeeded.\",\n    \"No process execution, binary-signing or file-integrity evidence is supplied to establish whether the Commvault executable or its use on WS-OHADDAD-01 is legitimate.\",\n    \"The supplied evidence does not include the password-rotation completion or ClaimSync configuration-update records, nor the proxy's corresponding access logs.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the ClaimSync job was updated with the rotated password, and whether the failures stopped because of an update or for another reason.\",\n    \"Whether the 14:07 use of svc-claimsync credentials was authorized, misconfigured, or performed by an attacker.\",\n    \"Whether the explicit-credentials attempt reached or authenticated to PROXY-HD-01.\",\n    \"Whether svc-claimsync was used successfully elsewhere during the review window.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Verify the rotation and ClaimSync job-update timestamps, configuration, and resulting job/authentication status.\",\n    \"Collect PROXY-HD-01 authentication and web-access logs around 14:07 UTC and correlate them with T012-00039.\",\n    \"Examine WS-OHADDAD-01 process, service, software-installation, and endpoint-protection telemetry for GxCVD.exe around 14:07 UTC; verify its publisher, hash, and expected installation.\",\n    \"Review svc-claimsync logon and account-change activity across the domain for the full period, including successful logons and activity from other hosts.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 6458,
+    "output": 2502,
+    "reasoning": 1215
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "Repeated failures for svc-claimsync occurred from FILE-HD-01 between 13:33 and 13:48 UTC. The events identify logon type 3, FILE-HD-01 as the workstation, and incorrect-password status 0xc000006a.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T012-00001",
+     "T012-00004",
+     "T012-00007",
+     "T012-00009",
+     "T012-00011",
+     "T012-00014",
+     "T012-00016",
+     "T012-00018",
+     "T012-00020",
+     "T012-00023",
+     "T012-00025",
+     "T012-00027",
+     "T012-00029",
+     "T012-00032",
+     "T012-00035",
+     "T012-00037"
+    ]
+   },
+   {
+    "claim": "Domain-controller records corroborate failed authentication for svc-claimsync from FILE-HD-01, including NTLM credential failures and Kerberos pre-authentication failures.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T012-00002",
+     "T012-00003",
+     "T012-00005",
+     "T012-00006",
+     "T012-00008",
+     "T012-00010",
+     "T012-00012",
+     "T012-00013",
+     "T012-00015",
+     "T012-00017",
+     "T012-00019",
+     "T012-00021",
+     "T012-00022",
+     "T012-00024",
+     "T012-00026",
+     "T012-00028",
+     "T012-00030",
+     "T012-00031",
+     "T012-00033",
+     "T012-00034",
+     "T012-00036",
+     "T012-00038"
+    ]
+   },
+   {
+    "claim": "The failures recur at roughly one-minute intervals and begin shortly after the scheduled 13:30 UTC password rotation. This timing and the FILE-HD-01 source are consistent with the inventory-described ClaimSync job continuing to use an outdated password, but do not prove that explanation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T012-00001",
+     "T012-00004",
+     "T012-00007",
+     "T012-00009",
+     "T012-00011",
+     "T012-00014",
+     "T012-00016",
+     "T012-00018",
+     "T012-00020",
+     "T012-00023",
+     "T012-00025",
+     "T012-00027",
+     "T012-00029",
+     "T012-00032",
+     "T012-00035",
+     "T012-00037"
+    ]
+   },
+   {
+    "claim": "At 14:07 UTC, WS-OHADDAD-01 recorded an explicit-credentials event under SYSTEM using svc-claimsync credentials for PROXY-HD-01; the process was identified as C:\\Program Files\\Commvault\\ContentStore\\Base\\GxCVD.exe. This is a distinct use of the service account from the repeated FILE-HD-01 failures and warrants investigation against the supplied inventory.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T012-00039"
+    ]
+   },
+   {
+    "claim": "The evidence is not sufficient to classify the activity as malicious or benign: the repeated failures fit the scheduled rotation scenario, while the separate explicit-credentials event from the administrator workstation is unexplained. The explicit-credentials event alone does not establish that authentication succeeded.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T012-00001",
+     "T012-00018",
+     "T012-00037",
+     "T012-00039"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records show failed authentication events and one explicit-credentials event, but do not show whether the 14:07 proxy authentication succeeded.",
+   "No process execution, binary-signing or file-integrity evidence is supplied to establish whether the Commvault executable or its use on WS-OHADDAD-01 is legitimate.",
+   "The supplied evidence does not include the password-rotation completion or ClaimSync configuration-update records, nor the proxy's corresponding access logs."
+  ],
+  "claims_not_established": [
+   "Whether the ClaimSync job was updated with the rotated password, and whether the failures stopped because of an update or for another reason.",
+   "Whether the 14:07 use of svc-claimsync credentials was authorized, misconfigured, or performed by an attacker.",
+   "Whether the explicit-credentials attempt reached or authenticated to PROXY-HD-01.",
+   "Whether svc-claimsync was used successfully elsewhere during the review window."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Verify the rotation and ClaimSync job-update timestamps, configuration, and resulting job/authentication status.",
+   "Collect PROXY-HD-01 authentication and web-access logs around 14:07 UTC and correlate them with T012-00039.",
+   "Examine WS-OHADDAD-01 process, service, software-installation, and endpoint-protection telemetry for GxCVD.exe around 14:07 UTC; verify its publisher, hash, and expected installation.",
+   "Review svc-claimsync logon and account-change activity across the domain for the full period, including successful logons and activity from other hosts."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 59,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.4
+}

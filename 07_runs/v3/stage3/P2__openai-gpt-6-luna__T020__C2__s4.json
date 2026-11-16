@@ -1,0 +1,88 @@
+{
+ "scenario_id": "T020",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 4,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:46 UTC, FILE-HD-01 ran the approved CobaltVault agent as HARBOR-DENTAL\\\\svc-bkp, with a command line specifying the Nightly job and ingest.cobaltvault.net target.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T020-00278\", \"T020-00279\"]\n    },\n    {\n      \"claim\": \"The agent connected through the configured proxy to ingest.cobaltvault.net, and the proxy recorded approximately 640 MB sent client-to-server during the tunnel. This is consistent with the inventory description of CobaltVault uploads of several hundred MB.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T020-00281\", \"T020-00283\", \"T020-00284\", \"T020-00285\", \"T020-00286\", \"T020-00287\", \"T020-00288\"]\n    },\n    {\n      \"claim\": \"Shortly before the transfer, the domain controller recorded a Kerberos service-ticket event for svc-bkp from 23.129.64.210. The evidence does not identify the source as an authorized system; the environment states there is no VPN.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T020-00264\"]\n    },\n    {\n      \"claim\": \"FILE-HD-01 then logged svc-bkp in as a service, and the CobaltVault process ran under that same account and logon ID. This links the unusual ticket event and the alerted transfer by account and timing, but does not establish that the ticket event caused or authorized the transfer.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T020-00264\", \"T020-00265\", \"T020-00278\", \"T020-00279\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and connection records show destination and byte counts, not the transferred files, their contents, or whether the upload contained only expected backup data.\",\n    \"The logs do not establish who or what was behind source IP 23.129.64.210 or whether the svc-bkp ticket event was authorized.\",\n    \"The process records identify the CobaltVault executable path and command line but do not provide a binary hash, signature validation, or independent confirmation of the backup job's schedule and contents.\"\n  ],\n  \"claims_not_established\": [\n    \"That the approximately 640 MB transfer contained stolen or otherwise unauthorized data.\",\n    \"That the svc-bkp Kerberos event from 23.129.64.210 was malicious, authorized, or technically related to the subsequent service execution.\",\n    \"That the CobaltVault agent or its credentials were compromised.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Validate the 13:45:53 svc-bkp Kerberos event against DC authentication and network telemetry, including the source host, connection path, and any approved explanation for the public IP.\",\n    \"Obtain CobaltVault job logs, backup manifests, and destination-side records for the Nightly job to verify the uploaded data and whether the volume and timing match normal operation.\",\n    \"Verify the CobaltVault executable's signature and hash, and review FILE-HD-01 service configuration and svc-bkp credential use around the event.\"\n  ],\n  \"unrelated_findings\": [\n    \"Lucy Park, a help-desk user, established an RDP session to FILE-HD-01 from WS-LPARK-01. This is outside the alerted transfer and should be reviewed separately against the organization's remote-administration policy. [T020-00342, T020-00349]\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 76049,
+    "output": 2232
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "At 13:46 UTC, FILE-HD-01 ran the approved CobaltVault agent as HARBOR-DENTAL\\svc-bkp, with a command line specifying the Nightly job and ingest.cobaltvault.net target.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00278",
+     "T020-00279"
+    ]
+   },
+   {
+    "claim": "The agent connected through the configured proxy to ingest.cobaltvault.net, and the proxy recorded approximately 640 MB sent client-to-server during the tunnel. This is consistent with the inventory description of CobaltVault uploads of several hundred MB.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00281",
+     "T020-00283",
+     "T020-00284",
+     "T020-00285",
+     "T020-00286",
+     "T020-00287",
+     "T020-00288"
+    ]
+   },
+   {
+    "claim": "Shortly before the transfer, the domain controller recorded a Kerberos service-ticket event for svc-bkp from 23.129.64.210. The evidence does not identify the source as an authorized system; the environment states there is no VPN.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00264"
+    ]
+   },
+   {
+    "claim": "FILE-HD-01 then logged svc-bkp in as a service, and the CobaltVault process ran under that same account and logon ID. This links the unusual ticket event and the alerted transfer by account and timing, but does not establish that the ticket event caused or authorized the transfer.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T020-00264",
+     "T020-00265",
+     "T020-00278",
+     "T020-00279"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and connection records show destination and byte counts, not the transferred files, their contents, or whether the upload contained only expected backup data.",
+   "The logs do not establish who or what was behind source IP 23.129.64.210 or whether the svc-bkp ticket event was authorized.",
+   "The process records identify the CobaltVault executable path and command line but do not provide a binary hash, signature validation, or independent confirmation of the backup job's schedule and contents."
+  ],
+  "claims_not_established": [
+   "That the approximately 640 MB transfer contained stolen or otherwise unauthorized data.",
+   "That the svc-bkp Kerberos event from 23.129.64.210 was malicious, authorized, or technically related to the subsequent service execution.",
+   "That the CobaltVault agent or its credentials were compromised."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Validate the 13:45:53 svc-bkp Kerberos event against DC authentication and network telemetry, including the source host, connection path, and any approved explanation for the public IP.",
+   "Obtain CobaltVault job logs, backup manifests, and destination-side records for the Nightly job to verify the uploaded data and whether the volume and timing match normal operation.",
+   "Verify the CobaltVault executable's signature and hash, and review FILE-HD-01 service configuration and svc-bkp credential use around the event."
+  ],
+  "unrelated_findings": [
+   "Lucy Park, a help-desk user, established an RDP session to FILE-HD-01 from WS-LPARK-01. This is outside the alerted transfer and should be reviewed separately against the organization's remote-administration policy. [T020-00342, T020-00349]"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 14,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 26.4
+}

@@ -1,0 +1,88 @@
+{
+ "scenario_id": "T113",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.84,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:38 UTC, the domain controller recorded a Kerberos ticket request for paul.becker from 10.52.10.21, followed by a service ticket for WS-PBECKER-01; WS-PBECKER-01 then recorded a successful network logon for paul.becker from that same address. Other records associate 10.52.10.21 with WS-DREYES-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T113-00003\", \"T113-00077\", \"T113-00078\", \"T113-00081\"]\n    },\n    {\n      \"claim\": \"This administrator-account authentication from WS-DREYES-01 is inconsistent with the supplied practice that remote administration is done only from WS-PBECKER-01. The records do not establish why it occurred or who initiated it.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T113-00077\", \"T113-00078\", \"T113-00081\"]\n    },\n    {\n      \"claim\": \"At 13:44 UTC, the proxy recorded a successful GET for https://raw.githubusercontent.com/copperline-it/tools/main/u.ps1 from WS-DREYES-01; the associated connection record shows a response of 9,382 bytes.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T113-00127\", \"T113-00128\", \"T113-00130\"]\n    },\n    {\n      \"claim\": \"The administrator authentication and subsequent script download are suspicious in the context of the reported PowerShell window, but the available records do not show that the downloaded script was executed or that it caused the window.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T113-00077\", \"T113-00078\", \"T113-00081\", \"T113-00128\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied evidence contains no endpoint process-creation record, PowerShell operational event, or command line that identifies the process behind the reported window.\",\n    \"The proxy record shows a successful script request but does not provide the script contents or establish execution.\",\n    \"The authentication records establish a network logon but do not identify the person or process that initiated it.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether PowerShell ran on WS-DREYES-01 around 13:40 UTC, and if so, its parent process, command line, or actions.\",\n    \"Whether u.ps1 was downloaded by PowerShell, executed, or related to the reported window.\",\n    \"Whether paul.becker's credentials were used legitimately or compromised.\",\n    \"Whether the script or the authentication activity was authorized.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Collect endpoint EDR or Sysmon process-creation telemetry and PowerShell logs for WS-DREYES-01 around 13:35\u201313:50 UTC, including process ancestry, command lines, and script-block content.\",\n    \"Retrieve the content and hash of u.ps1, if available, and verify with the repository owner whether this script and access were authorized.\",\n    \"Review WS-PBECKER-01 and domain-controller logon/session telemetry to determine the source and context of paul.becker's authentication from 10.52.10.21.\",\n    \"Ask dan.reyes and paul.becker whether either initiated the script request or administrator authentication.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 24181,
+    "output": 2335
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.84,
+  "supporting_observations": [
+   {
+    "claim": "At 13:38 UTC, the domain controller recorded a Kerberos ticket request for paul.becker from 10.52.10.21, followed by a service ticket for WS-PBECKER-01; WS-PBECKER-01 then recorded a successful network logon for paul.becker from that same address. Other records associate 10.52.10.21 with WS-DREYES-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T113-00003",
+     "T113-00077",
+     "T113-00078",
+     "T113-00081"
+    ]
+   },
+   {
+    "claim": "This administrator-account authentication from WS-DREYES-01 is inconsistent with the supplied practice that remote administration is done only from WS-PBECKER-01. The records do not establish why it occurred or who initiated it.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T113-00077",
+     "T113-00078",
+     "T113-00081"
+    ]
+   },
+   {
+    "claim": "At 13:44 UTC, the proxy recorded a successful GET for https://raw.githubusercontent.com/copperline-it/tools/main/u.ps1 from WS-DREYES-01; the associated connection record shows a response of 9,382 bytes.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T113-00127",
+     "T113-00128",
+     "T113-00130"
+    ]
+   },
+   {
+    "claim": "The administrator authentication and subsequent script download are suspicious in the context of the reported PowerShell window, but the available records do not show that the downloaded script was executed or that it caused the window.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T113-00077",
+     "T113-00078",
+     "T113-00081",
+     "T113-00128"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied evidence contains no endpoint process-creation record, PowerShell operational event, or command line that identifies the process behind the reported window.",
+   "The proxy record shows a successful script request but does not provide the script contents or establish execution.",
+   "The authentication records establish a network logon but do not identify the person or process that initiated it."
+  ],
+  "claims_not_established": [
+   "Whether PowerShell ran on WS-DREYES-01 around 13:40 UTC, and if so, its parent process, command line, or actions.",
+   "Whether u.ps1 was downloaded by PowerShell, executed, or related to the reported window.",
+   "Whether paul.becker's credentials were used legitimately or compromised.",
+   "Whether the script or the authentication activity was authorized."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Collect endpoint EDR or Sysmon process-creation telemetry and PowerShell logs for WS-DREYES-01 around 13:35\u201313:50 UTC, including process ancestry, command lines, and script-block content.",
+   "Retrieve the content and hash of u.ps1, if available, and verify with the repository owner whether this script and access were authorized.",
+   "Review WS-PBECKER-01 and domain-controller logon/session telemetry to determine the source and context of paul.becker's authentication from 10.52.10.21.",
+   "Ask dan.reyes and paul.becker whether either initiated the script request or administrator authentication."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 14,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 26.0
+}

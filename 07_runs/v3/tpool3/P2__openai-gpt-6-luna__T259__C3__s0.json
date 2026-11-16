@@ -1,0 +1,87 @@
+{
+ "scenario_id": "T259",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.93,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:43 UTC, zoe.adams ran PowerShell to compress \\\\\\\\FILE-SUN-01\\\\Shared\\\\Clients into C:\\\\Users\\\\zoe.adams\\\\AppData\\\\Local\\\\Temp\\\\c.zip; telemetry records creation of that archive shortly afterward.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T259-00125\",\n        \"T259-00126\",\n        \"T259-00127\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:48 UTC, WS-ZADAMS-01 sent about 51 MB through the proxy in a CONNECT tunnel to zipshare-host.io, a file-sharing destination not listed as approved in the supplied environment context.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T259-00148\",\n        \"T259-00149\"\n      ]\n    },\n    {\n      \"claim\": \"The large proxied connection was attributed to Chrome (ProcessId 6000), running as SUNRIDGE\\\\zoe.adams on WS-ZADAMS-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T259-00150\",\n        \"T259-00151\"\n      ]\n    },\n    {\n      \"claim\": \"The archive of client files followed by a similarly timed, large outbound transfer to an unapproved file-sharing destination strongly supports data exfiltration as the explanation for the alerted activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T259-00125\",\n        \"T259-00127\",\n        \"T259-00148\",\n        \"T259-00149\",\n        \"T259-00151\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Winsec collection from DC-SUN-01 was unavailable from 13:30 to 14:20 UTC, according to the supplied sensor status; domain-controller authentication events in that interval therefore cannot be assessed.\",\n    \"The proxy record shows a CONNECT tunnel and byte counts, not the uploaded payload or its filename; the records do not directly establish that c.zip was the file transferred. The tunnel and byte-count evidence is in T259-00148 and T259-00149.\"\n  ],\n  \"claims_not_established\": [\n    \"The available records do not prove that the uploaded payload was the specific c.zip archive or establish its contents.\",\n    \"The records do not establish whether zoe.adams knowingly initiated or authorized the transfer, or whether another person used the account or workstation.\",\n    \"The records do not establish whether the destination received, retained, or further distributed the data.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine c.zip, including its hash, contents, creation metadata, and any available file-access or archive-source evidence.\",\n    \"Obtain proxy or network-session details that could identify the upload endpoint, request path, and transferred object, and correlate them with browser history and endpoint artifacts.\",\n    \"Interview zoe.adams and check for an approved business purpose or authorization for copying the client files and transferring data to zipshare-host.io.\",\n    \"Review relevant DC-SUN-01 authentication records from another source, because winsec collection was unavailable during the interval.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 14:15 UTC, WS-ZADAMS-01 connected to drive.google.com through the proxy. Google Drive is not listed as an approved file-sharing service in the supplied environment context; these records show a connection, not a file upload. This is separate from the alerted transfer. (T259-00337)\",\n    \"GlobalProtect PanGPA.exe launched under zoe.adams at 13:50 UTC, despite the supplied context stating there is no VPN. The records show the process and a signed module load, but do not establish that a VPN connection occurred. This is separate from the alerted transfer. (T259-00156, T259-00157, T259-00158)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 48238,
+    "output": 2112
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.93,
+  "supporting_observations": [
+   {
+    "claim": "At 13:43 UTC, zoe.adams ran PowerShell to compress \\\\FILE-SUN-01\\Shared\\Clients into C:\\Users\\zoe.adams\\AppData\\Local\\Temp\\c.zip; telemetry records creation of that archive shortly afterward.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T259-00125",
+     "T259-00126",
+     "T259-00127"
+    ]
+   },
+   {
+    "claim": "At 13:48 UTC, WS-ZADAMS-01 sent about 51 MB through the proxy in a CONNECT tunnel to zipshare-host.io, a file-sharing destination not listed as approved in the supplied environment context.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T259-00148",
+     "T259-00149"
+    ]
+   },
+   {
+    "claim": "The large proxied connection was attributed to Chrome (ProcessId 6000), running as SUNRIDGE\\zoe.adams on WS-ZADAMS-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T259-00150",
+     "T259-00151"
+    ]
+   },
+   {
+    "claim": "The archive of client files followed by a similarly timed, large outbound transfer to an unapproved file-sharing destination strongly supports data exfiltration as the explanation for the alerted activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T259-00125",
+     "T259-00127",
+     "T259-00148",
+     "T259-00149",
+     "T259-00151"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Winsec collection from DC-SUN-01 was unavailable from 13:30 to 14:20 UTC, according to the supplied sensor status; domain-controller authentication events in that interval therefore cannot be assessed.",
+   "The proxy record shows a CONNECT tunnel and byte counts, not the uploaded payload or its filename; the records do not directly establish that c.zip was the file transferred. The tunnel and byte-count evidence is in T259-00148 and T259-00149."
+  ],
+  "claims_not_established": [
+   "The available records do not prove that the uploaded payload was the specific c.zip archive or establish its contents.",
+   "The records do not establish whether zoe.adams knowingly initiated or authorized the transfer, or whether another person used the account or workstation.",
+   "The records do not establish whether the destination received, retained, or further distributed the data."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine c.zip, including its hash, contents, creation metadata, and any available file-access or archive-source evidence.",
+   "Obtain proxy or network-session details that could identify the upload endpoint, request path, and transferred object, and correlate them with browser history and endpoint artifacts.",
+   "Interview zoe.adams and check for an approved business purpose or authorization for copying the client files and transferring data to zipshare-host.io.",
+   "Review relevant DC-SUN-01 authentication records from another source, because winsec collection was unavailable during the interval."
+  ],
+  "unrelated_findings": [
+   "At 14:15 UTC, WS-ZADAMS-01 connected to drive.google.com through the proxy. Google Drive is not listed as an approved file-sharing service in the supplied environment context; these records show a connection, not a file upload. This is separate from the alerted transfer. (T259-00337)",
+   "GlobalProtect PanGPA.exe launched under zoe.adams at 13:50 UTC, despite the supplied context stating there is no VPN. The records show the process and a signed module load, but do not establish that a VPN connection occurred. This is separate from the alerted transfer. (T259-00156, T259-00157, T259-00158)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.2
+}

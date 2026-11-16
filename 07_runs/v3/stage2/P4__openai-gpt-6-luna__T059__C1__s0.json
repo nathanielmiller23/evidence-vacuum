@@ -1,0 +1,90 @@
+{
+ "scenario_id": "T059",
+ "condition": "C1",
+ "variant": "P4",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:50:50 UTC, WS-ICHEN-01 sent approximately 51 MB of client-to-server traffic through the proxy to quickshare-drop.net. The proxy identifies ivy.chen and Chrome as the client context.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T059-00174\",\n        \"T059-00175\",\n        \"T059-00176\",\n        \"T059-00177\"\n      ]\n    },\n    {\n      \"claim\": \"About five minutes earlier, ivy.chen ran PowerShell to compress \\\\\\\\FILE-NWD-01\\\\Shared\\\\Clients into C:\\\\Users\\\\ivy.chen\\\\AppData\\\\Local\\\\Temp\\\\c.zip, and a record confirms that archive was created.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T059-00102\",\n        \"T059-00103\",\n        \"T059-00104\"\n      ]\n    },\n    {\n      \"claim\": \"The close timing between creating an archive of client files and sending a similarly large outbound transfer to a file-sharing-style destination strongly supports suspected data exfiltration. The records do not prove that c.zip was the transferred payload.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T059-00102\",\n        \"T059-00104\",\n        \"T059-00174\",\n        \"T059-00175\"\n      ]\n    },\n    {\n      \"claim\": \"The matching large-transfer evidence is timestamped 13:50:50 UTC, rather than exactly around 13:46 UTC as stated in the alert; it is within the requested review window.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T059-00174\",\n        \"T059-00175\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The transfer records give the destination and byte counts, but do not show the uploaded content or request path, so they do not establish whether the archive itself was sent. (T059-00174, T059-00175)\",\n    \"The archive creation event confirms the file path but does not provide its size, contents, or hash. (T059-00104)\",\n    \"The recorded large transfer is at 13:50:50 UTC; the evidence provided does not show a comparable large outbound transfer at precisely 13:46 UTC. (T059-00174, T059-00175)\"\n  ],\n  \"claims_not_established\": [\n    \"That c.zip, or any particular client file, was the payload of the quickshare-drop.net transfer.\",\n    \"Whether ivy.chen intentionally made the transfer or whether the browser activity was initiated by another person or process.\",\n    \"The business purpose, recipient, or authorization status of the transfer.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and inspect c.zip, including its hash, size, and contents; review access auditing for \\\\\\\\FILE-NWD-01\\\\Shared\\\\Clients.\",\n    \"Obtain proxy or destination-service request details for the quickshare-drop.net session, including upload metadata, account identity, and recipient if available.\",\n    \"Review endpoint browser history and relevant user/session activity, and confirm with ivy.chen whether the archive and transfer were authorized.\",\n    \"Investigate the destination domain and preserve relevant proxy and endpoint telemetry.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate review: Chrome accessed Google account sign-in/challenge pages on WS-ICHEN-01. These records do not establish that the large transfer went to Google. (T059-00139, T059-00140, T059-00147, T059-00152)\",\n    \"Separate review: ivy.chen's Chrome accessed the AWS console and its assets. The provided context does not list AWS as approved, but this observation alone does not establish malicious activity or decide the alerted transfer. (T059-00212, T059-00213, T059-00214, T059-00216, T059-00222)\",\n    \"Separate review: DC-NWD-01 recorded ivy.chen Kerberos authentication involving WS-NBLAKE-01, followed by a network logon for ivy.chen on WS-NBLAKE-01. The records do not explain the purpose or authorization of this access. (T059-00248, T059-00249, T059-00250)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 60450,
+    "output": 2454
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "At 13:50:50 UTC, WS-ICHEN-01 sent approximately 51 MB of client-to-server traffic through the proxy to quickshare-drop.net. The proxy identifies ivy.chen and Chrome as the client context.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00174",
+     "T059-00175",
+     "T059-00176",
+     "T059-00177"
+    ]
+   },
+   {
+    "claim": "About five minutes earlier, ivy.chen ran PowerShell to compress \\\\FILE-NWD-01\\Shared\\Clients into C:\\Users\\ivy.chen\\AppData\\Local\\Temp\\c.zip, and a record confirms that archive was created.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00102",
+     "T059-00103",
+     "T059-00104"
+    ]
+   },
+   {
+    "claim": "The close timing between creating an archive of client files and sending a similarly large outbound transfer to a file-sharing-style destination strongly supports suspected data exfiltration. The records do not prove that c.zip was the transferred payload.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T059-00102",
+     "T059-00104",
+     "T059-00174",
+     "T059-00175"
+    ]
+   },
+   {
+    "claim": "The matching large-transfer evidence is timestamped 13:50:50 UTC, rather than exactly around 13:46 UTC as stated in the alert; it is within the requested review window.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00174",
+     "T059-00175"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The transfer records give the destination and byte counts, but do not show the uploaded content or request path, so they do not establish whether the archive itself was sent. (T059-00174, T059-00175)",
+   "The archive creation event confirms the file path but does not provide its size, contents, or hash. (T059-00104)",
+   "The recorded large transfer is at 13:50:50 UTC; the evidence provided does not show a comparable large outbound transfer at precisely 13:46 UTC. (T059-00174, T059-00175)"
+  ],
+  "claims_not_established": [
+   "That c.zip, or any particular client file, was the payload of the quickshare-drop.net transfer.",
+   "Whether ivy.chen intentionally made the transfer or whether the browser activity was initiated by another person or process.",
+   "The business purpose, recipient, or authorization status of the transfer."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and inspect c.zip, including its hash, size, and contents; review access auditing for \\\\FILE-NWD-01\\Shared\\Clients.",
+   "Obtain proxy or destination-service request details for the quickshare-drop.net session, including upload metadata, account identity, and recipient if available.",
+   "Review endpoint browser history and relevant user/session activity, and confirm with ivy.chen whether the archive and transfer were authorized.",
+   "Investigate the destination domain and preserve relevant proxy and endpoint telemetry."
+  ],
+  "unrelated_findings": [
+   "Separate review: Chrome accessed Google account sign-in/challenge pages on WS-ICHEN-01. These records do not establish that the large transfer went to Google. (T059-00139, T059-00140, T059-00147, T059-00152)",
+   "Separate review: ivy.chen's Chrome accessed the AWS console and its assets. The provided context does not list AWS as approved, but this observation alone does not establish malicious activity or decide the alerted transfer. (T059-00212, T059-00213, T059-00214, T059-00216, T059-00222)",
+   "Separate review: DC-NWD-01 recorded ivy.chen Kerberos authentication involving WS-NBLAKE-01, followed by a network logon for ivy.chen on WS-NBLAKE-01. The records do not explain the purpose or authorization of this access. (T059-00248, T059-00249, T059-00250)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.5
+}

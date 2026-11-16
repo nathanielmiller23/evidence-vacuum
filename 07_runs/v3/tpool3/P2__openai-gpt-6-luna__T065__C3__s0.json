@@ -1,0 +1,90 @@
+{
+ "scenario_id": "T065",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.95,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"WS-TWEBER-01 made repeated TCP connections to 10.51.20.30:8080, the inventory-listed explicit proxy. Zeek classified them as HTTP; the records do not expose the proxied destination or establish that these were HTTPS connections to a particular service. Relevant connections occurred at 13:40:28, 13:45:04, 13:47:39, 13:50:01, 13:55:43, 14:00:09, 14:05:29, 14:10:28, and 14:13:55 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T065-00158\",\n        \"T065-00180\",\n        \"T065-00201\",\n        \"T065-00203\",\n        \"T065-00236\",\n        \"T065-00251\",\n        \"T065-00266\",\n        \"T065-00304\",\n        \"T065-00345\"\n      ]\n    },\n    {\n      \"claim\": \"The proxy-connection times are not uniformly five minutes apart: some successive intervals are about 2 minutes 20\u201335 seconds, while later intervals are roughly 4.5\u20135.7 minutes. The pattern may be consistent with a periodic check, but timing alone does not identify the application or destination.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T065-00180\",\n        \"T065-00201\",\n        \"T065-00203\",\n        \"T065-00236\",\n        \"T065-00251\",\n        \"T065-00266\",\n        \"T065-00304\"\n      ]\n    },\n    {\n      \"claim\": \"The inventory says the approved MediLedger updater checks for updates about every five minutes, so the later proxy-connection cadence could fit that behavior. The available connection records do not show the updater process or confirm a connection to update.medledger.com.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T065-00203\",\n        \"T065-00236\",\n        \"T065-00251\",\n        \"T065-00266\",\n        \"T065-00304\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Collection-status metadata reports a log-collection outage for WS-TWEBER-01 winsec and sysmon, and for PROXY-PIN-01 proxy logs, from 13:30 through 14:15 UTC. Thus process attribution and proxy request details for much of the alerted interval are unavailable; this status metadata has no record ID.\",\n    \"Zeek connection, DNS, and SSL sensors are reported operational. The supplied WS-TWEBER-01 records for the repeated proxy connections identify the proxy address and port but do not show the requested destination, hostname, or application.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the proxy requests were for update.medledger.com or another destination.\",\n    \"Which process, executable, user, or scheduled task initiated the repeated requests during the collection outage.\",\n    \"Whether the repeated requests transferred malicious content or were part of an approved update check.\",\n    \"Whether the alerted activity was actually outbound HTTPS to an external service; the available records show connections to the explicit proxy over port 8080.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover or obtain proxy logs for 13:30\u201314:15 UTC, including CONNECT target/SNI or URL, authenticated user, request method, response status, and transfer details.\",\n    \"Obtain endpoint process-to-network telemetry for WS-TWEBER-01 during the same interval, including executable path, command line, user, and parent process; verify whether the MediLedger updater was installed and running.\",\n    \"Compare the observed proxy destinations and request pattern with known-good MediLedger update activity before closing or escalating the alert.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate investigation: WS-ESTONE-01 and WS-ARUIZ-01 made TLS connections to WS-TWEBER-01:443, and WS-RPATEL-01 also made TLS connections to that host. These are internal connections, not the alerted outbound proxy activity; the records do not establish their purpose. (T065-00028, T065-00030, T065-00051, T065-00052, T065-00197, T065-00198, T065-00279, T065-00281)\",\n    \"Separate investigation: at 13:24:14 UTC, SYSTEM on WS-TWEBER-01 used taskhostw.exe in an explicit-credentials event targeting svc-billing. The inventory places the BillingSync job on FILE-PIN-01; this event is before the alerted connection sequence and does not establish a link to it. (T065-00043)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 42616,
+    "output": 3522
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.95,
+  "supporting_observations": [
+   {
+    "claim": "WS-TWEBER-01 made repeated TCP connections to 10.51.20.30:8080, the inventory-listed explicit proxy. Zeek classified them as HTTP; the records do not expose the proxied destination or establish that these were HTTPS connections to a particular service. Relevant connections occurred at 13:40:28, 13:45:04, 13:47:39, 13:50:01, 13:55:43, 14:00:09, 14:05:29, 14:10:28, and 14:13:55 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T065-00158",
+     "T065-00180",
+     "T065-00201",
+     "T065-00203",
+     "T065-00236",
+     "T065-00251",
+     "T065-00266",
+     "T065-00304",
+     "T065-00345"
+    ]
+   },
+   {
+    "claim": "The proxy-connection times are not uniformly five minutes apart: some successive intervals are about 2 minutes 20\u201335 seconds, while later intervals are roughly 4.5\u20135.7 minutes. The pattern may be consistent with a periodic check, but timing alone does not identify the application or destination.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T065-00180",
+     "T065-00201",
+     "T065-00203",
+     "T065-00236",
+     "T065-00251",
+     "T065-00266",
+     "T065-00304"
+    ]
+   },
+   {
+    "claim": "The inventory says the approved MediLedger updater checks for updates about every five minutes, so the later proxy-connection cadence could fit that behavior. The available connection records do not show the updater process or confirm a connection to update.medledger.com.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T065-00203",
+     "T065-00236",
+     "T065-00251",
+     "T065-00266",
+     "T065-00304"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Collection-status metadata reports a log-collection outage for WS-TWEBER-01 winsec and sysmon, and for PROXY-PIN-01 proxy logs, from 13:30 through 14:15 UTC. Thus process attribution and proxy request details for much of the alerted interval are unavailable; this status metadata has no record ID.",
+   "Zeek connection, DNS, and SSL sensors are reported operational. The supplied WS-TWEBER-01 records for the repeated proxy connections identify the proxy address and port but do not show the requested destination, hostname, or application."
+  ],
+  "claims_not_established": [
+   "Whether the proxy requests were for update.medledger.com or another destination.",
+   "Which process, executable, user, or scheduled task initiated the repeated requests during the collection outage.",
+   "Whether the repeated requests transferred malicious content or were part of an approved update check.",
+   "Whether the alerted activity was actually outbound HTTPS to an external service; the available records show connections to the explicit proxy over port 8080."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover or obtain proxy logs for 13:30\u201314:15 UTC, including CONNECT target/SNI or URL, authenticated user, request method, response status, and transfer details.",
+   "Obtain endpoint process-to-network telemetry for WS-TWEBER-01 during the same interval, including executable path, command line, user, and parent process; verify whether the MediLedger updater was installed and running.",
+   "Compare the observed proxy destinations and request pattern with known-good MediLedger update activity before closing or escalating the alert."
+  ],
+  "unrelated_findings": [
+   "Separate investigation: WS-ESTONE-01 and WS-ARUIZ-01 made TLS connections to WS-TWEBER-01:443, and WS-RPATEL-01 also made TLS connections to that host. These are internal connections, not the alerted outbound proxy activity; the records do not establish their purpose. (T065-00028, T065-00030, T065-00051, T065-00052, T065-00197, T065-00198, T065-00279, T065-00281)",
+   "Separate investigation: at 13:24:14 UTC, SYSTEM on WS-TWEBER-01 used taskhostw.exe in an explicit-credentials event targeting svc-billing. The inventory places the BillingSync job on FILE-PIN-01; this event is before the alerted connection sequence and does not establish a link to it. (T065-00043)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 21,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 33.5
+}

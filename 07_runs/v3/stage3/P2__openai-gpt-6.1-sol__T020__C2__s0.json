@@ -1,0 +1,84 @@
+{
+ "scenario_id": "T020",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6.1-sol",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.9,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted transfer is identifiable at 13:46:56 UTC: the proxy recorded 640,000,000 client-to-server bytes to ingest.cobaltvault.net:443, while network telemetry recorded 640,000,228 originating bytes on FILE-HD-01 source port 59207 to the explicit proxy.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T020-00285\", \"T020-00286\"]\n    },\n    {\n      \"claim\": \"Endpoint records attribute that same source-port-59207 connection to PID 5256, C:\\\\Program Files\\\\CobaltVault\\\\Agent\\\\cvagent.exe, running as HARBOR-DENTAL\\\\svc-bkp.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T020-00287\", \"T020-00288\"]\n    },\n    {\n      \"claim\": \"PID 5256 was launched by services.exe at 13:46:45 UTC with command-line arguments '--job Nightly --target https://ingest.cobaltvault.net', using svc-bkp logon session 0x3ca0252. That session was recorded as a service logon.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T020-00265\", \"T020-00278\", \"T020-00279\"]\n    },\n    {\n      \"claim\": \"The process path, service account, destination domain, and several-hundred-MB outbound volume match the approved CobaltVault backup activity described in the supplied inventory. Together with the exact connection-to-process correlation, this supports a benign disposition of the alerted transfer.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T020-00278\", \"T020-00285\", \"T020-00286\", \"T020-00287\", \"T020-00288\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The bulk connection is logged as a CONNECT tunnel; its application request, transferred files, and payload are not exposed in T020-00285 through T020-00288.\",\n    \"The inspected GET in T020-00282 belongs to the earlier source-port-62894 connection, not the bulk source-port-59207 connection. It does not establish the bulk transfer's HTTP method or content.\",\n    \"The process-creation records provide the executable path and command line but no executable hash or signature validation for cvagent.exe (T020-00278, T020-00279).\"\n  ],\n  \"claims_not_established\": [\n    \"The exact files transferred and successful completion of a backup job are not established by the connection counters or process termination records (T020-00285, T020-00286, T020-00292, T020-00293).\",\n    \"The unusual svc-bkp ticket request from 23.129.64.210 does not establish that the backup process or alerted transfer was attacker-controlled (T020-00264, T020-00278, T020-00288).\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [],\n  \"unrelated_findings\": [\n    \"Open a separate account-security investigation: DC-HD-01 recorded a svc-bkp service-ticket request for FILE-HD-01 from 23.129.64.210 at 13:45:53 UTC, inconsistent with the supplied internal-only remote-administration context. This record alone does not establish compromise or control of the alerted transfer (T020-00264).\",\n    \"Review explicit svc-bkp credential use by PowerShell running as SYSTEM on WS-OHADDAD-01 at 13:35:19 UTC; authorization and purpose are not established by this record (T020-00147).\",\n    \"Open a separate remote-access policy ticket: lucy.park successfully logged on to FILE-HD-01 over RDP from WS-LPARK-01, contrary to the supplied practice allowing remote administration only from WS-OHADDAD-01. This occurred after the alerted transfer (T020-00342, T020-00349).\",\n    \"Review the FILE-HD-01 connection to config.zscaler.net with a Zscaler Client Connector user agent against the approved-software inventory; the record establishes the connection and claimed user agent, not installation or maliciousness (T020-00077).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 76049,
+    "output": 1070
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.9,
+  "supporting_observations": [
+   {
+    "claim": "The alerted transfer is identifiable at 13:46:56 UTC: the proxy recorded 640,000,000 client-to-server bytes to ingest.cobaltvault.net:443, while network telemetry recorded 640,000,228 originating bytes on FILE-HD-01 source port 59207 to the explicit proxy.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00285",
+     "T020-00286"
+    ]
+   },
+   {
+    "claim": "Endpoint records attribute that same source-port-59207 connection to PID 5256, C:\\Program Files\\CobaltVault\\Agent\\cvagent.exe, running as HARBOR-DENTAL\\svc-bkp.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00287",
+     "T020-00288"
+    ]
+   },
+   {
+    "claim": "PID 5256 was launched by services.exe at 13:46:45 UTC with command-line arguments '--job Nightly --target https://ingest.cobaltvault.net', using svc-bkp logon session 0x3ca0252. That session was recorded as a service logon.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00265",
+     "T020-00278",
+     "T020-00279"
+    ]
+   },
+   {
+    "claim": "The process path, service account, destination domain, and several-hundred-MB outbound volume match the approved CobaltVault backup activity described in the supplied inventory. Together with the exact connection-to-process correlation, this supports a benign disposition of the alerted transfer.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T020-00278",
+     "T020-00285",
+     "T020-00286",
+     "T020-00287",
+     "T020-00288"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The bulk connection is logged as a CONNECT tunnel; its application request, transferred files, and payload are not exposed in T020-00285 through T020-00288.",
+   "The inspected GET in T020-00282 belongs to the earlier source-port-62894 connection, not the bulk source-port-59207 connection. It does not establish the bulk transfer's HTTP method or content.",
+   "The process-creation records provide the executable path and command line but no executable hash or signature validation for cvagent.exe (T020-00278, T020-00279)."
+  ],
+  "claims_not_established": [
+   "The exact files transferred and successful completion of a backup job are not established by the connection counters or process termination records (T020-00285, T020-00286, T020-00292, T020-00293).",
+   "The unusual svc-bkp ticket request from 23.129.64.210 does not establish that the backup process or alerted transfer was attacker-controlled (T020-00264, T020-00278, T020-00288)."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [],
+  "unrelated_findings": [
+   "Open a separate account-security investigation: DC-HD-01 recorded a svc-bkp service-ticket request for FILE-HD-01 from 23.129.64.210 at 13:45:53 UTC, inconsistent with the supplied internal-only remote-administration context. This record alone does not establish compromise or control of the alerted transfer (T020-00264).",
+   "Review explicit svc-bkp credential use by PowerShell running as SYSTEM on WS-OHADDAD-01 at 13:35:19 UTC; authorization and purpose are not established by this record (T020-00147).",
+   "Open a separate remote-access policy ticket: lucy.park successfully logged on to FILE-HD-01 over RDP from WS-LPARK-01, contrary to the supplied practice allowing remote administration only from WS-OHADDAD-01. This occurred after the alerted transfer (T020-00342, T020-00349).",
+   "Review the FILE-HD-01 connection to config.zscaler.net with a Zscaler Client Connector user agent against the approved-software inventory; the record establishes the connection and claimed user agent, not installation or maliciousness (T020-00077)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 16.0
+}

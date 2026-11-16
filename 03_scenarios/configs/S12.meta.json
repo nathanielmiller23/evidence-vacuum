@@ -1,0 +1,81 @@
+{
+ "scenario_id": "S12",
+ "pilot_only": false,
+ "class": "BENIGN",
+ "pair": "account",
+ "archetype": "helpdesk_temp_account",
+ "alert_category": "account_creation",
+ "gap_type": "non-consequential",
+ "seed": 2012,
+ "alert_summary": "Account management alert: a new account named temp.jsmith was created around 13:42 UTC on 2026-11-10. Review activity between 13:20 and 14:20 UTC and decide whether it is malicious.",
+ "window": [
+  "2026-11-10T13:20:00.000Z",
+  "2026-11-10T14:20:00.000Z"
+ ],
+ "focus": {
+  "hosts": [],
+  "ips": [],
+  "users": [
+   "temp.jsmith",
+   "tara.nguyen"
+  ]
+ },
+ "gap": {
+  "sources": [
+   "proxy"
+  ],
+  "hosts": [
+   "*"
+  ],
+  "mechanism": "Proxy access-log forwarder outage (proxy requests not ingested)",
+  "window": [
+   "2026-11-10T13:30:00.000Z",
+   "2026-11-10T14:10:00.000Z"
+  ]
+ },
+ "coverage_manifest": {
+  "sensors": [
+   {
+    "sensor": "winsec",
+    "host": "all hosts",
+    "status": "ok"
+   },
+   {
+    "sensor": "sysmon",
+    "host": "all hosts",
+    "status": "ok"
+   },
+   {
+    "sensor": "proxy",
+    "host": "PROXY-LV-01",
+    "window": [
+     "2026-11-10T13:30:00Z",
+     "2026-11-10T14:10:00Z"
+    ],
+    "status": "not_collected",
+    "reason": "Proxy access-log forwarder outage (proxy requests not ingested)"
+   },
+   {
+    "sensor": "proxy",
+    "host": "all other hosts, and the hosts above outside the listed window",
+    "status": "ok"
+   },
+   {
+    "sensor": "zeek_conn",
+    "host": "core SPAN (workstations, servers)",
+    "status": "ok"
+   },
+   {
+    "sensor": "zeek_dns",
+    "host": "core SPAN (workstations, servers)",
+    "status": "ok"
+   },
+   {
+    "sensor": "zeek_ssl",
+    "host": "core SPAN (workstations, servers)",
+    "status": "ok"
+   }
+  ]
+ },
+ "environment_context": "env_lakeview_v2.context.txt"
+}

@@ -1,0 +1,90 @@
+{
+ "scenario_id": "T140",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted large transfer is recorded as a 640,000,000-byte client upload through the proxy to ingest.ironvault-cloud.com, with about 39,000 response bytes.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T140-00310\", \"T140-00316\"]\n    },\n    {\n      \"claim\": \"Immediately before the transfer, Ironvault's agent.exe ran on FILE-COP-01 as svc-backup with a Nightly job targeting the same approved Ironvault ingest endpoint; its network connections to the proxy are attributed to that process and account.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T140-00308\", \"T140-00309\", \"T140-00313\", \"T140-00317\", \"T140-00318\"]\n    },\n    {\n      \"claim\": \"Shortly before the backup-agent run, a Kerberos service-ticket event names svc-backup and reports source IP 45.79.19.196; a local service logon for svc-backup follows. This is unusual in the stated no-VPN environment and raises a question about the account's use, but the records do not establish that this authentication caused or authorized the transfer.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T140-00300\", \"T140-00301\", \"T140-00308\"]\n    },\n    {\n      \"claim\": \"The transfer's destination, approximate volume, agent path, account, and Nightly job are consistent with the inventory's description of approved Ironvault backups. That consistency supports a benign explanation for the transfer, but does not resolve the preceding svc-backup authentication anomaly.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T140-00308\", \"T140-00310\", \"T140-00316\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show transfer volume and destination, but do not include the uploaded file list, content, hashes, or backup-job audit results.\",\n    \"The records do not establish whether the svc-backup ticket event from 45.79.19.196 was legitimate, how that source reached the domain controller, or whether it was causally connected to the later agent run.\",\n    \"The alert describes activity around 13:46 UTC, while the large transfer is logged at 13:47:11 UTC; the supplied records do not explain that timing difference.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the uploaded data was the expected backup set or included unauthorized files.\",\n    \"Whether the svc-backup authentication from 45.79.19.196 was authorized or indicates compromised credentials.\",\n    \"Whether the Ironvault agent executable or its Nightly job configuration was altered.\",\n    \"Whether the transfer was initiated by a legitimate scheduled backup or by an actor using the service account.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Obtain Ironvault backup-job logs and file manifests for this run; compare the uploaded set and volume with expected backups.\",\n    \"Investigate the 45.79.19.196 svc-backup Kerberos event, including domain-controller network/authentication records and any evidence of external exposure.\",\n    \"Correlate svc-backup logon and service lifecycle records with the agent run, and verify the service account's credentials, permissions, and scheduled-job configuration.\",\n    \"Preserve and validate the agent binary and relevant configuration against known-good versions; obtain destination-side upload records if available.\"\n  ],\n  \"unrelated_findings\": [\n    \"Meridian OpsAgent, which is not listed among approved software, ran on FILE-COP-01 and attempted to use svc-routes credentials after the scheduled password-rotation time. Investigate separately; these records do not establish a connection to the alerted Ironvault transfer. (T140-00415, T140-00416, T140-00418, T140-00419, T140-00420)\",\n    \"sara.ali initiated an RDP session to FILE-COP-01, although the supplied environment context says remote administration is only done from WS-PBECKER-01. Investigate separately; the records do not connect this session to the alerted transfer. (T140-00491, T140-00496, T140-00499, T140-00502)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 83223,
+    "output": 2200
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "The alerted large transfer is recorded as a 640,000,000-byte client upload through the proxy to ingest.ironvault-cloud.com, with about 39,000 response bytes.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T140-00310",
+     "T140-00316"
+    ]
+   },
+   {
+    "claim": "Immediately before the transfer, Ironvault's agent.exe ran on FILE-COP-01 as svc-backup with a Nightly job targeting the same approved Ironvault ingest endpoint; its network connections to the proxy are attributed to that process and account.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T140-00308",
+     "T140-00309",
+     "T140-00313",
+     "T140-00317",
+     "T140-00318"
+    ]
+   },
+   {
+    "claim": "Shortly before the backup-agent run, a Kerberos service-ticket event names svc-backup and reports source IP 45.79.19.196; a local service logon for svc-backup follows. This is unusual in the stated no-VPN environment and raises a question about the account's use, but the records do not establish that this authentication caused or authorized the transfer.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T140-00300",
+     "T140-00301",
+     "T140-00308"
+    ]
+   },
+   {
+    "claim": "The transfer's destination, approximate volume, agent path, account, and Nightly job are consistent with the inventory's description of approved Ironvault backups. That consistency supports a benign explanation for the transfer, but does not resolve the preceding svc-backup authentication anomaly.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T140-00308",
+     "T140-00310",
+     "T140-00316"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show transfer volume and destination, but do not include the uploaded file list, content, hashes, or backup-job audit results.",
+   "The records do not establish whether the svc-backup ticket event from 45.79.19.196 was legitimate, how that source reached the domain controller, or whether it was causally connected to the later agent run.",
+   "The alert describes activity around 13:46 UTC, while the large transfer is logged at 13:47:11 UTC; the supplied records do not explain that timing difference."
+  ],
+  "claims_not_established": [
+   "Whether the uploaded data was the expected backup set or included unauthorized files.",
+   "Whether the svc-backup authentication from 45.79.19.196 was authorized or indicates compromised credentials.",
+   "Whether the Ironvault agent executable or its Nightly job configuration was altered.",
+   "Whether the transfer was initiated by a legitimate scheduled backup or by an actor using the service account."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Obtain Ironvault backup-job logs and file manifests for this run; compare the uploaded set and volume with expected backups.",
+   "Investigate the 45.79.19.196 svc-backup Kerberos event, including domain-controller network/authentication records and any evidence of external exposure.",
+   "Correlate svc-backup logon and service lifecycle records with the agent run, and verify the service account's credentials, permissions, and scheduled-job configuration.",
+   "Preserve and validate the agent binary and relevant configuration against known-good versions; obtain destination-side upload records if available."
+  ],
+  "unrelated_findings": [
+   "Meridian OpsAgent, which is not listed among approved software, ran on FILE-COP-01 and attempted to use svc-routes credentials after the scheduled password-rotation time. Investigate separately; these records do not establish a connection to the alerted Ironvault transfer. (T140-00415, T140-00416, T140-00418, T140-00419, T140-00420)",
+   "sara.ali initiated an RDP session to FILE-COP-01, although the supplied environment context says remote administration is only done from WS-PBECKER-01. Investigate separately; the records do not connect this session to the alerted transfer. (T140-00491, T140-00496, T140-00499, T140-00502)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 32.5
+}

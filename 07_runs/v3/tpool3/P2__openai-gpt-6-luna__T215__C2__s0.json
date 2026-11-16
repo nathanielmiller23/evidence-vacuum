@@ -1,0 +1,127 @@
+{
+ "scenario_id": "T215",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted periodic connections are associated with stockpilotupd.exe running from Eli Brooks's AppData\\\\Local directory, not the inventoried approved location under C:\\\\Program Files\\\\StockPilot.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T215-00100\",\n        \"T215-00105\",\n        \"T215-00106\",\n        \"T215-00131\",\n        \"T215-00132\",\n        \"T215-00195\",\n        \"T215-00196\",\n        \"T215-00213\",\n        \"T215-00214\",\n        \"T215-00228\",\n        \"T215-00229\"\n      ]\n    },\n    {\n      \"claim\": \"The updater process's network activity reaches the explicit proxy for update.stockpilot.co, whereas the inventory identifies the approved StockPilot update host as update.stockpilot.com.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T215-00103\",\n        \"T215-00105\",\n        \"T215-00106\",\n        \"T215-00129\",\n        \"T215-00131\",\n        \"T215-00132\",\n        \"T215-00171\",\n        \"T215-00173\",\n        \"T215-00174\",\n        \"T215-00193\",\n        \"T215-00195\",\n        \"T215-00196\",\n        \"T215-00211\",\n        \"T215-00213\",\n        \"T215-00214\",\n        \"T215-00226\",\n        \"T215-00228\",\n        \"T215-00229\"\n      ]\n    },\n    {\n      \"claim\": \"The proxy records show repeated connections to update.stockpilot.co at 13:41:40, 13:46:51, 13:51:10, 13:56:45, 14:01:18, and 14:06:35 UTC, consistent with the alerted roughly five-minute cadence. Some were allowed and one was denied.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T215-00103\",\n        \"T215-00129\",\n        \"T215-00171\",\n        \"T215-00193\",\n        \"T215-00211\",\n        \"T215-00226\"\n      ]\n    },\n    {\n      \"claim\": \"The process was launched from a Chrome process whose command line references graph.microsoft.com, and a file-creation event for the updater's AppData path followed shortly afterward.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T215-00100\",\n        \"T215-00102\"\n      ]\n    },\n    {\n      \"claim\": \"The combination of an updater executable in a non-inventoried user-profile location and repeated connections to a hostname differing from the approved update hostname supports treating the alerted activity as malicious.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T215-00100\",\n        \"T215-00102\",\n        \"T215-00103\",\n        \"T215-00129\",\n        \"T215-00171\",\n        \"T215-00193\",\n        \"T215-00211\",\n        \"T215-00226\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The provided connection records show requests through PROXY-BLU-01 and the requested hostname, but do not establish the ultimate destination IP or the content exchanged over the TLS connections (for example, T215-00103 and T215-00129).\",\n    \"The records identify a file-creation event at the updater path but do not establish the file's origin, contents, hash, signature, or whether it was modified (T215-00100, T215-00102).\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish what payload or content was returned by update.stockpilot.co, or whether any data was sent beyond the connection metadata.\",\n    \"The evidence does not establish who caused the updater to run or whether Eli Brooks intentionally launched it.\",\n    \"The evidence does not establish whether the executable is malware by file analysis or whether the requested hostname is attacker-controlled.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze the updater executable from the AppData path, including hash, signature, metadata, and any available reputation results.\",\n    \"Collect endpoint file provenance and browser/download history around 13:41 UTC to determine how the executable appeared and was launched.\",\n    \"Obtain proxy and DNS details for update.stockpilot.co, including resolution and any available TLS inspection or response data.\",\n    \"Check for persistence, subsequent execution, and related activity by the same executable or hostname on this and other hosts.\"\n  ],\n  \"unrelated_findings\": [\n    \"Meridian OpsAgent ran on WS-EBROOKS-01 as SYSTEM and used explicit credentials for svc-arch while targeting the proxy; this is separate from the alerted StockPilot-like connections and merits validation against the workstation inventory (T215-00001, T215-00003).\",\n    \"Ruth Moss launched msra.exe targeting WS-EBROOKS-01 and supplied eli.brooks credentials. This is outside the alerted outbound activity and should be reviewed separately against the stated remote-administration practice; these records do not establish that a remote session succeeded (T215-00186, T215-00188).\",\n    \"Google DriveFS contacted clients4.google.com from WS-EBROOKS-01. Google Drive is an unapproved cloud-storage service in the supplied environment context and should be handled in a separate ticket (T215-00133, T215-00134).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 48975,
+    "output": 3074
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "The alerted periodic connections are associated with stockpilotupd.exe running from Eli Brooks's AppData\\Local directory, not the inventoried approved location under C:\\Program Files\\StockPilot.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T215-00100",
+     "T215-00105",
+     "T215-00106",
+     "T215-00131",
+     "T215-00132",
+     "T215-00195",
+     "T215-00196",
+     "T215-00213",
+     "T215-00214",
+     "T215-00228",
+     "T215-00229"
+    ]
+   },
+   {
+    "claim": "The updater process's network activity reaches the explicit proxy for update.stockpilot.co, whereas the inventory identifies the approved StockPilot update host as update.stockpilot.com.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T215-00103",
+     "T215-00105",
+     "T215-00106",
+     "T215-00129",
+     "T215-00131",
+     "T215-00132",
+     "T215-00171",
+     "T215-00173",
+     "T215-00174",
+     "T215-00193",
+     "T215-00195",
+     "T215-00196",
+     "T215-00211",
+     "T215-00213",
+     "T215-00214",
+     "T215-00226",
+     "T215-00228",
+     "T215-00229"
+    ]
+   },
+   {
+    "claim": "The proxy records show repeated connections to update.stockpilot.co at 13:41:40, 13:46:51, 13:51:10, 13:56:45, 14:01:18, and 14:06:35 UTC, consistent with the alerted roughly five-minute cadence. Some were allowed and one was denied.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T215-00103",
+     "T215-00129",
+     "T215-00171",
+     "T215-00193",
+     "T215-00211",
+     "T215-00226"
+    ]
+   },
+   {
+    "claim": "The process was launched from a Chrome process whose command line references graph.microsoft.com, and a file-creation event for the updater's AppData path followed shortly afterward.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T215-00100",
+     "T215-00102"
+    ]
+   },
+   {
+    "claim": "The combination of an updater executable in a non-inventoried user-profile location and repeated connections to a hostname differing from the approved update hostname supports treating the alerted activity as malicious.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T215-00100",
+     "T215-00102",
+     "T215-00103",
+     "T215-00129",
+     "T215-00171",
+     "T215-00193",
+     "T215-00211",
+     "T215-00226"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The provided connection records show requests through PROXY-BLU-01 and the requested hostname, but do not establish the ultimate destination IP or the content exchanged over the TLS connections (for example, T215-00103 and T215-00129).",
+   "The records identify a file-creation event at the updater path but do not establish the file's origin, contents, hash, signature, or whether it was modified (T215-00100, T215-00102)."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish what payload or content was returned by update.stockpilot.co, or whether any data was sent beyond the connection metadata.",
+   "The evidence does not establish who caused the updater to run or whether Eli Brooks intentionally launched it.",
+   "The evidence does not establish whether the executable is malware by file analysis or whether the requested hostname is attacker-controlled."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze the updater executable from the AppData path, including hash, signature, metadata, and any available reputation results.",
+   "Collect endpoint file provenance and browser/download history around 13:41 UTC to determine how the executable appeared and was launched.",
+   "Obtain proxy and DNS details for update.stockpilot.co, including resolution and any available TLS inspection or response data.",
+   "Check for persistence, subsequent execution, and related activity by the same executable or hostname on this and other hosts."
+  ],
+  "unrelated_findings": [
+   "Meridian OpsAgent ran on WS-EBROOKS-01 as SYSTEM and used explicit credentials for svc-arch while targeting the proxy; this is separate from the alerted StockPilot-like connections and merits validation against the workstation inventory (T215-00001, T215-00003).",
+   "Ruth Moss launched msra.exe targeting WS-EBROOKS-01 and supplied eli.brooks credentials. This is outside the alerted outbound activity and should be reviewed separately against the stated remote-administration practice; these records do not establish that a remote session succeeded (T215-00186, T215-00188).",
+   "Google DriveFS contacted clients4.google.com from WS-EBROOKS-01. Google Drive is an unapproved cloud-storage service in the supplied environment context and should be handled in a separate ticket (T215-00133, T215-00134)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 45,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 31.1
+}

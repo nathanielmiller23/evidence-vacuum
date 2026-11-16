@@ -1,0 +1,109 @@
+{
+ "scenario_id": "T023",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 2,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:44:40 UTC, maria.lopez's Word process opened C:\\\\Users\\\\maria.lopez\\\\Downloads\\\\Statement.docm.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T023-00081\", \"T023-00084\"]\n    },\n    {\n      \"claim\": \"Six seconds later, Word spawned PowerShell with no-profile, hidden-window, and encoded-command options. The encoded command requests a script from raw.githubusercontent.com.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T023-00085\", \"T023-00086\"]\n    },\n    {\n      \"claim\": \"The proxy recorded a successful GET for the same raw.githubusercontent.com script path at 13:44:47 UTC, and network telemetry associates PowerShell with proxy traffic at that time.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T023-00089\", \"T023-00090\", \"T023-00093\"]\n    },\n    {\n      \"claim\": \"PowerShell then spawned rundll32 to invoke C:\\\\Users\\\\maria.lopez\\\\AppData\\\\Roaming\\\\svchelper.dll,Init.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T023-00096\", \"T023-00097\"]\n    },\n    {\n      \"claim\": \"The sequence of a macro-enabled document launching hidden encoded PowerShell to retrieve a script, followed by rundll32 invoking a DLL from the user's roaming profile, supports a malicious-activity finding.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T023-00081\", \"T023-00085\", \"T023-00089\", \"T023-00096\"]\n    },\n    {\n      \"claim\": \"The logged Word-to-PowerShell activity occurred at 13:44 UTC, not around the reported 13:40 UTC; the records at 13:40 show an interactive logon and normal user-session startup.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T023-00055\", \"T023-00057\", \"T023-00058\", \"T023-00060\", \"T023-00085\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show the downloaded script URL and successful request, but do not include the script contents.\",\n    \"The records do not provide the DLL's contents, hash, signature, or provenance.\",\n    \"The available process and network records do not establish who authored or delivered Statement.docm, or whether maria.lopez knowingly opened it.\",\n    \"The reported window appearance is around 13:40 UTC, while the logged PowerShell process starts at 13:44:46 UTC; the evidence does not explain that timing difference.\"\n  ],\n  \"claims_not_established\": [\n    \"The exact behavior or impact of the downloaded script and svchelper.dll.\",\n    \"Whether the document or script caused additional actions not represented in these records.\",\n    \"Whether any data was accessed, changed, or exfiltrated.\",\n    \"Whether maria.lopez intentionally initiated or was aware of this activity.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Collect and analyze Statement.docm, including its origin, macro contents, and any associated email or download records.\",\n    \"Acquire the downloaded u.ps1 content and the svchelper.dll; preserve hashes and analyze their behavior.\",\n    \"Collect endpoint response data for WS-MLOPEZ-01, including persistence, file, registry, and subsequent process/network activity associated with the script and DLL.\",\n    \"Confirm the timeline with maria.lopez and check endpoint or user-interface telemetry for the reported PowerShell window.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 14:06 UTC, Edge opened Slack and accessed Slack web resources. Slack is not among the approved services listed in the environment context; assess separately, without using it to decide this alert. (T023-00176, T023-00179, T023-00180, T023-00185)\",\n    \"At 14:03 UTC, a scheduled task launched endpoint-inventory.ps1 as SYSTEM; at 14:05 UTC that PowerShell process generated an explicit-credentials event targeting svc-bkp and PROXY-HD-01. This is outside the identified Word-to-PowerShell chain and should be reviewed separately. (T023-00165, T023-00166, T023-00168)\",\n    \"At 14:14 UTC, maria.lopez launched cmd.exe to run netstat, and at 14:16 UTC launched PowerShell to request the NuGet API. These later commands are not shown to be part of the 13:44 Word-to-PowerShell chain; assess separately. (T023-00256, T023-00257, T023-00265, T023-00266)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 42931,
+    "output": 2075
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:44:40 UTC, maria.lopez's Word process opened C:\\Users\\maria.lopez\\Downloads\\Statement.docm.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T023-00081",
+     "T023-00084"
+    ]
+   },
+   {
+    "claim": "Six seconds later, Word spawned PowerShell with no-profile, hidden-window, and encoded-command options. The encoded command requests a script from raw.githubusercontent.com.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T023-00085",
+     "T023-00086"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a successful GET for the same raw.githubusercontent.com script path at 13:44:47 UTC, and network telemetry associates PowerShell with proxy traffic at that time.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T023-00089",
+     "T023-00090",
+     "T023-00093"
+    ]
+   },
+   {
+    "claim": "PowerShell then spawned rundll32 to invoke C:\\Users\\maria.lopez\\AppData\\Roaming\\svchelper.dll,Init.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T023-00096",
+     "T023-00097"
+    ]
+   },
+   {
+    "claim": "The sequence of a macro-enabled document launching hidden encoded PowerShell to retrieve a script, followed by rundll32 invoking a DLL from the user's roaming profile, supports a malicious-activity finding.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T023-00081",
+     "T023-00085",
+     "T023-00089",
+     "T023-00096"
+    ]
+   },
+   {
+    "claim": "The logged Word-to-PowerShell activity occurred at 13:44 UTC, not around the reported 13:40 UTC; the records at 13:40 show an interactive logon and normal user-session startup.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T023-00055",
+     "T023-00057",
+     "T023-00058",
+     "T023-00060",
+     "T023-00085"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show the downloaded script URL and successful request, but do not include the script contents.",
+   "The records do not provide the DLL's contents, hash, signature, or provenance.",
+   "The available process and network records do not establish who authored or delivered Statement.docm, or whether maria.lopez knowingly opened it.",
+   "The reported window appearance is around 13:40 UTC, while the logged PowerShell process starts at 13:44:46 UTC; the evidence does not explain that timing difference."
+  ],
+  "claims_not_established": [
+   "The exact behavior or impact of the downloaded script and svchelper.dll.",
+   "Whether the document or script caused additional actions not represented in these records.",
+   "Whether any data was accessed, changed, or exfiltrated.",
+   "Whether maria.lopez intentionally initiated or was aware of this activity."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Collect and analyze Statement.docm, including its origin, macro contents, and any associated email or download records.",
+   "Acquire the downloaded u.ps1 content and the svchelper.dll; preserve hashes and analyze their behavior.",
+   "Collect endpoint response data for WS-MLOPEZ-01, including persistence, file, registry, and subsequent process/network activity associated with the script and DLL.",
+   "Confirm the timeline with maria.lopez and check endpoint or user-interface telemetry for the reported PowerShell window."
+  ],
+  "unrelated_findings": [
+   "At 14:06 UTC, Edge opened Slack and accessed Slack web resources. Slack is not among the approved services listed in the environment context; assess separately, without using it to decide this alert. (T023-00176, T023-00179, T023-00180, T023-00185)",
+   "At 14:03 UTC, a scheduled task launched endpoint-inventory.ps1 as SYSTEM; at 14:05 UTC that PowerShell process generated an explicit-credentials event targeting svc-bkp and PROXY-HD-01. This is outside the identified Word-to-PowerShell chain and should be reviewed separately. (T023-00165, T023-00166, T023-00168)",
+   "At 14:14 UTC, maria.lopez launched cmd.exe to run netstat, and at 14:16 UTC launched PowerShell to request the NuGet API. These later commands are not shown to be part of the 13:44 Word-to-PowerShell chain; assess separately. (T023-00256, T023-00257, T023-00265, T023-00266)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 18,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.3
+}

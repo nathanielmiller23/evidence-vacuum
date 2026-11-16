@@ -1,0 +1,75 @@
+{
+ "scenario_id": "T074",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:38 UTC, the domain controller recorded a Kerberos service-ticket request for raj.patel targeting WS-ARUIZ-01$, sourced from 10.51.10.23, which inventory identifies as WS-RPATEL-01. This is consistent with authorized remote administration, but does not establish that a remote logon or patch-script execution occurred.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T074-00120\"]\n    },\n    {\n      \"claim\": \"At 13:40:35 UTC, WS-ARUIZ-01 made a proxy CONNECT to download.windowsupdate.com with a Windows Update Agent user agent; the proxy recorded about 38.8 MB received. This is consistent with update activity during scheduled business-hours patching, but the record does not identify the process that initiated it.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T074-00138\", \"T074-00141\"]\n    },\n    {\n      \"claim\": \"The supplied endpoint process-creation records show WmiPrvSE.exe at 13:22, not a PowerShell process near the reported 13:40 time. The available evidence therefore does not confirm or characterize the reported PowerShell window.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T074-00001\", \"T074-00002\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not include endpoint process creation, command-line, PowerShell script-block, or console-capture evidence for the reported 13:40 activity.\",\n    \"The Windows Update proxy records show destination, user agent, and transfer volume, but do not attribute the traffic to a specific process or establish its relationship to the reported PowerShell window.\",\n    \"A Kerberos service-ticket request does not by itself establish that an interactive or remote-administration session succeeded or that a particular script was run.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether ana.ruiz or another user opened PowerShell around 13:40 UTC, and what command or script\u2014if any\u2014was run.\",\n    \"Whether the Windows Update transfer or the raj.patel service-ticket request was causally related to the reported window.\",\n    \"Whether Patch-Workstations.ps1 was executed on WS-ARUIZ-01 during the review period.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Collect WS-ARUIZ-01 EDR/Sysmon and Windows process-creation logs around 13:35\u201313:50 UTC, including parent process, command line, user, and process identifiers.\",\n    \"Collect PowerShell operational logs, script-block/module logging, console history where available, and endpoint detection records for the same interval.\",\n    \"Check WS-RPATEL-01 and FILE-PIN-01 records for evidence of the authorized patch workflow, including access to Patch-Workstations.ps1 and any remote execution activity.\",\n    \"Review Windows Update client logs on WS-ARUIZ-01 to determine whether the 13:40 transfer was an expected update and what initiated it.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-ARUIZ-01 repeatedly established TLS sessions to WS-TWEBER-01 on port 443, including sessions before and after the reported PowerShell time. Inventory does not identify an approved remote-access service for this connection; investigate separately. The records do not establish that these sessions are related to the alert.\",\n    \"Supporting records: T074-00133, T074-00134, T074-00241, T074-00242, T074-00262, T074-00263, T074-00268, T074-00269, T074-00288, T074-00289, T074-00326, T074-00327.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 40878,
+    "output": 2460
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "At 13:38 UTC, the domain controller recorded a Kerberos service-ticket request for raj.patel targeting WS-ARUIZ-01$, sourced from 10.51.10.23, which inventory identifies as WS-RPATEL-01. This is consistent with authorized remote administration, but does not establish that a remote logon or patch-script execution occurred.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T074-00120"
+    ]
+   },
+   {
+    "claim": "At 13:40:35 UTC, WS-ARUIZ-01 made a proxy CONNECT to download.windowsupdate.com with a Windows Update Agent user agent; the proxy recorded about 38.8 MB received. This is consistent with update activity during scheduled business-hours patching, but the record does not identify the process that initiated it.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T074-00138",
+     "T074-00141"
+    ]
+   },
+   {
+    "claim": "The supplied endpoint process-creation records show WmiPrvSE.exe at 13:22, not a PowerShell process near the reported 13:40 time. The available evidence therefore does not confirm or characterize the reported PowerShell window.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T074-00001",
+     "T074-00002"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not include endpoint process creation, command-line, PowerShell script-block, or console-capture evidence for the reported 13:40 activity.",
+   "The Windows Update proxy records show destination, user agent, and transfer volume, but do not attribute the traffic to a specific process or establish its relationship to the reported PowerShell window.",
+   "A Kerberos service-ticket request does not by itself establish that an interactive or remote-administration session succeeded or that a particular script was run."
+  ],
+  "claims_not_established": [
+   "Whether ana.ruiz or another user opened PowerShell around 13:40 UTC, and what command or script\u2014if any\u2014was run.",
+   "Whether the Windows Update transfer or the raj.patel service-ticket request was causally related to the reported window.",
+   "Whether Patch-Workstations.ps1 was executed on WS-ARUIZ-01 during the review period."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Collect WS-ARUIZ-01 EDR/Sysmon and Windows process-creation logs around 13:35\u201313:50 UTC, including parent process, command line, user, and process identifiers.",
+   "Collect PowerShell operational logs, script-block/module logging, console history where available, and endpoint detection records for the same interval.",
+   "Check WS-RPATEL-01 and FILE-PIN-01 records for evidence of the authorized patch workflow, including access to Patch-Workstations.ps1 and any remote execution activity.",
+   "Review Windows Update client logs on WS-ARUIZ-01 to determine whether the 13:40 transfer was an expected update and what initiated it."
+  ],
+  "unrelated_findings": [
+   "WS-ARUIZ-01 repeatedly established TLS sessions to WS-TWEBER-01 on port 443, including sessions before and after the reported PowerShell time. Inventory does not identify an approved remote-access service for this connection; investigate separately. The records do not establish that these sessions are related to the alert.",
+   "Supporting records: T074-00133, T074-00134, T074-00241, T074-00242, T074-00262, T074-00263, T074-00268, T074-00269, T074-00288, T074-00289, T074-00326, T074-00327."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 5,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 26.0
+}

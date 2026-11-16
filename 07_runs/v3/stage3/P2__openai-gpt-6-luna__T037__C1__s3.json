@@ -1,0 +1,89 @@
+{
+ "scenario_id": "T037",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 3,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"An inbound RDP connection from 203.0.113.250 to WS-LMARTINS-01 was followed by a type 10 logon for sam.okafor. The supplied environment context says remote administration is only performed from WS-SOKAFOR-01 and there is no VPN, making this access inconsistent with the stated practice.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T037-00073\",\n        \"T037-00074\",\n        \"T037-00075\",\n        \"T037-00076\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:41:49 UTC, sysmaint was created with sam.okafor recorded as the subject; about two seconds later, sysmaint was added to the Administrators group. This conflicts with the supplied account-management practice that temporary accounts use the ext.<name> naming pattern and never receive administrator rights.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T037-00109\",\n        \"T037-00110\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:41:53 UTC, a scheduled task was registered on WS-LMARTINS-01 under sam.okafor's logon. It runs hidden PowerShell with an encoded command that decodes to a command invoking IEX on content from http://203.0.113.250/a.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T037-00111\"\n      ]\n    },\n    {\n      \"claim\": \"The unexpected remote logon, creation of an administrator account, and registration of a hidden PowerShell download task occur in a closely related time window on WS-LMARTINS-01. Together, these support treating the alerted account-management activity as malicious.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T037-00075\",\n        \"T037-00109\",\n        \"T037-00110\",\n        \"T037-00111\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show sam.okafor as the account used for the logon and actions; they do not establish whether sam.okafor personally performed them or whether the credentials or session were compromised.\",\n    \"The task-registration record does not establish whether the task ran successfully or what the downloaded script contained or did.\",\n    \"The logs do not establish whether the source address was genuinely attributable to an external actor or whether the address or activity had an authorized explanation.\"\n  ],\n  \"claims_not_established\": [\n    \"Who controlled the RDP session or whether sam.okafor's credentials were compromised.\",\n    \"Whether sysmaint was successfully used after creation or what resources it accessed.\",\n    \"Whether the scheduled task executed and whether its referenced script was retrieved.\",\n    \"Whether there was an approved change or exception authorizing the account, its administrator membership, or the task.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate the RDP source address and session with firewall, network, and identity-provider records, and verify whether the access was authorized.\",\n    \"Review DC-NWD-01 account and group-management audit records, including the full logon context for the subject logon ID in T037-00109 and T037-00110.\",\n    \"Acquire the task definition and execution history from WS-LMARTINS-01; determine whether the URL was contacted and preserve any retrieved content.\",\n    \"Confirm with sam.okafor and change-management records whether the account creation, administrator grant, and task were authorized.\",\n    \"Preserve relevant endpoint and domain-controller evidence; consider containment of WS-LMARTINS-01 and disabling or restricting sysmaint pending investigation.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox is installed and launched on WS-LMARTINS-01, although the supplied inventory says no file-sharing or cloud-storage services other than Microsoft 365 / OneDrive are approved. Track separately; this does not determine the account alert. (T037-00048, T037-00049, T037-00050)\",\n    \"A Meridian OpsAgent process ran on WS-LMARTINS-01 and attempted explicit authentication to PROXY-NWD-01 as svc-render. This software is not listed among approved software in the supplied context; investigate separately and do not use it by itself to decide this alert. (T037-00117, T037-00118, T037-00119)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 29868,
+    "output": 2166
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "An inbound RDP connection from 203.0.113.250 to WS-LMARTINS-01 was followed by a type 10 logon for sam.okafor. The supplied environment context says remote administration is only performed from WS-SOKAFOR-01 and there is no VPN, making this access inconsistent with the stated practice.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00073",
+     "T037-00074",
+     "T037-00075",
+     "T037-00076"
+    ]
+   },
+   {
+    "claim": "At 13:41:49 UTC, sysmaint was created with sam.okafor recorded as the subject; about two seconds later, sysmaint was added to the Administrators group. This conflicts with the supplied account-management practice that temporary accounts use the ext.<name> naming pattern and never receive administrator rights.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00109",
+     "T037-00110"
+    ]
+   },
+   {
+    "claim": "At 13:41:53 UTC, a scheduled task was registered on WS-LMARTINS-01 under sam.okafor's logon. It runs hidden PowerShell with an encoded command that decodes to a command invoking IEX on content from http://203.0.113.250/a.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00111"
+    ]
+   },
+   {
+    "claim": "The unexpected remote logon, creation of an administrator account, and registration of a hidden PowerShell download task occur in a closely related time window on WS-LMARTINS-01. Together, these support treating the alerted account-management activity as malicious.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T037-00075",
+     "T037-00109",
+     "T037-00110",
+     "T037-00111"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show sam.okafor as the account used for the logon and actions; they do not establish whether sam.okafor personally performed them or whether the credentials or session were compromised.",
+   "The task-registration record does not establish whether the task ran successfully or what the downloaded script contained or did.",
+   "The logs do not establish whether the source address was genuinely attributable to an external actor or whether the address or activity had an authorized explanation."
+  ],
+  "claims_not_established": [
+   "Who controlled the RDP session or whether sam.okafor's credentials were compromised.",
+   "Whether sysmaint was successfully used after creation or what resources it accessed.",
+   "Whether the scheduled task executed and whether its referenced script was retrieved.",
+   "Whether there was an approved change or exception authorizing the account, its administrator membership, or the task."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate the RDP source address and session with firewall, network, and identity-provider records, and verify whether the access was authorized.",
+   "Review DC-NWD-01 account and group-management audit records, including the full logon context for the subject logon ID in T037-00109 and T037-00110.",
+   "Acquire the task definition and execution history from WS-LMARTINS-01; determine whether the URL was contacted and preserve any retrieved content.",
+   "Confirm with sam.okafor and change-management records whether the account creation, administrator grant, and task were authorized.",
+   "Preserve relevant endpoint and domain-controller evidence; consider containment of WS-LMARTINS-01 and disabling or restricting sysmaint pending investigation."
+  ],
+  "unrelated_findings": [
+   "Dropbox is installed and launched on WS-LMARTINS-01, although the supplied inventory says no file-sharing or cloud-storage services other than Microsoft 365 / OneDrive are approved. Track separately; this does not determine the account alert. (T037-00048, T037-00049, T037-00050)",
+   "A Meridian OpsAgent process ran on WS-LMARTINS-01 and attempted explicit authentication to PROXY-NWD-01 as svc-render. This software is not listed among approved software in the supplied context; investigate separately and do not use it by itself to decide this alert. (T037-00117, T037-00118, T037-00119)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 22.9
+}

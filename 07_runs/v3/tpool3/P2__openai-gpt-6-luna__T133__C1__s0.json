@@ -1,0 +1,98 @@
+{
+ "scenario_id": "T133",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"WINWORD.EXE opened the macro-enabled file Statement.docm from dan.reyes's Downloads folder, and shortly afterward that Word process spawned PowerShell.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T133-00151\", \"T133-00155\", \"T133-00156\"]\n    },\n    {\n      \"claim\": \"The PowerShell command used no profile, requested a hidden window, and contained an encoded command that decodes to an expression downloading and evaluating a script from raw.githubusercontent.com/copperline-it/tools/main/u.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T133-00155\", \"T133-00156\"]\n    },\n    {\n      \"claim\": \"The proxy recorded a successful GET for that script URL, and PowerShell created a file in the user's Temp directory shortly afterward.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T133-00157\", \"T133-00158\", \"T133-00162\"]\n    },\n    {\n      \"claim\": \"PowerShell then spawned rundll32 to call Init in C:\\\\Users\\\\dan.reyes\\\\AppData\\\\Roaming\\\\svchelper.dll; the process ran under dan.reyes at medium integrity.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T133-00167\", \"T133-00168\"]\n    },\n    {\n      \"claim\": \"The sequence of a document launching hidden encoded PowerShell to download and evaluate a script, followed by rundll32 loading a DLL from the user's Roaming profile, strongly supports malicious activity associated with the alert.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T133-00151\", \"T133-00155\", \"T133-00158\", \"T133-00167\", \"T133-00168\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records the requested script URL and HTTP status but do not provide the downloaded script's response body.\",\n    \"The supplied records do not provide the contents, hash, signature, or provenance of svchelper.dll, or establish whether the temporary file is related to that DLL.\",\n    \"The available evidence shows process creation and termination, but does not establish the full effects of the script or DLL.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the GitHub repository or script is genuinely controlled or approved by Copperline Logistics.\",\n    \"Whether dan.reyes knowingly opened the document or expected it to run code.\",\n    \"What actions the downloaded script or DLL performed, including whether they achieved persistence, accessed data, or exfiltrated information.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire Statement.docm, the downloaded script if available, the Temp file, and svchelper.dll; preserve hashes and analyze their contents.\",\n    \"Obtain endpoint protection detections, full process and file telemetry, and any script-block or PowerShell logging for WS-DREYES-01 around the event.\",\n    \"Verify the repository and document against authorized internal sources and confirm with dan.reyes whether the document and activity were expected.\",\n    \"Check for subsequent persistence, credential access, lateral movement, and outbound activity attributable to the script or DLL.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox updater processes ran on WS-DREYES-01; Dropbox is not among the approved services in the supplied inventory. Review separately as an unapproved-software finding. (T133-00208, T133-00209, T133-00210, T133-00211, T133-00289, T133-00290, T133-00292, T133-00293)\",\n    \"Google Drive File Stream ran on WS-DREYES-01; Google Drive is not among the approved services in the supplied inventory. Review separately as an unapproved cloud-storage finding. (T133-00376, T133-00377, T133-00378)\",\n    \"A SYSTEM taskhostw.exe process on WS-DREYES-01 used explicit credentials for svc-routes to FILE-COP-01. Review separately against the scheduled password rotation and manual job update; this observation does not determine the disposition of the alerted PowerShell activity. (T133-00267)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 59786,
+    "output": 2360
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "WINWORD.EXE opened the macro-enabled file Statement.docm from dan.reyes's Downloads folder, and shortly afterward that Word process spawned PowerShell.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T133-00151",
+     "T133-00155",
+     "T133-00156"
+    ]
+   },
+   {
+    "claim": "The PowerShell command used no profile, requested a hidden window, and contained an encoded command that decodes to an expression downloading and evaluating a script from raw.githubusercontent.com/copperline-it/tools/main/u.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T133-00155",
+     "T133-00156"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a successful GET for that script URL, and PowerShell created a file in the user's Temp directory shortly afterward.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T133-00157",
+     "T133-00158",
+     "T133-00162"
+    ]
+   },
+   {
+    "claim": "PowerShell then spawned rundll32 to call Init in C:\\Users\\dan.reyes\\AppData\\Roaming\\svchelper.dll; the process ran under dan.reyes at medium integrity.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T133-00167",
+     "T133-00168"
+    ]
+   },
+   {
+    "claim": "The sequence of a document launching hidden encoded PowerShell to download and evaluate a script, followed by rundll32 loading a DLL from the user's Roaming profile, strongly supports malicious activity associated with the alert.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T133-00151",
+     "T133-00155",
+     "T133-00158",
+     "T133-00167",
+     "T133-00168"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records the requested script URL and HTTP status but do not provide the downloaded script's response body.",
+   "The supplied records do not provide the contents, hash, signature, or provenance of svchelper.dll, or establish whether the temporary file is related to that DLL.",
+   "The available evidence shows process creation and termination, but does not establish the full effects of the script or DLL."
+  ],
+  "claims_not_established": [
+   "Whether the GitHub repository or script is genuinely controlled or approved by Copperline Logistics.",
+   "Whether dan.reyes knowingly opened the document or expected it to run code.",
+   "What actions the downloaded script or DLL performed, including whether they achieved persistence, accessed data, or exfiltrated information."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire Statement.docm, the downloaded script if available, the Temp file, and svchelper.dll; preserve hashes and analyze their contents.",
+   "Obtain endpoint protection detections, full process and file telemetry, and any script-block or PowerShell logging for WS-DREYES-01 around the event.",
+   "Verify the repository and document against authorized internal sources and confirm with dan.reyes whether the document and activity were expected.",
+   "Check for subsequent persistence, credential access, lateral movement, and outbound activity attributable to the script or DLL."
+  ],
+  "unrelated_findings": [
+   "Dropbox updater processes ran on WS-DREYES-01; Dropbox is not among the approved services in the supplied inventory. Review separately as an unapproved-software finding. (T133-00208, T133-00209, T133-00210, T133-00211, T133-00289, T133-00290, T133-00292, T133-00293)",
+   "Google Drive File Stream ran on WS-DREYES-01; Google Drive is not among the approved services in the supplied inventory. Review separately as an unapproved cloud-storage finding. (T133-00376, T133-00377, T133-00378)",
+   "A SYSTEM taskhostw.exe process on WS-DREYES-01 used explicit credentials for svc-routes to FILE-COP-01. Review separately against the scheduled password rotation and manual job update; this observation does not determine the disposition of the alerted PowerShell activity. (T133-00267)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.8
+}

@@ -1,0 +1,89 @@
+{
+ "scenario_id": "T170",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.82,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The large transfer is associated with the installed Safeharbor backup agent running as svc-vault, with services.exe as its parent and the command line identifying a Nightly job targeting ingest.safeharbor-backup.net.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T170-00331\", \"T170-00332\"]\n    },\n    {\n      \"claim\": \"The proxy recorded a successful tunnel to the approved Safeharbor destination with 640,000,000 client-to-server bytes; connection telemetry independently records about 640 MB sent by that agent to the proxy.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T170-00339\", \"T170-00342\"]\n    },\n    {\n      \"claim\": \"Shortly before the backup-agent run, the domain controller recorded a service-ticket event for svc-vault from public IP 139.162.174.124, followed by a local service logon for svc-vault on FILE-MAP-01. The evidence does not establish whether this authentication was legitimate or related to the transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T170-00320\", \"T170-00321\"]\n    },\n    {\n      \"claim\": \"The transfer's executable, account, destination, and approximate volume match the inventory description of the approved offsite backup agent, but the nearby svc-vault authentication from a public IP leaves the legitimacy of this particular run unresolved.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T170-00320\", \"T170-00321\", \"T170-00331\", \"T170-00339\", \"T170-00342\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available records show process metadata and proxy byte counts, but do not show the files or data included in the transfer.\",\n    \"The proxy records identify the Safeharbor hostname and transfer volume, but do not establish that the destination or TLS session was controlled by the legitimate service provider.\",\n    \"The records do not explain the public source IP associated with the svc-vault ticket event or establish whether it is expected for this environment.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the svc-vault authentication from 139.162.174.124 was authorized or otherwise expected.\",\n    \"Whether the 640 MB consisted of legitimate backup data or data selected for unauthorized exfiltration.\",\n    \"Whether the Safeharbor agent binary and its configuration were authentic and unmodified.\",\n    \"Whether the alert time of around 13:46 corresponds to the transfer recorded at 13:51 or reflects a timing difference.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Validate the svc-vault authentication source IP against service-provider records, firewall/NAT records, and Safeharbor agent logs; confirm whether that source is expected.\",\n    \"Obtain the Safeharbor job manifest and audit logs for this run, including file paths, sizes, and destination-side receipt or job identity.\",\n    \"Verify the agent binary's signature, hash, installation history, and configuration against a known-good copy.\",\n    \"Correlate the alert's precise timestamp and network flow with proxy and endpoint telemetry to confirm the alert refers to this transfer.\"\n  ],\n  \"unrelated_findings\": [\n    \"Help-desk user greta.lund initiated an RDP session to FILE-MAP-01; inventory context says remote administration is only performed from WS-AHASSAN-01. Treat this as a separate review, not evidence deciding the alerted transfer. (T170-00232, T170-00240, T170-00245)\",\n    \"FILE-MAP-01 initiated an SSH connection to PROXY-MAP-01, and the proxy host later made an RDP attempt using svc_mgmt that failed. These services and activity are not established as part of the alerted transfer. (T170-00493, T170-00494, T170-00496, T170-00497)\",\n    \"An unlisted Meridian OpsAgent ran on FILE-MAP-01 and attempted explicit-credential use for svc-vault; the supplied inventory does not list it as approved. Investigate separately from the Safeharbor transfer. (T170-00542, T170-00544)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 80648,
+    "output": 2243
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.82,
+  "supporting_observations": [
+   {
+    "claim": "The large transfer is associated with the installed Safeharbor backup agent running as svc-vault, with services.exe as its parent and the command line identifying a Nightly job targeting ingest.safeharbor-backup.net.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T170-00331",
+     "T170-00332"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a successful tunnel to the approved Safeharbor destination with 640,000,000 client-to-server bytes; connection telemetry independently records about 640 MB sent by that agent to the proxy.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T170-00339",
+     "T170-00342"
+    ]
+   },
+   {
+    "claim": "Shortly before the backup-agent run, the domain controller recorded a service-ticket event for svc-vault from public IP 139.162.174.124, followed by a local service logon for svc-vault on FILE-MAP-01. The evidence does not establish whether this authentication was legitimate or related to the transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T170-00320",
+     "T170-00321"
+    ]
+   },
+   {
+    "claim": "The transfer's executable, account, destination, and approximate volume match the inventory description of the approved offsite backup agent, but the nearby svc-vault authentication from a public IP leaves the legitimacy of this particular run unresolved.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T170-00320",
+     "T170-00321",
+     "T170-00331",
+     "T170-00339",
+     "T170-00342"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available records show process metadata and proxy byte counts, but do not show the files or data included in the transfer.",
+   "The proxy records identify the Safeharbor hostname and transfer volume, but do not establish that the destination or TLS session was controlled by the legitimate service provider.",
+   "The records do not explain the public source IP associated with the svc-vault ticket event or establish whether it is expected for this environment."
+  ],
+  "claims_not_established": [
+   "Whether the svc-vault authentication from 139.162.174.124 was authorized or otherwise expected.",
+   "Whether the 640 MB consisted of legitimate backup data or data selected for unauthorized exfiltration.",
+   "Whether the Safeharbor agent binary and its configuration were authentic and unmodified.",
+   "Whether the alert time of around 13:46 corresponds to the transfer recorded at 13:51 or reflects a timing difference."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Validate the svc-vault authentication source IP against service-provider records, firewall/NAT records, and Safeharbor agent logs; confirm whether that source is expected.",
+   "Obtain the Safeharbor job manifest and audit logs for this run, including file paths, sizes, and destination-side receipt or job identity.",
+   "Verify the agent binary's signature, hash, installation history, and configuration against a known-good copy.",
+   "Correlate the alert's precise timestamp and network flow with proxy and endpoint telemetry to confirm the alert refers to this transfer."
+  ],
+  "unrelated_findings": [
+   "Help-desk user greta.lund initiated an RDP session to FILE-MAP-01; inventory context says remote administration is only performed from WS-AHASSAN-01. Treat this as a separate review, not evidence deciding the alerted transfer. (T170-00232, T170-00240, T170-00245)",
+   "FILE-MAP-01 initiated an SSH connection to PROXY-MAP-01, and the proxy host later made an RDP attempt using svc_mgmt that failed. These services and activity are not established as part of the alerted transfer. (T170-00493, T170-00494, T170-00496, T170-00497)",
+   "An unlisted Meridian OpsAgent ran on FILE-MAP-01 and attempted explicit-credential use for svc-vault; the supplied inventory does not list it as approved. Investigate separately from the Safeharbor transfer. (T170-00542, T170-00544)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 29.0
+}

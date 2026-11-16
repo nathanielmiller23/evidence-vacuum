@@ -1,0 +1,87 @@
+{
+ "scenario_id": "T039",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 3,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.9,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:39:46 UTC, ivy.chen ran PowerShell to compress \\\\\\\\FILE-NWD-01\\\\Shared\\\\Clients into C:\\\\Users\\\\ivy.chen\\\\AppData\\\\Local\\\\Temp\\\\c.zip; a file-creation event confirms c.zip was created shortly afterward.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T039-00104\",\n        \"T039-00106\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:45:32 UTC, ivy.chen launched Chrome to quickshare-drop.net, an unapproved file-sharing service.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T039-00133\",\n        \"T039-00135\"\n      ]\n    },\n    {\n      \"claim\": \"The proxy recorded about 51 MB of client-to-server traffic to quickshare-drop.net over a roughly nine-second tunnel. Network telemetry independently records about 51 MB sent from WS-ICHEN-01 to the proxy by Chrome at the same time.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T039-00138\",\n        \"T039-00140\",\n        \"T039-00141\"\n      ]\n    },\n    {\n      \"claim\": \"The sequence of compressing the Clients share and then sending a large outbound transfer to an unapproved file-sharing service strongly supports likely exfiltration of client data, making the alerted activity malicious.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T039-00104\",\n        \"T039-00106\",\n        \"T039-00133\",\n        \"T039-00138\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy record shows tunnel byte counts, but the available records do not expose the HTTPS request body or identify the exact uploaded file.\",\n    \"The logs do not show the archive's size, contents, hash, or whether the remote service retained the transferred data.\",\n    \"The available evidence does not establish whether ivy.chen had authorization or a legitimate business reason for this specific transfer.\"\n  ],\n  \"claims_not_established\": [\n    \"That c.zip itself was the data sent in the quickshare-drop.net transfer.\",\n    \"The exact contents or sensitivity of the transferred data.\",\n    \"The user's intent or whether the transfer was authorized.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and preserve C:\\\\Users\\\\ivy.chen\\\\AppData\\\\Local\\\\Temp\\\\c.zip and determine its creation-time size, contents, and hash, if still available.\",\n    \"Review endpoint file-access telemetry and filesystem artifacts to determine what was read from \\\\\\\\FILE-NWD-01\\\\Shared\\\\Clients and whether the archive was accessed during the outbound transfer.\",\n    \"Obtain proxy, endpoint, and service-side records that can identify the uploaded object, request outcome, and account or recipient associated with the transfer.\",\n    \"Confirm with the data owner and ivy.chen whether this client-data transfer was approved.\"\n  ],\n  \"unrelated_findings\": [\n    \"Cisco AnyConnect's UI was launched by ivy.chen at 14:04:55 UTC despite the inventory stating that the organization has no VPN; investigate separately. The evidence shows the UI process and a signed Cisco DLL load, not a VPN connection. (T039-00190, T039-00192)\",\n    \"Zscaler ZSATunnel.exe started under SYSTEM at 14:12:33 UTC. Its purpose and authorization are not established by these records; review separately. (T039-00264, T039-00265)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 47627,
+    "output": 1336
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.9,
+  "supporting_observations": [
+   {
+    "claim": "At 13:39:46 UTC, ivy.chen ran PowerShell to compress \\\\FILE-NWD-01\\Shared\\Clients into C:\\Users\\ivy.chen\\AppData\\Local\\Temp\\c.zip; a file-creation event confirms c.zip was created shortly afterward.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T039-00104",
+     "T039-00106"
+    ]
+   },
+   {
+    "claim": "At 13:45:32 UTC, ivy.chen launched Chrome to quickshare-drop.net, an unapproved file-sharing service.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T039-00133",
+     "T039-00135"
+    ]
+   },
+   {
+    "claim": "The proxy recorded about 51 MB of client-to-server traffic to quickshare-drop.net over a roughly nine-second tunnel. Network telemetry independently records about 51 MB sent from WS-ICHEN-01 to the proxy by Chrome at the same time.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T039-00138",
+     "T039-00140",
+     "T039-00141"
+    ]
+   },
+   {
+    "claim": "The sequence of compressing the Clients share and then sending a large outbound transfer to an unapproved file-sharing service strongly supports likely exfiltration of client data, making the alerted activity malicious.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T039-00104",
+     "T039-00106",
+     "T039-00133",
+     "T039-00138"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy record shows tunnel byte counts, but the available records do not expose the HTTPS request body or identify the exact uploaded file.",
+   "The logs do not show the archive's size, contents, hash, or whether the remote service retained the transferred data.",
+   "The available evidence does not establish whether ivy.chen had authorization or a legitimate business reason for this specific transfer."
+  ],
+  "claims_not_established": [
+   "That c.zip itself was the data sent in the quickshare-drop.net transfer.",
+   "The exact contents or sensitivity of the transferred data.",
+   "The user's intent or whether the transfer was authorized."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and preserve C:\\Users\\ivy.chen\\AppData\\Local\\Temp\\c.zip and determine its creation-time size, contents, and hash, if still available.",
+   "Review endpoint file-access telemetry and filesystem artifacts to determine what was read from \\\\FILE-NWD-01\\Shared\\Clients and whether the archive was accessed during the outbound transfer.",
+   "Obtain proxy, endpoint, and service-side records that can identify the uploaded object, request outcome, and account or recipient associated with the transfer.",
+   "Confirm with the data owner and ivy.chen whether this client-data transfer was approved."
+  ],
+  "unrelated_findings": [
+   "Cisco AnyConnect's UI was launched by ivy.chen at 14:04:55 UTC despite the inventory stating that the organization has no VPN; investigate separately. The evidence shows the UI process and a signed Cisco DLL load, not a VPN connection. (T039-00190, T039-00192)",
+   "Zscaler ZSATunnel.exe started under SYSTEM at 14:12:33 UTC. Its purpose and authorization are not established by these records; review separately. (T039-00264, T039-00265)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 12.9
+}

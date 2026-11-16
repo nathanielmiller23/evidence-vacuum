@@ -1,0 +1,69 @@
+{
+ "scenario_id": "T190",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Near the alert time, FILE-BLU-01 made an SMB connection to the domain controller; the flow record reports 6,603 origin bytes and 1,124 response bytes, far below the alerted transfer size. This does not identify or explain the large outbound transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T190-00230\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:46:24, FILE-BLU-01 obtained Kerberos tickets from the domain controller, followed shortly by the internal SMB connection. These records show contemporaneous internal activity, not the destination, process, or volume of the alerted outbound transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T190-00221\",\n        \"T190-00222\",\n        \"T190-00223\",\n        \"T190-00230\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied coverage status reports that FILE-BLU-01 winsec and Sysmon logs were not collected from 13:30 to 14:15 UTC, overlapping the alert time.\",\n    \"The supplied coverage status reports that PROXY-BLU-01 proxy logs were not collected from 13:30 to 14:15 UTC, overlapping the alert time.\",\n    \"Although Zeek connection and DNS sensors are reported as available, the supplied records do not identify a large outbound flow's destination, bytes, or originating process.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the alerted transfer went to the approved Cloudkeep service or to an unapproved destination.\",\n    \"Whether Cloudkeep's approved backup agent initiated the transfer.\",\n    \"What data was transferred, whether it was authorized, or whether it was staged or exfiltrated by an attacker.\",\n    \"Whether the large transfer was malicious or a routine backup.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Obtain firewall, flow, or equivalent network records for FILE-BLU-01 around 13:46 UTC, including destination, byte counts, and connection duration.\",\n    \"Recover proxy logs for the alert window and identify the requested host, URL, account, and transfer size.\",\n    \"Collect FILE-BLU-01 endpoint process and file-access telemetry, plus Cloudkeep agent and backup-job logs, to attribute the transfer and validate the job.\",\n    \"Correlate with Cloudkeep-side upload records or the backup schedule to confirm whether the transfer was expected.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:47:06, the domain controller recorded a service-ticket request for svc-arch from public IP 139.162.174.124. This is unusual in the stated no-VPN environment and merits a separate review, but the supplied evidence does not establish that it caused or was part of the alerted transfer. Record: T190-00236.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 76777,
+    "output": 2085
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "Near the alert time, FILE-BLU-01 made an SMB connection to the domain controller; the flow record reports 6,603 origin bytes and 1,124 response bytes, far below the alerted transfer size. This does not identify or explain the large outbound transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T190-00230"
+    ]
+   },
+   {
+    "claim": "At 13:46:24, FILE-BLU-01 obtained Kerberos tickets from the domain controller, followed shortly by the internal SMB connection. These records show contemporaneous internal activity, not the destination, process, or volume of the alerted outbound transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T190-00221",
+     "T190-00222",
+     "T190-00223",
+     "T190-00230"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied coverage status reports that FILE-BLU-01 winsec and Sysmon logs were not collected from 13:30 to 14:15 UTC, overlapping the alert time.",
+   "The supplied coverage status reports that PROXY-BLU-01 proxy logs were not collected from 13:30 to 14:15 UTC, overlapping the alert time.",
+   "Although Zeek connection and DNS sensors are reported as available, the supplied records do not identify a large outbound flow's destination, bytes, or originating process."
+  ],
+  "claims_not_established": [
+   "Whether the alerted transfer went to the approved Cloudkeep service or to an unapproved destination.",
+   "Whether Cloudkeep's approved backup agent initiated the transfer.",
+   "What data was transferred, whether it was authorized, or whether it was staged or exfiltrated by an attacker.",
+   "Whether the large transfer was malicious or a routine backup."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Obtain firewall, flow, or equivalent network records for FILE-BLU-01 around 13:46 UTC, including destination, byte counts, and connection duration.",
+   "Recover proxy logs for the alert window and identify the requested host, URL, account, and transfer size.",
+   "Collect FILE-BLU-01 endpoint process and file-access telemetry, plus Cloudkeep agent and backup-job logs, to attribute the transfer and validate the job.",
+   "Correlate with Cloudkeep-side upload records or the backup schedule to confirm whether the transfer was expected."
+  ],
+  "unrelated_findings": [
+   "At 13:47:06, the domain controller recorded a service-ticket request for svc-arch from public IP 139.162.174.124. This is unusual in the stated no-VPN environment and merits a separate review, but the supplied evidence does not establish that it caused or was part of the alerted transfer. Record: T190-00236."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 5,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.7
+}

@@ -1,0 +1,83 @@
+{
+ "scenario_id": "T037",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 1,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted account sysmaint was created on DC-NWD-01 at 13:41:49, with sam.okafor recorded as the subject.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T037-00109\"]\n    },\n    {\n      \"claim\": \"About two seconds later, sysmaint was added to the Administrators group. This conflicts with the stated help-desk practice of creating only ext.<name> temporary accounts and never granting them administrator rights.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T037-00110\"]\n    },\n    {\n      \"claim\": \"At 13:37:55, sam.okafor logged on interactively to WS-LMARTINS-01 from 203.0.113.250. The inventory says there is no VPN and remote administration is only performed from WS-SOKAFOR-01, so this activity is inconsistent with the stated practice.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T037-00073\", \"T037-00075\"]\n    },\n    {\n      \"claim\": \"At 13:41:53, a task authored by sam.okafor was registered on WS-LMARTINS-01 to run hidden PowerShell with an encoded command that decodes to a request for http://203.0.113.250/a.ps1 followed by execution of its response. This is strongly suspicious and occurred seconds after the sysmaint account creation and administrator-group addition.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T037-00111\", \"T037-00109\", \"T037-00110\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available records show the task registration and its command, but do not show whether the task ran or provide the contents or behavior of the requested script.\",\n    \"The account-creation and group-addition events do not identify the originating host in the supplied records; their close timing to activity on WS-LMARTINS-01 does not by itself prove that host was the source.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the sysmaint account was subsequently used, and whether it remains enabled or has other privileges.\",\n    \"Whether sam.okafor's credentials or session were compromised, or who controlled the connection from 203.0.113.250.\",\n    \"Whether the scheduled task executed or whether the remote script was retrieved.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and investigate WS-LMARTINS-01, including the registered task, task execution history, PowerShell logs, and any downloaded script or related files.\",\n    \"Review DC-NWD-01 audit and authentication records to identify the source host and session for the sysmaint creation and Administrators-group change.\",\n    \"Verify the sysmaint account's current state, group memberships, password-setting details, and any subsequent authentication or use.\",\n    \"Investigate the 203.0.113.250 connection and validate sam.okafor's authentication and activity with the administrator.\"\n  ],\n  \"unrelated_findings\": [\n    \"An unapproved Dropbox client was started on WS-LMARTINS-01; the inventory lists no approved Dropbox service. This is separate from the account-management finding. (T037-00048, T037-00050, T037-00190, T037-00191)\",\n    \"Chrome accessed go.pstmn.io, a Postman-related URL; this is separate from the account-management finding. (T037-00027, T037-00051)\",\n    \"An unlisted Meridian OpsAgent process ran on WS-LMARTINS-01 and explicitly used svc-render credentials to authenticate to PROXY-NWD-01. The inventory places svc-render on FILE-NWD-01, so investigate separately. (T037-00117, T037-00119)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 29868,
+    "output": 2259
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "The alerted account sysmaint was created on DC-NWD-01 at 13:41:49, with sam.okafor recorded as the subject.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00109"
+    ]
+   },
+   {
+    "claim": "About two seconds later, sysmaint was added to the Administrators group. This conflicts with the stated help-desk practice of creating only ext.<name> temporary accounts and never granting them administrator rights.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00110"
+    ]
+   },
+   {
+    "claim": "At 13:37:55, sam.okafor logged on interactively to WS-LMARTINS-01 from 203.0.113.250. The inventory says there is no VPN and remote administration is only performed from WS-SOKAFOR-01, so this activity is inconsistent with the stated practice.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T037-00073",
+     "T037-00075"
+    ]
+   },
+   {
+    "claim": "At 13:41:53, a task authored by sam.okafor was registered on WS-LMARTINS-01 to run hidden PowerShell with an encoded command that decodes to a request for http://203.0.113.250/a.ps1 followed by execution of its response. This is strongly suspicious and occurred seconds after the sysmaint account creation and administrator-group addition.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T037-00111",
+     "T037-00109",
+     "T037-00110"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available records show the task registration and its command, but do not show whether the task ran or provide the contents or behavior of the requested script.",
+   "The account-creation and group-addition events do not identify the originating host in the supplied records; their close timing to activity on WS-LMARTINS-01 does not by itself prove that host was the source."
+  ],
+  "claims_not_established": [
+   "Whether the sysmaint account was subsequently used, and whether it remains enabled or has other privileges.",
+   "Whether sam.okafor's credentials or session were compromised, or who controlled the connection from 203.0.113.250.",
+   "Whether the scheduled task executed or whether the remote script was retrieved."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and investigate WS-LMARTINS-01, including the registered task, task execution history, PowerShell logs, and any downloaded script or related files.",
+   "Review DC-NWD-01 audit and authentication records to identify the source host and session for the sysmaint creation and Administrators-group change.",
+   "Verify the sysmaint account's current state, group memberships, password-setting details, and any subsequent authentication or use.",
+   "Investigate the 203.0.113.250 connection and validate sam.okafor's authentication and activity with the administrator."
+  ],
+  "unrelated_findings": [
+   "An unapproved Dropbox client was started on WS-LMARTINS-01; the inventory lists no approved Dropbox service. This is separate from the account-management finding. (T037-00048, T037-00050, T037-00190, T037-00191)",
+   "Chrome accessed go.pstmn.io, a Postman-related URL; this is separate from the account-management finding. (T037-00027, T037-00051)",
+   "An unlisted Meridian OpsAgent process ran on WS-LMARTINS-01 and explicitly used svc-render credentials to authenticate to PROXY-NWD-01. The inventory places svc-render on FILE-NWD-01, so investigate separately. (T037-00117, T037-00119)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 7,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 24.6
+}

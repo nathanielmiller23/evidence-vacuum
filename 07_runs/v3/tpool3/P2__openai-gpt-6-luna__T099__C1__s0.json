@@ -1,0 +1,89 @@
+{
+ "scenario_id": "T099",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.95,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:44:34 UTC, ana.ruiz ran PowerShell to compress \\\\\\\\FILE-PIN-01\\\\Shared\\\\Clients into C:\\\\Users\\\\ana.ruiz\\\\AppData\\\\Local\\\\Temp\\\\c.zip; Sysmon recorded the archive file being created at 13:44:38 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T099-00307\",\n        \"T099-00308\",\n        \"T099-00309\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:50:57 UTC, WS-ARUIZ-01 sent approximately 51 MB through the proxy to dropzone-transfer.net:443. The proxy recorded 51,000,000 client-to-server tunnel bytes, and Zeek recorded 51,000,372 originating bytes; Sysmon attributes the connection to Firefox running as ana.ruiz.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T099-00399\",\n        \"T099-00400\",\n        \"T099-00401\",\n        \"T099-00402\"\n      ]\n    },\n    {\n      \"claim\": \"The destination is not among the approved services, and the transfer followed shortly after creation of an archive from the Clients share. Together, these observations support treating the alerted transfer as likely unauthorized data exfiltration.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T099-00307\",\n        \"T099-00309\",\n        \"T099-00399\",\n        \"T099-00401\"\n      ]\n    },\n    {\n      \"claim\": \"The recorded large transfer occurred at 13:50:57 UTC, rather than exactly around the alert's stated 13:46 UTC time; it is within the requested review window.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T099-00399\",\n        \"T099-00401\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records the large transfer as a CONNECT tunnel, and the corresponding Zeek record contains connection byte counts, not the HTTP request or uploaded content. These records do not establish what data was sent.\",\n    \"The archive's creation is recorded, but the available records do not show its size, contents, or whether c.zip was the file uploaded.\",\n    \"The available records do not establish who controlled the destination or whether the transfer had authorization.\"\n  ],\n  \"claims_not_established\": [\n    \"That c.zip, or any particular files from the Clients share, were the contents of the 51 MB transfer.\",\n    \"That the archive contained sensitive client information or that the transfer caused a confirmed disclosure.\",\n    \"The identity or intent of the person operating the workstation, or whether there was an authorized business reason for this transfer.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine c.zip and relevant endpoint file-system, PowerShell, and browser records to determine its contents and relationship to the transfer.\",\n    \"Obtain proxy or network inspection records that may identify the upload request, destination account, and transferred object.\",\n    \"Review access and file-audit records for \\\\\\\\FILE-PIN-01\\\\Shared\\\\Clients, and confirm with the data owner and ana.ruiz whether this transfer was authorized.\",\n    \"Check whether other hosts or accounts transferred data to dropzone-transfer.net during the relevant period.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox.exe was launched on WS-ARUIZ-01 by ana.ruiz shortly before the alerted transfer. Dropbox is an unapproved file-sharing/cloud-storage service in this environment; investigate separately. Its presence does not establish that it was involved in the alerted transfer.\",\n    \"At 13:56:34 UTC, ana.ruiz ran PowerShell to enumerate AD users in the IT OU. This is outside the alerted transfer activity and should be reviewed separately; the record alone does not establish malicious intent.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 80690,
+    "output": 1863
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.95,
+  "supporting_observations": [
+   {
+    "claim": "At 13:44:34 UTC, ana.ruiz ran PowerShell to compress \\\\FILE-PIN-01\\Shared\\Clients into C:\\Users\\ana.ruiz\\AppData\\Local\\Temp\\c.zip; Sysmon recorded the archive file being created at 13:44:38 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T099-00307",
+     "T099-00308",
+     "T099-00309"
+    ]
+   },
+   {
+    "claim": "At 13:50:57 UTC, WS-ARUIZ-01 sent approximately 51 MB through the proxy to dropzone-transfer.net:443. The proxy recorded 51,000,000 client-to-server tunnel bytes, and Zeek recorded 51,000,372 originating bytes; Sysmon attributes the connection to Firefox running as ana.ruiz.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T099-00399",
+     "T099-00400",
+     "T099-00401",
+     "T099-00402"
+    ]
+   },
+   {
+    "claim": "The destination is not among the approved services, and the transfer followed shortly after creation of an archive from the Clients share. Together, these observations support treating the alerted transfer as likely unauthorized data exfiltration.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T099-00307",
+     "T099-00309",
+     "T099-00399",
+     "T099-00401"
+    ]
+   },
+   {
+    "claim": "The recorded large transfer occurred at 13:50:57 UTC, rather than exactly around the alert's stated 13:46 UTC time; it is within the requested review window.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T099-00399",
+     "T099-00401"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records the large transfer as a CONNECT tunnel, and the corresponding Zeek record contains connection byte counts, not the HTTP request or uploaded content. These records do not establish what data was sent.",
+   "The archive's creation is recorded, but the available records do not show its size, contents, or whether c.zip was the file uploaded.",
+   "The available records do not establish who controlled the destination or whether the transfer had authorization."
+  ],
+  "claims_not_established": [
+   "That c.zip, or any particular files from the Clients share, were the contents of the 51 MB transfer.",
+   "That the archive contained sensitive client information or that the transfer caused a confirmed disclosure.",
+   "The identity or intent of the person operating the workstation, or whether there was an authorized business reason for this transfer."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine c.zip and relevant endpoint file-system, PowerShell, and browser records to determine its contents and relationship to the transfer.",
+   "Obtain proxy or network inspection records that may identify the upload request, destination account, and transferred object.",
+   "Review access and file-audit records for \\\\FILE-PIN-01\\Shared\\Clients, and confirm with the data owner and ana.ruiz whether this transfer was authorized.",
+   "Check whether other hosts or accounts transferred data to dropzone-transfer.net during the relevant period."
+  ],
+  "unrelated_findings": [
+   "Dropbox.exe was launched on WS-ARUIZ-01 by ana.ruiz shortly before the alerted transfer. Dropbox is an unapproved file-sharing/cloud-storage service in this environment; investigate separately. Its presence does not establish that it was involved in the alerted transfer.",
+   "At 13:56:34 UTC, ana.ruiz ran PowerShell to enumerate AD users in the IT OU. This is outside the alerted transfer activity and should be reviewed separately; the record alone does not establish malicious intent."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.7
+}

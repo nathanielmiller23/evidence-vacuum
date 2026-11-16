@@ -1,0 +1,84 @@
+{
+ "scenario_id": "T014",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 2,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:41:49 UTC, PowerShell ran on WS-MLOPEZ-01 as omar.haddad with the command line `-NoProfile -ExecutionPolicy Bypass -File \\\\\\\\FILE-HD-01\\\\IT\\\\Deploy-Patches.ps1`, matching the documented IT workstation-patching procedure.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T014-00177\", \"T014-00178\"]\n    },\n    {\n      \"claim\": \"A network logon for omar.haddad from WS-OHADDAD-01 was recorded on WS-MLOPEZ-01 shortly before the PowerShell process started, consistent with the documented remote-administration source.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T014-00148\", \"T014-00177\"]\n    },\n    {\n      \"claim\": \"The PowerShell process launched wusa.exe to install a Windows 11 update package, and the proxy recorded a Windows Update download during the same activity.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T014-00179\", \"T014-00182\", \"T014-00184\"]\n    },\n    {\n      \"claim\": \"PowerShell exited about 50 seconds after launch; the observed process chain and update activity are consistent with a brief patching operation rather than evidence of an unrelated PowerShell task.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T014-00177\", \"T014-00182\", \"T014-00187\", \"T014-00188\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records establish a PowerShell process and its command line, but do not directly establish whether a visible window appeared or what Maria saw.\",\n    \"The provided records do not include the contents or hash of Deploy-Patches.ps1 or the update package.\",\n    \"Winsec and Sysmon collection was unavailable on WS-LPARK-01 from 13:30 to 14:10 UTC; that outage is on a different host and does not establish missing telemetry on WS-MLOPEZ-01.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish whether Maria's reported time of about 13:40 was exact; the recorded PowerShell launch was at 13:41:49 UTC.\",\n    \"The evidence does not independently verify the script's contents, the update package's provenance, or whether this specific patch run had a corresponding change ticket.\",\n    \"The logs do not prove that a visible PowerShell window was displayed to the logged-in user.\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [],\n  \"unrelated_findings\": [\n    \"A Google Drive File Stream user agent contacted clients4.google.com from WS-MLOPEZ-01. Google Drive is not among the approved services listed in the environment context; the records show contact, not that files were uploaded. Review separately. (T014-00218, T014-00219)\",\n    \"A Dropbox updater contacted desktop.dropbox.com from WS-MLOPEZ-01. Dropbox is not among the approved services listed in the environment context; the records show updater traffic, not file sharing. Review separately. (T014-00285, T014-00286)\",\n    \"WS-MLOPEZ-01 obtained a Kerberos ticket for ben.carter and a network logon as ben.carter was recorded on WS-BCARTER-01; later, DC-HD-01 recorded a network logon for maria.lopez with WS-BCARTER-01 as the workstation. This cross-host/account activity is outside the alerted PowerShell activity and merits separate review. (T014-00089, T014-00090, T014-00092, T014-00112)\",\n    \"A signed Palo Alto GlobalProtect process was launched on WS-MLOPEZ-01. The provided records show the process and a valid signature, but no VPN connection; review separately if this software's presence is unexpected. (T014-00071, T014-00072, T014-00073)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 61183,
+    "output": 2289
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "At 13:41:49 UTC, PowerShell ran on WS-MLOPEZ-01 as omar.haddad with the command line `-NoProfile -ExecutionPolicy Bypass -File \\\\FILE-HD-01\\IT\\Deploy-Patches.ps1`, matching the documented IT workstation-patching procedure.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T014-00177",
+     "T014-00178"
+    ]
+   },
+   {
+    "claim": "A network logon for omar.haddad from WS-OHADDAD-01 was recorded on WS-MLOPEZ-01 shortly before the PowerShell process started, consistent with the documented remote-administration source.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T014-00148",
+     "T014-00177"
+    ]
+   },
+   {
+    "claim": "The PowerShell process launched wusa.exe to install a Windows 11 update package, and the proxy recorded a Windows Update download during the same activity.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T014-00179",
+     "T014-00182",
+     "T014-00184"
+    ]
+   },
+   {
+    "claim": "PowerShell exited about 50 seconds after launch; the observed process chain and update activity are consistent with a brief patching operation rather than evidence of an unrelated PowerShell task.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T014-00177",
+     "T014-00182",
+     "T014-00187",
+     "T014-00188"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records establish a PowerShell process and its command line, but do not directly establish whether a visible window appeared or what Maria saw.",
+   "The provided records do not include the contents or hash of Deploy-Patches.ps1 or the update package.",
+   "Winsec and Sysmon collection was unavailable on WS-LPARK-01 from 13:30 to 14:10 UTC; that outage is on a different host and does not establish missing telemetry on WS-MLOPEZ-01."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish whether Maria's reported time of about 13:40 was exact; the recorded PowerShell launch was at 13:41:49 UTC.",
+   "The evidence does not independently verify the script's contents, the update package's provenance, or whether this specific patch run had a corresponding change ticket.",
+   "The logs do not prove that a visible PowerShell window was displayed to the logged-in user."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [],
+  "unrelated_findings": [
+   "A Google Drive File Stream user agent contacted clients4.google.com from WS-MLOPEZ-01. Google Drive is not among the approved services listed in the environment context; the records show contact, not that files were uploaded. Review separately. (T014-00218, T014-00219)",
+   "A Dropbox updater contacted desktop.dropbox.com from WS-MLOPEZ-01. Dropbox is not among the approved services listed in the environment context; the records show updater traffic, not file sharing. Review separately. (T014-00285, T014-00286)",
+   "WS-MLOPEZ-01 obtained a Kerberos ticket for ben.carter and a network logon as ben.carter was recorded on WS-BCARTER-01; later, DC-HD-01 recorded a network logon for maria.lopez with WS-BCARTER-01 as the workstation. This cross-host/account activity is outside the alerted PowerShell activity and merits separate review. (T014-00089, T014-00090, T014-00092, T014-00112)",
+   "A signed Palo Alto GlobalProtect process was launched on WS-MLOPEZ-01. The provided records show the process and a valid signature, but no VPN connection; review separately if this software's presence is unexpected. (T014-00071, T014-00072, T014-00073)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 28.3
+}

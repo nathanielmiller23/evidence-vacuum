@@ -1,0 +1,87 @@
+{
+ "scenario_id": "T019",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 2,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:41 UTC, maria.lopez ran PowerShell from her interactive session to compress \\\\\\\\FILE-HD-01\\\\Shared\\\\Clients into C:\\\\Users\\\\maria.lopez\\\\AppData\\\\Local\\\\Temp\\\\c.zip; Sysmon recorded creation of that archive.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T019-00117\", \"T019-00118\", \"T019-00119\"]\n    },\n    {\n      \"claim\": \"At 13:45 UTC, maria.lopez launched Chrome to https://sendbox-files.io/ from Explorer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T019-00150\", \"T019-00154\"]\n    },\n    {\n      \"claim\": \"At 13:48 UTC, Chrome on WS-MLOPEZ-01 sent about 51 MB through the proxy tunnel to sendbox-files.io; the proxy recorded 51,000,000 client-to-server bytes, and Zeek recorded 50,000,251 outbound bytes.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T019-00170\", \"T019-00171\", \"T019-00172\", \"T019-00173\"]\n    },\n    {\n      \"claim\": \"The sequence\u2014compressing a client share, opening an unapproved file-sharing destination, then sending about 51 MB outbound\u2014strongly supports an inference of unauthorized data exfiltration and a malicious disposition for the alerted activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T019-00117\", \"T019-00119\", \"T019-00150\", \"T019-00170\", \"T019-00171\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available proxy and Zeek records establish the destination, timing, and transfer volume, but do not expose the encrypted tunnel's application payload.\",\n    \"The logs do not directly link the transmitted bytes to the specific c.zip archive.\"\n  ],\n  \"claims_not_established\": [\n    \"The exact contents of c.zip and whether it contained sensitive client data.\",\n    \"Whether c.zip, or another file or data, was the payload sent to sendbox-files.io.\",\n    \"Whether the destination accepted and retained the data, who received it, or whether the transfer had any authorization or business purpose.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and examine c.zip, including its hash, contents, and relevant file metadata.\",\n    \"Obtain browser history, download/upload artifacts, and any available endpoint or proxy records that could identify the uploaded filename or service-side result.\",\n    \"Review access and file-audit logs for \\\\\\\\FILE-HD-01\\\\Shared\\\\Clients around the event, and confirm with maria.lopez whether the transfer was authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"A dotnet-sdk-installer.exe in maria.lopez's Temp directory was executed with a quiet-install argument during the review window; review separately if warranted. This did not drive the alert assessment. (T019-00181, T019-00182, T019-00210, T019-00211)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 49118,
+    "output": 1700
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "At 13:41 UTC, maria.lopez ran PowerShell from her interactive session to compress \\\\FILE-HD-01\\Shared\\Clients into C:\\Users\\maria.lopez\\AppData\\Local\\Temp\\c.zip; Sysmon recorded creation of that archive.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00117",
+     "T019-00118",
+     "T019-00119"
+    ]
+   },
+   {
+    "claim": "At 13:45 UTC, maria.lopez launched Chrome to https://sendbox-files.io/ from Explorer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00150",
+     "T019-00154"
+    ]
+   },
+   {
+    "claim": "At 13:48 UTC, Chrome on WS-MLOPEZ-01 sent about 51 MB through the proxy tunnel to sendbox-files.io; the proxy recorded 51,000,000 client-to-server bytes, and Zeek recorded 50,000,251 outbound bytes.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00170",
+     "T019-00171",
+     "T019-00172",
+     "T019-00173"
+    ]
+   },
+   {
+    "claim": "The sequence\u2014compressing a client share, opening an unapproved file-sharing destination, then sending about 51 MB outbound\u2014strongly supports an inference of unauthorized data exfiltration and a malicious disposition for the alerted activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T019-00117",
+     "T019-00119",
+     "T019-00150",
+     "T019-00170",
+     "T019-00171"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available proxy and Zeek records establish the destination, timing, and transfer volume, but do not expose the encrypted tunnel's application payload.",
+   "The logs do not directly link the transmitted bytes to the specific c.zip archive."
+  ],
+  "claims_not_established": [
+   "The exact contents of c.zip and whether it contained sensitive client data.",
+   "Whether c.zip, or another file or data, was the payload sent to sendbox-files.io.",
+   "Whether the destination accepted and retained the data, who received it, or whether the transfer had any authorization or business purpose."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and examine c.zip, including its hash, contents, and relevant file metadata.",
+   "Obtain browser history, download/upload artifacts, and any available endpoint or proxy records that could identify the uploaded filename or service-side result.",
+   "Review access and file-audit logs for \\\\FILE-HD-01\\Shared\\Clients around the event, and confirm with maria.lopez whether the transfer was authorized."
+  ],
+  "unrelated_findings": [
+   "A dotnet-sdk-installer.exe in maria.lopez's Temp directory was executed with a quiet-install argument during the review window; review separately if warranted. This did not drive the alert assessment. (T019-00181, T019-00182, T019-00210, T019-00211)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 14,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.9
+}

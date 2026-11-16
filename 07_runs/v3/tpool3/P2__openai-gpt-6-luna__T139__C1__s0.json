@@ -1,0 +1,84 @@
+{
+ "scenario_id": "T139",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.95,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"dan.reyes ran PowerShell to compress \\\\\\\\FILE-COP-01\\\\Shared\\\\Clients into C:\\\\Users\\\\dan.reyes\\\\AppData\\\\Local\\\\Temp\\\\c.zip, and Sysmon recorded creation of that ZIP shortly afterward.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T139-00074\",\n        \"T139-00075\",\n        \"T139-00076\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:47:36\u201313:47:37 UTC, WS-DREYES-01 sent about 51 MB outbound through the proxy to fastfile-share.io over a connection attributed to Firefox running as dan.reyes.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T139-00108\",\n        \"T139-00109\",\n        \"T139-00110\",\n        \"T139-00111\"\n      ]\n    },\n    {\n      \"claim\": \"The archive operation shortly preceded the large outbound transfer, and the destination is an unapproved file-sharing service; together these facts strongly support suspected exfiltration and a malicious disposition for the alerted activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T139-00074\",\n        \"T139-00076\",\n        \"T139-00108\",\n        \"T139-00110\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records identify the CONNECT destination and transferred byte counts, but do not expose the tunneled request method, uploaded filename, or payload contents for fastfile-share.io.\",\n    \"The records do not directly link c.zip or its contents to the 51 MB transfer; the timing and surrounding activity support that inference but do not prove it.\",\n    \"The available evidence does not establish whether dan.reyes had a business authorization or other legitimate reason for this transfer.\"\n  ],\n  \"claims_not_established\": [\n    \"That c.zip was the file uploaded, or that the outbound data contained files from Shared\\\\Clients.\",\n    \"Which specific files or sensitive information, if any, were transferred.\",\n    \"Who controlled or received the data at fastfile-share.io.\",\n    \"Whether the user acted maliciously, under instruction, or with authorization.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine WS-DREYES-01, including c.zip, browser history and upload artifacts, relevant file-access telemetry, and forensic timestamps.\",\n    \"Obtain FILE-COP-01 SMB/file auditing to identify what dan.reyes accessed under Shared\\\\Clients, and compare those files with the archive if available.\",\n    \"Collect any retained proxy or browser telemetry that can identify the upload request, filename, response, or destination account.\",\n    \"Confirm with the data owner and dan.reyes whether the transfer was authorized; preserve relevant logs and coordinate containment or blocking of the destination.\"\n  ],\n  \"unrelated_findings\": [\n    \"Firefox accessed drive.google.com shortly after the alerted transfer; Google Drive is not among the listed approved services, but the cited records show page/resource requests, not a large upload. Review separately. (T139-00119, T139-00120, T139-00124, T139-00125)\",\n    \"Firefox visited the AWS console, including its EC2 home page. This is separate from the fastfile-share.io transfer and does not establish AWS data movement. (T139-00144, T139-00147, T139-00161)\",\n    \"A Dropbox updater ran on WS-DREYES-01; this shows updater execution, not Dropbox synchronization or data transfer. Review separately against software policy. (T139-00079, T139-00080)\",\n    \"Cisco AnyConnect vpnagent.exe launched on WS-DREYES-01 despite the inventory stating there is no VPN. The record shows process execution only, not a VPN connection; investigate separately. (T139-00252, T139-00253)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 43234,
+    "output": 1940
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.95,
+  "supporting_observations": [
+   {
+    "claim": "dan.reyes ran PowerShell to compress \\\\FILE-COP-01\\Shared\\Clients into C:\\Users\\dan.reyes\\AppData\\Local\\Temp\\c.zip, and Sysmon recorded creation of that ZIP shortly afterward.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T139-00074",
+     "T139-00075",
+     "T139-00076"
+    ]
+   },
+   {
+    "claim": "At 13:47:36\u201313:47:37 UTC, WS-DREYES-01 sent about 51 MB outbound through the proxy to fastfile-share.io over a connection attributed to Firefox running as dan.reyes.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T139-00108",
+     "T139-00109",
+     "T139-00110",
+     "T139-00111"
+    ]
+   },
+   {
+    "claim": "The archive operation shortly preceded the large outbound transfer, and the destination is an unapproved file-sharing service; together these facts strongly support suspected exfiltration and a malicious disposition for the alerted activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T139-00074",
+     "T139-00076",
+     "T139-00108",
+     "T139-00110"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records identify the CONNECT destination and transferred byte counts, but do not expose the tunneled request method, uploaded filename, or payload contents for fastfile-share.io.",
+   "The records do not directly link c.zip or its contents to the 51 MB transfer; the timing and surrounding activity support that inference but do not prove it.",
+   "The available evidence does not establish whether dan.reyes had a business authorization or other legitimate reason for this transfer."
+  ],
+  "claims_not_established": [
+   "That c.zip was the file uploaded, or that the outbound data contained files from Shared\\Clients.",
+   "Which specific files or sensitive information, if any, were transferred.",
+   "Who controlled or received the data at fastfile-share.io.",
+   "Whether the user acted maliciously, under instruction, or with authorization."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine WS-DREYES-01, including c.zip, browser history and upload artifacts, relevant file-access telemetry, and forensic timestamps.",
+   "Obtain FILE-COP-01 SMB/file auditing to identify what dan.reyes accessed under Shared\\Clients, and compare those files with the archive if available.",
+   "Collect any retained proxy or browser telemetry that can identify the upload request, filename, response, or destination account.",
+   "Confirm with the data owner and dan.reyes whether the transfer was authorized; preserve relevant logs and coordinate containment or blocking of the destination."
+  ],
+  "unrelated_findings": [
+   "Firefox accessed drive.google.com shortly after the alerted transfer; Google Drive is not among the listed approved services, but the cited records show page/resource requests, not a large upload. Review separately. (T139-00119, T139-00120, T139-00124, T139-00125)",
+   "Firefox visited the AWS console, including its EC2 home page. This is separate from the fastfile-share.io transfer and does not establish AWS data movement. (T139-00144, T139-00147, T139-00161)",
+   "A Dropbox updater ran on WS-DREYES-01; this shows updater execution, not Dropbox synchronization or data transfer. Review separately against software policy. (T139-00079, T139-00080)",
+   "Cisco AnyConnect vpnagent.exe launched on WS-DREYES-01 despite the inventory stating there is no VPN. The record shows process execution only, not a VPN connection; investigate separately. (T139-00252, T139-00253)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 22.2
+}

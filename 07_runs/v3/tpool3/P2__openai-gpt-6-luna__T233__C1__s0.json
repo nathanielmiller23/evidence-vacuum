@@ -1,0 +1,92 @@
+{
+ "scenario_id": "T233",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:40:28 UTC, zoe.adams opened Downloads\\\\Statement.docm in Word. About two seconds later, Word spawned PowerShell with no-profile, hidden-window, and encoded-command options.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T233-00176\",\n        \"T233-00180\",\n        \"T233-00181\"\n      ]\n    },\n    {\n      \"claim\": \"The encoded PowerShell command decodes to an expression that invokes IEX on a DownloadString request to raw.githubusercontent.com/sunridge-it/tools/main/u.ps1. At 13:40:31 UTC, the proxy recorded a successful GET for that same path.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T233-00180\",\n        \"T233-00184\"\n      ]\n    },\n    {\n      \"claim\": \"PowerShell then launched rundll32.exe to invoke Init in C:\\\\Users\\\\zoe.adams\\\\AppData\\\\Roaming\\\\svchelper.dll. This sequence is consistent with a document-triggered script downloading code and launching a DLL from a user-writable location.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T233-00176\",\n        \"T233-00180\",\n        \"T233-00185\",\n        \"T233-00186\"\n      ]\n    },\n    {\n      \"claim\": \"The PowerShell and rundll32 processes ran briefly and exited within roughly 27 seconds of their recorded starts.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T233-00180\",\n        \"T233-00185\",\n        \"T233-00199\",\n        \"T233-00200\",\n        \"T233-00201\",\n        \"T233-00202\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The provided records show process creation and proxy request metadata, but not the contents of u.ps1 or the response body; the script's behavior is therefore not directly established. Relevant records: T233-00180, T233-00184.\",\n    \"The provided records do not show a file-write event, hash, or image-load event for svchelper.dll, so they do not establish how that DLL was created or what it contains. Relevant records: T233-00185, T233-00186.\",\n    \"The logs do not establish the document's provenance, whether Zoe intentionally opened it, or whether the attempted actions produced further impact.\"\n  ],\n  \"claims_not_established\": [\n    \"The identity or intent of the person who delivered or authored Statement.docm.\",\n    \"Whether u.ps1 or svchelper.dll performed additional actions, persisted, or caused data access or exfiltration.\",\n    \"Whether the rundll32 invocation successfully loaded and executed the DLL's Init export.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire Statement.docm, u.ps1, and svchelper.dll; preserve hashes and inspect their contents and provenance.\",\n    \"Collect endpoint file, image-load, registry, and persistence telemetry for WS-ZADAMS-01 around and after 13:40 UTC.\",\n    \"Review proxy or network content records for the response to the u.ps1 request and any subsequent connections attributable to the spawned processes.\",\n    \"Confirm with Zoe whether she expected the document and determine how it arrived.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:33 UTC, ian.doyle Kerberos activity originated from WS-ZADAMS-01, followed by a network logon to WS-IDOYLE-01 from that workstation. This is not tied by the available records to the later document-triggered execution; investigate separately against the stated remote-administration practice.\",\n    \"Firefox accessed Google Docs before the alerted execution; Google Docs is outside the listed approved cloud services. Separate policy review: T233-00051, T233-00052, T233-00072.\",\n    \"A Dropbox updater service process ran briefly on WS-ZADAMS-01; Dropbox is not listed among approved services. The records establish the updater process, not use of Dropbox for file sharing. Separate review: T233-00245, T233-00246, T233-00247, T233-00248.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 63024,
+    "output": 2269
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:40:28 UTC, zoe.adams opened Downloads\\Statement.docm in Word. About two seconds later, Word spawned PowerShell with no-profile, hidden-window, and encoded-command options.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T233-00176",
+     "T233-00180",
+     "T233-00181"
+    ]
+   },
+   {
+    "claim": "The encoded PowerShell command decodes to an expression that invokes IEX on a DownloadString request to raw.githubusercontent.com/sunridge-it/tools/main/u.ps1. At 13:40:31 UTC, the proxy recorded a successful GET for that same path.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T233-00180",
+     "T233-00184"
+    ]
+   },
+   {
+    "claim": "PowerShell then launched rundll32.exe to invoke Init in C:\\Users\\zoe.adams\\AppData\\Roaming\\svchelper.dll. This sequence is consistent with a document-triggered script downloading code and launching a DLL from a user-writable location.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T233-00176",
+     "T233-00180",
+     "T233-00185",
+     "T233-00186"
+    ]
+   },
+   {
+    "claim": "The PowerShell and rundll32 processes ran briefly and exited within roughly 27 seconds of their recorded starts.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T233-00180",
+     "T233-00185",
+     "T233-00199",
+     "T233-00200",
+     "T233-00201",
+     "T233-00202"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The provided records show process creation and proxy request metadata, but not the contents of u.ps1 or the response body; the script's behavior is therefore not directly established. Relevant records: T233-00180, T233-00184.",
+   "The provided records do not show a file-write event, hash, or image-load event for svchelper.dll, so they do not establish how that DLL was created or what it contains. Relevant records: T233-00185, T233-00186.",
+   "The logs do not establish the document's provenance, whether Zoe intentionally opened it, or whether the attempted actions produced further impact."
+  ],
+  "claims_not_established": [
+   "The identity or intent of the person who delivered or authored Statement.docm.",
+   "Whether u.ps1 or svchelper.dll performed additional actions, persisted, or caused data access or exfiltration.",
+   "Whether the rundll32 invocation successfully loaded and executed the DLL's Init export."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire Statement.docm, u.ps1, and svchelper.dll; preserve hashes and inspect their contents and provenance.",
+   "Collect endpoint file, image-load, registry, and persistence telemetry for WS-ZADAMS-01 around and after 13:40 UTC.",
+   "Review proxy or network content records for the response to the u.ps1 request and any subsequent connections attributable to the spawned processes.",
+   "Confirm with Zoe whether she expected the document and determine how it arrived."
+  ],
+  "unrelated_findings": [
+   "At 13:33 UTC, ian.doyle Kerberos activity originated from WS-ZADAMS-01, followed by a network logon to WS-IDOYLE-01 from that workstation. This is not tied by the available records to the later document-triggered execution; investigate separately against the stated remote-administration practice.",
+   "Firefox accessed Google Docs before the alerted execution; Google Docs is outside the listed approved cloud services. Separate policy review: T233-00051, T233-00052, T233-00072.",
+   "A Dropbox updater service process ran briefly on WS-ZADAMS-01; Dropbox is not listed among approved services. The records establish the updater process, not use of Dropbox for file sharing. Separate review: T233-00245, T233-00246, T233-00247, T233-00248."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 25.2
+}

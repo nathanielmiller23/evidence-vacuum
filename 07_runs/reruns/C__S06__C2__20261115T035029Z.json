@@ -1,0 +1,406 @@
+{
+ "run_id": "C__S06__C2__20261115T035029Z",
+ "config": "C",
+ "scenario_id": "S06",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "agent_setting_config": "settings.ev.toml",
+ "settings_sha": "d164a225cec03452",
+ "cuga_commit": "f6e2335aa326e1cfdeb6e80a350394f6ab8b7b72",
+ "max_tool_calls": 30,
+ "timeout_s": 400,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task": "Alert: Account management alert: a new account named support_tmp was created around 13:42 UTC on 2026-11-10. Review activity between 13:20 and 14:20 UTC and decide whether it is malicious.\n\nEnvironment context (from the organization's asset and service inventory):\nOrganization: Lakeview Accounting (domain LAKEVIEW-ACCT / lakeview-acct.local), a small accounting office.\nHosts: workstations WS-DWELLS-01 (dana.wells, accountant), WS-RIYER-01 (raj.iyer, analyst), WS-KORTEGA-01 (kim.ortega, IT administrator), WS-TNGUYEN-01 (tara.nguyen, help desk); servers DC-LV-01 (domain controller, DNS), FILE-LV-01 (file server, finance shares, scheduled jobs), PROXY-LV-01 (explicit web proxy, port 8080; all web egress goes through it). There is no VPN; remote administration is only done from WS-KORTEGA-01 inside the office.\nAccounts: kim.ortega is the only IT administrator. tara.nguyen (help desk) can create domain accounts but is not an administrator. Service accounts: svc-backup (Vaultline backup agent on FILE-LV-01) and svc-reporting (ReportSync job on FILE-LV-01, runs every minute and re-authenticates on each run).\nChange calendar for 2026-11-10: the svc-reporting password is scheduled to be rotated by IT at 13:30 UTC (CHG-2291); the ReportSync job on FILE-LV-01 must then be updated manually with the new password. Monthly workstation patching by IT is scheduled during business hours.\nIT practices: kim.ortega patches workstations by remotely running \\\\FILE-LV-01\\IT\\scripts\\Install-MonthlyPatches.ps1 with PowerShell from WS-KORTEGA-01. The help desk creates temporary contractor accounts on request, always named temp.<name>, added only to the Contractors domain group; temporary accounts never receive administrator rights. No other account creation is expected.\nApproved software and services: Microsoft 365 / OneDrive; Vaultline (vaultline-backup.com) offsite backup; DataGrid Analytics desktop (installed in C:\\Program Files\\DataGrid\\Analytics\\ on analyst workstations), whose updater dgupdate.exe checks update.datagrid-analytics.com over HTTPS about every 5 minutes. No other file-sharing, cloud-storage or remote-access services are approved.\n\nObjective: Determine whether the available security evidence supports a malicious-activity finding, a benign disposition, or an insufficient-evidence determination.\n\nEvidence is available only through these tools: list_sources, query, get_record. Retrieve evidence with the tools before answering. You may make at most 30 tool calls.\n\nRespond with a single JSON object (no prose, no code fences) that conforms to this JSON schema. Output only the instance, not the schema:\n{\n \"type\": \"object\",\n \"additionalProperties\": false,\n \"required\": [\n  \"assessment\",\n  \"confidence\",\n  \"supporting_observations\",\n  \"known_telemetry_limitations\",\n  \"claims_not_established\",\n  \"recommended_action\",\n  \"additional_evidence_needed\"\n ],\n \"properties\": {\n  \"assessment\": {\n   \"type\": \"string\",\n   \"enum\": [\n    \"malicious\",\n    \"benign\",\n    \"insufficient_evidence\"\n   ]\n  },\n  \"confidence\": {\n   \"type\": \"number\",\n   \"minimum\": 0,\n   \"maximum\": 1,\n   \"description\": \"Probability that the assessment is correct.\"\n  },\n  \"supporting_observations\": {\n   \"type\": \"array\",\n   \"items\": {\n    \"type\": \"object\",\n    \"additionalProperties\": false,\n    \"required\": [\n     \"claim\",\n     \"claim_type\",\n     \"record_ids\"\n    ],\n    \"properties\": {\n     \"claim\": {\n      \"type\": \"string\"\n     },\n     \"claim_type\": {\n      \"type\": \"string\",\n      \"enum\": [\n       \"observed_fact\",\n       \"inferred_claim\"\n      ]\n     },\n     \"record_ids\": {\n      \"type\": \"array\",\n      \"items\": {\n       \"type\": \"string\"\n      }\n     }\n    }\n   }\n  },\n  \"known_telemetry_limitations\": {\n   \"type\": \"array\",\n   \"items\": {\n    \"type\": \"string\"\n   }\n  },\n  \"claims_not_established\": {\n   \"type\": \"array\",\n   \"items\": {\n    \"type\": \"string\"\n   },\n   \"description\": \"Material questions the available evidence cannot answer.\"\n  },\n  \"recommended_action\": {\n   \"type\": \"string\",\n   \"enum\": [\n    \"close\",\n    \"escalate\",\n    \"collect_more\"\n   ]\n  },\n  \"additional_evidence_needed\": {\n   \"type\": \"array\",\n   \"items\": {\n    \"type\": \"string\"\n   }\n  }\n }\n}",
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"A successful remote-interactive (LogonType 10) session authenticated as kim.ortega reached WS-RIYER-01 from 198.51.100.77 at 13:38:18 UTC; network and process events corroborate the inbound RDP connection and interactive session.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S06-00092\", \"S06-00095\", \"S06-00096\", \"S06-00097\", \"S06-00098\", \"S06-00100\"]\n    },\n    {\n      \"claim\": \"At 13:42:23 UTC, DC-LV-01 recorded creation of support_tmp by kim.ortega.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S06-00121\"]\n    },\n    {\n      \"claim\": \"Four seconds after its creation, support_tmp was added to the domain Administrators group by kim.ortega.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S06-00122\"]\n    },\n    {\n      \"claim\": \"The external RDP session followed shortly by creation of a nonstandard temporary account with domain-administrator membership is strongly indicative of malicious account activity. It conflicts with the supplied context that remote administration is only from WS-KORTEGA-01 inside the office and temporary accounts are named temp.<name> and never receive administrator rights.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S06-00092\", \"S06-00095\", \"S06-00097\", \"S06-00121\", \"S06-00122\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show the named account kim.ortega and the external source address, but do not establish who controlled the session or whether the credentials were compromised.\",\n    \"The available records do not directly link the account-creation action on DC-LV-01 to the specific RDP session on WS-RIYER-01.\",\n    \"The search for support_tmp on 2026-11-10 returned only the creation and Administrators-group membership records; the evidence reviewed does not show whether the account was subsequently used.\"\n  ],\n  \"claims_not_established\": [\n    \"That kim.ortega personally initiated the RDP session or account changes.\",\n    \"That 198.51.100.77 is controlled by a particular person or organization.\",\n    \"That there was no approved exception or business justification for creating this account.\",\n    \"That support_tmp was used to access systems or data, or that data was exfiltrated.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Immediately verify the account's authorization; if unapproved, disable support_tmp and remove its Administrators membership while preserving evidence.\",\n    \"Review DC-LV-01 authentication and directory-change logs, including the origin/session context for the account changes, and correlate them with workstation RDP and network records.\",\n    \"Validate the external IP and remote-access path, and confirm with kim.ortega and IT whether the session and account creation were authorized.\",\n    \"Review post-creation authentication, group changes, and access to servers and finance data for support_tmp and the associated administrator session.\",\n    \"Preserve and examine WS-RIYER-01 and relevant identity-system logs for evidence of credential theft, remote-session tooling, or follow-on activity.\"\n  ]\n}",
+   "cuga_error": null,
+   "valid": true,
+   "validation_errors": [],
+   "cuga_tool_calls": [
+    {
+     "name": "list_sources",
+     "arguments": {},
+     "result": "{\"sources\": [\"proxy\", \"sysmon\", \"winsec\", \"zeek_conn\", \"zeek_dns\", \"zeek_ssl\"], \"known_hosts\": [\"DC-LV-01\", \"WS-RIYER-01\"]}",
+     "app_name": "runtime_tools",
+     "operation_id": "list_sources",
+     "timestamp": "2026-11-14T21:50:45.484982",
+     "duration_ms": 6.468057632446289,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "winsec",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z"
+     },
+     "result": "{\"total_matches\": 101, \"offset\": 0, \"returned\": 25, \"rows\": [{\"record_id\": \"S06-00002\", \"ts\": \"2026-11-10T13:20:48.211Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4688\", \"raw\": \"EventID=4688 SubjectUserName=raj.iyer SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x6953dd5 NewProcessId=0x1264 NewProcessName=C:\\\\Users\\\\raj.iyer\\\\AppData\\\\Local\\\\Microsoft\\\\OneDrive\\\\OneDrive.exe TokenElevationType=%%1938 ProcessId=0x1260 CommandLine=\\\"C:\\\\Users\\\\raj.iyer\\\\AppData\\\\Local\\\\Microsoft\\\\OneDrive\\\\OneDrive.exe\\\" /background ParentProcessName=C:\\\\Windows\\\\explorer.exe MandatoryLabel=S-1-16-8192\"}, {\"record_id\": \"S06-00004\", \"ts\": \"2026-11-10T13:21:26.025Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4688\", \"raw\": \"EventID=4688 SubjectUserName=raj.iyer SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x6953dd5 NewProcessId=0x127c NewProcessName=C:\\\\Program Files\\\\PostgreSQL\\\\16\\\\bin\\\\psql.exe TokenElevationType=%%1938 ProcessId=0x126c CommandLine=psql.exe -U postgres -d metrics ParentProcessName=C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe MandatoryLabel=S-1-16-8192\"}, {\"record_id\": \"S06-00006\", \"ts\": \"2026-11-10T13:21:31.106Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4689\", \"raw\": \"EventID=4689 SubjectUserName=raj.iyer SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x6953dd5 ProcessId=0x127c ProcessName=C:\\\\Program Files\\\\PostgreSQL\\\\16\\\\bin\\\\psql.exe\"}, {\"record_id\": \"S06-00009\", \"ts\": \"2026-11-10T13:21:45.169Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4688\", \"raw\": \"EventID=4688 SubjectUserName=raj.iyer SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x6953dd5 NewProcessId=0x1280 NewProcessName=C:\\\\Program Files\\\\DBeaver\\\\dbeaver.exe TokenElevationType=%%1938 ProcessId=0x126c CommandLine=\\\"C:\\\\Program Files\\\\DBeaver\\\\dbeaver.exe\\\" -nosplash ParentProcessName=C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe MandatoryLabel=S-1-16-8192\"}, {\"record_id\": \"S06-00011\", \"ts\": \"2026-11-10T13:21:46.233Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=4736 Application=\\\\device\\\\harddiskvolume3\\\\program files\\\\dbeaver\\\\dbeaver.exe Direction=%%14593 SourceAddress=10.20.10.22 SourcePort=52075 DestAddress=10.20.10.23 DestPort=5432 Protocol=6 FilterRTID=40511 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S06-00013\", \"ts\": \"2026-11-10T13:21:48.209Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4689\", \"raw\": \"EventID=4689 SubjectUserName=raj.iyer SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x6953dd5 ProcessId=0x1280 ProcessName=C:\\\\Program Files\\\\DBeaver\\\\dbeaver.exe\"}, {\"record_id\": \"S06-00015\", \"ts\": \"2026-11-10T13:22:56.118Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=4248 Application=\\\\device\\\\harddiskvolume3\\\\windows\\\\system32\\\\lsass.exe Direction=%%14593 SourceAddress=10.20.10.22 SourcePort=59268 DestAddress=10.20.20.10 DestPort=389 Protocol=6 FilterRTID=40417 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S06-00017\", \"ts\": \"2026-11-10T13:24:17.623Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=4248 Application=\\\\device\\\\harddiskvolume3\\\\windows\\\\system32\\\\lsass.exe Direction=%%14593 SourceAddress=10.20.10.22 SourcePort=65038 DestAddress=10.20.20.10 DestPort=389 Protocol=6 FilterRTID=40417 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S06-00019\", \"ts\": \"2026-11-10T13:24:24.401Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=4248 Application=\\\\device\\\\harddiskvolume3\\\\windows\\\\system32\\\\lsass.exe Direction=%%14593 SourceAddress=10.20.10.22 SourcePort=49936 DestAddress=10.20.20.10 DestPort=389 Protocol=6 FilterRTID=40417 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S06-00021\", \"ts\": \"2026-11-10T13:24:25.412Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=4248 Application=\\\\device\\\\harddiskvolume3\\\\windows\\\\system32\\\\lsass.exe Direction=%%14593 SourceAddress=10.20.10.22 SourcePort=58727 DestAddress=10.20.20.10 DestPort=88 Protocol=6 FilterRTID=40403 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S06-00022\", \"ts\": \"2026-11-10T13:24:25.419Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4768\", \"raw\": \"EventID=4768 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL TargetSid=S-1-5-21-1274587805-3576993242-1442637435-1006 ServiceName=krbtgt ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-502 TicketOptions=0x40810010 TicketEncryptionType=0x11 PreAuthType=2 IpAddress=::ffff:10.20.10.22 IpPort=58727\"}, {\"record_id\": \"S06-00023\", \"ts\": \"2026-11-10T13:24:25.423Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-1009 TicketOptions=0x40810000 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.22 IpPort=58727\"}, {\"record_id\": \"S06-00026\", \"ts\": \"2026-11-10T13:24:27.670Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=4248 Application=\\\\device\\\\harddiskvolume3\\\\windows\\\\system32\\\\lsass.exe Direction=%%14593 SourceAddress=10.20.10.22 SourcePort=53079 DestAddress=10.20.20.10 DestPort=389 Protocol=6 FilterRTID=40417 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S06-00027\", \"ts\": \"2026-11-10T13:24:27.709Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4624\", \"raw\": \"EventID=4624 SubjectUserName=SYSTEM SubjectDomainName=NT AUTHORITY SubjectLogonId=0x3e7 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x830cc5c LogonType=3 LogonProcessName=Kerberos AuthenticationPackageName=Kerberos WorkstationName=WS-RIYER-01 IpAddress=::ffff:10.20.10.22 IpPort=53079\"}, {\"record_id\": \"S06-00028\", \"ts\": \"2026-11-10T13:24:47.851Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4634\", \"raw\": \"EventID=4634 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x830cc5c LogonType=3\"}, {\"record_id\": \"S06-00030\", \"ts\": \"2026-11-10T13:25:12.289Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=4248 Application=\\\\device\\\\harddiskvolume3\\\\windows\\\\system32\\\\lsass.exe Direction=%%14593 SourceAddress=10.20.10.22 SourcePort=54264 DestAddress=10.20.20.10 DestPort=389 Protocol=6 FilterRTID=40417 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S06-00032\", \"ts\": \"2026-11-10T13:26:04.024Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=4248 Application=\\\\device\\\\harddiskvolume3\\\\windows\\\\system32\\\\lsass.exe Direction=%%14593 SourceAddress=10.20.10.22 SourcePort=54463 DestAddress=10.20.20.10 DestPort=389 Protocol=6 FilterRTID=40417 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S06-00034\", \"ts\": \"2026-11-10T13:27:55.746Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4688\", \"raw\": \"EventID=4688 SubjectUserName=raj.iyer SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x6953dd5 NewProcessId=0x129c NewProcessName=C:\\\\Program Files\\\\Google\\\\Drive File Stream\\\\97.0.1.0\\\\GoogleDriveFS.exe TokenElevationType=%%1938 ProcessId=0x1260 CommandLine=\\\"C:\\\\Program Files\\\\Google\\\\Drive File Stream\\\\97.0.1.0\\\\GoogleDriveFS.exe\\\" --user-data-dir=\\\"C:\\\\Users\\\\raj.iyer\\\\AppData\\\\Local\\\\Google\\\\DriveFS\\\" ParentProcessName=C:\\\\Windows\\\\explorer.exe MandatoryLabel=S-1-16-8192\"}, {\"record_id\": \"S06-00037\", \"ts\": \"2026-11-10T13:27:56.166Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4688\", \"raw\": \"EventID=4688 SubjectUserName=raj.iyer SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x6953dd5 NewProcessId=0x12ac NewProcessName=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe TokenElevationType=%%1938 ProcessId=0x1260 CommandLine=\\\"C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\\\" --single-argument https://www.bing.com/ ParentProcessName=C:\\\\Windows\\\\explorer.exe MandatoryLabel=S-1-16-8192\"}, {\"record_id\": \"S06-00044\", \"ts\": \"2026-11-10T13:27:57.209Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=4780 Application=\\\\device\\\\harddiskvolume3\\\\program files\\\\google\\\\chrome\\\\application\\\\chrome.exe Direction=%%14593 SourceAddress=10.20.10.22 SourcePort=61368 DestAddress=10.20.20.30 DestPort=8080 Protocol=6 FilterRTID=40464 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S06-00048\", \"ts\": \"2026-11-10T13:27:58.889Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=4780 Application=\\\\device\\\\harddiskvolume3\\\\program files\\\\google\\\\chrome\\\\application\\\\chrome.exe Direction=%%14593 SourceAddress=10.20.10.22 SourcePort=54952 DestAddress=10.20.20.30 DestPort=8080 Protocol=6 FilterRTID=40464 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S06-00055\", \"ts\": \"2026-11-10T13:27:59.026Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=4780 Application=\\\\device\\\\harddiskvolume3\\\\program files\\\\google\\\\chrome\\\\application\\\\chrome.exe Direction=%%14593 SourceAddress=10.20.10.22 SourcePort=51633 DestAddress=10.20.20.30 DestPort=8080 Protocol=6 FilterRTID=40464 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S06-00057\", \"ts\": \"2026-11-10T13:27:59.252Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=4780 Application=\\\\device\\\\harddiskvolume3\\\\program files\\\\google\\\\chrome\\\\application\\\\chrome.exe Direction=%%14593 SourceAddress=10.20.10.22 SourcePort=57039 DestAddress=10.20.20.30 DestPort=8080 Protocol=6 FilterRTID=40464 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S06-00063\", \"ts\": \"2026-11-10T13:29:07.642Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=4248 Application=\\\\device\\\\harddiskvolume3\\\\windows\\\\system32\\\\lsass.exe Direction=%%14593 SourceAddress=10.20.10.22 SourcePort=53249 DestAddress=10.20.20.10 DestPort=88 Protocol=17 FilterRTID=40401 LayerName=%%14611 LayerRTID=48 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S06-00064\", \"ts\": \"2026-11-10T13:29:07.648Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4768\", \"raw\": \"EventID=4768 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL TargetSid=S-1-5-21-1274587805-3576993242-1442637435-1006 ServiceName=krbtgt ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-502 TicketOptions=0x10 TicketEncryptionType=0x12 PreAuthType=2 IpAddress=::ffff:10.20.10.22 IpPort=53249\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:50:47.761939",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "winsec",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z",
+      "contains": "support_tmp"
+     },
+     "result": "{\"total_matches\": 2, \"offset\": 0, \"returned\": 2, \"rows\": [{\"record_id\": \"S06-00121\", \"ts\": \"2026-11-10T13:42:23.635Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4720\", \"raw\": \"EventID=4720 TargetUserName=support_tmp TargetDomainName=LAKEVIEW-ACCT TargetSid=S-1-5-21-1274587805-3576993242-1442637435-5678 SubjectUserName=kim.ortega SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x8330a81 SamAccountName=support_tmp PasswordLastSet=%%1794 PrimaryGroupId=513 NewUacValue=0x15 UserAccountControl=%%2080\\n\\t\\t\\t%%2082\\n\\t\\t\\t%%2084\"}, {\"record_id\": \"S06-00122\", \"ts\": \"2026-11-10T13:42:27.090Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4732\", \"raw\": \"EventID=4732 MemberName=CN=support_tmp,CN=Users,DC=lakeview-acct,DC=local MemberSid=S-1-5-21-1274587805-3576993242-1442637435-5678 TargetUserName=Administrators TargetDomainName=LAKEVIEW-ACCT TargetSid=S-1-5-21-1274587805-3576993242-1442637435-512 SubjectUserName=kim.ortega SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x8330a81\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:50:50.308880",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "winsec",
+      "host": "DC-LV-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z",
+      "contains": "0x8330a81"
+     },
+     "result": "{\"total_matches\": 2, \"offset\": 0, \"returned\": 2, \"rows\": [{\"record_id\": \"S06-00121\", \"ts\": \"2026-11-10T13:42:23.635Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4720\", \"raw\": \"EventID=4720 TargetUserName=support_tmp TargetDomainName=LAKEVIEW-ACCT TargetSid=S-1-5-21-1274587805-3576993242-1442637435-5678 SubjectUserName=kim.ortega SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x8330a81 SamAccountName=support_tmp PasswordLastSet=%%1794 PrimaryGroupId=513 NewUacValue=0x15 UserAccountControl=%%2080\\n\\t\\t\\t%%2082\\n\\t\\t\\t%%2084\"}, {\"record_id\": \"S06-00122\", \"ts\": \"2026-11-10T13:42:27.090Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4732\", \"raw\": \"EventID=4732 MemberName=CN=support_tmp,CN=Users,DC=lakeview-acct,DC=local MemberSid=S-1-5-21-1274587805-3576993242-1442637435-5678 TargetUserName=Administrators TargetDomainName=LAKEVIEW-ACCT TargetSid=S-1-5-21-1274587805-3576993242-1442637435-512 SubjectUserName=kim.ortega SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x8330a81\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:51:05.654063",
+     "duration_ms": 1.0323524475097656,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "winsec",
+      "host": "DC-LV-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z"
+     },
+     "result": "{\"total_matches\": 35, \"offset\": 0, \"returned\": 25, \"rows\": [{\"record_id\": \"S06-00022\", \"ts\": \"2026-11-10T13:24:25.419Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4768\", \"raw\": \"EventID=4768 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL TargetSid=S-1-5-21-1274587805-3576993242-1442637435-1006 ServiceName=krbtgt ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-502 TicketOptions=0x40810010 TicketEncryptionType=0x11 PreAuthType=2 IpAddress=::ffff:10.20.10.22 IpPort=58727\"}, {\"record_id\": \"S06-00023\", \"ts\": \"2026-11-10T13:24:25.423Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-1009 TicketOptions=0x40810000 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.22 IpPort=58727\"}, {\"record_id\": \"S06-00027\", \"ts\": \"2026-11-10T13:24:27.709Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4624\", \"raw\": \"EventID=4624 SubjectUserName=SYSTEM SubjectDomainName=NT AUTHORITY SubjectLogonId=0x3e7 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x830cc5c LogonType=3 LogonProcessName=Kerberos AuthenticationPackageName=Kerberos WorkstationName=WS-RIYER-01 IpAddress=::ffff:10.20.10.22 IpPort=53079\"}, {\"record_id\": \"S06-00028\", \"ts\": \"2026-11-10T13:24:47.851Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4634\", \"raw\": \"EventID=4634 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x830cc5c LogonType=3\"}, {\"record_id\": \"S06-00064\", \"ts\": \"2026-11-10T13:29:07.648Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4768\", \"raw\": \"EventID=4768 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL TargetSid=S-1-5-21-1274587805-3576993242-1442637435-1006 ServiceName=krbtgt ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-502 TicketOptions=0x10 TicketEncryptionType=0x12 PreAuthType=2 IpAddress=::ffff:10.20.10.22 IpPort=53249\"}, {\"record_id\": \"S06-00067\", \"ts\": \"2026-11-10T13:29:08.706Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=FILE-LV-01$ ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-1010 TicketOptions=0x40810000 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.22 IpPort=54537\"}, {\"record_id\": \"S06-00070\", \"ts\": \"2026-11-10T13:30:33.094Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-1009 TicketOptions=0x40810010 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.22 IpPort=61075\"}, {\"record_id\": \"S06-00073\", \"ts\": \"2026-11-10T13:32:50.516Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=FILE-LV-01$ ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-1010 TicketOptions=0x40810010 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.22 IpPort=55988\"}, {\"record_id\": \"S06-00076\", \"ts\": \"2026-11-10T13:32:54.758Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-1009 TicketOptions=0x40810000 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.22 IpPort=63353\"}, {\"record_id\": \"S06-00079\", \"ts\": \"2026-11-10T13:34:42.617Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4768\", \"raw\": \"EventID=4768 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL TargetSid=S-1-5-21-1274587805-3576993242-1442637435-1006 ServiceName=krbtgt ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-502 TicketOptions=0x40810010 TicketEncryptionType=0x12 PreAuthType=2 IpAddress=::ffff:10.20.10.22 IpPort=62889\"}, {\"record_id\": \"S06-00080\", \"ts\": \"2026-11-10T13:34:42.627Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-1009 TicketOptions=0x40810000 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.22 IpPort=62889\"}, {\"record_id\": \"S06-00083\", \"ts\": \"2026-11-10T13:34:45.021Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4624\", \"raw\": \"EventID=4624 SubjectUserName=SYSTEM SubjectDomainName=NT AUTHORITY SubjectLogonId=0x3e7 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x8320e67 LogonType=3 LogonProcessName=Kerberos AuthenticationPackageName=Kerberos WorkstationName=WS-RIYER-01 IpAddress=::ffff:10.20.10.22 IpPort=60660\"}, {\"record_id\": \"S06-00084\", \"ts\": \"2026-11-10T13:34:58.625Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4634\", \"raw\": \"EventID=4634 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x8320e67 LogonType=3\"}, {\"record_id\": \"S06-00086\", \"ts\": \"2026-11-10T13:36:18.827Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-1009 TicketOptions=0x40810000 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.22 IpPort=57127\"}, {\"record_id\": \"S06-00092\", \"ts\": \"2026-11-10T13:38:15.643Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=kim.ortega TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=WS-RIYER-01$ ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-1006 TicketOptions=0x40810010 TicketEncryptionType=0x12 IpAddress=::ffff:198.51.100.77 IpPort=54486\"}, {\"record_id\": \"S06-00103\", \"ts\": \"2026-11-10T13:38:19.297Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-1009 TicketOptions=0x40810010 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.22 IpPort=54871\"}, {\"record_id\": \"S06-00113\", \"ts\": \"2026-11-10T13:39:13.537Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-1009 TicketOptions=0x40810000 TicketEncryptionType=0x11 IpAddress=::ffff:10.20.10.22 IpPort=59794\"}, {\"record_id\": \"S06-00121\", \"ts\": \"2026-11-10T13:42:23.635Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4720\", \"raw\": \"EventID=4720 TargetUserName=support_tmp TargetDomainName=LAKEVIEW-ACCT TargetSid=S-1-5-21-1274587805-3576993242-1442637435-5678 SubjectUserName=kim.ortega SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x8330a81 SamAccountName=support_tmp PasswordLastSet=%%1794 PrimaryGroupId=513 NewUacValue=0x15 UserAccountControl=%%2080\\n\\t\\t\\t%%2082\\n\\t\\t\\t%%2084\"}, {\"record_id\": \"S06-00122\", \"ts\": \"2026-11-10T13:42:27.090Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4732\", \"raw\": \"EventID=4732 MemberName=CN=support_tmp,CN=Users,DC=lakeview-acct,DC=local MemberSid=S-1-5-21-1274587805-3576993242-1442637435-5678 TargetUserName=Administrators TargetDomainName=LAKEVIEW-ACCT TargetSid=S-1-5-21-1274587805-3576993242-1442637435-512 SubjectUserName=kim.ortega SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x8330a81\"}, {\"record_id\": \"S06-00126\", \"ts\": \"2026-11-10T13:43:35.920Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4768\", \"raw\": \"EventID=4768 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL TargetSid=S-1-5-21-1274587805-3576993242-1442637435-1006 ServiceName=krbtgt ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-502 TicketOptions=0x40810010 TicketEncryptionType=0x12 PreAuthType=2 IpAddress=::ffff:10.20.10.22 IpPort=58149\"}, {\"record_id\": \"S06-00128\", \"ts\": \"2026-11-10T13:43:36.679Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=FILE-LV-01$ ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-1010 TicketOptions=0x40000000 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.22 IpPort=55245\"}, {\"record_id\": \"S06-00135\", \"ts\": \"2026-11-10T13:44:32.201Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=FILE-LV-01$ ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-1010 TicketOptions=0x40810000 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.22 IpPort=50719\"}, {\"record_id\": \"S06-00138\", \"ts\": \"2026-11-10T13:44:33.830Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=FILE-LV-01$ ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-1010 TicketOptions=0x40810010 TicketEncryptionType=0x11 IpAddress=::ffff:10.20.10.22 IpPort=62944\"}, {\"record_id\": \"S06-00150\", \"ts\": \"2026-11-10T13:48:41.689Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4768\", \"raw\": \"EventID=4768 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL TargetSid=S-1-5-21-1274587805-3576993242-1442637435-1006 ServiceName=krbtgt ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-502 TicketOptions=0x40810000 TicketEncryptionType=0x12 PreAuthType=2 IpAddress=::ffff:10.20.10.22 IpPort=65090\"}, {\"record_id\": \"S06-00151\", \"ts\": \"2026-11-10T13:48:41.691Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-1009 TicketOptions=0x40000000 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.22 IpPort=65090\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:51:10.959498",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "winsec",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z",
+      "contains": "198.51.100.77"
+     },
+     "result": "{\"total_matches\": 3, \"offset\": 0, \"returned\": 3, \"rows\": [{\"record_id\": \"S06-00092\", \"ts\": \"2026-11-10T13:38:15.643Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=kim.ortega TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=WS-RIYER-01$ ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-1006 TicketOptions=0x40810010 TicketEncryptionType=0x12 IpAddress=::ffff:198.51.100.77 IpPort=54486\"}, {\"record_id\": \"S06-00095\", \"ts\": \"2026-11-10T13:38:17.267Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"5156\", \"raw\": \"EventID=5156 ProcessID=4268 Application=\\\\device\\\\harddiskvolume3\\\\windows\\\\system32\\\\svchost.exe Direction=%%14592 SourceAddress=198.51.100.77 SourcePort=59487 DestAddress=10.20.10.22 DestPort=3389 Protocol=6 FilterRTID=40482 LayerName=%%14610 LayerRTID=44 RemoteUserID=S-1-0-0 RemoteMachineID=S-1-0-0\"}, {\"record_id\": \"S06-00097\", \"ts\": \"2026-11-10T13:38:18.407Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4624\", \"raw\": \"EventID=4624 SubjectUserName=SYSTEM SubjectDomainName=NT AUTHORITY SubjectLogonId=0x3e7 TargetUserName=kim.ortega TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x6978b4e LogonType=10 LogonProcessName=User32 AuthenticationPackageName=Kerberos WorkstationName=WS-RIYER-01 ProcessId=0x1304 ProcessName=C:\\\\Windows\\\\System32\\\\winlogon.exe IpAddress=::ffff:198.51.100.77 IpPort=59487\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:51:14.986670",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "sysmon",
+      "host": "WS-RIYER-01",
+      "time_from": "2026-11-10T13:35:00Z",
+      "time_to": "2026-11-10T13:45:00Z"
+     },
+     "result": "{\"total_matches\": 18, \"offset\": 0, \"returned\": 18, \"rows\": [{\"record_id\": \"S06-00088\", \"ts\": \"2026-11-10T13:37:07.339Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=4864 Image=C:\\\\Windows\\\\System32\\\\svchost.exe CommandLine=svchost.exe -k netsvcs -p -s BITS CurrentDirectory=C:\\\\Windows\\\\System32\\\\ User=NT AUTHORITY\\\\SYSTEM LogonId=0x3e7 IntegrityLevel=System ParentProcessId=4204 ParentImage=C:\\\\Windows\\\\System32\\\\services.exe ParentCommandLine=services.exe ParentUser=NT AUTHORITY\\\\SYSTEM\"}, {\"record_id\": \"S06-00090\", \"ts\": \"2026-11-10T13:38:02.409Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=4828 Image=C:\\\\Program Files (x86)\\\\Dropbox\\\\Update\\\\DropboxUpdate.exe CommandLine=DropboxUpdate.exe /svc CurrentDirectory=C:\\\\Windows\\\\System32\\\\ User=NT AUTHORITY\\\\SYSTEM LogonId=0x3e7 IntegrityLevel=System ParentProcessId=4204 ParentImage=C:\\\\Windows\\\\System32\\\\services.exe ParentCommandLine=services.exe ParentUser=NT AUTHORITY\\\\SYSTEM\"}, {\"record_id\": \"S06-00093\", \"ts\": \"2026-11-10T13:38:16.024Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=4868 Image=C:\\\\Windows\\\\System32\\\\winlogon.exe CommandLine=winlogon.exe CurrentDirectory=C:\\\\Windows\\\\System32\\\\ User=NT AUTHORITY\\\\SYSTEM LogonId=0x3e7 IntegrityLevel=System ParentProcessId=4156 ParentImage=C:\\\\Windows\\\\System32\\\\smss.exe ParentCommandLine=smss.exe ParentUser=NT AUTHORITY\\\\SYSTEM\"}, {\"record_id\": \"S06-00096\", \"ts\": \"2026-11-10T13:38:17.276Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"3\", \"raw\": \"EventID=3 ProcessId=4268 Image=C:\\\\Windows\\\\System32\\\\svchost.exe User=NT AUTHORITY\\\\NETWORK SERVICE Protocol=tcp Initiated=false SourceIsIpv6=false SourceIp=198.51.100.77 SourcePort=59487 DestinationIsIpv6=false DestinationIp=10.20.10.22 DestinationHostname=WS-RIYER-01.lakeview-acct.local DestinationPort=3389 DestinationPortName=ms-wbt-server\"}, {\"record_id\": \"S06-00098\", \"ts\": \"2026-11-10T13:38:18.588Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=4896 Image=C:\\\\Windows\\\\System32\\\\userinit.exe CommandLine=userinit.exe CurrentDirectory=C:\\\\Windows\\\\System32\\\\ User=LAKEVIEW-ACCT\\\\kim.ortega LogonId=0x6978b4e IntegrityLevel=Medium ParentProcessId=4868 ParentImage=C:\\\\Windows\\\\System32\\\\winlogon.exe ParentCommandLine=winlogon.exe ParentUser=NT AUTHORITY\\\\SYSTEM\"}, {\"record_id\": \"S06-00100\", \"ts\": \"2026-11-10T13:38:18.824Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=4900 Image=C:\\\\Windows\\\\explorer.exe CommandLine=explorer.exe CurrentDirectory=C:\\\\Windows\\\\ User=LAKEVIEW-ACCT\\\\kim.ortega LogonId=0x6978b4e IntegrityLevel=Medium ParentProcessId=4896 ParentImage=C:\\\\Windows\\\\System32\\\\userinit.exe ParentCommandLine=userinit.exe ParentUser=LAKEVIEW-ACCT\\\\kim.ortega\"}, {\"record_id\": \"S06-00106\", \"ts\": \"2026-11-10T13:38:23.147Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"5\", \"raw\": \"EventID=5 ProcessId=4896 Image=C:\\\\Windows\\\\System32\\\\userinit.exe User=LAKEVIEW-ACCT\\\\kim.ortega\"}, {\"record_id\": \"S06-00107\", \"ts\": \"2026-11-10T13:38:26.040Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"5\", \"raw\": \"EventID=5 ProcessId=4828 Image=C:\\\\Program Files (x86)\\\\Dropbox\\\\Update\\\\DropboxUpdate.exe User=NT AUTHORITY\\\\SYSTEM\"}, {\"record_id\": \"S06-00109\", \"ts\": \"2026-11-10T13:38:40.459Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"13\", \"raw\": \"EventID=13 EventType=SetValue ProcessId=4468 Image=C:\\\\Windows\\\\explorer.exe TargetObject=HKU\\\\S-1-5-21-1274587805-3576993242-1442637435-1002\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Explorer\\\\UserAssist\\\\{CEBFF5CD-ACE2-4F4F-9178-9926F41749EA}\\\\Count\\\\HRZR_EHACNGU:P:\\\\Cebtenz Svyrf\\\\Zvpebfbsg Bssvpr\\\\ebbg\\\\Bssvpr16\\\\RKPRY.RKR Details=Binary Data User=LAKEVIEW-ACCT\\\\raj.iyer\"}, {\"record_id\": \"S06-00115\", \"ts\": \"2026-11-10T13:39:53.639Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"13\", \"raw\": \"EventID=13 EventType=SetValue ProcessId=4468 Image=C:\\\\Windows\\\\explorer.exe TargetObject=HKU\\\\S-1-5-21-1274587805-3576993242-1442637435-1002\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Explorer\\\\Advanced\\\\ShowSuperHidden Details=DWORD (0x00000000) User=LAKEVIEW-ACCT\\\\raj.iyer\"}, {\"record_id\": \"S06-00116\", \"ts\": \"2026-11-10T13:41:05.260Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=4860 Image=C:\\\\Windows\\\\System32\\\\wbem\\\\WmiPrvSE.exe CommandLine=WmiPrvSE.exe -secured -Embedding CurrentDirectory=C:\\\\Windows\\\\System32\\\\ User=NT AUTHORITY\\\\SYSTEM LogonId=0x3e7 IntegrityLevel=System ParentProcessId=4252 ParentImage=C:\\\\Windows\\\\System32\\\\svchost.exe ParentCommandLine=svchost.exe -k DcomLaunch ParentUser=NT AUTHORITY\\\\SYSTEM\"}, {\"record_id\": \"S06-00118\", \"ts\": \"2026-11-10T13:41:34.529Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=4844 Image=C:\\\\Windows\\\\System32\\\\SearchProtocolHost.exe CommandLine=SearchProtocolHost.exe Global\\\\UsGthrFltPipeMssGthrPipe_S-1-5-20 Global\\\\UsGthrCtrlFltPipeMssGthrPipe_S-1-5-20 1 CurrentDirectory=C:\\\\Windows\\\\System32\\\\ User=NT AUTHORITY\\\\SYSTEM LogonId=0x3e7 IntegrityLevel=System ParentProcessId=4364 ParentImage=C:\\\\Windows\\\\System32\\\\SearchIndexer.exe ParentCommandLine=SearchIndexer.exe ParentUser=NT AUTHORITY\\\\SYSTEM\"}, {\"record_id\": \"S06-00120\", \"ts\": \"2026-11-10T13:42:15.124Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"10\", \"raw\": \"EventID=10 SourceProcessId=4368 SourceImage=C:\\\\Windows\\\\System32\\\\wbem\\\\WmiPrvSE.exe TargetProcessId=4256 TargetImage=C:\\\\Windows\\\\System32\\\\svchost.exe GrantedAccess=0x0400\"}, {\"record_id\": \"S06-00132\", \"ts\": \"2026-11-10T13:44:28.651Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"10\", \"raw\": \"EventID=10 SourceProcessId=4432 SourceImage=C:\\\\Windows\\\\System32\\\\taskhostw.exe TargetProcessId=4500 TargetImage=C:\\\\Windows\\\\System32\\\\RuntimeBroker.exe GrantedAccess=0x0400\"}, {\"record_id\": \"S06-00139\", \"ts\": \"2026-11-10T13:45:00.412Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=4752 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe CommandLine=\\\"C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\\\" --single-argument https://login.salesforce.com/ CurrentDirectory=C:\\\\Users\\\\raj.iyer\\\\ User=LAKEVIEW-ACCT\\\\raj.iyer LogonId=0x6953dd5 IntegrityLevel=Medium ParentProcessId=4704 ParentImage=C:\\\\Windows\\\\explorer.exe ParentCommandLine=explorer.exe ParentUser=LAKEVIEW-ACCT\\\\raj.iyer\"}, {\"record_id\": \"S06-00140\", \"ts\": \"2026-11-10T13:45:00.459Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"7\", \"raw\": \"EventID=7 ProcessId=4752 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe ImageLoaded=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\libEGL.dll Signed=true Signature=Google LLC SignatureStatus=Valid User=LAKEVIEW-ACCT\\\\raj.iyer\"}, {\"record_id\": \"S06-00141\", \"ts\": \"2026-11-10T13:45:00.466Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"7\", \"raw\": \"EventID=7 ProcessId=4752 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe ImageLoaded=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\libGLESv2.dll Signed=true Signature=Google LLC SignatureStatus=Valid User=LAKEVIEW-ACCT\\\\raj.iyer\"}, {\"record_id\": \"S06-00142\", \"ts\": \"2026-11-10T13:45:00.515Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"7\", \"raw\": \"EventID=7 ProcessId=4752 Image=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe ImageLoaded=C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome_elf.dll Signed=true Signature=Google LLC SignatureStatus=Valid User=LAKEVIEW-ACCT\\\\raj.iyer\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:51:26.472703",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "winsec",
+      "time_from": "2026-11-10T00:00:00Z",
+      "time_to": "2026-11-11T00:00:00Z",
+      "contains": "support_tmp"
+     },
+     "result": "{\"total_matches\": 2, \"offset\": 0, \"returned\": 2, \"rows\": [{\"record_id\": \"S06-00121\", \"ts\": \"2026-11-10T13:42:23.635Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4720\", \"raw\": \"EventID=4720 TargetUserName=support_tmp TargetDomainName=LAKEVIEW-ACCT TargetSid=S-1-5-21-1274587805-3576993242-1442637435-5678 SubjectUserName=kim.ortega SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x8330a81 SamAccountName=support_tmp PasswordLastSet=%%1794 PrimaryGroupId=513 NewUacValue=0x15 UserAccountControl=%%2080\\n\\t\\t\\t%%2082\\n\\t\\t\\t%%2084\"}, {\"record_id\": \"S06-00122\", \"ts\": \"2026-11-10T13:42:27.090Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4732\", \"raw\": \"EventID=4732 MemberName=CN=support_tmp,CN=Users,DC=lakeview-acct,DC=local MemberSid=S-1-5-21-1274587805-3576993242-1442637435-5678 TargetUserName=Administrators TargetDomainName=LAKEVIEW-ACCT TargetSid=S-1-5-21-1274587805-3576993242-1442637435-512 SubjectUserName=kim.ortega SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x8330a81\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:51:31.170571",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "winsec",
+      "host": "DC-LV-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z",
+      "contains": "kim.ortega"
+     },
+     "result": "{\"total_matches\": 3, \"offset\": 0, \"returned\": 3, \"rows\": [{\"record_id\": \"S06-00092\", \"ts\": \"2026-11-10T13:38:15.643Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=kim.ortega TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=WS-RIYER-01$ ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-1006 TicketOptions=0x40810010 TicketEncryptionType=0x12 IpAddress=::ffff:198.51.100.77 IpPort=54486\"}, {\"record_id\": \"S06-00121\", \"ts\": \"2026-11-10T13:42:23.635Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4720\", \"raw\": \"EventID=4720 TargetUserName=support_tmp TargetDomainName=LAKEVIEW-ACCT TargetSid=S-1-5-21-1274587805-3576993242-1442637435-5678 SubjectUserName=kim.ortega SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x8330a81 SamAccountName=support_tmp PasswordLastSet=%%1794 PrimaryGroupId=513 NewUacValue=0x15 UserAccountControl=%%2080\\n\\t\\t\\t%%2082\\n\\t\\t\\t%%2084\"}, {\"record_id\": \"S06-00122\", \"ts\": \"2026-11-10T13:42:27.090Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4732\", \"raw\": \"EventID=4732 MemberName=CN=support_tmp,CN=Users,DC=lakeview-acct,DC=local MemberSid=S-1-5-21-1274587805-3576993242-1442637435-5678 TargetUserName=Administrators TargetDomainName=LAKEVIEW-ACCT TargetSid=S-1-5-21-1274587805-3576993242-1442637435-512 SubjectUserName=kim.ortega SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x8330a81\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:51:36.651106",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    },
+    {
+     "name": "query",
+     "arguments": {
+      "source": "winsec",
+      "host": "DC-LV-01",
+      "time_from": "2026-11-10T13:20:00Z",
+      "time_to": "2026-11-10T14:20:00Z",
+      "offset": 25
+     },
+     "result": "{\"total_matches\": 35, \"offset\": 25, \"returned\": 10, \"rows\": [{\"record_id\": \"S06-00155\", \"ts\": \"2026-11-10T13:48:44.035Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4624\", \"raw\": \"EventID=4624 SubjectUserName=SYSTEM SubjectDomainName=NT AUTHORITY SubjectLogonId=0x3e7 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x833cd5a LogonType=3 LogonProcessName=Kerberos AuthenticationPackageName=Kerberos WorkstationName=WS-RIYER-01 IpAddress=::ffff:10.20.10.22 IpPort=59700\"}, {\"record_id\": \"S06-00156\", \"ts\": \"2026-11-10T13:48:46.772Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4634\", \"raw\": \"EventID=4634 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x833cd5a LogonType=3\"}, {\"record_id\": \"S06-00182\", \"ts\": \"2026-11-10T14:08:30.777Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-1009 TicketOptions=0x10 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.22 IpPort=63165\"}, {\"record_id\": \"S06-00187\", \"ts\": \"2026-11-10T14:11:21.340Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=DC-LV-01$ ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-1009 TicketOptions=0x40810000 TicketEncryptionType=0x11 IpAddress=::ffff:10.20.10.22 IpPort=59857\"}, {\"record_id\": \"S06-00188\", \"ts\": \"2026-11-10T14:11:21.341Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4768\", \"raw\": \"EventID=4768 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL TargetSid=S-1-5-21-1274587805-3576993242-1442637435-1006 ServiceName=krbtgt ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-502 TicketOptions=0x40810010 TicketEncryptionType=0x11 PreAuthType=2 IpAddress=::ffff:10.20.10.22 IpPort=59857\"}, {\"record_id\": \"S06-00191\", \"ts\": \"2026-11-10T14:11:23.917Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4624\", \"raw\": \"EventID=4624 SubjectUserName=SYSTEM SubjectDomainName=NT AUTHORITY SubjectLogonId=0x3e7 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x836a861 LogonType=3 LogonProcessName=Kerberos AuthenticationPackageName=Kerberos WorkstationName=WS-RIYER-01 IpAddress=::ffff:10.20.10.22 IpPort=64338\"}, {\"record_id\": \"S06-00194\", \"ts\": \"2026-11-10T14:11:35.433Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4768\", \"raw\": \"EventID=4768 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL TargetSid=S-1-5-21-1274587805-3576993242-1442637435-1006 ServiceName=krbtgt ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-502 TicketOptions=0x40810010 TicketEncryptionType=0x11 PreAuthType=2 IpAddress=::ffff:10.20.10.22 IpPort=57699\"}, {\"record_id\": \"S06-00195\", \"ts\": \"2026-11-10T14:11:44.663Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4634\", \"raw\": \"EventID=4634 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x836a861 LogonType=3\"}, {\"record_id\": \"S06-00198\", \"ts\": \"2026-11-10T14:12:03.501Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=FILE-LV-01$ ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-1010 TicketOptions=0x40810000 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.22 IpPort=59518\"}, {\"record_id\": \"S06-00201\", \"ts\": \"2026-11-10T14:12:06.689Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=FILE-LV-01$ ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-1010 TicketOptions=0x40000000 TicketEncryptionType=0x12 IpAddress=::ffff:10.20.10.22 IpPort=58569\"}]}",
+     "app_name": "runtime_tools",
+     "operation_id": "query",
+     "timestamp": "2026-11-14T21:51:45.270781",
+     "duration_ms": 0.0,
+     "error": null,
+     "succeeded": true,
+     "pagination": null
+    }
+   ]
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "A successful remote-interactive (LogonType 10) session authenticated as kim.ortega reached WS-RIYER-01 from 198.51.100.77 at 13:38:18 UTC; network and process events corroborate the inbound RDP connection and interactive session.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S06-00092",
+     "S06-00095",
+     "S06-00096",
+     "S06-00097",
+     "S06-00098",
+     "S06-00100"
+    ]
+   },
+   {
+    "claim": "At 13:42:23 UTC, DC-LV-01 recorded creation of support_tmp by kim.ortega.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S06-00121"
+    ]
+   },
+   {
+    "claim": "Four seconds after its creation, support_tmp was added to the domain Administrators group by kim.ortega.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S06-00122"
+    ]
+   },
+   {
+    "claim": "The external RDP session followed shortly by creation of a nonstandard temporary account with domain-administrator membership is strongly indicative of malicious account activity. It conflicts with the supplied context that remote administration is only from WS-KORTEGA-01 inside the office and temporary accounts are named temp.<name> and never receive administrator rights.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S06-00092",
+     "S06-00095",
+     "S06-00097",
+     "S06-00121",
+     "S06-00122"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show the named account kim.ortega and the external source address, but do not establish who controlled the session or whether the credentials were compromised.",
+   "The available records do not directly link the account-creation action on DC-LV-01 to the specific RDP session on WS-RIYER-01.",
+   "The search for support_tmp on 2026-11-10 returned only the creation and Administrators-group membership records; the evidence reviewed does not show whether the account was subsequently used."
+  ],
+  "claims_not_established": [
+   "That kim.ortega personally initiated the RDP session or account changes.",
+   "That 198.51.100.77 is controlled by a particular person or organization.",
+   "That there was no approved exception or business justification for creating this account.",
+   "That support_tmp was used to access systems or data, or that data was exfiltrated."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Immediately verify the account's authorization; if unapproved, disable support_tmp and remove its Administrators membership while preserving evidence.",
+   "Review DC-LV-01 authentication and directory-change logs, including the origin/session context for the account changes, and correlate them with workstation RDP and network records.",
+   "Validate the external IP and remote-access path, and confirm with kim.ortega and IT whether the session and account creation were authorized.",
+   "Review post-creation authentication, group changes, and access to servers and finance data for support_tmp and the associated administrator session.",
+   "Preserve and examine WS-RIYER-01 and relevant identity-system logs for evidence of credential theft, remote-session tooling, or follow-on activity."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 99.0,
+ "our_tool_calls": [
+  {
+   "i": 1,
+   "t": 1794714645.478514,
+   "tool": "list_sources",
+   "args": {},
+   "n_chars": 123,
+   "result_preview": "{\"sources\": [\"proxy\", \"sysmon\", \"winsec\", \"zeek_conn\", \"zeek_dns\", \"zeek_ssl\"], \"known_hosts\": [\"DC-LV-01\", \"WS-RIYER-01\"]}"
+  },
+  {
+   "i": 2,
+   "t": 1794714647.7619393,
+   "tool": "query",
+   "args": {
+    "source": "winsec",
+    "host": "",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 0
+   },
+   "n_chars": 11174,
+   "result_preview": "{\"total_matches\": 101, \"offset\": 0, \"returned\": 25, \"rows\": [{\"record_id\": \"S06-00002\", \"ts\": \"2026-11-10T13:20:48.211Z\", \"host\": \"WS-RIYER-01\", \"source\": \"winsec\", \"event_type\": \"4688\", \"raw\": \"EventID=4688 SubjectUserName=raj.iyer SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x6953dd5 NewProcessId=0x1264 NewProcessName=C:\\\\Users\\\\raj.iyer\\\\AppData\\\\Local\\\\Microsoft\\\\OneDrive\\\\OneDrive.exe TokenElevationType=%%1938 ProcessId=0x1260 CommandLine=\\\"C:\\\\Users\\\\raj.iyer\\\\AppData\\\\Local\\\\Microsoft\\"
+  },
+  {
+   "i": 3,
+   "t": 1794714650.3088803,
+   "tool": "query",
+   "args": {
+    "source": "winsec",
+    "host": "",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "support_tmp",
+    "offset": 0
+   },
+   "n_chars": 1010,
+   "result_preview": "{\"total_matches\": 2, \"offset\": 0, \"returned\": 2, \"rows\": [{\"record_id\": \"S06-00121\", \"ts\": \"2026-11-10T13:42:23.635Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4720\", \"raw\": \"EventID=4720 TargetUserName=support_tmp TargetDomainName=LAKEVIEW-ACCT TargetSid=S-1-5-21-1274587805-3576993242-1442637435-5678 SubjectUserName=kim.ortega SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x8330a81 SamAccountName=support_tmp PasswordLastSet=%%1794 PrimaryGroupId=513 NewUacValue=0x15 UserAccountCo"
+  },
+  {
+   "i": 4,
+   "t": 1794714665.654063,
+   "tool": "query",
+   "args": {
+    "source": "winsec",
+    "host": "DC-LV-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "0x8330a81",
+    "offset": 0
+   },
+   "n_chars": 1010,
+   "result_preview": "{\"total_matches\": 2, \"offset\": 0, \"returned\": 2, \"rows\": [{\"record_id\": \"S06-00121\", \"ts\": \"2026-11-10T13:42:23.635Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4720\", \"raw\": \"EventID=4720 TargetUserName=support_tmp TargetDomainName=LAKEVIEW-ACCT TargetSid=S-1-5-21-1274587805-3576993242-1442637435-5678 SubjectUserName=kim.ortega SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x8330a81 SamAccountName=support_tmp PasswordLastSet=%%1794 PrimaryGroupId=513 NewUacValue=0x15 UserAccountCo"
+  },
+  {
+   "i": 5,
+   "t": 1794714670.9594982,
+   "tool": "query",
+   "args": {
+    "source": "winsec",
+    "host": "DC-LV-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 0
+   },
+   "n_chars": 10049,
+   "result_preview": "{\"total_matches\": 35, \"offset\": 0, \"returned\": 25, \"rows\": [{\"record_id\": \"S06-00022\", \"ts\": \"2026-11-10T13:24:25.419Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4768\", \"raw\": \"EventID=4768 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT.LOCAL TargetSid=S-1-5-21-1274587805-3576993242-1442637435-1006 ServiceName=krbtgt ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-502 TicketOptions=0x40810010 TicketEncryptionType=0x11 PreAuthType=2 IpAddress=::ffff:10.20.10.22 IpPo"
+  },
+  {
+   "i": 6,
+   "t": 1794714674.9866705,
+   "tool": "query",
+   "args": {
+    "source": "winsec",
+    "host": "",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "198.51.100.77",
+    "offset": 0
+   },
+   "n_chars": 1401,
+   "result_preview": "{\"total_matches\": 3, \"offset\": 0, \"returned\": 3, \"rows\": [{\"record_id\": \"S06-00092\", \"ts\": \"2026-11-10T13:38:15.643Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=kim.ortega TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=WS-RIYER-01$ ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-1006 TicketOptions=0x40810010 TicketEncryptionType=0x12 IpAddress=::ffff:198.51.100.77 IpPort=54486\"}, {\"record_id\": \"S06-00095\", \"ts\": \"2026-11-10T13:38:17."
+  },
+  {
+   "i": 7,
+   "t": 1794714686.4727037,
+   "tool": "query",
+   "args": {
+    "source": "sysmon",
+    "host": "WS-RIYER-01",
+    "time_from": "2026-11-10T13:35:00Z",
+    "time_to": "2026-11-10T13:45:00Z",
+    "contains": "",
+    "offset": 0
+   },
+   "n_chars": 7736,
+   "result_preview": "{\"total_matches\": 18, \"offset\": 0, \"returned\": 18, \"rows\": [{\"record_id\": \"S06-00088\", \"ts\": \"2026-11-10T13:37:07.339Z\", \"host\": \"WS-RIYER-01\", \"source\": \"sysmon\", \"event_type\": \"1\", \"raw\": \"EventID=1 ProcessId=4864 Image=C:\\\\Windows\\\\System32\\\\svchost.exe CommandLine=svchost.exe -k netsvcs -p -s BITS CurrentDirectory=C:\\\\Windows\\\\System32\\\\ User=NT AUTHORITY\\\\SYSTEM LogonId=0x3e7 IntegrityLevel=System ParentProcessId=4204 ParentImage=C:\\\\Windows\\\\System32\\\\services.exe ParentCommandLine=service"
+  },
+  {
+   "i": 8,
+   "t": 1794714691.1705713,
+   "tool": "query",
+   "args": {
+    "source": "winsec",
+    "host": "",
+    "time_from": "2026-11-10T00:00:00Z",
+    "time_to": "2026-11-11T00:00:00Z",
+    "contains": "support_tmp",
+    "offset": 0
+   },
+   "n_chars": 1010,
+   "result_preview": "{\"total_matches\": 2, \"offset\": 0, \"returned\": 2, \"rows\": [{\"record_id\": \"S06-00121\", \"ts\": \"2026-11-10T13:42:23.635Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4720\", \"raw\": \"EventID=4720 TargetUserName=support_tmp TargetDomainName=LAKEVIEW-ACCT TargetSid=S-1-5-21-1274587805-3576993242-1442637435-5678 SubjectUserName=kim.ortega SubjectDomainName=LAKEVIEW-ACCT SubjectLogonId=0x8330a81 SamAccountName=support_tmp PasswordLastSet=%%1794 PrimaryGroupId=513 NewUacValue=0x15 UserAccountCo"
+  },
+  {
+   "i": 9,
+   "t": 1794714696.6511066,
+   "tool": "query",
+   "args": {
+    "source": "winsec",
+    "host": "DC-LV-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "kim.ortega",
+    "offset": 0
+   },
+   "n_chars": 1398,
+   "result_preview": "{\"total_matches\": 3, \"offset\": 0, \"returned\": 3, \"rows\": [{\"record_id\": \"S06-00092\", \"ts\": \"2026-11-10T13:38:15.643Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4769\", \"raw\": \"EventID=4769 TargetUserName=kim.ortega TargetDomainName=LAKEVIEW-ACCT.LOCAL ServiceName=WS-RIYER-01$ ServiceSid=S-1-5-21-1274587805-3576993242-1442637435-1006 TicketOptions=0x40810010 TicketEncryptionType=0x12 IpAddress=::ffff:198.51.100.77 IpPort=54486\"}, {\"record_id\": \"S06-00121\", \"ts\": \"2026-11-10T13:42:23."
+  },
+  {
+   "i": 10,
+   "t": 1794714705.2707818,
+   "tool": "query",
+   "args": {
+    "source": "winsec",
+    "host": "DC-LV-01",
+    "time_from": "2026-11-10T13:20:00Z",
+    "time_to": "2026-11-10T14:20:00Z",
+    "contains": "",
+    "offset": 25
+   },
+   "n_chars": 3883,
+   "result_preview": "{\"total_matches\": 35, \"offset\": 25, \"returned\": 10, \"rows\": [{\"record_id\": \"S06-00155\", \"ts\": \"2026-11-10T13:48:44.035Z\", \"host\": \"DC-LV-01\", \"source\": \"winsec\", \"event_type\": \"4624\", \"raw\": \"EventID=4624 SubjectUserName=SYSTEM SubjectDomainName=NT AUTHORITY SubjectLogonId=0x3e7 TargetUserName=WS-RIYER-01$ TargetDomainName=LAKEVIEW-ACCT TargetLogonId=0x833cd5a LogonType=3 LogonProcessName=Kerberos AuthenticationPackageName=Kerberos WorkstationName=WS-RIYER-01 IpAddress=::ffff:10.20.10.22 IpPort="
+  }
+ ]
+}

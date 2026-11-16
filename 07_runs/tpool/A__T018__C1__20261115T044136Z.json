@@ -1,0 +1,112 @@
+{
+ "run_id": "A__T018__C1__20261115T044136Z",
+ "config": "A",
+ "scenario_id": "T018",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 14,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 10099,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Lucy Park's account logged on to the domain controller from WS-LPARK-01, and the subsequent account-creation event carries the same logon ID.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T018-00002\", \"T018-00003\"]\n    },\n    {\n      \"claim\": \"Lucy Park created tmp.rwong and added it to Temp-Staff. This is consistent with the stated help-desk process for temporary accounts, but does not by itself establish that the request was authorized.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T018-00003\", \"T018-00004\"]\n    },\n    {\n      \"claim\": \"After launching cmd.exe from Explorer, Lucy Park launched ssh.exe to connect to PROXY-HD-01; endpoint telemetry records a TCP connection from WS-LPARK-01 to that host on port 22. The inventory says remote administration is only performed from WS-OHADDAD-01, making this activity inconsistent with the stated practice.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T018-00007\", \"T018-00008\", \"T018-00009\", \"T018-00010\", \"T018-00011\", \"T018-00012\", \"T018-00013\"]\n    },\n    {\n      \"claim\": \"The records show a client-side SSH connection attempt, but do not show whether SSH authentication succeeded or what happened on PROXY-HD-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T018-00009\", \"T018-00010\", \"T018-00013\"]\n    },\n    {\n      \"claim\": \"Proxy and endpoint records show a browser CONNECT tunnel to cf-assets.www.cloudflare.com, but do not establish what content was exchanged or whether it was related to the account creation or SSH activity.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T018-00005\", \"T018-00006\"]\n    },\n    {\n      \"claim\": \"The UserAssist registry records contain encoded paths corresponding to PowerShell and Firefox, but these registry writes alone do not establish the commands run, their purpose, or a malicious action.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T018-00001\", \"T018-00014\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The evidence contains no SSH server-side authentication or session records from PROXY-HD-01, so the client-side connection does not establish a successful login or executed commands (T018-00009, T018-00013).\",\n    \"The supplied domain-controller records show account creation and a Temp-Staff addition, but do not provide a complete account-group membership or authorization review (T018-00003, T018-00004).\",\n    \"The browser proxy record is a CONNECT tunnel record and does not identify the tunneled content (T018-00005).\",\n    \"The UserAssist records are registry value writes, not process-creation records establishing PowerShell or Firefox activity in detail (T018-00001, T018-00014).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the SSH connection authenticated successfully, which credentials were used, or whether any commands or file transfers occurred.\",\n    \"Whether Lucy Park's SSH activity was authorized, accidental, or performed by someone else using her session.\",\n    \"Whether tmp.rwong was requested for a legitimate purpose and whether it received any privileges or group memberships beyond those shown.\",\n    \"Whether the browser tunnel or UserAssist entries are related to the account creation or SSH connection.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"PROXY-HD-01 SSH server authentication, session, and command/audit logs for the relevant time window.\",\n    \"Domain-controller records or a current directory query showing tmp.rwong's group memberships and any subsequent account changes or logons.\",\n    \"Endpoint process, command-line, and file/network telemetry for WS-LPARK-01 around the SSH activity.\",\n    \"Help-desk ticket or other approval record for creating tmp.rwong, plus confirmation of the intended account owner and purpose.\",\n    \"Proxy logs with any available request-level details for the Cloudflare tunnel.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 3393,
+    "output": 2111,
+    "reasoning": 1141
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "Lucy Park's account logged on to the domain controller from WS-LPARK-01, and the subsequent account-creation event carries the same logon ID.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T018-00002",
+     "T018-00003"
+    ]
+   },
+   {
+    "claim": "Lucy Park created tmp.rwong and added it to Temp-Staff. This is consistent with the stated help-desk process for temporary accounts, but does not by itself establish that the request was authorized.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T018-00003",
+     "T018-00004"
+    ]
+   },
+   {
+    "claim": "After launching cmd.exe from Explorer, Lucy Park launched ssh.exe to connect to PROXY-HD-01; endpoint telemetry records a TCP connection from WS-LPARK-01 to that host on port 22. The inventory says remote administration is only performed from WS-OHADDAD-01, making this activity inconsistent with the stated practice.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T018-00007",
+     "T018-00008",
+     "T018-00009",
+     "T018-00010",
+     "T018-00011",
+     "T018-00012",
+     "T018-00013"
+    ]
+   },
+   {
+    "claim": "The records show a client-side SSH connection attempt, but do not show whether SSH authentication succeeded or what happened on PROXY-HD-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T018-00009",
+     "T018-00010",
+     "T018-00013"
+    ]
+   },
+   {
+    "claim": "Proxy and endpoint records show a browser CONNECT tunnel to cf-assets.www.cloudflare.com, but do not establish what content was exchanged or whether it was related to the account creation or SSH activity.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T018-00005",
+     "T018-00006"
+    ]
+   },
+   {
+    "claim": "The UserAssist registry records contain encoded paths corresponding to PowerShell and Firefox, but these registry writes alone do not establish the commands run, their purpose, or a malicious action.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T018-00001",
+     "T018-00014"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The evidence contains no SSH server-side authentication or session records from PROXY-HD-01, so the client-side connection does not establish a successful login or executed commands (T018-00009, T018-00013).",
+   "The supplied domain-controller records show account creation and a Temp-Staff addition, but do not provide a complete account-group membership or authorization review (T018-00003, T018-00004).",
+   "The browser proxy record is a CONNECT tunnel record and does not identify the tunneled content (T018-00005).",
+   "The UserAssist records are registry value writes, not process-creation records establishing PowerShell or Firefox activity in detail (T018-00001, T018-00014)."
+  ],
+  "claims_not_established": [
+   "Whether the SSH connection authenticated successfully, which credentials were used, or whether any commands or file transfers occurred.",
+   "Whether Lucy Park's SSH activity was authorized, accidental, or performed by someone else using her session.",
+   "Whether tmp.rwong was requested for a legitimate purpose and whether it received any privileges or group memberships beyond those shown.",
+   "Whether the browser tunnel or UserAssist entries are related to the account creation or SSH connection."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "PROXY-HD-01 SSH server authentication, session, and command/audit logs for the relevant time window.",
+   "Domain-controller records or a current directory query showing tmp.rwong's group memberships and any subsequent account changes or logons.",
+   "Endpoint process, command-line, and file/network telemetry for WS-LPARK-01 around the SSH activity.",
+   "Help-desk ticket or other approval record for creating tmp.rwong, plus confirmation of the intended account owner and purpose.",
+   "Proxy logs with any available request-level details for the Cloudflare tunnel."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 18,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.5
+}

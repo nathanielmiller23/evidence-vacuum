@@ -1,0 +1,85 @@
+{
+ "scenario_id": "S25",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:44:19 UTC, rundll32.exe was launched on WS-CPRICE-01 with comsvcs.dll MiniDump arguments targeting process ID 712 and specifying C:\\\\Users\\\\Public\\\\lsass.dmp with the full-dump option; the recorded user is cole.price.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S25-00137\", \"S25-00138\"]\n    },\n    {\n      \"claim\": \"The dump command ran at medium integrity under cole.price and was launched from Windows PowerShell running under the same user context.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S25-00137\", \"S25-00138\"]\n    },\n    {\n      \"claim\": \"This is inconsistent with the documented crash-dump practice: the approved procedure is to use vcdump.exe to collect a VetChart dump, whereas this command targets LSASS and writes to a public path.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S25-00137\", \"S25-00138\"]\n    },\n    {\n      \"claim\": \"The rundll32 process terminated shortly after the dump command was issued.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S25-00139\", \"S25-00140\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied endpoint records show the LSASS dump command and process termination, but do not include a file-creation event, file hash, or dump contents to independently confirm successful creation or what the file contains (S25-00137\u2013S25-00140).\",\n    \"The records show PowerShell as the parent process but do not show how that PowerShell process was started or the commands entered into it (S25-00137, S25-00138).\"\n  ],\n  \"claims_not_established\": [\n    \"The supplied records do not establish whether the dump file was successfully created or whether it contains usable credentials (S25-00137\u2013S25-00140).\",\n    \"The supplied records do not establish whether the dump was read, copied, or exfiltrated.\",\n    \"The supplied records do not establish whether cole.price personally initiated the command or whether the account or session was being used by someone else.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Collect and preserve C:\\\\Users\\\\Public\\\\lsass.dmp, if present, along with filesystem metadata and a hash; handle it as sensitive credential material.\",\n    \"Review endpoint file-system and EDR telemetry around 13:44 UTC to verify whether the dump was created, accessed, copied, or removed.\",\n    \"Recover PowerShell process and script-block or console history for the parent process, and determine how that process was launched.\",\n    \"Investigate cole.price's session and account activity, and check for use of any credentials potentially exposed by the attempted LSASS dump.\"\n  ],\n  \"unrelated_findings\": [\n    \"A user-context executable named msi_update.exe ran from cole.price's Temp directory earlier in the review window; assess its origin and file reputation separately (S25-00094, S25-00095, S25-00098, S25-00099).\",\n    \"DBeaver was launched from cole.price's profile earlier in the window; it is not among the software listed as approved in the provided environment context (S25-00089\u2013S25-00093).\",\n    \"A UserAssist registry entry appears to encode a Slack shortcut path; Slack is not among the software listed as approved in the provided environment context (S25-00112).\",\n    \"GlobalProtect and Zscaler processes were observed on WS-CPRICE-01; assess their authorization separately against the organization's software and service inventory (S25-00135, S25-00136, S25-00176\u2013S25-00178).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 53169,
+    "output": 2406
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "At 13:44:19 UTC, rundll32.exe was launched on WS-CPRICE-01 with comsvcs.dll MiniDump arguments targeting process ID 712 and specifying C:\\Users\\Public\\lsass.dmp with the full-dump option; the recorded user is cole.price.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S25-00137",
+     "S25-00138"
+    ]
+   },
+   {
+    "claim": "The dump command ran at medium integrity under cole.price and was launched from Windows PowerShell running under the same user context.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S25-00137",
+     "S25-00138"
+    ]
+   },
+   {
+    "claim": "This is inconsistent with the documented crash-dump practice: the approved procedure is to use vcdump.exe to collect a VetChart dump, whereas this command targets LSASS and writes to a public path.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S25-00137",
+     "S25-00138"
+    ]
+   },
+   {
+    "claim": "The rundll32 process terminated shortly after the dump command was issued.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S25-00139",
+     "S25-00140"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied endpoint records show the LSASS dump command and process termination, but do not include a file-creation event, file hash, or dump contents to independently confirm successful creation or what the file contains (S25-00137\u2013S25-00140).",
+   "The records show PowerShell as the parent process but do not show how that PowerShell process was started or the commands entered into it (S25-00137, S25-00138)."
+  ],
+  "claims_not_established": [
+   "The supplied records do not establish whether the dump file was successfully created or whether it contains usable credentials (S25-00137\u2013S25-00140).",
+   "The supplied records do not establish whether the dump was read, copied, or exfiltrated.",
+   "The supplied records do not establish whether cole.price personally initiated the command or whether the account or session was being used by someone else."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Collect and preserve C:\\Users\\Public\\lsass.dmp, if present, along with filesystem metadata and a hash; handle it as sensitive credential material.",
+   "Review endpoint file-system and EDR telemetry around 13:44 UTC to verify whether the dump was created, accessed, copied, or removed.",
+   "Recover PowerShell process and script-block or console history for the parent process, and determine how that process was launched.",
+   "Investigate cole.price's session and account activity, and check for use of any credentials potentially exposed by the attempted LSASS dump."
+  ],
+  "unrelated_findings": [
+   "A user-context executable named msi_update.exe ran from cole.price's Temp directory earlier in the review window; assess its origin and file reputation separately (S25-00094, S25-00095, S25-00098, S25-00099).",
+   "DBeaver was launched from cole.price's profile earlier in the window; it is not among the software listed as approved in the provided environment context (S25-00089\u2013S25-00093).",
+   "A UserAssist registry entry appears to encode a Slack shortcut path; Slack is not among the software listed as approved in the provided environment context (S25-00112).",
+   "GlobalProtect and Zscaler processes were observed on WS-CPRICE-01; assess their authorization separately against the organization's software and service inventory (S25-00135, S25-00136, S25-00176\u2013S25-00178)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 8,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 26.3
+}

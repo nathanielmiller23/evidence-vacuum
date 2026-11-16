@@ -1,0 +1,79 @@
+{
+ "scenario_id": "T047",
+ "condition": "C2",
+ "variant": "P3",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted account was created on DC-NWD-01 at 13:43:55 UTC; the event records sam.okafor as the subject.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T047-00081\"]\n    },\n    {\n      \"claim\": \"Seconds later, sysmaint was added to the domain Administrators group by sam.okafor. This conflicts with the stated help-desk practice that temporary accounts receive no administrator rights, and no legitimate explanation for this account or elevation is provided in the available context.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T047-00082\"]\n    },\n    {\n      \"claim\": \"Shortly before the account changes, sam.okafor authenticated to WS-LMARTINS-01 via RDP from 203.0.113.250, an external address; the inventory says there is no VPN and remote administration is only performed from WS-SOKAFOR-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T047-00060\", \"T047-00063\", \"T047-00065\"]\n    },\n    {\n      \"claim\": \"In the same workstation logon session as the RDP login, sam.okafor created a scheduled task that runs hidden PowerShell with an encoded command referencing a script at http://203.0.113.250/a.ps1. This is strongly suspicious corroborating activity, although the record alone does not establish that the script ran successfully.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T047-00065\", \"T047-00083\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The account creation and group-addition records identify sam.okafor as the subject, but their DC logon ID is not the same as the workstation RDP session ID; the records do not directly establish the precise session or mechanism that caused the DC changes.\",\n    \"The supplied evidence does not show whether the scheduled task executed or whether the referenced script was retrieved successfully.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether sam.okafor's credentials or session were compromised, or whether the actions were performed by the legitimate user.\",\n    \"The intended purpose or subsequent use of sysmaint.\",\n    \"Who controlled or used the external IP address, or whether the task's referenced script was downloaded and executed.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and review DC-NWD-01 account-management and authentication logs, including the full logon context for the account creation and Administrators-group change.\",\n    \"Review WS-LMARTINS-01 RDP, process, scheduled-task execution, and network/proxy telemetry to establish whether the task ran and whether the script was retrieved.\",\n    \"Verify with the account owner and change/ticket records whether creation and administrator elevation of sysmaint were authorized.\",\n    \"Investigate the source and attribution of 203.0.113.250 and check for related authentication or administrative activity.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 28014,
+    "output": 1839
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "The alerted account was created on DC-NWD-01 at 13:43:55 UTC; the event records sam.okafor as the subject.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00081"
+    ]
+   },
+   {
+    "claim": "Seconds later, sysmaint was added to the domain Administrators group by sam.okafor. This conflicts with the stated help-desk practice that temporary accounts receive no administrator rights, and no legitimate explanation for this account or elevation is provided in the available context.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00082"
+    ]
+   },
+   {
+    "claim": "Shortly before the account changes, sam.okafor authenticated to WS-LMARTINS-01 via RDP from 203.0.113.250, an external address; the inventory says there is no VPN and remote administration is only performed from WS-SOKAFOR-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00060",
+     "T047-00063",
+     "T047-00065"
+    ]
+   },
+   {
+    "claim": "In the same workstation logon session as the RDP login, sam.okafor created a scheduled task that runs hidden PowerShell with an encoded command referencing a script at http://203.0.113.250/a.ps1. This is strongly suspicious corroborating activity, although the record alone does not establish that the script ran successfully.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00065",
+     "T047-00083"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The account creation and group-addition records identify sam.okafor as the subject, but their DC logon ID is not the same as the workstation RDP session ID; the records do not directly establish the precise session or mechanism that caused the DC changes.",
+   "The supplied evidence does not show whether the scheduled task executed or whether the referenced script was retrieved successfully."
+  ],
+  "claims_not_established": [
+   "Whether sam.okafor's credentials or session were compromised, or whether the actions were performed by the legitimate user.",
+   "The intended purpose or subsequent use of sysmaint.",
+   "Who controlled or used the external IP address, or whether the task's referenced script was downloaded and executed."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and review DC-NWD-01 account-management and authentication logs, including the full logon context for the account creation and Administrators-group change.",
+   "Review WS-LMARTINS-01 RDP, process, scheduled-task execution, and network/proxy telemetry to establish whether the task ran and whether the script was retrieved.",
+   "Verify with the account owner and change/ticket records whether creation and administrator elevation of sysmaint were authorized.",
+   "Investigate the source and attribution of 203.0.113.250 and check for related authentication or administrative activity."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 7,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 17.9
+}

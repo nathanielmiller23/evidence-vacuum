@@ -1,0 +1,67 @@
+{
+ "scenario_id": "T069",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.95,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:49:54 UTC, WS-ARUIZ-01 opened an HTTP connection to PROXY-PIN-01 on port 8080; the flow recorded 50,000,371 origin bytes and 8,980 response bytes. This is consistent with a large transfer from the workstation to the proxy, but does not establish that data reached an external destination.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T069-00196\"\n      ]\n    },\n    {\n      \"claim\": \"The observed flow is close in time to the alert, but the available record does not identify the requested URL, remote destination, process, transferred content, or business purpose. The flow alone does not establish malicious activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T069-00196\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy logs for PROXY-PIN-01 were not collected from 13:25 to 14:20 UTC due to a collection outage, preventing confirmation of the requested destination or proxy transaction details.\",\n    \"WS-ARUIZ-01 winsec and Sysmon logs were not collected from 13:25 to 14:20 UTC due to a collection outage, so endpoint process and file activity around the transfer are unavailable.\",\n    \"Zeek connection telemetry was available, but the supplied flow record does not show the ultimate destination or the contents of the transfer.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the transfer reached an external destination or was otherwise legitimate.\",\n    \"Which process or user initiated the transfer.\",\n    \"What data was transferred, whether it was sensitive, or whether it was authorized.\",\n    \"Whether the observed 13:49:54 flow is the specific transfer that triggered the alert described as occurring around 13:46 UTC.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover proxy transaction logs or backups for the flow at 13:49:54 UTC, including URL, destination, method, and any available byte or content metadata.\",\n    \"Correlate firewall, NAT, or upstream network records to determine whether and where the proxy forwarded the data.\",\n    \"Collect endpoint process, file-access, and application telemetry for WS-ARUIZ-01 around the transfer, including available EDR or forensic artifacts.\",\n    \"Check DLP or data-access records to identify candidate files and determine whether the transfer was authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"An unapproved Dropbox updater ran as SYSTEM on WS-ARUIZ-01 at 13:20:46 UTC. The evidence does not link it to the later large transfer; investigate separately. (T069-00006, T069-00007)\",\n    \"FILE-PIN-01 recorded an SMB network logon as ANONYMOUS LOGON from WS-ARUIZ-01 at 13:42:30 UTC, followed by a small SMB flow. The supplied evidence does not establish what resource, if any, was accessed; investigate separately. (T069-00139, T069-00140)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 29433,
+    "output": 1923
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.95,
+  "supporting_observations": [
+   {
+    "claim": "At 13:49:54 UTC, WS-ARUIZ-01 opened an HTTP connection to PROXY-PIN-01 on port 8080; the flow recorded 50,000,371 origin bytes and 8,980 response bytes. This is consistent with a large transfer from the workstation to the proxy, but does not establish that data reached an external destination.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T069-00196"
+    ]
+   },
+   {
+    "claim": "The observed flow is close in time to the alert, but the available record does not identify the requested URL, remote destination, process, transferred content, or business purpose. The flow alone does not establish malicious activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T069-00196"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy logs for PROXY-PIN-01 were not collected from 13:25 to 14:20 UTC due to a collection outage, preventing confirmation of the requested destination or proxy transaction details.",
+   "WS-ARUIZ-01 winsec and Sysmon logs were not collected from 13:25 to 14:20 UTC due to a collection outage, so endpoint process and file activity around the transfer are unavailable.",
+   "Zeek connection telemetry was available, but the supplied flow record does not show the ultimate destination or the contents of the transfer."
+  ],
+  "claims_not_established": [
+   "Whether the transfer reached an external destination or was otherwise legitimate.",
+   "Which process or user initiated the transfer.",
+   "What data was transferred, whether it was sensitive, or whether it was authorized.",
+   "Whether the observed 13:49:54 flow is the specific transfer that triggered the alert described as occurring around 13:46 UTC."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover proxy transaction logs or backups for the flow at 13:49:54 UTC, including URL, destination, method, and any available byte or content metadata.",
+   "Correlate firewall, NAT, or upstream network records to determine whether and where the proxy forwarded the data.",
+   "Collect endpoint process, file-access, and application telemetry for WS-ARUIZ-01 around the transfer, including available EDR or forensic artifacts.",
+   "Check DLP or data-access records to identify candidate files and determine whether the transfer was authorized."
+  ],
+  "unrelated_findings": [
+   "An unapproved Dropbox updater ran as SYSTEM on WS-ARUIZ-01 at 13:20:46 UTC. The evidence does not link it to the later large transfer; investigate separately. (T069-00006, T069-00007)",
+   "FILE-PIN-01 recorded an SMB network logon as ANONYMOUS LOGON from WS-ARUIZ-01 at 13:42:30 UTC, followed by a small SMB flow. The supplied evidence does not establish what resource, if any, was accessed; investigate separately. (T069-00139, T069-00140)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 2,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 19.6
+}

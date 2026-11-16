@@ -1,0 +1,72 @@
+{
+ "scenario_id": "T039",
+ "condition": "C3",
+ "variant": "P4",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45:58 UTC, WS-ICHEN-01 made a connection to 10.40.20.30:8080 lasting about 9 seconds, with 51,000,389 bytes sent and 9,017 bytes received. This is the alerted large outbound transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T039-00140\"\n      ]\n    },\n    {\n      \"claim\": \"The connection record identifies the destination only by IP and port; it does not identify the ultimate external destination, transferred content, user, or initiating process.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T039-00140\"\n      ]\n    },\n    {\n      \"claim\": \"The available evidence does not match the transfer to a documented legitimate explanation: the documented workstation-patching method runs from WS-SOKAFOR-01, while this transfer originated from WS-ICHEN-01. The connection record does not identify a patching tool or other approved transfer tool.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T039-00140\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Per the supplied sensor-coverage status, WS-ICHEN-01 winsec and Sysmon logs and PROXY-NWD-01 proxy logs were not collected from 13:30 to 14:10 UTC because of a collection outage. This covers the alerted connection.\",\n    \"Zeek connection telemetry is available for the alert, but the supplied record has no corresponding proxy transaction details to resolve the external destination or request.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the transfer was initiated by ivy.chen, a process running as another account, or a system/service process.\",\n    \"Whether the transfer was an upload, what data it contained, and whether it went to an authorized recipient.\",\n    \"Whether the transfer was part of a legitimate user or business activity, or was malicious exfiltration.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover proxy transaction, authentication, and URL/destination records for 13:45:58 UTC, including any retained records from the collection outage.\",\n    \"Recover endpoint process, user-session, and file-access telemetry for WS-ICHEN-01 around 13:45:58 UTC; identify the process that opened the connection and the files accessed.\",\n    \"Check available packet capture, TLS inspection, proxy cache, or destination-side records for the transfer's actual destination and content.\",\n    \"Ask the user or business owner whether a transfer of this size was expected and obtain any related work item or approval.\"\n  ],\n  \"unrelated_findings\": [\n    \"After the alerted transfer, Chrome traffic attributed to NWD\\\\ivy.chen accessed aws.amazon.com and its console at about 14:12\u201314:13 UTC. The available records do not link this later browsing to the alerted transfer. Records: T039-00266, T039-00267, T039-00286.\",\n    \"At 13:46:29 UTC, Sysmon recorded svchost.exe accessing lsass.exe with GrantedAccess=0x1010; at 14:17:10 UTC, services.exe accessed lsass.exe with GrantedAccess=0x1000. These are separate leads and do not establish the process or purpose of the alerted transfer. Records: T039-00304, T039-00305.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 32504,
+    "output": 2212
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45:58 UTC, WS-ICHEN-01 made a connection to 10.40.20.30:8080 lasting about 9 seconds, with 51,000,389 bytes sent and 9,017 bytes received. This is the alerted large outbound transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T039-00140"
+    ]
+   },
+   {
+    "claim": "The connection record identifies the destination only by IP and port; it does not identify the ultimate external destination, transferred content, user, or initiating process.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T039-00140"
+    ]
+   },
+   {
+    "claim": "The available evidence does not match the transfer to a documented legitimate explanation: the documented workstation-patching method runs from WS-SOKAFOR-01, while this transfer originated from WS-ICHEN-01. The connection record does not identify a patching tool or other approved transfer tool.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T039-00140"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Per the supplied sensor-coverage status, WS-ICHEN-01 winsec and Sysmon logs and PROXY-NWD-01 proxy logs were not collected from 13:30 to 14:10 UTC because of a collection outage. This covers the alerted connection.",
+   "Zeek connection telemetry is available for the alert, but the supplied record has no corresponding proxy transaction details to resolve the external destination or request."
+  ],
+  "claims_not_established": [
+   "Whether the transfer was initiated by ivy.chen, a process running as another account, or a system/service process.",
+   "Whether the transfer was an upload, what data it contained, and whether it went to an authorized recipient.",
+   "Whether the transfer was part of a legitimate user or business activity, or was malicious exfiltration."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover proxy transaction, authentication, and URL/destination records for 13:45:58 UTC, including any retained records from the collection outage.",
+   "Recover endpoint process, user-session, and file-access telemetry for WS-ICHEN-01 around 13:45:58 UTC; identify the process that opened the connection and the files accessed.",
+   "Check available packet capture, TLS inspection, proxy cache, or destination-side records for the transfer's actual destination and content.",
+   "Ask the user or business owner whether a transfer of this size was expected and obtain any related work item or approval."
+  ],
+  "unrelated_findings": [
+   "After the alerted transfer, Chrome traffic attributed to NWD\\ivy.chen accessed aws.amazon.com and its console at about 14:12\u201314:13 UTC. The available records do not link this later browsing to the alerted transfer. Records: T039-00266, T039-00267, T039-00286.",
+   "At 13:46:29 UTC, Sysmon recorded svchost.exe accessing lsass.exe with GrantedAccess=0x1010; at 14:17:10 UTC, services.exe accessed lsass.exe with GrantedAccess=0x1000. These are separate leads and do not establish the process or purpose of the alerted transfer. Records: T039-00304, T039-00305."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 3,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.1
+}

@@ -1,0 +1,81 @@
+{
+ "scenario_id": "T110",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The large transfer was made by C:\\\\Program Files\\\\Ironvault\\\\agent.exe running as COPPERLINE\\\\svc-backup, with the command line targeting https://ingest.ironvault-cloud.com.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T110-00294\", \"T110-00295\"]\n    },\n    {\n      \"claim\": \"The proxy recorded a successful connection to ingest.ironvault-cloud.com carrying 640,000,000 client bytes and 39,000 server bytes; the associated Zeek connection recorded approximately the same outbound volume.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T110-00296\", \"T110-00300\"]\n    },\n    {\n      \"claim\": \"The network connection to the proxy is attributed to the Ironvault agent process, and that process exited shortly after the transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T110-00301\", \"T110-00305\", \"T110-00306\"]\n    },\n    {\n      \"claim\": \"The destination and agent match the organization's listed approved offsite backup service and agent, which is expected to upload several hundred MB. The alerted transfer is therefore consistent with documented backup activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T110-00294\", \"T110-00296\", \"T110-00300\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and Zeek records establish the destination and transfer volume, but do not expose the contents of the encrypted transfer (T110-00296, T110-00300).\",\n    \"The provided records do not include a backup job manifest or file-level details to independently verify what data was uploaded.\"\n  ],\n  \"claims_not_established\": [\n    \"The exact files or data contained in the transfer are not established.\",\n    \"The evidence does not independently verify the integrity of the uploaded backup or its authorization beyond the match to the documented approved service.\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [],\n  \"unrelated_findings\": [\n    \"Separate review: sara.ali launched Remote Desktop to FILE-COP-01 and successfully logged on there; inventory says remote administration is only performed from WS-PBECKER-01 and sara.ali is help desk, not an administrator (T110-00199, T110-00205, T110-00207, T110-00210).\",\n    \"Separate review: FILE-COP-01 accessed receiver.citrix.com and downloads.cloud.com through the proxy using curl; neither service is listed as approved (T110-00109, T110-00139).\",\n    \"Separate review: a Veeam Backup and Replication service process ran on FILE-COP-01 and used explicit svc-backup credentials; Veeam is not listed among the approved software and services (T110-00161, T110-00168).\",\n    \"Separate review: a Kerberos service-ticket event for svc-backup records source IP 116.202.120.181; the available record does not establish why that external IP appears (T110-00290).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 101323,
+    "output": 1663
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "The large transfer was made by C:\\Program Files\\Ironvault\\agent.exe running as COPPERLINE\\svc-backup, with the command line targeting https://ingest.ironvault-cloud.com.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T110-00294",
+     "T110-00295"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a successful connection to ingest.ironvault-cloud.com carrying 640,000,000 client bytes and 39,000 server bytes; the associated Zeek connection recorded approximately the same outbound volume.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T110-00296",
+     "T110-00300"
+    ]
+   },
+   {
+    "claim": "The network connection to the proxy is attributed to the Ironvault agent process, and that process exited shortly after the transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T110-00301",
+     "T110-00305",
+     "T110-00306"
+    ]
+   },
+   {
+    "claim": "The destination and agent match the organization's listed approved offsite backup service and agent, which is expected to upload several hundred MB. The alerted transfer is therefore consistent with documented backup activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T110-00294",
+     "T110-00296",
+     "T110-00300"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and Zeek records establish the destination and transfer volume, but do not expose the contents of the encrypted transfer (T110-00296, T110-00300).",
+   "The provided records do not include a backup job manifest or file-level details to independently verify what data was uploaded."
+  ],
+  "claims_not_established": [
+   "The exact files or data contained in the transfer are not established.",
+   "The evidence does not independently verify the integrity of the uploaded backup or its authorization beyond the match to the documented approved service."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [],
+  "unrelated_findings": [
+   "Separate review: sara.ali launched Remote Desktop to FILE-COP-01 and successfully logged on there; inventory says remote administration is only performed from WS-PBECKER-01 and sara.ali is help desk, not an administrator (T110-00199, T110-00205, T110-00207, T110-00210).",
+   "Separate review: FILE-COP-01 accessed receiver.citrix.com and downloads.cloud.com through the proxy using curl; neither service is listed as approved (T110-00109, T110-00139).",
+   "Separate review: a Veeam Backup and Replication service process ran on FILE-COP-01 and used explicit svc-backup credentials; Veeam is not listed among the approved software and services (T110-00161, T110-00168).",
+   "Separate review: a Kerberos service-ticket event for svc-backup records source IP 116.202.120.181; the available record does not establish why that external IP appears (T110-00290)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 17.8
+}

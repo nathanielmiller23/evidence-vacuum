@@ -1,0 +1,86 @@
+{
+ "scenario_id": "T019",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 1,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:41 UTC, maria.lopez ran PowerShell from her interactive Explorer session to compress \\\\\\\\FILE-HD-01\\\\Shared\\\\Clients into C:\\\\Users\\\\maria.lopez\\\\AppData\\\\Local\\\\Temp\\\\c.zip; Sysmon recorded creation of that archive.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T019-00117\",\n        \"T019-00119\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:45 UTC, the same user launched Chrome to sendbox-files.io from Explorer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T019-00150\",\n        \"T019-00154\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:48 UTC, Chrome sent approximately 51 MB through the proxy to sendbox-files.io; the proxy attributed the connection to maria.lopez.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T019-00170\",\n        \"T019-00171\",\n        \"T019-00172\",\n        \"T019-00173\"\n      ]\n    },\n    {\n      \"claim\": \"The sequence of archiving the Clients share, opening a file-transfer site, and sending approximately 51 MB strongly indicates attempted or completed exfiltration of client data. The provided inventory says sendbox-files.io is not an approved file-sharing service.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T019-00117\",\n        \"T019-00119\",\n        \"T019-00150\",\n        \"T019-00170\",\n        \"T019-00171\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and connection records show the destination and transfer volume, but the sendbox connection is logged as a tunnel; these records do not identify the uploaded file or expose its contents. (T019-00170, T019-00171)\"\n  ],\n  \"claims_not_established\": [\n    \"The available records do not prove that c.zip, specifically, was the file uploaded or establish the exact contents of the 51 MB transfer.\",\n    \"The evidence does not establish maria.lopez's intent or whether she had any authorization not represented in the provided context.\",\n    \"The records do not establish that malware or account compromise caused the activity.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Obtain endpoint or browser artifacts identifying the file selected and uploaded to sendbox-files.io, including its hash, size, and contents if recoverable.\",\n    \"Review the proxy's full session details and any available destination-side or endpoint records to confirm upload completion and identify the transferred object.\",\n    \"Verify with the data owner and maria.lopez whether the transfer was authorized, and determine what client data was involved.\"\n  ],\n  \"unrelated_findings\": [\n    \"A dotnet-sdk-installer.exe was run from maria.lopez's Temp directory after the alerted transfer; the available evidence does not connect it to the transfer. (T019-00181, T019-00182)\",\n    \"Chrome accessed Tableau-hosted web content later in the review window; this activity is separate from the sendbox-files.io transfer and is not used to assess the alert. (T019-00257, T019-00258, T019-00263, T019-00264)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 49118,
+    "output": 1951
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "At 13:41 UTC, maria.lopez ran PowerShell from her interactive Explorer session to compress \\\\FILE-HD-01\\Shared\\Clients into C:\\Users\\maria.lopez\\AppData\\Local\\Temp\\c.zip; Sysmon recorded creation of that archive.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00117",
+     "T019-00119"
+    ]
+   },
+   {
+    "claim": "At 13:45 UTC, the same user launched Chrome to sendbox-files.io from Explorer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00150",
+     "T019-00154"
+    ]
+   },
+   {
+    "claim": "At 13:48 UTC, Chrome sent approximately 51 MB through the proxy to sendbox-files.io; the proxy attributed the connection to maria.lopez.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00170",
+     "T019-00171",
+     "T019-00172",
+     "T019-00173"
+    ]
+   },
+   {
+    "claim": "The sequence of archiving the Clients share, opening a file-transfer site, and sending approximately 51 MB strongly indicates attempted or completed exfiltration of client data. The provided inventory says sendbox-files.io is not an approved file-sharing service.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T019-00117",
+     "T019-00119",
+     "T019-00150",
+     "T019-00170",
+     "T019-00171"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and connection records show the destination and transfer volume, but the sendbox connection is logged as a tunnel; these records do not identify the uploaded file or expose its contents. (T019-00170, T019-00171)"
+  ],
+  "claims_not_established": [
+   "The available records do not prove that c.zip, specifically, was the file uploaded or establish the exact contents of the 51 MB transfer.",
+   "The evidence does not establish maria.lopez's intent or whether she had any authorization not represented in the provided context.",
+   "The records do not establish that malware or account compromise caused the activity."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Obtain endpoint or browser artifacts identifying the file selected and uploaded to sendbox-files.io, including its hash, size, and contents if recoverable.",
+   "Review the proxy's full session details and any available destination-side or endpoint records to confirm upload completion and identify the transferred object.",
+   "Verify with the data owner and maria.lopez whether the transfer was authorized, and determine what client data was involved."
+  ],
+  "unrelated_findings": [
+   "A dotnet-sdk-installer.exe was run from maria.lopez's Temp directory after the alerted transfer; the available evidence does not connect it to the transfer. (T019-00181, T019-00182)",
+   "Chrome accessed Tableau-hosted web content later in the review window; this activity is separate from the sendbox-files.io transfer and is not used to assess the alert. (T019-00257, T019-00258, T019-00263, T019-00264)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.8
+}

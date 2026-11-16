@@ -1,0 +1,101 @@
+{
+ "scenario_id": "T082",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.89,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted activity consists of repeated failed logons for svc-billing from FILE-PIN-01, with the workstation name also reported as FILE-PIN-01 and source address 10.51.20.20. The failures recur at roughly one-minute intervals, matching the inventory description that BillingSync runs and re-authenticates every minute.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T082-00001\",\n        \"T082-00003\",\n        \"T082-00006\",\n        \"T082-00008\",\n        \"T082-00010\",\n        \"T082-00012\",\n        \"T082-00014\",\n        \"T082-00017\",\n        \"T082-00019\",\n        \"T082-00021\",\n        \"T082-00024\",\n        \"T082-00027\",\n        \"T082-00030\",\n        \"T082-00031\",\n        \"T082-00034\",\n        \"T082-00036\"\n      ]\n    },\n    {\n      \"claim\": \"The failures report bad-password status: the FILE-PIN-01 4625 records show SubStatus 0xc000006a, and corresponding domain-controller records show 4776 Status 0xc000006a and 4771 Status 0x18. This is consistent with the scheduled svc-billing password rotation at 13:30 followed by the job continuing to use an outdated credential.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T082-00001\",\n        \"T082-00002\",\n        \"T082-00005\",\n        \"T082-00017\",\n        \"T082-00018\",\n        \"T082-00020\",\n        \"T082-00021\",\n        \"T082-00022\",\n        \"T082-00023\",\n        \"T082-00036\",\n        \"T082-00037\"\n      ]\n    },\n    {\n      \"claim\": \"The supplied records show failed authentication events for the alerted sequence; they do not show a successful logon for svc-billing in that sequence.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T082-00001\",\n        \"T082-00002\",\n        \"T082-00018\",\n        \"T082-00019\",\n        \"T082-00020\",\n        \"T082-00036\",\n        \"T082-00037\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not include evidence confirming when the password rotation actually completed or when BillingSync was updated.\",\n    \"The supplied authentication records do not identify the BillingSync executable or scheduled task as the initiating application; the 4625 records name lsass.exe.\",\n    \"The records provided are not a complete process, network, or account-audit history for FILE-PIN-01 or svc-billing.\"\n  ],\n  \"claims_not_established\": [\n    \"That the password rotation completed at exactly 13:30 UTC.\",\n    \"That BillingSync, rather than another process on FILE-PIN-01, generated every failed authentication attempt.\",\n    \"That the later explicit-credential event involving svc-billing succeeded or was connected to the repeated failures.\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [\n    \"No additional evidence is necessary to disposition the repeated failures as benign based on the supplied context and records.\",\n    \"For a separate review of the explicit-credential event, obtain the relevant PowerShell/process and proxy authentication logs, and identify the device associated with source address 10.51.20.10.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate review recommended: at 14:05:36 UTC, a 4648 event records SYSTEM on DC-PIN-01 using explicit credentials for svc-billing with PowerShell, targeting PROXY-PIN-01 from 10.51.20.10. This is distinct from the repeated failed logons; the record alone does not establish authentication success or malicious intent. (T082-00038)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 6493,
+    "output": 2176
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.89,
+  "supporting_observations": [
+   {
+    "claim": "The alerted activity consists of repeated failed logons for svc-billing from FILE-PIN-01, with the workstation name also reported as FILE-PIN-01 and source address 10.51.20.20. The failures recur at roughly one-minute intervals, matching the inventory description that BillingSync runs and re-authenticates every minute.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T082-00001",
+     "T082-00003",
+     "T082-00006",
+     "T082-00008",
+     "T082-00010",
+     "T082-00012",
+     "T082-00014",
+     "T082-00017",
+     "T082-00019",
+     "T082-00021",
+     "T082-00024",
+     "T082-00027",
+     "T082-00030",
+     "T082-00031",
+     "T082-00034",
+     "T082-00036"
+    ]
+   },
+   {
+    "claim": "The failures report bad-password status: the FILE-PIN-01 4625 records show SubStatus 0xc000006a, and corresponding domain-controller records show 4776 Status 0xc000006a and 4771 Status 0x18. This is consistent with the scheduled svc-billing password rotation at 13:30 followed by the job continuing to use an outdated credential.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T082-00001",
+     "T082-00002",
+     "T082-00005",
+     "T082-00017",
+     "T082-00018",
+     "T082-00020",
+     "T082-00021",
+     "T082-00022",
+     "T082-00023",
+     "T082-00036",
+     "T082-00037"
+    ]
+   },
+   {
+    "claim": "The supplied records show failed authentication events for the alerted sequence; they do not show a successful logon for svc-billing in that sequence.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T082-00001",
+     "T082-00002",
+     "T082-00018",
+     "T082-00019",
+     "T082-00020",
+     "T082-00036",
+     "T082-00037"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not include evidence confirming when the password rotation actually completed or when BillingSync was updated.",
+   "The supplied authentication records do not identify the BillingSync executable or scheduled task as the initiating application; the 4625 records name lsass.exe.",
+   "The records provided are not a complete process, network, or account-audit history for FILE-PIN-01 or svc-billing."
+  ],
+  "claims_not_established": [
+   "That the password rotation completed at exactly 13:30 UTC.",
+   "That BillingSync, rather than another process on FILE-PIN-01, generated every failed authentication attempt.",
+   "That the later explicit-credential event involving svc-billing succeeded or was connected to the repeated failures."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [
+   "No additional evidence is necessary to disposition the repeated failures as benign based on the supplied context and records.",
+   "For a separate review of the explicit-credential event, obtain the relevant PowerShell/process and proxy authentication logs, and identify the device associated with source address 10.51.20.10."
+  ],
+  "unrelated_findings": [
+   "Separate review recommended: at 14:05:36 UTC, a 4648 event records SYSTEM on DC-PIN-01 using explicit credentials for svc-billing with PowerShell, targeting PROXY-PIN-01 from 10.51.20.10. This is distinct from the repeated failed logons; the record alone does not establish authentication success or malicious intent. (T082-00038)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 34,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.5
+}

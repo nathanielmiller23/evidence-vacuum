@@ -1,0 +1,96 @@
+{
+ "scenario_id": "T043",
+ "condition": "C3",
+ "variant": "P4",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:41:50 UTC, ivy.chen launched WINWORD.EXE to open Statement.docm from the Downloads folder.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T043-00124\", \"T043-00125\"]\n    },\n    {\n      \"claim\": \"Two process-creation records show PowerShell starting from WINWORD.EXE with no profile, a hidden-window option, and an encoded command that decodes to downloading and executing a script from raw.githubusercontent.com/nwd-it/tools/main/u.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T043-00128\", \"T043-00129\"]\n    },\n    {\n      \"claim\": \"The proxy recorded a successful GET for that u.ps1 URL, and the associated tunnel records show data returned during the PowerShell activity.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T043-00130\", \"T043-00132\", \"T043-00134\", \"T043-00137\"]\n    },\n    {\n      \"claim\": \"PowerShell then launched rundll32.exe with C:\\\\Users\\\\ivy.chen\\\\AppData\\\\Roaming\\\\svchelper.dll,Init; the process was later recorded exiting.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T043-00139\", \"T043-00140\", \"T043-00143\", \"T043-00144\"]\n    },\n    {\n      \"claim\": \"The sequence\u2014document-launched hidden PowerShell downloading a script and launching a DLL from the user's Roaming directory\u2014supports a malicious-activity finding for the alerted PowerShell activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T043-00124\", \"T043-00128\", \"T043-00132\", \"T043-00139\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied sensor-status information reports winsec, Sysmon, proxy, and Zeek coverage as available for WS-ICHEN-01 during the alert window; it does not identify a collection outage on that host.\",\n    \"The supplied records do not include the contents or hash of u.ps1, the contents or hash of Statement.docm or svchelper.dll, or evidence establishing what the DLL did after launch.\"\n  ],\n  \"claims_not_established\": [\n    \"The exact behavior or full contents of the downloaded u.ps1 script and svchelper.dll.\",\n    \"Whether the DLL completed any actions or established persistence; the records show rundll32 launching and exiting, not its resulting effects.\",\n    \"How Statement.docm reached the workstation or whether ivy.chen knowingly opened a malicious document.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and analyze Statement.docm, u.ps1, and svchelper.dll, including hashes and relevant file metadata.\",\n    \"Collect endpoint artifacts and execution telemetry for the PowerShell and rundll32 activity, including any available script-block, module-load, and subsequent process or network activity.\",\n    \"Investigate the document's source and determine whether the same URL, script, DLL, or document affected other hosts.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:32 UTC, DC-NWD-01 recorded a Kerberos service ticket for sam.okafor from WS-ICHEN-01, followed by a network logon to WS-SOKAFOR-01 identifying WS-ICHEN-01 as the originating workstation. This is outside the alerted PowerShell sequence and merits a separate review against the remote-administration practice. (T043-00080, T043-00084)\",\n    \"ZoomUpdate.exe ran on WS-ICHEN-01 at 14:03 UTC; this is separate from the alerted activity. (T043-00203, T043-00204, T043-00205, T043-00206)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 41942,
+    "output": 2058
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:41:50 UTC, ivy.chen launched WINWORD.EXE to open Statement.docm from the Downloads folder.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T043-00124",
+     "T043-00125"
+    ]
+   },
+   {
+    "claim": "Two process-creation records show PowerShell starting from WINWORD.EXE with no profile, a hidden-window option, and an encoded command that decodes to downloading and executing a script from raw.githubusercontent.com/nwd-it/tools/main/u.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T043-00128",
+     "T043-00129"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a successful GET for that u.ps1 URL, and the associated tunnel records show data returned during the PowerShell activity.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T043-00130",
+     "T043-00132",
+     "T043-00134",
+     "T043-00137"
+    ]
+   },
+   {
+    "claim": "PowerShell then launched rundll32.exe with C:\\Users\\ivy.chen\\AppData\\Roaming\\svchelper.dll,Init; the process was later recorded exiting.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T043-00139",
+     "T043-00140",
+     "T043-00143",
+     "T043-00144"
+    ]
+   },
+   {
+    "claim": "The sequence\u2014document-launched hidden PowerShell downloading a script and launching a DLL from the user's Roaming directory\u2014supports a malicious-activity finding for the alerted PowerShell activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T043-00124",
+     "T043-00128",
+     "T043-00132",
+     "T043-00139"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied sensor-status information reports winsec, Sysmon, proxy, and Zeek coverage as available for WS-ICHEN-01 during the alert window; it does not identify a collection outage on that host.",
+   "The supplied records do not include the contents or hash of u.ps1, the contents or hash of Statement.docm or svchelper.dll, or evidence establishing what the DLL did after launch."
+  ],
+  "claims_not_established": [
+   "The exact behavior or full contents of the downloaded u.ps1 script and svchelper.dll.",
+   "Whether the DLL completed any actions or established persistence; the records show rundll32 launching and exiting, not its resulting effects.",
+   "How Statement.docm reached the workstation or whether ivy.chen knowingly opened a malicious document."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and analyze Statement.docm, u.ps1, and svchelper.dll, including hashes and relevant file metadata.",
+   "Collect endpoint artifacts and execution telemetry for the PowerShell and rundll32 activity, including any available script-block, module-load, and subsequent process or network activity.",
+   "Investigate the document's source and determine whether the same URL, script, DLL, or document affected other hosts."
+  ],
+  "unrelated_findings": [
+   "At 13:32 UTC, DC-NWD-01 recorded a Kerberos service ticket for sam.okafor from WS-ICHEN-01, followed by a network logon to WS-SOKAFOR-01 identifying WS-ICHEN-01 as the originating workstation. This is outside the alerted PowerShell sequence and merits a separate review against the remote-administration practice. (T043-00080, T043-00084)",
+   "ZoomUpdate.exe ran on WS-ICHEN-01 at 14:03 UTC; this is separate from the alerted activity. (T043-00203, T043-00204, T043-00205, T043-00206)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 16,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.7
+}

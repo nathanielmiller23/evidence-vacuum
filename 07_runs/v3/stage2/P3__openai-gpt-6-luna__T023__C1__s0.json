@@ -1,0 +1,101 @@
+{
+ "scenario_id": "T023",
+ "condition": "C1",
+ "variant": "P3",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The reported workstation and user are associated with the alerted activity: at 13:44:46 UTC, PowerShell ran on WS-MLOPEZ-01 as maria.lopez. The timestamp is later than the reported approximate 13:40 time.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T023-00085\", \"T023-00086\"]\n    },\n    {\n      \"claim\": \"WINWORD.EXE opened C:\\\\Users\\\\maria.lopez\\\\Downloads\\\\Statement.docm and was the parent of the hidden, no-profile PowerShell process, which used an encoded command.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T023-00081\", \"T023-00084\", \"T023-00085\", \"T023-00086\"]\n    },\n    {\n      \"claim\": \"The proxy records show that PowerShell fetched u.ps1 from raw.githubusercontent.com/harbor-dental-it/tools/main, matching the URL embedded in its encoded command.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T023-00085\", \"T023-00086\", \"T023-00089\", \"T023-00090\", \"T023-00093\"]\n    },\n    {\n      \"claim\": \"Immediately after the download, PowerShell launched rundll32.exe to invoke C:\\\\Users\\\\maria.lopez\\\\AppData\\\\Roaming\\\\svchelper.dll, which is consistent with a malicious document-to-script-to-DLL execution chain.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T023-00085\", \"T023-00096\", \"T023-00097\"]\n    },\n    {\n      \"claim\": \"The observed chain does not match the stated patching practice: that uses IT administrator omar.haddad on WS-OHADDAD-01 to run a named patch script, whereas this activity ran as maria.lopez, was launched by Word from a .docm file, and downloaded a different script.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T023-00081\", \"T023-00084\", \"T023-00085\", \"T023-00089\", \"T023-00096\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records establish PowerShell execution at 13:44:46 UTC, not at exactly 13:40 UTC; the alert describes the time as approximate.\",\n    \"The provided records do not include the contents or hash of Statement.docm, the downloaded u.ps1, or svchelper.dll.\",\n    \"The records show a proxy download and a DLL invocation command, but do not establish the full behavior or impact of the payload.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether maria.lopez intentionally opened Statement.docm or knew what it would execute.\",\n    \"The complete contents and behavior of u.ps1 or svchelper.dll.\",\n    \"Whether the activity established persistence, accessed sensitive data, or communicated with additional external systems.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze Statement.docm, u.ps1, svchelper.dll, and the PowerShell temporary file; preserve hashes and relevant timestamps.\",\n    \"Collect endpoint process, file, registry, and memory evidence around the Word, PowerShell, and rundll32 execution chain.\",\n    \"Retrieve the proxy-inspected response contents for the u.ps1 request and any subsequent network activity attributable to the payload.\",\n    \"Confirm with maria.lopez whether she opened the document and determine its source and intended business purpose.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 14:05 UTC, a SYSTEM PowerShell process running the endpoint-inventory script attempted explicit authentication as svc-bkp to PROXY-HD-01 from WS-MLOPEZ-01. This is separate from the alerted Word-launched activity and merits review against the inventory task\u2019s authorization and expected credentials. (T023-00165, T023-00168)\",\n    \"At 14:16 UTC, maria.lopez ran a separate PowerShell command requesting https://packages.nuget.org/api/v2. This is outside the alerted execution chain and merits separate review. (T023-00265, T023-00266)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 43042,
+    "output": 1932
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "The reported workstation and user are associated with the alerted activity: at 13:44:46 UTC, PowerShell ran on WS-MLOPEZ-01 as maria.lopez. The timestamp is later than the reported approximate 13:40 time.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T023-00085",
+     "T023-00086"
+    ]
+   },
+   {
+    "claim": "WINWORD.EXE opened C:\\Users\\maria.lopez\\Downloads\\Statement.docm and was the parent of the hidden, no-profile PowerShell process, which used an encoded command.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T023-00081",
+     "T023-00084",
+     "T023-00085",
+     "T023-00086"
+    ]
+   },
+   {
+    "claim": "The proxy records show that PowerShell fetched u.ps1 from raw.githubusercontent.com/harbor-dental-it/tools/main, matching the URL embedded in its encoded command.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T023-00085",
+     "T023-00086",
+     "T023-00089",
+     "T023-00090",
+     "T023-00093"
+    ]
+   },
+   {
+    "claim": "Immediately after the download, PowerShell launched rundll32.exe to invoke C:\\Users\\maria.lopez\\AppData\\Roaming\\svchelper.dll, which is consistent with a malicious document-to-script-to-DLL execution chain.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T023-00085",
+     "T023-00096",
+     "T023-00097"
+    ]
+   },
+   {
+    "claim": "The observed chain does not match the stated patching practice: that uses IT administrator omar.haddad on WS-OHADDAD-01 to run a named patch script, whereas this activity ran as maria.lopez, was launched by Word from a .docm file, and downloaded a different script.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T023-00081",
+     "T023-00084",
+     "T023-00085",
+     "T023-00089",
+     "T023-00096"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records establish PowerShell execution at 13:44:46 UTC, not at exactly 13:40 UTC; the alert describes the time as approximate.",
+   "The provided records do not include the contents or hash of Statement.docm, the downloaded u.ps1, or svchelper.dll.",
+   "The records show a proxy download and a DLL invocation command, but do not establish the full behavior or impact of the payload."
+  ],
+  "claims_not_established": [
+   "Whether maria.lopez intentionally opened Statement.docm or knew what it would execute.",
+   "The complete contents and behavior of u.ps1 or svchelper.dll.",
+   "Whether the activity established persistence, accessed sensitive data, or communicated with additional external systems."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze Statement.docm, u.ps1, svchelper.dll, and the PowerShell temporary file; preserve hashes and relevant timestamps.",
+   "Collect endpoint process, file, registry, and memory evidence around the Word, PowerShell, and rundll32 execution chain.",
+   "Retrieve the proxy-inspected response contents for the u.ps1 request and any subsequent network activity attributable to the payload.",
+   "Confirm with maria.lopez whether she opened the document and determine its source and intended business purpose."
+  ],
+  "unrelated_findings": [
+   "At 14:05 UTC, a SYSTEM PowerShell process running the endpoint-inventory script attempted explicit authentication as svc-bkp to PROXY-HD-01 from WS-MLOPEZ-01. This is separate from the alerted Word-launched activity and merits review against the inventory task\u2019s authorization and expected credentials. (T023-00165, T023-00168)",
+   "At 14:16 UTC, maria.lopez ran a separate PowerShell command requesting https://packages.nuget.org/api/v2. This is outside the alerted execution chain and merits separate review. (T023-00265, T023-00266)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 19,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 17.7
+}

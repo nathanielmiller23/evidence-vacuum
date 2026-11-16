@@ -1,0 +1,113 @@
+{
+ "scenario_id": "T023",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:44:40 UTC, maria.lopez launched a macro-enabled document, Statement.docm, from Downloads in Microsoft Word.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T023-00081\", \"T023-00084\"]\n    },\n    {\n      \"claim\": \"About six seconds later, Word spawned PowerShell with no-profile, hidden-window, and encoded-command options. Decoding the recorded command shows it uses IEX and WebClient to download and execute a script from raw.githubusercontent.com/harbor-dental-it/tools/main/u.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T023-00085\", \"T023-00086\"]\n    },\n    {\n      \"claim\": \"The proxy recorded a successful request for that exact u.ps1 URL, and the related PowerShell network traffic is recorded from the workstation.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T023-00089\", \"T023-00090\", \"T023-00091\", \"T023-00092\", \"T023-00093\", \"T023-00094\", \"T023-00095\"]\n    },\n    {\n      \"claim\": \"PowerShell then launched rundll32 to invoke C:\\\\Users\\\\maria.lopez\\\\AppData\\\\Roaming\\\\svchelper.dll,Init.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T023-00096\", \"T023-00097\"]\n    },\n    {\n      \"claim\": \"The document-to-hidden-downloader-to-Roaming-DLL execution chain is strongly indicative of malicious activity on the alerted workstation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T023-00081\", \"T023-00085\", \"T023-00089\", \"T023-00096\"]\n    },\n    {\n      \"claim\": \"The reported time is approximate relative to the process evidence: the supplied records show an interactive logon and normal user-shell startup around 13:40, while the identified Word-to-PowerShell chain begins at 13:44:40.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T023-00057\", \"T023-00058\", \"T023-00060\", \"T023-00081\", \"T023-00085\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The evidence records the downloader URL and a successful response, but does not include the downloaded u.ps1 contents.\",\n    \"The evidence does not include the contents, hash, signature, or other analysis of svchelper.dll.\",\n    \"Process and proxy records establish execution and a successful download, but do not by themselves establish who authored or deliberately initiated the activity.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether maria.lopez knowingly opened or enabled content in Statement.docm.\",\n    \"Whether the GitHub repository or downloaded script was authorized, compromised, or controlled by an attacker.\",\n    \"What actions the downloaded script or svchelper.dll performed, including whether they persisted, stole data, or communicated further.\",\n    \"Whether the reported brief PowerShell window at approximately 13:40 was the same event as the documented activity beginning at 13:44:46.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze Statement.docm, including its macros and source/provenance.\",\n    \"Retrieve the exact u.ps1 version served at the recorded time and preserve repository/account history if available.\",\n    \"Acquire and analyze svchelper.dll, including its hash, signature, contents, and execution effects.\",\n    \"Collect PowerShell operational/script-block logs, endpoint protection detections, and relevant workstation forensic data.\",\n    \"Confirm with maria.lopez whether she opened the document and whether the document or repository was expected.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate review: Edge opened slack.com and fetched Slack web assets from WS-MLOPEZ-01; Slack is not listed among the approved services in the provided environment context. This does not determine the alerted finding. Records: T023-00176, T023-00179, T023-00180, T023-00184, T023-00185.\",\n    \"Separate review: a SYSTEM PowerShell process running endpoint-inventory.ps1 recorded explicit credentials for svc-bkp to PROXY-HD-01. The provided evidence does not establish whether this was authorized or connected to the alerted execution. Records: T023-00165, T023-00166, T023-00168.\",\n    \"Separate review: maria.lopez ran PowerShell to request packages.nuget.org/api/v2 later in the review window; no evidence here links that process to the document-launched PowerShell. Records: T023-00265, T023-00266, T023-00267, T023-00268.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 42931,
+    "output": 2182
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:44:40 UTC, maria.lopez launched a macro-enabled document, Statement.docm, from Downloads in Microsoft Word.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T023-00081",
+     "T023-00084"
+    ]
+   },
+   {
+    "claim": "About six seconds later, Word spawned PowerShell with no-profile, hidden-window, and encoded-command options. Decoding the recorded command shows it uses IEX and WebClient to download and execute a script from raw.githubusercontent.com/harbor-dental-it/tools/main/u.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T023-00085",
+     "T023-00086"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a successful request for that exact u.ps1 URL, and the related PowerShell network traffic is recorded from the workstation.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T023-00089",
+     "T023-00090",
+     "T023-00091",
+     "T023-00092",
+     "T023-00093",
+     "T023-00094",
+     "T023-00095"
+    ]
+   },
+   {
+    "claim": "PowerShell then launched rundll32 to invoke C:\\Users\\maria.lopez\\AppData\\Roaming\\svchelper.dll,Init.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T023-00096",
+     "T023-00097"
+    ]
+   },
+   {
+    "claim": "The document-to-hidden-downloader-to-Roaming-DLL execution chain is strongly indicative of malicious activity on the alerted workstation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T023-00081",
+     "T023-00085",
+     "T023-00089",
+     "T023-00096"
+    ]
+   },
+   {
+    "claim": "The reported time is approximate relative to the process evidence: the supplied records show an interactive logon and normal user-shell startup around 13:40, while the identified Word-to-PowerShell chain begins at 13:44:40.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T023-00057",
+     "T023-00058",
+     "T023-00060",
+     "T023-00081",
+     "T023-00085"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The evidence records the downloader URL and a successful response, but does not include the downloaded u.ps1 contents.",
+   "The evidence does not include the contents, hash, signature, or other analysis of svchelper.dll.",
+   "Process and proxy records establish execution and a successful download, but do not by themselves establish who authored or deliberately initiated the activity."
+  ],
+  "claims_not_established": [
+   "Whether maria.lopez knowingly opened or enabled content in Statement.docm.",
+   "Whether the GitHub repository or downloaded script was authorized, compromised, or controlled by an attacker.",
+   "What actions the downloaded script or svchelper.dll performed, including whether they persisted, stole data, or communicated further.",
+   "Whether the reported brief PowerShell window at approximately 13:40 was the same event as the documented activity beginning at 13:44:46."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze Statement.docm, including its macros and source/provenance.",
+   "Retrieve the exact u.ps1 version served at the recorded time and preserve repository/account history if available.",
+   "Acquire and analyze svchelper.dll, including its hash, signature, contents, and execution effects.",
+   "Collect PowerShell operational/script-block logs, endpoint protection detections, and relevant workstation forensic data.",
+   "Confirm with maria.lopez whether she opened the document and whether the document or repository was expected."
+  ],
+  "unrelated_findings": [
+   "Separate review: Edge opened slack.com and fetched Slack web assets from WS-MLOPEZ-01; Slack is not listed among the approved services in the provided environment context. This does not determine the alerted finding. Records: T023-00176, T023-00179, T023-00180, T023-00184, T023-00185.",
+   "Separate review: a SYSTEM PowerShell process running endpoint-inventory.ps1 recorded explicit credentials for svc-bkp to PROXY-HD-01. The provided evidence does not establish whether this was authorized or connected to the alerted execution. Records: T023-00165, T023-00166, T023-00168.",
+   "Separate review: maria.lopez ran PowerShell to request packages.nuget.org/api/v2 later in the review window; no evidence here links that process to the document-launched PowerShell. Records: T023-00265, T023-00266, T023-00267, T023-00268."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 22,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.5
+}

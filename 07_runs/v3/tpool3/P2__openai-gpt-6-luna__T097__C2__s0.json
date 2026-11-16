@@ -1,0 +1,77 @@
+{
+ "scenario_id": "T097",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The account it_support was created on the domain controller at 13:46:58 UTC by subject raj.patel, later than the alert's approximate 13:42 time.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T097-00140\"\n      ]\n    },\n    {\n      \"claim\": \"One second after creation, it_support was added to the group named Administrators. This conflicts with the stated practice that temporary help-desk accounts are not given administrator rights.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T097-00141\"\n      ]\n    },\n    {\n      \"claim\": \"A remote-interactive logon for raj.patel to WS-TWEBER-01 came from 203.0.113.17, and the domain controller recorded a Kerberos service ticket request for raj.patel from that same address. This is inconsistent with the stated remote-administration practice, which permits administration only from WS-RPATEL-01 and has no VPN.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T097-00117\",\n        \"T097-00122\"\n      ]\n    },\n    {\n      \"claim\": \"Shortly after the account was created, raj.patel's session on WS-TWEBER-01 registered a scheduled task that runs hidden, encoded PowerShell. Decoding the recorded argument indicates it invokes a web request to retrieve and execute a script from http://203.0.113.17/a.ps1.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T097-00142\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The account creation and group-addition events identify raj.patel as the subject, but use logon ID 0x39528fc; the observed RDP session has logon ID 0x148bd5ba. The supplied records do not link those logon IDs.\",\n    \"The records show the task registration and its encoded command, but do not show whether the task executed or what the downloaded script contained.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish who controlled the source address 203.0.113.17 or whether it was reached through an intermediary.\",\n    \"The evidence does not establish whether raj.patel's credentials or account were compromised, or whether raj.patel personally performed these actions.\",\n    \"The evidence does not show the purpose or subsequent use of it_support, beyond its creation and addition to Administrators.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate domain-controller and endpoint authentication records for logon ID 0x39528fc and determine the origin of the account-management actions.\",\n    \"Verify with raj.patel whether the RDP session and account creation were authorized; preserve and review the relevant endpoint and domain-controller logs.\",\n    \"Retrieve the scheduled task's execution history and the contents or proxy/network records for the requested script at 203.0.113.17/a.ps1.\",\n    \"Review it_support's subsequent logons, group memberships, and actions, and assess whether containment or credential resets are warranted.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 34140,
+    "output": 2112
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "The account it_support was created on the domain controller at 13:46:58 UTC by subject raj.patel, later than the alert's approximate 13:42 time.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T097-00140"
+    ]
+   },
+   {
+    "claim": "One second after creation, it_support was added to the group named Administrators. This conflicts with the stated practice that temporary help-desk accounts are not given administrator rights.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T097-00141"
+    ]
+   },
+   {
+    "claim": "A remote-interactive logon for raj.patel to WS-TWEBER-01 came from 203.0.113.17, and the domain controller recorded a Kerberos service ticket request for raj.patel from that same address. This is inconsistent with the stated remote-administration practice, which permits administration only from WS-RPATEL-01 and has no VPN.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T097-00117",
+     "T097-00122"
+    ]
+   },
+   {
+    "claim": "Shortly after the account was created, raj.patel's session on WS-TWEBER-01 registered a scheduled task that runs hidden, encoded PowerShell. Decoding the recorded argument indicates it invokes a web request to retrieve and execute a script from http://203.0.113.17/a.ps1.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T097-00142"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The account creation and group-addition events identify raj.patel as the subject, but use logon ID 0x39528fc; the observed RDP session has logon ID 0x148bd5ba. The supplied records do not link those logon IDs.",
+   "The records show the task registration and its encoded command, but do not show whether the task executed or what the downloaded script contained."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish who controlled the source address 203.0.113.17 or whether it was reached through an intermediary.",
+   "The evidence does not establish whether raj.patel's credentials or account were compromised, or whether raj.patel personally performed these actions.",
+   "The evidence does not show the purpose or subsequent use of it_support, beyond its creation and addition to Administrators."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate domain-controller and endpoint authentication records for logon ID 0x39528fc and determine the origin of the account-management actions.",
+   "Verify with raj.patel whether the RDP session and account creation were authorized; preserve and review the relevant endpoint and domain-controller logs.",
+   "Retrieve the scheduled task's execution history and the contents or proxy/network records for the requested script at 203.0.113.17/a.ps1.",
+   "Review it_support's subsequent logons, group memberships, and actions, and assess whether containment or credential resets are warranted."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 5,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.8
+}

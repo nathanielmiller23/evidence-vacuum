@@ -1,0 +1,97 @@
+{
+ "scenario_id": "T255",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "error": "APIConnectionError: Connection error."
+  },
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted periodic HTTPS activity is associated with ledgerlinkupd.exe: it ran as max.fischer from C:\\\\Users\\\\max.fischer\\\\AppData\\\\Local\\\\LedgerLink\\\\ledgerlinkupd.exe, and network events for that process connect through the proxy.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T255-00082\", \"T255-00085\", \"T255-00087\", \"T255-00154\"]\n    },\n    {\n      \"claim\": \"The updater made repeated proxy CONNECT attempts to update.ledgerlink.co at roughly five-minute intervals, including 13:39:09, 13:43:56, 13:49:21, 13:53:45, 13:59:21, 14:04:09, and 14:08:56 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T255-00084\", \"T255-00149\", \"T255-00175\", \"T255-00190\", \"T255-00202\", \"T255-00226\", \"T255-00284\"]\n    },\n    {\n      \"claim\": \"The observed executable location and destination differ from the inventory's approved LedgerLink updater location and update.ledgerlink.com destination; the logged destination is update.ledgerlink.co. These discrepancies make the alerted activity strongly suspicious and support a malicious finding.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T255-00082\", \"T255-00084\"]\n    },\n    {\n      \"claim\": \"Some proxy CONNECT attempts returned 502 or 503 rather than 200, so the records do not establish that every periodic attempt completed successfully.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T255-00190\", \"T255-00284\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records expose the CONNECT hostname and tunnel status, but the available evidence does not show the HTTPS payload or application-level response.\",\n    \"A proxy status of 200 indicates the CONNECT tunnel was accepted; it does not by itself establish what content was exchanged or whether an update was installed.\",\n    \"The records do not provide the updater's hash, signature-validation result, or a confirmed downloaded payload.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether update.ledgerlink.co is controlled by the legitimate LedgerLink vendor or is malicious.\",\n    \"Whether the updater received or executed any content during these connections.\",\n    \"Whether max.fischer knowingly initiated or authorized this updater activity.\",\n    \"Whether the endpoint was compromised beyond the suspicious updater and its network activity.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze the updater binary, including its hash, signature, origin, and file metadata; compare it with the approved LedgerLink installer.\",\n    \"Verify ownership and legitimacy of update.ledgerlink.co and compare its certificate and DNS history with the approved LedgerLink service.\",\n    \"Collect proxy TLS inspection or endpoint network/content telemetry, if available, to determine what was exchanged and whether a payload was downloaded.\",\n    \"Review endpoint file, persistence, and execution telemetry around the updater's launch and periodic connections.\"\n  ],\n  \"unrelated_findings\": [\n    \"Google Drive File Stream ran on WS-MFISCHER-01, and a proxy request used a Google Drive user agent; Google Drive is not among the listed approved services. This is separate from the alerted LedgerLink activity. (T255-00134, T255-00179)\",\n    \"Dropbox.exe ran on WS-MFISCHER-01; Dropbox is not among the listed approved services. The available records establish execution, not that files were transferred. (T255-00409, T255-00410)\",\n    \"Firefox opened files.slack.com on WS-MFISCHER-01; Slack is not among the listed approved services. This is separate from the alerted activity. (T255-00124, T255-00130)\",\n    \"Cisco AnyConnect's VPN UI ran on WS-MFISCHER-01 despite the inventory stating there is no VPN; the records do not establish that a VPN connection was made. (T255-00365, T255-00367)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 62174,
+    "output": 2477
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "The alerted periodic HTTPS activity is associated with ledgerlinkupd.exe: it ran as max.fischer from C:\\Users\\max.fischer\\AppData\\Local\\LedgerLink\\ledgerlinkupd.exe, and network events for that process connect through the proxy.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T255-00082",
+     "T255-00085",
+     "T255-00087",
+     "T255-00154"
+    ]
+   },
+   {
+    "claim": "The updater made repeated proxy CONNECT attempts to update.ledgerlink.co at roughly five-minute intervals, including 13:39:09, 13:43:56, 13:49:21, 13:53:45, 13:59:21, 14:04:09, and 14:08:56 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T255-00084",
+     "T255-00149",
+     "T255-00175",
+     "T255-00190",
+     "T255-00202",
+     "T255-00226",
+     "T255-00284"
+    ]
+   },
+   {
+    "claim": "The observed executable location and destination differ from the inventory's approved LedgerLink updater location and update.ledgerlink.com destination; the logged destination is update.ledgerlink.co. These discrepancies make the alerted activity strongly suspicious and support a malicious finding.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T255-00082",
+     "T255-00084"
+    ]
+   },
+   {
+    "claim": "Some proxy CONNECT attempts returned 502 or 503 rather than 200, so the records do not establish that every periodic attempt completed successfully.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T255-00190",
+     "T255-00284"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records expose the CONNECT hostname and tunnel status, but the available evidence does not show the HTTPS payload or application-level response.",
+   "A proxy status of 200 indicates the CONNECT tunnel was accepted; it does not by itself establish what content was exchanged or whether an update was installed.",
+   "The records do not provide the updater's hash, signature-validation result, or a confirmed downloaded payload."
+  ],
+  "claims_not_established": [
+   "Whether update.ledgerlink.co is controlled by the legitimate LedgerLink vendor or is malicious.",
+   "Whether the updater received or executed any content during these connections.",
+   "Whether max.fischer knowingly initiated or authorized this updater activity.",
+   "Whether the endpoint was compromised beyond the suspicious updater and its network activity."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze the updater binary, including its hash, signature, origin, and file metadata; compare it with the approved LedgerLink installer.",
+   "Verify ownership and legitimacy of update.ledgerlink.co and compare its certificate and DNS history with the approved LedgerLink service.",
+   "Collect proxy TLS inspection or endpoint network/content telemetry, if available, to determine what was exchanged and whether a payload was downloaded.",
+   "Review endpoint file, persistence, and execution telemetry around the updater's launch and periodic connections."
+  ],
+  "unrelated_findings": [
+   "Google Drive File Stream ran on WS-MFISCHER-01, and a proxy request used a Google Drive user agent; Google Drive is not among the listed approved services. This is separate from the alerted LedgerLink activity. (T255-00134, T255-00179)",
+   "Dropbox.exe ran on WS-MFISCHER-01; Dropbox is not among the listed approved services. The available records establish execution, not that files were transferred. (T255-00409, T255-00410)",
+   "Firefox opened files.slack.com on WS-MFISCHER-01; Slack is not among the listed approved services. This is separate from the alerted activity. (T255-00124, T255-00130)",
+   "Cisco AnyConnect's VPN UI ran on WS-MFISCHER-01 despite the inventory stating there is no VPN; the records do not establish that a VPN connection was made. (T255-00365, T255-00367)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 37.3
+}

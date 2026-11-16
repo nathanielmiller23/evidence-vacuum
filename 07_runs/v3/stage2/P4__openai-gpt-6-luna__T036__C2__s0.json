@@ -1,0 +1,90 @@
+{
+ "scenario_id": "T036",
+ "condition": "C2",
+ "variant": "P4",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.95,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"During the alert window, WS-LMARTINS-01 (10.40.10.22) made repeated TCP connections to PROXY-NWD-01 (10.40.20.30) on port 8080 at 13:35:56, 13:41:25, 13:46:13, 13:50:32, 13:55:50, 14:01:07, and 14:05:48 UTC. The intervals are broadly consistent with the reported roughly five-minute pattern.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T036-00101\",\n        \"T036-00144\",\n        \"T036-00178\",\n        \"T036-00208\",\n        \"T036-00235\",\n        \"T036-00242\",\n        \"T036-00256\"\n      ]\n    },\n    {\n      \"claim\": \"The recurring timing is consistent with the documented PixelForge updater check schedule of about every five minutes, but the records do not attribute these connections to pfupdater.exe or establish that they reached updates.pixelforge-suite.com.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T036-00101\",\n        \"T036-00144\",\n        \"T036-00178\",\n        \"T036-00208\",\n        \"T036-00235\",\n        \"T036-00242\",\n        \"T036-00256\"\n      ]\n    },\n    {\n      \"claim\": \"The available network records identify connections to the explicit proxy on port 8080 and label them as HTTP service; they do not show the requested destination or establish that the proxied traffic was HTTPS.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T036-00101\",\n        \"T036-00144\",\n        \"T036-00178\",\n        \"T036-00208\",\n        \"T036-00235\",\n        \"T036-00242\",\n        \"T036-00256\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The provided proxy-side records are connection summaries, not proxy request logs; they do not expose a URL, CONNECT target, hostname, or TLS details for the recurring connections (for example, T036-00101 and T036-00256).\",\n    \"The provided records do not correlate these proxy connections with a process or executable on WS-LMARTINS-01, so they cannot confirm or rule out pfupdater.exe as the source.\",\n    \"The provided evidence does not show the full alert window's proxy request and endpoint process-attribution telemetry; the listed connection records alone cannot establish the activity's destination or purpose.\"\n  ],\n  \"claims_not_established\": [\n    \"That PixelForge Suite or pfupdater.exe generated the recurring connections.\",\n    \"That the connections were to updates.pixelforge-suite.com, or to any particular external destination.\",\n    \"That the traffic was HTTPS, benign update traffic, or malicious command-and-control traffic.\",\n    \"Whether the connection contents, TLS certificate, or downloaded response were safe.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"PROXY-NWD-01 access logs for the alert window, including client, request method, CONNECT destination or hostname, response status, and any available TLS/SNI details.\",\n    \"Endpoint network-to-process telemetry for WS-LMARTINS-01 covering the connection times, including process image, PID, parent process, and user.\",\n    \"PixelForge updater logs and installed software details for the host, to verify whether it checked updates at these times and which server it contacted.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate from the alerted proxy activity, WS-LMARTINS-01 had SMB connections to DC-NWD-01 around 14:06:39 and 14:14:48 UTC. The records show the sessions but not the accessed share or their purpose; review separately if warranted (T036-00267, T036-00269, T036-00270, T036-00304, T036-00306, T036-00308).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 33421,
+    "output": 2181
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.95,
+  "supporting_observations": [
+   {
+    "claim": "During the alert window, WS-LMARTINS-01 (10.40.10.22) made repeated TCP connections to PROXY-NWD-01 (10.40.20.30) on port 8080 at 13:35:56, 13:41:25, 13:46:13, 13:50:32, 13:55:50, 14:01:07, and 14:05:48 UTC. The intervals are broadly consistent with the reported roughly five-minute pattern.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T036-00101",
+     "T036-00144",
+     "T036-00178",
+     "T036-00208",
+     "T036-00235",
+     "T036-00242",
+     "T036-00256"
+    ]
+   },
+   {
+    "claim": "The recurring timing is consistent with the documented PixelForge updater check schedule of about every five minutes, but the records do not attribute these connections to pfupdater.exe or establish that they reached updates.pixelforge-suite.com.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T036-00101",
+     "T036-00144",
+     "T036-00178",
+     "T036-00208",
+     "T036-00235",
+     "T036-00242",
+     "T036-00256"
+    ]
+   },
+   {
+    "claim": "The available network records identify connections to the explicit proxy on port 8080 and label them as HTTP service; they do not show the requested destination or establish that the proxied traffic was HTTPS.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T036-00101",
+     "T036-00144",
+     "T036-00178",
+     "T036-00208",
+     "T036-00235",
+     "T036-00242",
+     "T036-00256"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The provided proxy-side records are connection summaries, not proxy request logs; they do not expose a URL, CONNECT target, hostname, or TLS details for the recurring connections (for example, T036-00101 and T036-00256).",
+   "The provided records do not correlate these proxy connections with a process or executable on WS-LMARTINS-01, so they cannot confirm or rule out pfupdater.exe as the source.",
+   "The provided evidence does not show the full alert window's proxy request and endpoint process-attribution telemetry; the listed connection records alone cannot establish the activity's destination or purpose."
+  ],
+  "claims_not_established": [
+   "That PixelForge Suite or pfupdater.exe generated the recurring connections.",
+   "That the connections were to updates.pixelforge-suite.com, or to any particular external destination.",
+   "That the traffic was HTTPS, benign update traffic, or malicious command-and-control traffic.",
+   "Whether the connection contents, TLS certificate, or downloaded response were safe."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "PROXY-NWD-01 access logs for the alert window, including client, request method, CONNECT destination or hostname, response status, and any available TLS/SNI details.",
+   "Endpoint network-to-process telemetry for WS-LMARTINS-01 covering the connection times, including process image, PID, parent process, and user.",
+   "PixelForge updater logs and installed software details for the host, to verify whether it checked updates at these times and which server it contacted."
+  ],
+  "unrelated_findings": [
+   "Separate from the alerted proxy activity, WS-LMARTINS-01 had SMB connections to DC-NWD-01 around 14:06:39 and 14:14:48 UTC. The records show the sessions but not the accessed share or their purpose; review separately if warranted (T036-00267, T036-00269, T036-00270, T036-00304, T036-00306, T036-00308)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 21,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.2
+}

@@ -1,0 +1,96 @@
+{
+ "scenario_id": "T050",
+ "condition": "C3",
+ "variant": "P1",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.78,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45:33, the domain controller recorded a service-ticket event for svc-archive targeting FILE-NWD-01$, with source address 45.79.19.196. This is an unexpected non-internal source in an environment with no VPN.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T050-00223\"\n      ]\n    },\n    {\n      \"claim\": \"Shortly afterward, FILE-NWD-01 recorded a svc-archive service logon and started the StratoSafe stsync.exe backup job under that account.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T050-00224\",\n        \"T050-00237\",\n        \"T050-00238\"\n      ]\n    },\n    {\n      \"claim\": \"The large transfer itself is consistent with the approved backup: stsync.exe targeted ingest.stratosafe-backup.com, and the proxy recorded 640,000,000 client-to-server bytes to that destination.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T050-00237\",\n        \"T050-00244\",\n        \"T050-00245\",\n        \"T050-00247\"\n      ]\n    },\n    {\n      \"claim\": \"At 14:18, nora.blake launched Remote Desktop from WS-NBLAKE-01 to FILE-NWD-01 and authenticated with a remote-interactive logon. The environment identifies her as help desk, not an administrator, and says remote administration is only done from WS-SOKAFOR-01.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T050-00441\",\n        \"T050-00442\",\n        \"T050-00444\",\n        \"T050-00448\",\n        \"T050-00459\"\n      ]\n    },\n    {\n      \"claim\": \"A SYSTEM Java integration-worker process connected to receiver.citrix.com; this service is not identified as approved in the supplied inventory, though the records do not establish that it was involved in the large transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T050-00165\",\n        \"T050-00248\",\n        \"T050-00249\",\n        \"T050-00250\",\n        \"T050-00251\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Winsec and Sysmon collection for WS-NBLAKE-01 was unavailable from 13:30 to 14:10 UTC due to a collection outage; activity from that workstation during that interval may be missing.\",\n    \"The proxy records the large transfer through a tunnel to the approved backup endpoint, but the supplied records do not expose the transferred file contents.\"\n  ],\n  \"claims_not_established\": [\n    \"The records do not establish who controlled source address 45.79.19.196 or whether the svc-archive ticket request resulted in an interactive or other successful remote session.\",\n    \"The records do not establish the purpose or authorization of nora.blake's RDP session, or what actions were taken during it.\",\n    \"The records do not establish whether the 640,000,000 bytes were expected backup data or whether the backup job or its credentials were abused.\",\n    \"The records do not establish whether the Java connection to receiver.citrix.com was authorized or related to any suspicious activity.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate DC authentication and service-ticket records with FILE-NWD-01 logons and determine the origin and ownership of 45.79.19.196.\",\n    \"Review FILE-NWD-01 RDP session, process, file-access, and account activity associated with nora.blake's 14:18 session.\",\n    \"Validate the StratoSafe job schedule, run history, backup manifest, and uploaded data against expected backup contents.\",\n    \"Confirm whether the Meridian integration-worker service and its receiver.citrix.com connection are authorized, and review its configuration and execution history.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 73141,
+    "output": 3285
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.78,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45:33, the domain controller recorded a service-ticket event for svc-archive targeting FILE-NWD-01$, with source address 45.79.19.196. This is an unexpected non-internal source in an environment with no VPN.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T050-00223"
+    ]
+   },
+   {
+    "claim": "Shortly afterward, FILE-NWD-01 recorded a svc-archive service logon and started the StratoSafe stsync.exe backup job under that account.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T050-00224",
+     "T050-00237",
+     "T050-00238"
+    ]
+   },
+   {
+    "claim": "The large transfer itself is consistent with the approved backup: stsync.exe targeted ingest.stratosafe-backup.com, and the proxy recorded 640,000,000 client-to-server bytes to that destination.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T050-00237",
+     "T050-00244",
+     "T050-00245",
+     "T050-00247"
+    ]
+   },
+   {
+    "claim": "At 14:18, nora.blake launched Remote Desktop from WS-NBLAKE-01 to FILE-NWD-01 and authenticated with a remote-interactive logon. The environment identifies her as help desk, not an administrator, and says remote administration is only done from WS-SOKAFOR-01.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T050-00441",
+     "T050-00442",
+     "T050-00444",
+     "T050-00448",
+     "T050-00459"
+    ]
+   },
+   {
+    "claim": "A SYSTEM Java integration-worker process connected to receiver.citrix.com; this service is not identified as approved in the supplied inventory, though the records do not establish that it was involved in the large transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T050-00165",
+     "T050-00248",
+     "T050-00249",
+     "T050-00250",
+     "T050-00251"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Winsec and Sysmon collection for WS-NBLAKE-01 was unavailable from 13:30 to 14:10 UTC due to a collection outage; activity from that workstation during that interval may be missing.",
+   "The proxy records the large transfer through a tunnel to the approved backup endpoint, but the supplied records do not expose the transferred file contents."
+  ],
+  "claims_not_established": [
+   "The records do not establish who controlled source address 45.79.19.196 or whether the svc-archive ticket request resulted in an interactive or other successful remote session.",
+   "The records do not establish the purpose or authorization of nora.blake's RDP session, or what actions were taken during it.",
+   "The records do not establish whether the 640,000,000 bytes were expected backup data or whether the backup job or its credentials were abused.",
+   "The records do not establish whether the Java connection to receiver.citrix.com was authorized or related to any suspicious activity."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate DC authentication and service-ticket records with FILE-NWD-01 logons and determine the origin and ownership of 45.79.19.196.",
+   "Review FILE-NWD-01 RDP session, process, file-access, and account activity associated with nora.blake's 14:18 session.",
+   "Validate the StratoSafe job schedule, run history, backup manifest, and uploaded data against expected backup contents.",
+   "Confirm whether the Meridian integration-worker service and its receiver.citrix.com connection are authorized, and review its configuration and execution history."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 18,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 38.4
+}

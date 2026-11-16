@@ -1,0 +1,94 @@
+{
+ "scenario_id": "T210",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The large outbound transfer is recorded at 13:50:22 UTC: FILE-BLU-01 sent 640,000,000 client-to-server bytes through the proxy to ingest.cloudkeep-backup.com. The corresponding network connection also records about 640 MB sent.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T210-00372\",\n        \"T210-00374\"\n      ]\n    },\n    {\n      \"claim\": \"The transfer is consistent with the inventory's approved Cloudkeep backup activity: the Cloudkeep agent ran as svc-arch with a Nightly job targeting the Cloudkeep ingest endpoint, and its process made the proxy connection carrying the large transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T210-00363\",\n        \"T210-00364\",\n        \"T210-00365\",\n        \"T210-00366\",\n        \"T210-00367\",\n        \"T210-00368\",\n        \"T210-00372\",\n        \"T210-00373\",\n        \"T210-00374\"\n      ]\n    },\n    {\n      \"claim\": \"Shortly before the transfer, the domain controller recorded a service-ticket request for svc-arch targeting FILE-BLU-01 from public IP 91.219.236.174; FILE-BLU-01 then recorded a svc-arch service logon, followed by the Cloudkeep agent running under that account. This sequence is suspicious and temporally linked to the transfer, but does not establish who initiated the backup job or what data it uploaded.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T210-00335\",\n        \"T210-00336\",\n        \"T210-00363\",\n        \"T210-00372\",\n        \"T210-00374\"\n      ]\n    },\n    {\n      \"claim\": \"The supplied records place the large transfer at 13:50:22 UTC, rather than precisely around the alert's stated 13:46 UTC time.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T210-00372\",\n        \"T210-00374\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Winsec and Sysmon collection from WS-RMOSS-01 was unavailable for the full 13:20\u201314:20 UTC window, limiting investigation of activity originating from that workstation.\",\n    \"The available transfer records identify the process, destination, and byte count, but do not show the uploaded files, their contents, or Cloudkeep-side job and account audit details.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the svc-arch ticket request from 91.219.236.174 was legitimate, how it was authenticated, or whether the source address is accurate.\",\n    \"Whether the large upload contained the expected backup data or data collected or selected for unauthorized exfiltration.\",\n    \"Whether the Cloudkeep job was initiated as part of the normal schedule or triggered by someone using compromised svc-arch credentials.\",\n    \"Whether the upload began at the alert's approximate 13:46 time; the provided bulk-transfer records show it at 13:50:22 UTC.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Validate the 91.219.236.174 svc-arch ticket request against domain-controller authentication details, network perimeter records, and the expected source of svc-arch activity.\",\n    \"Obtain Cloudkeep job history, upload manifests, destination-side audit records, and the normal schedule and expected volume for the Nightly job.\",\n    \"Review FILE-BLU-01 service and task configuration and logs to determine why svc-arch logged on and whether the Cloudkeep agent was started as expected.\",\n    \"Restore or obtain any available WS-RMOSS-01 endpoint telemetry for the scoped window to investigate activity from that host.\"\n  ],\n  \"unrelated_findings\": [\n    \"FILE-BLU-01 made a proxy request to receiver.citrix.com using python-requests; this service is not among the approved services in the inventory and should be reviewed separately. The recorded request is small and predates the alerted transfer. (T210-00213, T210-00214)\",\n    \"ruth.moss logged on to FILE-BLU-01 over RDP from WS-RMOSS-01 after the large transfer. This is outside the alerted transfer activity and merits separate review against the stated remote-administration practice; WS-RMOSS-01 endpoint collection was unavailable. (T210-00457, T210-00459)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 94963,
+    "output": 3209
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "The large outbound transfer is recorded at 13:50:22 UTC: FILE-BLU-01 sent 640,000,000 client-to-server bytes through the proxy to ingest.cloudkeep-backup.com. The corresponding network connection also records about 640 MB sent.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T210-00372",
+     "T210-00374"
+    ]
+   },
+   {
+    "claim": "The transfer is consistent with the inventory's approved Cloudkeep backup activity: the Cloudkeep agent ran as svc-arch with a Nightly job targeting the Cloudkeep ingest endpoint, and its process made the proxy connection carrying the large transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T210-00363",
+     "T210-00364",
+     "T210-00365",
+     "T210-00366",
+     "T210-00367",
+     "T210-00368",
+     "T210-00372",
+     "T210-00373",
+     "T210-00374"
+    ]
+   },
+   {
+    "claim": "Shortly before the transfer, the domain controller recorded a service-ticket request for svc-arch targeting FILE-BLU-01 from public IP 91.219.236.174; FILE-BLU-01 then recorded a svc-arch service logon, followed by the Cloudkeep agent running under that account. This sequence is suspicious and temporally linked to the transfer, but does not establish who initiated the backup job or what data it uploaded.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T210-00335",
+     "T210-00336",
+     "T210-00363",
+     "T210-00372",
+     "T210-00374"
+    ]
+   },
+   {
+    "claim": "The supplied records place the large transfer at 13:50:22 UTC, rather than precisely around the alert's stated 13:46 UTC time.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T210-00372",
+     "T210-00374"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Winsec and Sysmon collection from WS-RMOSS-01 was unavailable for the full 13:20\u201314:20 UTC window, limiting investigation of activity originating from that workstation.",
+   "The available transfer records identify the process, destination, and byte count, but do not show the uploaded files, their contents, or Cloudkeep-side job and account audit details."
+  ],
+  "claims_not_established": [
+   "Whether the svc-arch ticket request from 91.219.236.174 was legitimate, how it was authenticated, or whether the source address is accurate.",
+   "Whether the large upload contained the expected backup data or data collected or selected for unauthorized exfiltration.",
+   "Whether the Cloudkeep job was initiated as part of the normal schedule or triggered by someone using compromised svc-arch credentials.",
+   "Whether the upload began at the alert's approximate 13:46 time; the provided bulk-transfer records show it at 13:50:22 UTC."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Validate the 91.219.236.174 svc-arch ticket request against domain-controller authentication details, network perimeter records, and the expected source of svc-arch activity.",
+   "Obtain Cloudkeep job history, upload manifests, destination-side audit records, and the normal schedule and expected volume for the Nightly job.",
+   "Review FILE-BLU-01 service and task configuration and logs to determine why svc-arch logged on and whether the Cloudkeep agent was started as expected.",
+   "Restore or obtain any available WS-RMOSS-01 endpoint telemetry for the scoped window to investigate activity from that host."
+  ],
+  "unrelated_findings": [
+   "FILE-BLU-01 made a proxy request to receiver.citrix.com using python-requests; this service is not among the approved services in the inventory and should be reviewed separately. The recorded request is small and predates the alerted transfer. (T210-00213, T210-00214)",
+   "ruth.moss logged on to FILE-BLU-01 over RDP from WS-RMOSS-01 after the large transfer. This is outside the alerted transfer activity and merits separate review against the stated remote-administration practice; WS-RMOSS-01 endpoint collection was unavailable. (T210-00457, T210-00459)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 18,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 34.4
+}

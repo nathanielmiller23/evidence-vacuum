@@ -1,0 +1,99 @@
+{
+ "scenario_id": "T059",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6.1-sol",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.86,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The supplied network records at 13:46 show Kerberos exchanges with DC-NWD-01, not a tens-of-MB outbound transfer: the recorded originating byte counts are 498 and 3,064.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T059-00113\",\n        \"T059-00118\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:45:20, PowerShell running as NWD\\\\ivy.chen invoked Compress-Archive against \\\\\\\\FILE-NWD-01\\\\Shared\\\\Clients, targeting the user's temporary directory as c.zip. A corresponding file-creation event followed at 13:45:24.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T059-00102\",\n        \"T059-00103\",\n        \"T059-00104\"\n      ]\n    },\n    {\n      \"claim\": \"A candidate large outbound transfer appears at 13:50:50, approximately five minutes after the stated alert time. The proxy recorded 51,000,000 client-to-server tunnel bytes to quickshare-drop.net, while Zeek recorded 51,000,389 originating bytes on a contemporaneous connection to the proxy.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T059-00174\",\n        \"T059-00175\"\n      ]\n    },\n    {\n      \"claim\": \"Endpoint records attribute the 13:50:50 proxy connection on source port 51437 to Chrome PID 4120 running as NWD\\\\ivy.chen.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T059-00174\",\n        \"T059-00176\",\n        \"T059-00177\"\n      ]\n    },\n    {\n      \"claim\": \"The archive creation followed by a large outbound tunnel is suspicious, but these records do not establish that c.zip was transmitted or that the 13:50:50 connection is the transfer that generated the approximately 13:46 alert. Alert-to-flow correlation is needed before assigning this candidate activity's disposition to the alert.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T059-00102\",\n        \"T059-00104\",\n        \"T059-00174\",\n        \"T059-00175\",\n        \"T059-00177\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The candidate transfer is logged as an opaque CONNECT tunnel, without an inspected request path, upload filename, or payload contents (T059-00175).\",\n    \"The archive-creation event establishes creation of c.zip, but provides neither its size nor a hash or verified contents (T059-00104).\",\n    \"The supplied 13:46 flow records do not identify a large outbound transfer; the large candidate flow is timestamped 13:50:49.917, leaving the alert-time discrepancy unresolved (T059-00113, T059-00118, T059-00174).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the original alert refers to the 13:50:50 quickshare-drop.net transfer rather than a different flow.\",\n    \"Whether c.zip, client files, or any other sensitive information was transmitted through the candidate tunnel.\",\n    \"Whether the activity was performed by Ivy Chen personally, by another person using the session, or through account or endpoint compromise.\",\n    \"Whether the archive operation and candidate transfer had an authorized business purpose.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Obtain the original alert's flow identifier, exact event and detection timestamps, byte counters, destination, and source port; correlate them with T059-00174 through T059-00177 and verify sensor clock alignment.\",\n    \"Preserve and examine c.zip, including its size, hash, and contents, and obtain endpoint file-access or browser-upload artifacts linking or separating it from the candidate transfer.\",\n    \"Retrieve any additional proxy, DLP, or destination-side upload records that identify the object transmitted to quickshare-drop.net.\",\n    \"Confirm the business purpose and authorization for the archive operation and candidate transfer with the user and data owner.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate urgent investigation pending alert correlation: the 13:50:50 approximately 51 MB outbound tunnel to quickshare-drop.net is a suspicious candidate transfer to a destination outside the supplied approved-service inventory. Do not assume it is the approximately 13:46 alerted flow without correlation (T059-00174 through T059-00177).\",\n    \"DropboxUpdate.exe ran as SYSTEM on WS-ICHEN-01; Dropbox is outside the supplied approved software and service list. These execution records do not link it to the alerted transfer (T059-00011 through T059-00014).\",\n    \"At 14:01, ivy.chen obtained Kerberos tickets from source address 10.40.20.20 and authenticated to WS-NBLAKE-01 with a network logon. Investigate the source and purpose separately; these records do not establish remote administration or a connection to the alerted transfer (T059-00248 through T059-00250).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 60299,
+    "output": 1329
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.86,
+  "supporting_observations": [
+   {
+    "claim": "The supplied network records at 13:46 show Kerberos exchanges with DC-NWD-01, not a tens-of-MB outbound transfer: the recorded originating byte counts are 498 and 3,064.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00113",
+     "T059-00118"
+    ]
+   },
+   {
+    "claim": "At 13:45:20, PowerShell running as NWD\\ivy.chen invoked Compress-Archive against \\\\FILE-NWD-01\\Shared\\Clients, targeting the user's temporary directory as c.zip. A corresponding file-creation event followed at 13:45:24.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00102",
+     "T059-00103",
+     "T059-00104"
+    ]
+   },
+   {
+    "claim": "A candidate large outbound transfer appears at 13:50:50, approximately five minutes after the stated alert time. The proxy recorded 51,000,000 client-to-server tunnel bytes to quickshare-drop.net, while Zeek recorded 51,000,389 originating bytes on a contemporaneous connection to the proxy.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00174",
+     "T059-00175"
+    ]
+   },
+   {
+    "claim": "Endpoint records attribute the 13:50:50 proxy connection on source port 51437 to Chrome PID 4120 running as NWD\\ivy.chen.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00174",
+     "T059-00176",
+     "T059-00177"
+    ]
+   },
+   {
+    "claim": "The archive creation followed by a large outbound tunnel is suspicious, but these records do not establish that c.zip was transmitted or that the 13:50:50 connection is the transfer that generated the approximately 13:46 alert. Alert-to-flow correlation is needed before assigning this candidate activity's disposition to the alert.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T059-00102",
+     "T059-00104",
+     "T059-00174",
+     "T059-00175",
+     "T059-00177"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The candidate transfer is logged as an opaque CONNECT tunnel, without an inspected request path, upload filename, or payload contents (T059-00175).",
+   "The archive-creation event establishes creation of c.zip, but provides neither its size nor a hash or verified contents (T059-00104).",
+   "The supplied 13:46 flow records do not identify a large outbound transfer; the large candidate flow is timestamped 13:50:49.917, leaving the alert-time discrepancy unresolved (T059-00113, T059-00118, T059-00174)."
+  ],
+  "claims_not_established": [
+   "Whether the original alert refers to the 13:50:50 quickshare-drop.net transfer rather than a different flow.",
+   "Whether c.zip, client files, or any other sensitive information was transmitted through the candidate tunnel.",
+   "Whether the activity was performed by Ivy Chen personally, by another person using the session, or through account or endpoint compromise.",
+   "Whether the archive operation and candidate transfer had an authorized business purpose."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Obtain the original alert's flow identifier, exact event and detection timestamps, byte counters, destination, and source port; correlate them with T059-00174 through T059-00177 and verify sensor clock alignment.",
+   "Preserve and examine c.zip, including its size, hash, and contents, and obtain endpoint file-access or browser-upload artifacts linking or separating it from the candidate transfer.",
+   "Retrieve any additional proxy, DLP, or destination-side upload records that identify the object transmitted to quickshare-drop.net.",
+   "Confirm the business purpose and authorization for the archive operation and candidate transfer with the user and data owner."
+  ],
+  "unrelated_findings": [
+   "Separate urgent investigation pending alert correlation: the 13:50:50 approximately 51 MB outbound tunnel to quickshare-drop.net is a suspicious candidate transfer to a destination outside the supplied approved-service inventory. Do not assume it is the approximately 13:46 alerted flow without correlation (T059-00174 through T059-00177).",
+   "DropboxUpdate.exe ran as SYSTEM on WS-ICHEN-01; Dropbox is outside the supplied approved software and service list. These execution records do not link it to the alerted transfer (T059-00011 through T059-00014).",
+   "At 14:01, ivy.chen obtained Kerberos tickets from source address 10.40.20.20 and authenticated to WS-NBLAKE-01 with a network logon. Investigate the source and purpose separately; these records do not establish remote administration or a connection to the alerted transfer (T059-00248 through T059-00250)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.2
+}

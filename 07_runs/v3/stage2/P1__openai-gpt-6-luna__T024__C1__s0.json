@@ -1,0 +1,94 @@
+{
+ "scenario_id": "T024",
+ "condition": "C1",
+ "variant": "P1",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The PowerShell execution visible in the records occurred at 13:44:39 UTC, after the reported approximate time. It ran as omar.haddad and invoked the inventory-listed patch script from \\\\\\\\FILE-HD-01\\\\IT\\\\Deploy-Patches.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T024-00111\", \"T024-00112\"]\n    },\n    {\n      \"claim\": \"Immediately beforehand, WS-MLOPEZ-01 recorded a network logon for omar.haddad from the workstation identified as WS-OHADDAD-01; the PowerShell process used that logon ID.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T024-00082\", \"T024-00111\", \"T024-00112\"]\n    },\n    {\n      \"claim\": \"The PowerShell process contacted the explicit proxy for a Windows Update download, then launched wusa.exe to install a Windows 11 update. This is consistent with the stated patching practice, though the script's contents are not shown.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T024-00113\", \"T024-00116\", \"T024-00117\", \"T024-00118\", \"T024-00119\"]\n    },\n    {\n      \"claim\": \"At 13:32:09, taskhostw.exe on WS-MLOPEZ-01 generated an explicit-credentials event naming svc-bkp and PROXY-HD-01. The inventory places svc-bkp on FILE-HD-01, so this credential event on Maria's workstation is unexplained by the supplied context; the event alone does not establish successful authentication.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T024-00043\"]\n    },\n    {\n      \"claim\": \"At 14:11:00, Google Drive File Stream started under maria.lopez. The supplied inventory does not list Google Drive as approved, but these records do not show that it synchronized or uploaded files.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T024-00278\", \"T024-00279\", \"T024-00280\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records cover only the specified one-hour window; they do not establish the prior installation or longer-term behavior of Google Drive File Stream.\",\n    \"The records show the PowerShell command line and subsequent patch activity, but not the contents, integrity, or source history of Deploy-Patches.ps1.\",\n    \"The explicit-credentials event does not by itself show whether svc-bkp authentication to the proxy succeeded or what network activity followed.\",\n    \"The supplied records do not show whether Google Drive File Stream accessed or transferred files.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the svc-bkp credential event was authorized, successful, or related to the reported PowerShell window.\",\n    \"Whether Google Drive File Stream was authorized for Maria or performed any cloud-storage activity.\",\n    \"Whether the patch script or downloaded update was authentic and unmodified.\",\n    \"Whether any malicious activity occurred outside the supplied telemetry or time window.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Review Deploy-Patches.ps1 and its hash, signature, source, and execution logs on FILE-HD-01; verify the update package and its provenance.\",\n    \"Correlate the svc-bkp event with proxy authentication/access logs, taskhostw scheduled-task details, and svc-bkp account-use history on FILE-HD-01.\",\n    \"Determine how Google Drive File Stream was installed and authorized, and review its sync, file-access, and network-transfer logs.\",\n    \"Confirm with Maria the exact time and context of the reported window, and with Omar whether this workstation patch run was expected.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 48298,
+    "output": 2330
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "The PowerShell execution visible in the records occurred at 13:44:39 UTC, after the reported approximate time. It ran as omar.haddad and invoked the inventory-listed patch script from \\\\FILE-HD-01\\IT\\Deploy-Patches.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T024-00111",
+     "T024-00112"
+    ]
+   },
+   {
+    "claim": "Immediately beforehand, WS-MLOPEZ-01 recorded a network logon for omar.haddad from the workstation identified as WS-OHADDAD-01; the PowerShell process used that logon ID.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T024-00082",
+     "T024-00111",
+     "T024-00112"
+    ]
+   },
+   {
+    "claim": "The PowerShell process contacted the explicit proxy for a Windows Update download, then launched wusa.exe to install a Windows 11 update. This is consistent with the stated patching practice, though the script's contents are not shown.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T024-00113",
+     "T024-00116",
+     "T024-00117",
+     "T024-00118",
+     "T024-00119"
+    ]
+   },
+   {
+    "claim": "At 13:32:09, taskhostw.exe on WS-MLOPEZ-01 generated an explicit-credentials event naming svc-bkp and PROXY-HD-01. The inventory places svc-bkp on FILE-HD-01, so this credential event on Maria's workstation is unexplained by the supplied context; the event alone does not establish successful authentication.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T024-00043"
+    ]
+   },
+   {
+    "claim": "At 14:11:00, Google Drive File Stream started under maria.lopez. The supplied inventory does not list Google Drive as approved, but these records do not show that it synchronized or uploaded files.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T024-00278",
+     "T024-00279",
+     "T024-00280"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records cover only the specified one-hour window; they do not establish the prior installation or longer-term behavior of Google Drive File Stream.",
+   "The records show the PowerShell command line and subsequent patch activity, but not the contents, integrity, or source history of Deploy-Patches.ps1.",
+   "The explicit-credentials event does not by itself show whether svc-bkp authentication to the proxy succeeded or what network activity followed.",
+   "The supplied records do not show whether Google Drive File Stream accessed or transferred files."
+  ],
+  "claims_not_established": [
+   "Whether the svc-bkp credential event was authorized, successful, or related to the reported PowerShell window.",
+   "Whether Google Drive File Stream was authorized for Maria or performed any cloud-storage activity.",
+   "Whether the patch script or downloaded update was authentic and unmodified.",
+   "Whether any malicious activity occurred outside the supplied telemetry or time window."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Review Deploy-Patches.ps1 and its hash, signature, source, and execution logs on FILE-HD-01; verify the update package and its provenance.",
+   "Correlate the svc-bkp event with proxy authentication/access logs, taskhostw scheduled-task details, and svc-bkp account-use history on FILE-HD-01.",
+   "Determine how Google Drive File Stream was installed and authorized, and review its sync, file-access, and network-transfer logs.",
+   "Confirm with Maria the exact time and context of the reported window, and with Omar whether this workstation patch run was expected."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 14,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.3
+}

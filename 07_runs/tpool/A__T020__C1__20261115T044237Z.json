@@ -1,0 +1,95 @@
+{
+ "run_id": "A__T020__C1__20261115T044237Z",
+ "config": "A",
+ "scenario_id": "T020",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 519,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 208551,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.86,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The large transfer is consistent with the approved backup activity: cvagent.exe ran as svc-bkp with a CobaltVault target, and a subsequent proxy tunnel to ingest.cobaltvault.net recorded 640,000,000 client-to-server bytes.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T020-00278\",\n        \"T020-00279\",\n        \"T020-00281\",\n        \"T020-00285\",\n        \"T020-00286\",\n        \"T020-00288\"\n      ]\n    },\n    {\n      \"claim\": \"Shortly before the backup process started, the domain controller recorded a service-ticket request for svc-bkp to FILE-HD-01$ from public IP 23.129.64.210, followed by a svc-bkp service logon on FILE-HD-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T020-00264\",\n        \"T020-00265\"\n      ]\n    },\n    {\n      \"claim\": \"A PowerShell process on WS-OHADDAD-01 used explicit credentials targeting svc-bkp on FILE-HD-01 shortly before the public-IP ticket event. The records do not establish who initiated or authorized this credential use.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T020-00147\",\n        \"T020-00264\"\n      ]\n    },\n    {\n      \"claim\": \"Lucy Park launched Remote Desktop from WS-LPARK-01 to FILE-HD-01, and FILE-HD-01 recorded an interactive logon for lucy.park. This is inconsistent with the supplied practice that remote administration is only done from WS-OHADDAD-01, but the records alone do not establish malicious intent.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T020-00339\",\n        \"T020-00342\",\n        \"T020-00349\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The bulk-transfer records report tunnel byte counts but do not identify the transferred files, their contents, or whether they match an expected backup set.\",\n    \"The supplied records do not show the source host or authentication exchange behind the public-IP service-ticket request beyond the IP recorded in the domain-controller event.\",\n    \"The RDP records establish a session and user logon, but do not show the user's actions or explain whether the access was authorized.\",\n    \"The supplied evidence does not include corroborating change records, backup manifests, or a complete authentication and endpoint timeline.\"\n  ],\n  \"claims_not_established\": [\n    \"That the 640 MB transfer contained stolen data rather than backup data.\",\n    \"That the svc-bkp ticket request from the public IP was an attacker rather than a logging, network, or other explainable anomaly.\",\n    \"That Lucy Park's RDP session was malicious or unauthorized in the specific circumstances.\",\n    \"That the backup process or its executable was compromised.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Validate the public-IP ticket request against domain-controller and network-edge logs, including whether that IP can legitimately reach the domain controller and what principal or client initiated the request.\",\n    \"Review the CobaltVault job history, backup manifest, destination-side receipt, and file or snapshot inventory for the transfer.\",\n    \"Confirm with Omar Haddad whether the svc-bkp credential use from WS-OHADDAD-01 was expected and review the relevant PowerShell command history and endpoint telemetry.\",\n    \"Confirm with Lucy Park and the help desk whether the RDP session was approved; collect RDP session activity and FILE-HD-01 logon/session audit details.\",\n    \"Check for related svc-bkp credential changes, failures, or use from other hosts and network locations around the alert window.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 76572,
+    "output": 3041,
+    "reasoning": 2162
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.86,
+  "supporting_observations": [
+   {
+    "claim": "The large transfer is consistent with the approved backup activity: cvagent.exe ran as svc-bkp with a CobaltVault target, and a subsequent proxy tunnel to ingest.cobaltvault.net recorded 640,000,000 client-to-server bytes.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T020-00278",
+     "T020-00279",
+     "T020-00281",
+     "T020-00285",
+     "T020-00286",
+     "T020-00288"
+    ]
+   },
+   {
+    "claim": "Shortly before the backup process started, the domain controller recorded a service-ticket request for svc-bkp to FILE-HD-01$ from public IP 23.129.64.210, followed by a svc-bkp service logon on FILE-HD-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00264",
+     "T020-00265"
+    ]
+   },
+   {
+    "claim": "A PowerShell process on WS-OHADDAD-01 used explicit credentials targeting svc-bkp on FILE-HD-01 shortly before the public-IP ticket event. The records do not establish who initiated or authorized this credential use.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00147",
+     "T020-00264"
+    ]
+   },
+   {
+    "claim": "Lucy Park launched Remote Desktop from WS-LPARK-01 to FILE-HD-01, and FILE-HD-01 recorded an interactive logon for lucy.park. This is inconsistent with the supplied practice that remote administration is only done from WS-OHADDAD-01, but the records alone do not establish malicious intent.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T020-00339",
+     "T020-00342",
+     "T020-00349"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The bulk-transfer records report tunnel byte counts but do not identify the transferred files, their contents, or whether they match an expected backup set.",
+   "The supplied records do not show the source host or authentication exchange behind the public-IP service-ticket request beyond the IP recorded in the domain-controller event.",
+   "The RDP records establish a session and user logon, but do not show the user's actions or explain whether the access was authorized.",
+   "The supplied evidence does not include corroborating change records, backup manifests, or a complete authentication and endpoint timeline."
+  ],
+  "claims_not_established": [
+   "That the 640 MB transfer contained stolen data rather than backup data.",
+   "That the svc-bkp ticket request from the public IP was an attacker rather than a logging, network, or other explainable anomaly.",
+   "That Lucy Park's RDP session was malicious or unauthorized in the specific circumstances.",
+   "That the backup process or its executable was compromised."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Validate the public-IP ticket request against domain-controller and network-edge logs, including whether that IP can legitimately reach the domain controller and what principal or client initiated the request.",
+   "Review the CobaltVault job history, backup manifest, destination-side receipt, and file or snapshot inventory for the transfer.",
+   "Confirm with Omar Haddad whether the svc-bkp credential use from WS-OHADDAD-01 was expected and review the relevant PowerShell command history and endpoint telemetry.",
+   "Confirm with Lucy Park and the help desk whether the RDP session was approved; collect RDP session activity and FILE-HD-01 logon/session audit details.",
+   "Check for related svc-bkp credential changes, failures, or use from other hosts and network locations around the alert window."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 32.1
+}

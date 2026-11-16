@@ -1,0 +1,75 @@
+{
+ "scenario_id": "T211",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.84,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded two failed network logons for eli.brooks using NTLM from 203.0.113.133; both failures have status 0xc000006d and substatus 0xc000006a.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T211-00006\",\n        \"T211-00013\"\n      ]\n    },\n    {\n      \"claim\": \"About one minute after the second failure, the domain controller recorded a successful NTLM network logon for eli.brooks from the same source address, 203.0.113.133.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T211-00013\",\n        \"T211-00014\"\n      ]\n    },\n    {\n      \"claim\": \"The failed-then-successful domain authentication from this source is not explained by the stated access model: the organization has no VPN, and remote administration is only performed from WS-KITO-01.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T211-00006\",\n        \"T211-00013\",\n        \"T211-00014\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show the source address as 203.0.113.133, but the supplied evidence does not establish its actual origin, whether it was transformed or sanitized, or who controlled it.\",\n    \"The successful logon record does not identify a verified source host; its WorkstationName is DC-BLU-01 while the recorded source address is 203.0.113.133.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish who initiated the authentication or whether eli.brooks's credentials were compromised.\",\n    \"The evidence does not establish what resources, if any, were accessed after the successful logon or whether further activity occurred.\",\n    \"The evidence does not establish whether the recorded source address represents a real originating address or a transformed value.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Validate the source address against network, firewall, and domain-controller telemetry, including any address translation or log sanitization.\",\n    \"Review DC-BLU-01 authentication and session events associated with TargetLogonId 0x10eedd42 and identify subsequent access by that logon.\",\n    \"Confirm with eli.brooks whether the authentication was expected; review account activity and credential-reset history around the event.\",\n    \"Check for related authentication attempts from the same source against other accounts and systems.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox.exe was launched under eli.brooks on WS-EBROOKS-01. Dropbox is not among the organization's approved software or file-sharing services; track separately and do not use this alone to decide the alerted authentication activity. (T211-00001, T211-00002, T211-00003)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 7512,
+    "output": 1787
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.84,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded two failed network logons for eli.brooks using NTLM from 203.0.113.133; both failures have status 0xc000006d and substatus 0xc000006a.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T211-00006",
+     "T211-00013"
+    ]
+   },
+   {
+    "claim": "About one minute after the second failure, the domain controller recorded a successful NTLM network logon for eli.brooks from the same source address, 203.0.113.133.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T211-00013",
+     "T211-00014"
+    ]
+   },
+   {
+    "claim": "The failed-then-successful domain authentication from this source is not explained by the stated access model: the organization has no VPN, and remote administration is only performed from WS-KITO-01.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T211-00006",
+     "T211-00013",
+     "T211-00014"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show the source address as 203.0.113.133, but the supplied evidence does not establish its actual origin, whether it was transformed or sanitized, or who controlled it.",
+   "The successful logon record does not identify a verified source host; its WorkstationName is DC-BLU-01 while the recorded source address is 203.0.113.133."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish who initiated the authentication or whether eli.brooks's credentials were compromised.",
+   "The evidence does not establish what resources, if any, were accessed after the successful logon or whether further activity occurred.",
+   "The evidence does not establish whether the recorded source address represents a real originating address or a transformed value."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Validate the source address against network, firewall, and domain-controller telemetry, including any address translation or log sanitization.",
+   "Review DC-BLU-01 authentication and session events associated with TargetLogonId 0x10eedd42 and identify subsequent access by that logon.",
+   "Confirm with eli.brooks whether the authentication was expected; review account activity and credential-reset history around the event.",
+   "Check for related authentication attempts from the same source against other accounts and systems."
+  ],
+  "unrelated_findings": [
+   "Dropbox.exe was launched under eli.brooks on WS-EBROOKS-01. Dropbox is not among the organization's approved software or file-sharing services; track separately and do not use this alone to decide the alerted authentication activity. (T211-00001, T211-00002, T211-00003)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 7,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.1
+}

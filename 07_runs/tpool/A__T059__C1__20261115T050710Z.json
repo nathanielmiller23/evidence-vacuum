@@ -1,0 +1,85 @@
+{
+ "run_id": "A__T059__C1__20261115T050710Z",
+ "config": "A",
+ "scenario_id": "T059",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 389,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 162758,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45:20 UTC, ivy.chen ran PowerShell from Explorer to compress \\\\\\\\FILE-NWD-01\\\\Shared\\\\Clients into C:\\\\Users\\\\ivy.chen\\\\AppData\\\\Local\\\\Temp\\\\c.zip; Sysmon recorded creation of that archive seconds later.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T059-00102\", \"T059-00103\", \"T059-00104\"]\n    },\n    {\n      \"claim\": \"At 13:50:49\u201313:50:50 UTC, Chrome on WS-ICHEN-01 sent about 51 MB of client-to-server tunnel data through the proxy to quickshare-drop.net. The observed destination is not among the organization's approved services, and the inventory says no other file-sharing or cloud-storage services are approved.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T059-00174\", \"T059-00175\", \"T059-00176\", \"T059-00177\"]\n    },\n    {\n      \"claim\": \"The close timing and sequence\u2014archiving a client share locally, followed minutes later by a large outbound transfer to an unapproved sharing domain\u2014strongly support suspected data exfiltration.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T059-00102\", \"T059-00104\", \"T059-00174\", \"T059-00175\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and connection records show the destination and approximate outbound tunnel bytes, but do not expose the upload request path or contents.\",\n    \"The provided records do not show the archive's size, contents, or hash, or establish that c.zip specifically accounted for all bytes sent.\",\n    \"The records do not establish whether the destination received or retained the data, or whether the user had a specific authorization not represented in the supplied inventory.\"\n  ],\n  \"claims_not_established\": [\n    \"That the 51 MB transfer consisted of c.zip rather than other data.\",\n    \"Which files or sensitive information were in the archive.\",\n    \"Whether ivy.chen knowingly initiated the transfer, was acting under authorization, or had an account or device compromised.\",\n    \"Whether the remote service successfully retained the transferred data.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Collect c.zip and relevant source-file metadata, including file size, contents, timestamps, and hashes.\",\n    \"Obtain browser history, upload-related artifacts, and endpoint process/file-access telemetry to link the archive to the transfer.\",\n    \"Review proxy or destination-side records for the upload request, account, and transfer outcome; assess quickshare-drop.net's ownership and reputation.\",\n    \"Confirm with the user and data owner whether any approved business purpose or exception applied.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 60165,
+    "output": 1289,
+    "reasoning": 640
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45:20 UTC, ivy.chen ran PowerShell from Explorer to compress \\\\FILE-NWD-01\\Shared\\Clients into C:\\Users\\ivy.chen\\AppData\\Local\\Temp\\c.zip; Sysmon recorded creation of that archive seconds later.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00102",
+     "T059-00103",
+     "T059-00104"
+    ]
+   },
+   {
+    "claim": "At 13:50:49\u201313:50:50 UTC, Chrome on WS-ICHEN-01 sent about 51 MB of client-to-server tunnel data through the proxy to quickshare-drop.net. The observed destination is not among the organization's approved services, and the inventory says no other file-sharing or cloud-storage services are approved.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00174",
+     "T059-00175",
+     "T059-00176",
+     "T059-00177"
+    ]
+   },
+   {
+    "claim": "The close timing and sequence\u2014archiving a client share locally, followed minutes later by a large outbound transfer to an unapproved sharing domain\u2014strongly support suspected data exfiltration.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T059-00102",
+     "T059-00104",
+     "T059-00174",
+     "T059-00175"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and connection records show the destination and approximate outbound tunnel bytes, but do not expose the upload request path or contents.",
+   "The provided records do not show the archive's size, contents, or hash, or establish that c.zip specifically accounted for all bytes sent.",
+   "The records do not establish whether the destination received or retained the data, or whether the user had a specific authorization not represented in the supplied inventory."
+  ],
+  "claims_not_established": [
+   "That the 51 MB transfer consisted of c.zip rather than other data.",
+   "Which files or sensitive information were in the archive.",
+   "Whether ivy.chen knowingly initiated the transfer, was acting under authorization, or had an account or device compromised.",
+   "Whether the remote service successfully retained the transferred data."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Collect c.zip and relevant source-file metadata, including file size, contents, timestamps, and hashes.",
+   "Obtain browser history, upload-related artifacts, and endpoint process/file-access telemetry to link the archive to the transfer.",
+   "Review proxy or destination-side records for the upload request, account, and transfer outcome; assess quickshare-drop.net's ownership and reputation.",
+   "Confirm with the user and data owner whether any approved business purpose or exception applied."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 13.4
+}

@@ -1,0 +1,87 @@
+{
+ "run_id": "A__T057__C2__20261115T050621Z",
+ "config": "A",
+ "scenario_id": "T057",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 116,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 48451,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"On 2026-10-27 at 13:46:49 UTC, sysmaint was created on DC-NWD-01; the event names sam.okafor as the subject.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T057-00089\"]\n    },\n    {\n      \"claim\": \"About two seconds later, sysmaint was added to the Administrators group by sam.okafor under the same subject logon ID.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T057-00089\", \"T057-00090\"]\n    },\n    {\n      \"claim\": \"The account name and Administrators membership do not match the stated help-desk practice for temporary accounts, which uses ext.<name> accounts without administrator rights. This is suspicious, but does not by itself establish that the account was unauthorized.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T057-00089\", \"T057-00090\"]\n    },\n    {\n      \"claim\": \"The supplied account-management events attribute the changes to sam.okafor but do not identify the originating host or establish whether the actions were approved.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T057-00089\", \"T057-00090\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The account creation and group-membership records do not include an originating IP address or host; they provide a subject logon ID but the supplied evidence does not link it to a source session. (T057-00089, T057-00090)\",\n    \"The supplied evidence does not show subsequent logons or activity by sysmaint.\",\n    \"The evidence does not include a change request or other authorization record for creating this account or granting it administrator membership.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether sam.okafor personally performed these actions or the account or session was misused.\",\n    \"Whether creating sysmaint and adding it to Administrators was authorized.\",\n    \"Which host or session originated the changes.\",\n    \"Whether sysmaint was used after creation or for malicious activity.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"DC-NWD-01 logon and authentication events corresponding to subject logon ID 0x13ef891e, including source host and address.\",\n    \"Change tickets, approvals, or administrator records explaining the purpose of sysmaint and its Administrators membership.\",\n    \"Endpoint and PowerShell/remote-administration telemetry from WS-SOKAFOR-01 and other candidate source hosts around 13:46 UTC.\",\n    \"sysmaint account sign-in history, subsequent group changes, and any actions performed using the account.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 18140,
+    "output": 2401,
+    "reasoning": 1756
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "On 2026-10-27 at 13:46:49 UTC, sysmaint was created on DC-NWD-01; the event names sam.okafor as the subject.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T057-00089"
+    ]
+   },
+   {
+    "claim": "About two seconds later, sysmaint was added to the Administrators group by sam.okafor under the same subject logon ID.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T057-00089",
+     "T057-00090"
+    ]
+   },
+   {
+    "claim": "The account name and Administrators membership do not match the stated help-desk practice for temporary accounts, which uses ext.<name> accounts without administrator rights. This is suspicious, but does not by itself establish that the account was unauthorized.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T057-00089",
+     "T057-00090"
+    ]
+   },
+   {
+    "claim": "The supplied account-management events attribute the changes to sam.okafor but do not identify the originating host or establish whether the actions were approved.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T057-00089",
+     "T057-00090"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The account creation and group-membership records do not include an originating IP address or host; they provide a subject logon ID but the supplied evidence does not link it to a source session. (T057-00089, T057-00090)",
+   "The supplied evidence does not show subsequent logons or activity by sysmaint.",
+   "The evidence does not include a change request or other authorization record for creating this account or granting it administrator membership."
+  ],
+  "claims_not_established": [
+   "Whether sam.okafor personally performed these actions or the account or session was misused.",
+   "Whether creating sysmaint and adding it to Administrators was authorized.",
+   "Which host or session originated the changes.",
+   "Whether sysmaint was used after creation or for malicious activity."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "DC-NWD-01 logon and authentication events corresponding to subject logon ID 0x13ef891e, including source host and address.",
+   "Change tickets, approvals, or administrator records explaining the purpose of sysmaint and its Administrators membership.",
+   "Endpoint and PowerShell/remote-administration telemetry from WS-SOKAFOR-01 and other candidate source hosts around 13:46 UTC.",
+   "sysmaint account sign-in history, subsequent group changes, and any actions performed using the account."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 7,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 24.8
+}

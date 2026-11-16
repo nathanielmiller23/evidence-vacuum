@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GateTrainingRow",
+  "description": "One SFT row for the evidence-sufficiency gate (H5). T-pool only; never S-pool.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "row_id",
+    "scenario_id",
+    "archetype",
+    "gap_mechanism",
+    "condition",
+    "input_source",
+    "input",
+    "target"
+  ],
+  "properties": {
+    "row_id": {
+      "type": "string"
+    },
+    "scenario_id": {
+      "type": "string",
+      "pattern": "^T[0-9]+"
+    },
+    "archetype": {
+      "type": "string"
+    },
+    "gap_mechanism": {
+      "type": "string"
+    },
+    "input_source": {
+      "type": "string",
+      "enum": [
+        "real_investigator",
+        "synthetic_summary"
+      ]
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "investigator_output",
+        "coverage_manifest"
+      ],
+      "properties": {
+        "investigator_output": {
+          "$ref": "output_schema.json"
+        },
+        "coverage_manifest": {
+          "type": [
+            "object",
+            "null"
+          ]
+        }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "closure_justified",
+        "epistemic_status",
+        "missing_decisive_evidence",
+        "recommended_action"
+      ],
+      "properties": {
+        "closure_justified": {
+          "type": "boolean"
+        },
+        "epistemic_status": {
+          "type": "string",
+          "enum": [
+            "malicious_supported",
+            "benign_supported",
+            "insufficient_evidence"
+          ]
+        },
+        "missing_decisive_evidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "recommended_action": {
+          "type": "string",
+          "enum": [
+            "close",
+            "escalate",
+            "collect_more"
+          ]
+        }
+      }
+    },
+    "condition": {
+      "type": "string",
+      "enum": [
+        "C1",
+        "C2",
+        "C3"
+      ],
+      "description": "Metadata only. Never rendered into the gate prompt (it would leak the gap in C2)."
+    }
+  }
+}

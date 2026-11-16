@@ -1,0 +1,95 @@
+{
+ "run_id": "A__T050__C2__20261115T050125Z",
+ "config": "A",
+ "scenario_id": "T050",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 496,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 197442,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The large transfer is strongly consistent with the approved StratoSafe backup: stsync.exe ran as svc-archive with the Nightly job and the approved ingest.stratosafe-backup.com target, and the proxy recorded about 640 MB sent through its tunnel.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T050-00237\",\n        \"T050-00238\",\n        \"T050-00239\",\n        \"T050-00244\",\n        \"T050-00245\",\n        \"T050-00247\"\n      ]\n    },\n    {\n      \"claim\": \"Shortly before the backup process ran, the domain controller recorded a Kerberos service-ticket event for svc-archive from public IP 45.79.19.196, requesting a ticket for FILE-NWD-01. This source is not explained by the supplied environment context, which says there is no VPN and remote administration is only done from WS-SOKAFOR-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T050-00223\"\n      ]\n    },\n    {\n      \"claim\": \"FILE-NWD-01 then recorded a local service logon for svc-archive, followed by stsync.exe starting under that account. These records connect the backup activity to svc-archive but do not establish whether the earlier public-IP ticket request was authorized.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T050-00224\",\n        \"T050-00237\",\n        \"T050-00238\"\n      ]\n    },\n    {\n      \"claim\": \"At 14:18, help-desk user nora.blake launched Remote Desktop to FILE-NWD-01 from WS-NBLAKE-01, and FILE-NWD-01 recorded a type 10 logon for her. This is outside the stated practice that remote administration is only performed from WS-SOKAFOR-01, but the records do not show what she did in the session.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T050-00441\",\n        \"T050-00444\",\n        \"T050-00448\",\n        \"T050-00459\",\n        \"T050-00460\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and connection records show destination and byte counts, but not the files or data content transferred.\",\n    \"The supplied records do not identify the device or person behind public IP 45.79.19.196, or establish whether that Kerberos request was associated with an authorized external service.\",\n    \"The records show that an RDP session for nora.blake was established, but do not include session activity sufficient to determine its purpose or actions.\"\n  ],\n  \"claims_not_established\": [\n    \"That the 640 MB transfer contained unauthorized data or was malicious exfiltration.\",\n    \"That the svc-archive Kerberos request from the public IP was authorized, or that it reflects compromised credentials.\",\n    \"That nora.blake's RDP session was malicious or related to the earlier transfer.\",\n    \"That the transfer was initiated by anyone other than the recorded stsync.exe process running as svc-archive.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Correlate the public IP in T050-00223 with DC, firewall, NAT, and network perimeter logs; verify whether it is expected for any approved service.\",\n    \"Review svc-archive credential, password-change, and service authentication audit records, including the backup agent's job and execution logs.\",\n    \"Obtain StratoSafe-side receipt or job records and, if available, the backup manifest to confirm what was uploaded.\",\n    \"Review the authentication and session audit trail for nora.blake's RDP connection and confirm whether it was authorized.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 72779,
+    "output": 2553,
+    "reasoning": 1672
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "The large transfer is strongly consistent with the approved StratoSafe backup: stsync.exe ran as svc-archive with the Nightly job and the approved ingest.stratosafe-backup.com target, and the proxy recorded about 640 MB sent through its tunnel.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T050-00237",
+     "T050-00238",
+     "T050-00239",
+     "T050-00244",
+     "T050-00245",
+     "T050-00247"
+    ]
+   },
+   {
+    "claim": "Shortly before the backup process ran, the domain controller recorded a Kerberos service-ticket event for svc-archive from public IP 45.79.19.196, requesting a ticket for FILE-NWD-01. This source is not explained by the supplied environment context, which says there is no VPN and remote administration is only done from WS-SOKAFOR-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T050-00223"
+    ]
+   },
+   {
+    "claim": "FILE-NWD-01 then recorded a local service logon for svc-archive, followed by stsync.exe starting under that account. These records connect the backup activity to svc-archive but do not establish whether the earlier public-IP ticket request was authorized.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T050-00224",
+     "T050-00237",
+     "T050-00238"
+    ]
+   },
+   {
+    "claim": "At 14:18, help-desk user nora.blake launched Remote Desktop to FILE-NWD-01 from WS-NBLAKE-01, and FILE-NWD-01 recorded a type 10 logon for her. This is outside the stated practice that remote administration is only performed from WS-SOKAFOR-01, but the records do not show what she did in the session.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T050-00441",
+     "T050-00444",
+     "T050-00448",
+     "T050-00459",
+     "T050-00460"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and connection records show destination and byte counts, but not the files or data content transferred.",
+   "The supplied records do not identify the device or person behind public IP 45.79.19.196, or establish whether that Kerberos request was associated with an authorized external service.",
+   "The records show that an RDP session for nora.blake was established, but do not include session activity sufficient to determine its purpose or actions."
+  ],
+  "claims_not_established": [
+   "That the 640 MB transfer contained unauthorized data or was malicious exfiltration.",
+   "That the svc-archive Kerberos request from the public IP was authorized, or that it reflects compromised credentials.",
+   "That nora.blake's RDP session was malicious or related to the earlier transfer.",
+   "That the transfer was initiated by anyone other than the recorded stsync.exe process running as svc-archive."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Correlate the public IP in T050-00223 with DC, firewall, NAT, and network perimeter logs; verify whether it is expected for any approved service.",
+   "Review svc-archive credential, password-change, and service authentication audit records, including the backup agent's job and execution logs.",
+   "Obtain StratoSafe-side receipt or job records and, if available, the backup manifest to confirm what was uploaded.",
+   "Review the authentication and session audit trail for nora.blake's RDP connection and confirm whether it was authorized."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 27.3
+}

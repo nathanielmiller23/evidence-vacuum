@@ -1,0 +1,127 @@
+{
+ "run_id": "A__T060__C1__20261115T050745Z",
+ "config": "A",
+ "scenario_id": "T060",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 541,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 215831,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The large transfer is attributable to the approved StratoSafe backup executable, running as svc-archive and targeting the approved ingest.stratosafe-backup.com endpoint. The proxy records 640,000,000 client-to-server bytes.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T060-00285\", \"T060-00286\", \"T060-00287\", \"T060-00297\", \"T060-00298\", \"T060-00300\"]\n    },\n    {\n      \"claim\": \"The backup transfer alone is consistent with the inventory's description of the approved backup agent uploading several hundred MB; it is not by itself evidence of exfiltration to an unapproved service.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T060-00285\", \"T060-00287\", \"T060-00297\", \"T060-00298\"]\n    },\n    {\n      \"claim\": \"The domain controller recorded a Kerberos service-ticket request for svc-archive from public IP 139.162.174.124, shortly before the local svc-archive service logon and backup process launch.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T060-00279\", \"T060-00280\", \"T060-00285\"]\n    },\n    {\n      \"claim\": \"The public-IP authentication source is inconsistent with the stated environment context of no VPN and warrants treating the svc-archive activity as suspicious, even though the subsequent backup process and destination are approved.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T060-00279\", \"T060-00280\", \"T060-00285\"]\n    },\n    {\n      \"claim\": \"At 14:14, PROXY-NWD-01 connected to FILE-NWD-01 over RDP, and FILE-NWD-01 recorded a failed network logon attempt for the disabled account svc_mgmt from that host.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T060-00500\", \"T060-00501\", \"T060-00503\"]\n    },\n    {\n      \"claim\": \"Shortly afterward, FILE-NWD-01 connected to PROXY-NWD-01 over SSH and attempted SMB authentication to DC-NWD-01 using svc_mgmt; the domain controller recorded that logon attempt as failed.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T060-00504\", \"T060-00505\", \"T060-00507\", \"T060-00509\"]\n    },\n    {\n      \"claim\": \"The RDP attempt from the proxy and the subsequent SSH and SMB activity are not explained by the stated remote-administration practice, which limits remote administration to WS-SOKAFOR-01.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T060-00500\", \"T060-00503\", \"T060-00504\", \"T060-00505\", \"T060-00509\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy CONNECT record gives the byte count and destination, but the available records do not establish the contents or sensitivity of the transferred data.\",\n    \"The records show the SSH connection and failed svc_mgmt authentication attempts, but do not establish successful SSH authentication, successful access to the domain controller, or what occurred inside either session.\",\n    \"The Kerberos record identifies a public source IP for the svc-archive ticket request, but the available evidence does not explain how that request originated or rule out a logging, address-attribution, or configuration issue.\"\n  ],\n  \"claims_not_established\": [\n    \"That the 640 MB backup transfer contained stolen or otherwise unauthorized data.\",\n    \"That an attacker successfully authenticated as svc-archive or svc_mgmt.\",\n    \"That the RDP or SSH connections resulted in a successful interactive session.\",\n    \"That the public-IP Kerberos request and the later suspicious connections were performed by the same actor.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Review domain-controller Kerberos and network logs, including relevant firewall/NAT records, to validate the source and disposition of the svc-archive ticket request from 139.162.174.124.\",\n    \"Collect FILE-NWD-01 service configuration and scheduled-task history for svc-archive and the StratoSafe job, and verify the executable's signature, hash, and integrity.\",\n    \"Obtain RDP and SSH server authentication/session logs from FILE-NWD-01 and PROXY-NWD-01, plus proxy host telemetry, to determine whether any session succeeded and what processes or commands followed.\",\n    \"Review the svc_mgmt account's status and authentication history, and correlate the failed attempts across FILE-NWD-01 and DC-NWD-01.\",\n    \"Validate the backup job's run schedule, expected data volume, and destination-side receipt records against the observed transfer.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 79902,
+    "output": 2124,
+    "reasoning": 1024
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "The large transfer is attributable to the approved StratoSafe backup executable, running as svc-archive and targeting the approved ingest.stratosafe-backup.com endpoint. The proxy records 640,000,000 client-to-server bytes.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T060-00285",
+     "T060-00286",
+     "T060-00287",
+     "T060-00297",
+     "T060-00298",
+     "T060-00300"
+    ]
+   },
+   {
+    "claim": "The backup transfer alone is consistent with the inventory's description of the approved backup agent uploading several hundred MB; it is not by itself evidence of exfiltration to an unapproved service.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T060-00285",
+     "T060-00287",
+     "T060-00297",
+     "T060-00298"
+    ]
+   },
+   {
+    "claim": "The domain controller recorded a Kerberos service-ticket request for svc-archive from public IP 139.162.174.124, shortly before the local svc-archive service logon and backup process launch.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T060-00279",
+     "T060-00280",
+     "T060-00285"
+    ]
+   },
+   {
+    "claim": "The public-IP authentication source is inconsistent with the stated environment context of no VPN and warrants treating the svc-archive activity as suspicious, even though the subsequent backup process and destination are approved.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T060-00279",
+     "T060-00280",
+     "T060-00285"
+    ]
+   },
+   {
+    "claim": "At 14:14, PROXY-NWD-01 connected to FILE-NWD-01 over RDP, and FILE-NWD-01 recorded a failed network logon attempt for the disabled account svc_mgmt from that host.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T060-00500",
+     "T060-00501",
+     "T060-00503"
+    ]
+   },
+   {
+    "claim": "Shortly afterward, FILE-NWD-01 connected to PROXY-NWD-01 over SSH and attempted SMB authentication to DC-NWD-01 using svc_mgmt; the domain controller recorded that logon attempt as failed.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T060-00504",
+     "T060-00505",
+     "T060-00507",
+     "T060-00509"
+    ]
+   },
+   {
+    "claim": "The RDP attempt from the proxy and the subsequent SSH and SMB activity are not explained by the stated remote-administration practice, which limits remote administration to WS-SOKAFOR-01.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T060-00500",
+     "T060-00503",
+     "T060-00504",
+     "T060-00505",
+     "T060-00509"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy CONNECT record gives the byte count and destination, but the available records do not establish the contents or sensitivity of the transferred data.",
+   "The records show the SSH connection and failed svc_mgmt authentication attempts, but do not establish successful SSH authentication, successful access to the domain controller, or what occurred inside either session.",
+   "The Kerberos record identifies a public source IP for the svc-archive ticket request, but the available evidence does not explain how that request originated or rule out a logging, address-attribution, or configuration issue."
+  ],
+  "claims_not_established": [
+   "That the 640 MB backup transfer contained stolen or otherwise unauthorized data.",
+   "That an attacker successfully authenticated as svc-archive or svc_mgmt.",
+   "That the RDP or SSH connections resulted in a successful interactive session.",
+   "That the public-IP Kerberos request and the later suspicious connections were performed by the same actor."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Review domain-controller Kerberos and network logs, including relevant firewall/NAT records, to validate the source and disposition of the svc-archive ticket request from 139.162.174.124.",
+   "Collect FILE-NWD-01 service configuration and scheduled-task history for svc-archive and the StratoSafe job, and verify the executable's signature, hash, and integrity.",
+   "Obtain RDP and SSH server authentication/session logs from FILE-NWD-01 and PROXY-NWD-01, plus proxy host telemetry, to determine whether any session succeeded and what processes or commands followed.",
+   "Review the svc_mgmt account's status and authentication history, and correlate the failed attempts across FILE-NWD-01 and DC-NWD-01.",
+   "Validate the backup job's run schedule, expected data volume, and destination-side receipt records against the observed transfer."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 28,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.1
+}

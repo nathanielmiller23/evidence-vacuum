@@ -1,0 +1,103 @@
+{
+ "run_id": "A__T010__C3__20261115T043701Z",
+ "config": "A",
+ "scenario_id": "T010",
+ "condition": "C3",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 528,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 210104,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.93,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The supplied flow records around 13:46 show FILE-HD-01 communicating with DC-HD-01 over LDAP and Kerberos, but do not identify a large external transfer at that time.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T010-00338\", \"T010-00341\", \"T010-00343\", \"T010-00346\", \"T010-00349\", \"T010-00351\"]\n    },\n    {\n      \"claim\": \"FILE-HD-01 has multiple recorded connections to the explicit proxy on port 8080; the listed individual flows exchange only thousands to tens of thousands of bytes and do not reveal the requested URL or ultimate destination.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T010-00124\", \"T010-00233\", \"T010-00255\", \"T010-00325\", \"T010-00331\", \"T010-00362\", \"T010-00474\", \"T010-00516\"]\n    },\n    {\n      \"claim\": \"At 14:05, FILE-HD-01 initiated a connection to WS-OHADDAD-01 on RPC endpoint-mapper port 135. This is opposite the stated direction of the organization's normal patching practice, but the records do not show what, if anything, was executed.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T010-00528\", \"T010-00529\", \"T010-00530\"]\n    },\n    {\n      \"claim\": \"DC-HD-01 made a failed connection attempt to FILE-HD-01 on port 22 and a rejected attempt on port 8443. These are unusual in the supplied evidence, but neither record establishes successful access or a relationship to the reported transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T010-00445\", \"T010-00451\", \"T010-00452\", \"T010-00453\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"According to the supplied coverage status, FILE-HD-01 winsec and Sysmon were not collected from 13:30 to 14:10 UTC, overlapping both the reported transfer and the RPC connection to WS-OHADDAD-01.\",\n    \"According to the supplied coverage status, PROXY-HD-01 proxy logs were not collected from 13:30 to 14:10 UTC, so proxy request details and attribution for the reported transfer are unavailable.\",\n    \"The supplied Zeek flow records do not show the destination, content, or process responsible for the reported hundreds-of-megabytes transfer.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the reported transfer occurred as described, and its exact start time, destination, and byte count.\",\n    \"Whether the transfer was made by the approved CobaltVault agent or another process, and whether its destination was an approved backup service.\",\n    \"Whether the transfer contained authorized backup data or unauthorized/exfiltrated data.\",\n    \"Whether the connection from FILE-HD-01 to WS-OHADDAD-01 resulted in remote execution or was related to authorized patching.\",\n    \"Whether the failed DC-HD-01 connection attempts were authorized or related to the alert.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover or collect FILE-HD-01 process and security telemetry for 13:30\u201314:10 UTC, including process creation, service activity, file access, and outbound connection attribution.\",\n    \"Obtain PROXY-HD-01 access logs, firewall or flow records, and the alert's underlying destination and byte-count details for the transfer.\",\n    \"Review CobaltVault agent logs and execution records for the relevant time, and verify the destination and volume against an approved backup job.\",\n    \"Investigate endpoint and remote-administration logs on WS-OHADDAD-01 and FILE-HD-01 around 14:05 UTC to determine whether the RPC connection led to any action.\",\n    \"Check DC-HD-01 telemetry and change records to explain the port 22 and 8443 attempts.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 78150,
+    "output": 2657,
+    "reasoning": 1725
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.93,
+  "supporting_observations": [
+   {
+    "claim": "The supplied flow records around 13:46 show FILE-HD-01 communicating with DC-HD-01 over LDAP and Kerberos, but do not identify a large external transfer at that time.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T010-00338",
+     "T010-00341",
+     "T010-00343",
+     "T010-00346",
+     "T010-00349",
+     "T010-00351"
+    ]
+   },
+   {
+    "claim": "FILE-HD-01 has multiple recorded connections to the explicit proxy on port 8080; the listed individual flows exchange only thousands to tens of thousands of bytes and do not reveal the requested URL or ultimate destination.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T010-00124",
+     "T010-00233",
+     "T010-00255",
+     "T010-00325",
+     "T010-00331",
+     "T010-00362",
+     "T010-00474",
+     "T010-00516"
+    ]
+   },
+   {
+    "claim": "At 14:05, FILE-HD-01 initiated a connection to WS-OHADDAD-01 on RPC endpoint-mapper port 135. This is opposite the stated direction of the organization's normal patching practice, but the records do not show what, if anything, was executed.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T010-00528",
+     "T010-00529",
+     "T010-00530"
+    ]
+   },
+   {
+    "claim": "DC-HD-01 made a failed connection attempt to FILE-HD-01 on port 22 and a rejected attempt on port 8443. These are unusual in the supplied evidence, but neither record establishes successful access or a relationship to the reported transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T010-00445",
+     "T010-00451",
+     "T010-00452",
+     "T010-00453"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "According to the supplied coverage status, FILE-HD-01 winsec and Sysmon were not collected from 13:30 to 14:10 UTC, overlapping both the reported transfer and the RPC connection to WS-OHADDAD-01.",
+   "According to the supplied coverage status, PROXY-HD-01 proxy logs were not collected from 13:30 to 14:10 UTC, so proxy request details and attribution for the reported transfer are unavailable.",
+   "The supplied Zeek flow records do not show the destination, content, or process responsible for the reported hundreds-of-megabytes transfer."
+  ],
+  "claims_not_established": [
+   "Whether the reported transfer occurred as described, and its exact start time, destination, and byte count.",
+   "Whether the transfer was made by the approved CobaltVault agent or another process, and whether its destination was an approved backup service.",
+   "Whether the transfer contained authorized backup data or unauthorized/exfiltrated data.",
+   "Whether the connection from FILE-HD-01 to WS-OHADDAD-01 resulted in remote execution or was related to authorized patching.",
+   "Whether the failed DC-HD-01 connection attempts were authorized or related to the alert."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover or collect FILE-HD-01 process and security telemetry for 13:30\u201314:10 UTC, including process creation, service activity, file access, and outbound connection attribution.",
+   "Obtain PROXY-HD-01 access logs, firewall or flow records, and the alert's underlying destination and byte-count details for the transfer.",
+   "Review CobaltVault agent logs and execution records for the relevant time, and verify the destination and volume against an approved backup job.",
+   "Investigate endpoint and remote-administration logs on WS-OHADDAD-01 and FILE-HD-01 around 14:05 UTC to determine whether the RPC connection led to any action.",
+   "Check DC-HD-01 telemetry and change records to explain the port 22 and 8443 attempts."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 21,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 25.7
+}

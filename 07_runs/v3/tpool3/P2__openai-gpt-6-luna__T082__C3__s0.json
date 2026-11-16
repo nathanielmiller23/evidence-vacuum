@@ -1,0 +1,94 @@
+{
+ "scenario_id": "T082",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.87,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Repeated failed authentication attempts for svc-billing came from FILE-PIN-01 at roughly one-minute intervals. The failures report bad-password status, including 4625 events with SubStatus 0xc000006a and corresponding domain-controller authentication failures.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T082-00001\",\n        \"T082-00002\",\n        \"T082-00006\",\n        \"T082-00010\",\n        \"T082-00017\",\n        \"T082-00019\",\n        \"T082-00021\",\n        \"T082-00024\",\n        \"T082-00027\",\n        \"T082-00031\",\n        \"T082-00036\"\n      ]\n    },\n    {\n      \"claim\": \"The recurring failures are consistent with the provided change-calendar and service context: the svc-billing password was scheduled for rotation at 13:30 UTC, while BillingSync on FILE-PIN-01 re-authenticates every minute. This makes stale credentials after rotation a plausible explanation, but does not establish that this is the cause.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T082-00001\",\n        \"T082-00003\",\n        \"T082-00006\",\n        \"T082-00008\",\n        \"T082-00010\",\n        \"T082-00012\",\n        \"T082-00014\",\n        \"T082-00017\",\n        \"T082-00019\",\n        \"T082-00021\",\n        \"T082-00024\",\n        \"T082-00027\",\n        \"T082-00030\",\n        \"T082-00031\",\n        \"T082-00034\",\n        \"T082-00036\"\n      ]\n    },\n    {\n      \"claim\": \"At 14:05 UTC, a Windows PowerShell process running as SYSTEM used explicit credentials for svc-billing while targeting PROXY-PIN-01. This record shows an explicit-credential event, but does not show whether authentication succeeded or why the credentials were used.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T082-00038\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy logs were not collected for PROXY-PIN-01 from 13:30 to 14:20 UTC because of a collection outage, so proxy-side evidence to corroborate the 14:05 explicit-credential event is unavailable.\",\n    \"The available records do not identify which host or person corresponds to source IP 10.51.20.10 in the 14:05 event.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the svc-billing password rotation completed at 13:30 UTC and whether BillingSync was updated with the new password.\",\n    \"Whether the explicit-credential event targeting PROXY-PIN-01 succeeded, or whether it was related to the recurring BillingSync failures.\",\n    \"Who or what initiated the 14:05 PowerShell activity and why svc-billing credentials were supplied.\",\n    \"Whether any unrecorded successful authentication or proxy activity occurred during the collection gap.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Review password-change audit records and BillingSync configuration or job logs to verify the rotation and determine whether the job continued using an old password.\",\n    \"Identify the device assigned to 10.51.20.10 and collect its PowerShell, process, and authentication telemetry around 14:05 UTC.\",\n    \"Obtain proxy access or authentication logs for PROXY-PIN-01 around 14:05 UTC, including any recoverable records from the collection outage.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 6756,
+    "output": 1944
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.87,
+  "supporting_observations": [
+   {
+    "claim": "Repeated failed authentication attempts for svc-billing came from FILE-PIN-01 at roughly one-minute intervals. The failures report bad-password status, including 4625 events with SubStatus 0xc000006a and corresponding domain-controller authentication failures.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T082-00001",
+     "T082-00002",
+     "T082-00006",
+     "T082-00010",
+     "T082-00017",
+     "T082-00019",
+     "T082-00021",
+     "T082-00024",
+     "T082-00027",
+     "T082-00031",
+     "T082-00036"
+    ]
+   },
+   {
+    "claim": "The recurring failures are consistent with the provided change-calendar and service context: the svc-billing password was scheduled for rotation at 13:30 UTC, while BillingSync on FILE-PIN-01 re-authenticates every minute. This makes stale credentials after rotation a plausible explanation, but does not establish that this is the cause.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T082-00001",
+     "T082-00003",
+     "T082-00006",
+     "T082-00008",
+     "T082-00010",
+     "T082-00012",
+     "T082-00014",
+     "T082-00017",
+     "T082-00019",
+     "T082-00021",
+     "T082-00024",
+     "T082-00027",
+     "T082-00030",
+     "T082-00031",
+     "T082-00034",
+     "T082-00036"
+    ]
+   },
+   {
+    "claim": "At 14:05 UTC, a Windows PowerShell process running as SYSTEM used explicit credentials for svc-billing while targeting PROXY-PIN-01. This record shows an explicit-credential event, but does not show whether authentication succeeded or why the credentials were used.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T082-00038"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy logs were not collected for PROXY-PIN-01 from 13:30 to 14:20 UTC because of a collection outage, so proxy-side evidence to corroborate the 14:05 explicit-credential event is unavailable.",
+   "The available records do not identify which host or person corresponds to source IP 10.51.20.10 in the 14:05 event."
+  ],
+  "claims_not_established": [
+   "Whether the svc-billing password rotation completed at 13:30 UTC and whether BillingSync was updated with the new password.",
+   "Whether the explicit-credential event targeting PROXY-PIN-01 succeeded, or whether it was related to the recurring BillingSync failures.",
+   "Who or what initiated the 14:05 PowerShell activity and why svc-billing credentials were supplied.",
+   "Whether any unrecorded successful authentication or proxy activity occurred during the collection gap."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Review password-change audit records and BillingSync configuration or job logs to verify the rotation and determine whether the job continued using an old password.",
+   "Identify the device assigned to 10.51.20.10 and collect its PowerShell, process, and authentication telemetry around 14:05 UTC.",
+   "Obtain proxy access or authentication logs for PROXY-PIN-01 around 14:05 UTC, including any recoverable records from the collection outage."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 28,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 19.6
+}

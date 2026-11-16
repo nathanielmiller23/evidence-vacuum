@@ -1,0 +1,191 @@
+version: '1.0'
+name: ev-T006
+description: Evidence Vacuum TRAINING scenario T006 (harbor, updater, v1).
+environment:
+  description: Harbor Dental Group
+  domain: harbor-dental.local
+  timezone:
+    default: UTC
+  proxy:
+    mode: explicit
+    listener_port: 8080
+  users:
+  - username: maria.lopez
+    full_name: Maria Lopez
+    email: maria.lopez@harbordental.com
+    persona: accountant
+    primary_system: WS-MLOPEZ-01
+    groups:
+    - staff
+    enabled: true
+    browsing_intensity: normal
+  - username: ben.carter
+    full_name: Ben Carter
+    email: ben.carter@harbordental.com
+    persona: analyst
+    primary_system: WS-BCARTER-01
+    groups:
+    - staff
+    enabled: true
+    browsing_intensity: light
+  - username: omar.haddad
+    full_name: Omar Haddad
+    email: omar.haddad@harbordental.com
+    persona: sysadmin
+    primary_system: WS-OHADDAD-01
+    groups:
+    - it-admins
+    - domain-admins
+    enabled: true
+    browsing_intensity: light
+  - username: lucy.park
+    full_name: Lucy Park
+    email: lucy.park@harbordental.com
+    persona: help_desk
+    primary_system: WS-LPARK-01
+    groups:
+    - staff
+    enabled: true
+    browsing_intensity: light
+  service_accounts:
+  - svc-bkp
+  - svc-claimsync
+  systems:
+  - hostname: WS-MLOPEZ-01
+    ip: 10.30.10.21
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: maria.lopez
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-BCARTER-01
+    ip: 10.30.10.22
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: ben.carter
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-OHADDAD-01
+    ip: 10.30.10.23
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: omar.haddad
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-LPARK-01
+    ip: 10.30.10.24
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: lucy.park
+    services:
+    - dns-client
+    - termservice
+  - hostname: DC-HD-01
+    ip: 10.30.20.10
+    os: Windows Server 2022
+    type: domain_controller
+    services:
+    - kerberos
+    - ldap
+    - dns
+    roles:
+    - domain_controller
+    - dns_server
+  - hostname: FILE-HD-01
+    ip: 10.30.20.20
+    os: Windows Server 2022
+    type: server
+    services:
+    - smb
+    - dns-client
+    roles:
+    - file_server
+  - hostname: PROXY-HD-01
+    ip: 10.30.20.30
+    os: Ubuntu 22.04 LTS
+    type: server
+    services:
+    - squid
+    - dns-client
+    roles:
+    - forward_proxy
+  network:
+    public_cidrs:
+    - 203.0.113.32/28
+    segments:
+    - name: workstations
+      cidr: 10.30.10.0/24
+      exposure: internal
+      systems:
+      - WS-MLOPEZ-01
+      - WS-BCARTER-01
+      - WS-OHADDAD-01
+      - WS-LPARK-01
+    - name: servers
+      cidr: 10.30.20.0/24
+      exposure: internal
+      systems:
+      - DC-HD-01
+      - FILE-HD-01
+      - PROXY-HD-01
+    sensors:
+    - type: network
+      name: core-span
+      hostname: ZEEK-CORE
+      monitoring_segments:
+      - workstations
+      - servers
+      direction: bidirectional
+      placement: span
+      log_formats:
+      - zeek
+time_window:
+  start: '2026-10-20T13:00:00Z'
+  duration: 2h
+  warmup: 1h
+generation_seed: 7006
+baseline_activity:
+  description: Quiet afternoon
+  intensity: low
+  variation: low
+  suspicious_noise: low
+observation_profile: complete
+storyline:
+- id: logon
+  time: +25m
+  actor: ben.carter
+  system: WS-BCARTER-01
+  activity: Interactive logon
+  events:
+  - type: logon
+    logon_type: 2
+- id: upd
+  time: +36m
+  actor: ben.carter
+  system: WS-BCARTER-01
+  activity: Approved updater polls vendor
+  events:
+  - type: process
+    process_name: C:\Program Files\ChartMate\cmupdate.exe
+    command_line: '"C:\Program Files\ChartMate\cmupdate.exe" --background'
+  - type: beacon
+    dst_ip: 203.0.113.160
+    dst_port: 443
+    hostname: update.chartmate-imaging.com
+    service: ssl
+    interval: 5m
+    duration: 30m
+    jitter: 0.1
+output:
+  logs:
+  - format: windows_event_security
+  - format: windows_event_sysmon
+  - format: zeek_conn
+  - format: zeek_dns
+  - format: zeek_ssl
+  - format: proxy_access
+  destination: out/T006
+  compression: false

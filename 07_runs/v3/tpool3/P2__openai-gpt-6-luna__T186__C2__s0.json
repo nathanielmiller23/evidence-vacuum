@@ -1,0 +1,104 @@
+{
+ "scenario_id": "T186",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.92,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The supplied network records show WS-EBROOKS-01 (10.54.10.22) connecting to the internal proxy at 10.54.20.30:8080 at recurring intervals from 13:38 through 14:16 UTC, including connections at 13:49:00, 13:54:25, 13:59:01, 14:04:25, and 14:09:21.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T186-00072\", \"T186-00126\", \"T186-00147\", \"T186-00165\", \"T186-00175\", \"T186-00188\"]\n    },\n    {\n      \"claim\": \"The observed intervals are broadly compatible with the roughly five-minute cadence in the alert, but are not uniformly five minutes; for example, recorded connections also occur at 13:38:33 and 13:39:21.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T186-00072\", \"T186-00081\", \"T186-00097\", \"T186-00126\", \"T186-00147\", \"T186-00165\", \"T186-00175\", \"T186-00188\"]\n    },\n    {\n      \"claim\": \"The inventory identifies StockPilot as approved software whose updater checks update.stockpilot.com about every five minutes, so that is a plausible benign explanation for the cadence; the supplied records do not attribute these connections to StockPilot.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T186-00072\", \"T186-00126\", \"T186-00147\", \"T186-00165\", \"T186-00175\", \"T186-00188\"]\n    },\n    {\n      \"claim\": \"The available connection records identify traffic to the internal proxy, not the external destination or application-layer content, and do not establish that the connections were HTTPS.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T186-00072\", \"T186-00126\", \"T186-00147\", \"T186-00165\", \"T186-00175\", \"T186-00188\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records contain proxy-directed Zeek connection metadata but no proxy access logs showing requested hosts, URLs, methods, status codes, or whether the proxied requests used HTTPS (for example, T186-00072 and T186-00126).\",\n    \"No supplied record ties the proxy connections to a process, executable, or user session on WS-EBROOKS-01.\",\n    \"The connection metadata includes byte counts and timing but not payload contents; it cannot establish what data, if any, was transferred.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the recurring connections were made by StockPilot, another legitimate application, or an unauthorized process.\",\n    \"Whether the traffic reached an approved update service or an unapproved external destination.\",\n    \"Whether the activity involved command-and-control, data exfiltration, or any other malicious purpose.\",\n    \"Whether the alerted HTTPS characterization is accurate for the connections represented in the supplied records.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Retrieve PROXY-BLU-01 access logs for the observed connection times, including requested host/URL, method, response status, and TLS or CONNECT details.\",\n    \"Collect endpoint network-connection telemetry and process execution records on WS-EBROOKS-01 to identify the process responsible for the proxy traffic.\",\n    \"Verify whether StockPilot is installed and obtain its updater execution, version, and update-check logs for the review period.\",\n    \"If available, obtain DNS and TLS metadata for the external destinations associated with the proxy requests.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-EBROOKS-01 made an SMB connection to FILE-BLU-01 at 13:58:47, and FILE-BLU-01 recorded an ANONYMOUS LOGON using NTLM. This is separate from the alerted proxy activity and merits review in a separate ticket (T186-00158, T186-00159, T186-00160, T186-00161).\",\n    \"An Explorer UserAssist registry value on WS-EBROOKS-01 contains a ROT13-encoded path that decodes to C:\\\\Windows\\\\System32\\\\mstsc.exe; the registry update alone does not establish execution. Review separately in light of the stated remote-administration practice (T186-00012).\",\n    \"Explorer set the eli.brooks Internet Settings ProxyEnable value to 0 shortly before the observed proxy connections. The supplied records do not establish a relationship between this setting change and the alerted connections (T186-00034).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 28595,
+    "output": 2829
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.92,
+  "supporting_observations": [
+   {
+    "claim": "The supplied network records show WS-EBROOKS-01 (10.54.10.22) connecting to the internal proxy at 10.54.20.30:8080 at recurring intervals from 13:38 through 14:16 UTC, including connections at 13:49:00, 13:54:25, 13:59:01, 14:04:25, and 14:09:21.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T186-00072",
+     "T186-00126",
+     "T186-00147",
+     "T186-00165",
+     "T186-00175",
+     "T186-00188"
+    ]
+   },
+   {
+    "claim": "The observed intervals are broadly compatible with the roughly five-minute cadence in the alert, but are not uniformly five minutes; for example, recorded connections also occur at 13:38:33 and 13:39:21.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T186-00072",
+     "T186-00081",
+     "T186-00097",
+     "T186-00126",
+     "T186-00147",
+     "T186-00165",
+     "T186-00175",
+     "T186-00188"
+    ]
+   },
+   {
+    "claim": "The inventory identifies StockPilot as approved software whose updater checks update.stockpilot.com about every five minutes, so that is a plausible benign explanation for the cadence; the supplied records do not attribute these connections to StockPilot.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T186-00072",
+     "T186-00126",
+     "T186-00147",
+     "T186-00165",
+     "T186-00175",
+     "T186-00188"
+    ]
+   },
+   {
+    "claim": "The available connection records identify traffic to the internal proxy, not the external destination or application-layer content, and do not establish that the connections were HTTPS.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T186-00072",
+     "T186-00126",
+     "T186-00147",
+     "T186-00165",
+     "T186-00175",
+     "T186-00188"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records contain proxy-directed Zeek connection metadata but no proxy access logs showing requested hosts, URLs, methods, status codes, or whether the proxied requests used HTTPS (for example, T186-00072 and T186-00126).",
+   "No supplied record ties the proxy connections to a process, executable, or user session on WS-EBROOKS-01.",
+   "The connection metadata includes byte counts and timing but not payload contents; it cannot establish what data, if any, was transferred."
+  ],
+  "claims_not_established": [
+   "Whether the recurring connections were made by StockPilot, another legitimate application, or an unauthorized process.",
+   "Whether the traffic reached an approved update service or an unapproved external destination.",
+   "Whether the activity involved command-and-control, data exfiltration, or any other malicious purpose.",
+   "Whether the alerted HTTPS characterization is accurate for the connections represented in the supplied records."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Retrieve PROXY-BLU-01 access logs for the observed connection times, including requested host/URL, method, response status, and TLS or CONNECT details.",
+   "Collect endpoint network-connection telemetry and process execution records on WS-EBROOKS-01 to identify the process responsible for the proxy traffic.",
+   "Verify whether StockPilot is installed and obtain its updater execution, version, and update-check logs for the review period.",
+   "If available, obtain DNS and TLS metadata for the external destinations associated with the proxy requests."
+  ],
+  "unrelated_findings": [
+   "WS-EBROOKS-01 made an SMB connection to FILE-BLU-01 at 13:58:47, and FILE-BLU-01 recorded an ANONYMOUS LOGON using NTLM. This is separate from the alerted proxy activity and merits review in a separate ticket (T186-00158, T186-00159, T186-00160, T186-00161).",
+   "An Explorer UserAssist registry value on WS-EBROOKS-01 contains a ROT13-encoded path that decodes to C:\\Windows\\System32\\mstsc.exe; the registry update alone does not establish execution. Review separately in light of the stated remote-administration practice (T186-00012).",
+   "Explorer set the eli.brooks Internet Settings ProxyEnable value to 0 shortly before the observed proxy connections. The supplied records do not establish a relationship between this setting change and the alerted connections (T186-00034)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 26,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 27.4
+}

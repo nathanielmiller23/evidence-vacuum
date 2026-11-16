@@ -1,0 +1,91 @@
+{
+ "scenario_id": "T263",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The reported time is approximate: the logged PowerShell process started at 13:45:07 UTC, not around 13:40. It ran hidden with no profile, and its parent was Word opening amy.cole's Downloads\\\\Statement.docm.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T263-00136\", \"T263-00140\", \"T263-00141\"]\n    },\n    {\n      \"claim\": \"The PowerShell command contains an encoded instruction to invoke a download from raw.githubusercontent.com/orchard-it/tools/main/u.ps1. The proxy records a successful GET for that URL, and Sysmon attributes the related proxy connection to that PowerShell process.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T263-00140\", \"T263-00144\", \"T263-00146\", \"T263-00147\"]\n    },\n    {\n      \"claim\": \"Shortly after the download, PowerShell launched rundll32 to call Init in C:\\\\Users\\\\amy.cole\\\\AppData\\\\Roaming\\\\svchelper.dll. This sequence is strongly indicative of malicious document-driven code execution.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T263-00151\", \"T263-00154\"]\n    },\n    {\n      \"claim\": \"The PowerShell, Word, and rundll32 processes exited shortly afterward; these records do not establish that the DLL or any subsequent activity was harmless.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T263-00152\", \"T263-00153\", \"T263-00157\", \"T263-00158\", \"T263-00162\", \"T263-00163\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The evidence contains process command lines and proxy metadata, but not the contents of u.ps1 or the bytes, hash, or signature status of svchelper.dll.\",\n    \"The proxy records establish a successful request for the script URL but do not provide the returned script contents.\",\n    \"The available records do not show whether the DLL established persistence or what further actions it may have performed.\"\n  ],\n  \"claims_not_established\": [\n    \"The exact contents or behavior of u.ps1 and svchelper.dll.\",\n    \"Whether amy.cole intentionally opened the document or knew it would launch code.\",\n    \"Whether data was accessed, exfiltrated, or credentials were compromised.\",\n    \"Whether the activity persisted beyond the recorded process lifetimes or affected other systems.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze Statement.docm, including its origin, macros, and embedded content.\",\n    \"Recover u.ps1 and svchelper.dll from endpoint or proxy caches; preserve hashes and analyze both.\",\n    \"Collect endpoint detection, file creation, registry, persistence, and network telemetry for WS-ACOLE-01 around and after the execution.\",\n    \"Review relevant user and system activity to determine scope, impact, and whether other hosts or accounts were affected.\"\n  ],\n  \"unrelated_findings\": [\n    \"Google Drive File Stream started under amy.cole's account. The inventory lists Microsoft 365/OneDrive as approved and no other cloud-storage services, so this appears to warrant a separate review; it does not determine the alerted activity. (T263-00265, T263-00266)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 42248,
+    "output": 1285
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "The reported time is approximate: the logged PowerShell process started at 13:45:07 UTC, not around 13:40. It ran hidden with no profile, and its parent was Word opening amy.cole's Downloads\\Statement.docm.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T263-00136",
+     "T263-00140",
+     "T263-00141"
+    ]
+   },
+   {
+    "claim": "The PowerShell command contains an encoded instruction to invoke a download from raw.githubusercontent.com/orchard-it/tools/main/u.ps1. The proxy records a successful GET for that URL, and Sysmon attributes the related proxy connection to that PowerShell process.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T263-00140",
+     "T263-00144",
+     "T263-00146",
+     "T263-00147"
+    ]
+   },
+   {
+    "claim": "Shortly after the download, PowerShell launched rundll32 to call Init in C:\\Users\\amy.cole\\AppData\\Roaming\\svchelper.dll. This sequence is strongly indicative of malicious document-driven code execution.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T263-00151",
+     "T263-00154"
+    ]
+   },
+   {
+    "claim": "The PowerShell, Word, and rundll32 processes exited shortly afterward; these records do not establish that the DLL or any subsequent activity was harmless.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T263-00152",
+     "T263-00153",
+     "T263-00157",
+     "T263-00158",
+     "T263-00162",
+     "T263-00163"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The evidence contains process command lines and proxy metadata, but not the contents of u.ps1 or the bytes, hash, or signature status of svchelper.dll.",
+   "The proxy records establish a successful request for the script URL but do not provide the returned script contents.",
+   "The available records do not show whether the DLL established persistence or what further actions it may have performed."
+  ],
+  "claims_not_established": [
+   "The exact contents or behavior of u.ps1 and svchelper.dll.",
+   "Whether amy.cole intentionally opened the document or knew it would launch code.",
+   "Whether data was accessed, exfiltrated, or credentials were compromised.",
+   "Whether the activity persisted beyond the recorded process lifetimes or affected other systems."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze Statement.docm, including its origin, macros, and embedded content.",
+   "Recover u.ps1 and svchelper.dll from endpoint or proxy caches; preserve hashes and analyze both.",
+   "Collect endpoint detection, file creation, registry, persistence, and network telemetry for WS-ACOLE-01 around and after the execution.",
+   "Review relevant user and system activity to determine scope, impact, and whether other hosts or accounts were affected."
+  ],
+  "unrelated_findings": [
+   "Google Drive File Stream started under amy.cole's account. The inventory lists Microsoft 365/OneDrive as approved and no other cloud-storage services, so this appears to warrant a separate review; it does not determine the alerted activity. (T263-00265, T263-00266)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 14.6
+}

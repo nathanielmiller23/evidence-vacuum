@@ -1,0 +1,79 @@
+{
+ "scenario_id": "T020",
+ "condition": "C2",
+ "variant": "P3",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.84,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted large transfer is visible: FILE-HD-01 sent 640,000,000 client bytes through the proxy to ingest.cobaltvault.net, and the corresponding Zeek connection records about 640 MB outbound.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T020-00285\", \"T020-00286\"]\n    },\n    {\n      \"claim\": \"The transfer is strongly consistent with the approved backup explanation: cvagent.exe ran on FILE-HD-01 as svc-bkp with a Nightly job targeting ingest.cobaltvault.net, and Sysmon attributes the proxy connection to that process and account.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T020-00278\", \"T020-00279\", \"T020-00283\", \"T020-00284\", \"T020-00285\", \"T020-00288\"]\n    },\n    {\n      \"claim\": \"Shortly before the transfer, the domain controller recorded a service-ticket request for svc-bkp to FILE-HD-01$ from 23.129.64.210, a globally routable address; the evidence does not explain that source or tie the request conclusively to the backup process.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T020-00264\", \"T020-00265\", \"T020-00278\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy CONNECT record identifies the destination and byte count but has user=-; process and account attribution comes from host telemetry correlated by connection details, not from proxy identity (T020-00281, T020-00285, T020-00287, T020-00288).\",\n    \"The available records do not establish who or what was using 23.129.64.210, or whether that service-ticket request was authorized (T020-00264).\",\n    \"The available transfer records do not show backup job configuration, the files included, or a corresponding backup-service receipt.\"\n  ],\n  \"claims_not_established\": [\n    \"That the svc-bkp service-ticket request from 23.129.64.210 was legitimate or unrelated to the transfer.\",\n    \"That the backup job's contents and destination were authorized for this particular run.\",\n    \"That the large transfer was malicious; the observed process, account, and destination also fit the approved backup explanation.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Validate the source and context of the 23.129.64.210 service-ticket request using DC authentication/Kerberos records and network or asset attribution.\",\n    \"Review CobaltVault job configuration and service-side records for the Nightly run, including its expected schedule, uploaded files, and receipt.\",\n    \"Check whether svc-bkp credentials or the FILE-HD-01 service were accessed or used from outside the organization around the alert window.\"\n  ],\n  \"unrelated_findings\": [\n    \"Lucy Park's workstation initiated an RDP session to FILE-HD-01 and lucy.park logged on interactively. This is separate from the earlier backup transfer and should be reviewed separately given the stated remote-administration practice (T020-00341, T020-00342, T020-00349).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 76160,
+    "output": 2755
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.84,
+  "supporting_observations": [
+   {
+    "claim": "The alerted large transfer is visible: FILE-HD-01 sent 640,000,000 client bytes through the proxy to ingest.cobaltvault.net, and the corresponding Zeek connection records about 640 MB outbound.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00285",
+     "T020-00286"
+    ]
+   },
+   {
+    "claim": "The transfer is strongly consistent with the approved backup explanation: cvagent.exe ran on FILE-HD-01 as svc-bkp with a Nightly job targeting ingest.cobaltvault.net, and Sysmon attributes the proxy connection to that process and account.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T020-00278",
+     "T020-00279",
+     "T020-00283",
+     "T020-00284",
+     "T020-00285",
+     "T020-00288"
+    ]
+   },
+   {
+    "claim": "Shortly before the transfer, the domain controller recorded a service-ticket request for svc-bkp to FILE-HD-01$ from 23.129.64.210, a globally routable address; the evidence does not explain that source or tie the request conclusively to the backup process.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00264",
+     "T020-00265",
+     "T020-00278"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy CONNECT record identifies the destination and byte count but has user=-; process and account attribution comes from host telemetry correlated by connection details, not from proxy identity (T020-00281, T020-00285, T020-00287, T020-00288).",
+   "The available records do not establish who or what was using 23.129.64.210, or whether that service-ticket request was authorized (T020-00264).",
+   "The available transfer records do not show backup job configuration, the files included, or a corresponding backup-service receipt."
+  ],
+  "claims_not_established": [
+   "That the svc-bkp service-ticket request from 23.129.64.210 was legitimate or unrelated to the transfer.",
+   "That the backup job's contents and destination were authorized for this particular run.",
+   "That the large transfer was malicious; the observed process, account, and destination also fit the approved backup explanation."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Validate the source and context of the 23.129.64.210 service-ticket request using DC authentication/Kerberos records and network or asset attribution.",
+   "Review CobaltVault job configuration and service-side records for the Nightly run, including its expected schedule, uploaded files, and receipt.",
+   "Check whether svc-bkp credentials or the FILE-HD-01 service were accessed or used from outside the organization around the alert window."
+  ],
+  "unrelated_findings": [
+   "Lucy Park's workstation initiated an RDP session to FILE-HD-01 and lucy.park logged on interactively. This is separate from the earlier backup transfer and should be reviewed separately given the stated remote-administration practice (T020-00341, T020-00342, T020-00349)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 28.2
+}

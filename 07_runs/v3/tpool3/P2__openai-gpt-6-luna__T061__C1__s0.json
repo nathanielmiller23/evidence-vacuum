@@ -1,0 +1,84 @@
+{
+ "scenario_id": "T061",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.87,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded two failed network logons for tom.weber, both from logged IP 203.0.113.17; both have substatus 0xc000006a, indicating an incorrect password.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T061-00003\",\n        \"T061-00004\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:46 UTC, the domain controller recorded a successful NTLM network logon for tom.weber from the same logged IP, shortly after the two failures.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T061-00003\",\n        \"T061-00004\",\n        \"T061-00005\"\n      ]\n    },\n    {\n      \"claim\": \"The failure-then-success sequence from a source not identified as an organizational host is suspicious and supports treating the alerted activity as potentially unauthorized.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T061-00003\",\n        \"T061-00004\",\n        \"T061-00005\"\n      ]\n    },\n    {\n      \"claim\": \"The failed-logon records list the workstation name as 203.0.113.17, while the successful-logon record lists DC-PIN-01; the successful record nevertheless reports the same IP address as the failures.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T061-00003\",\n        \"T061-00004\",\n        \"T061-00005\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available records show authentication events but do not show what resources, if any, were accessed after the successful logon.\",\n    \"The successful-logon record's WorkstationName field differs from the failure records, so the source device cannot be confidently identified from these records alone.\",\n    \"The evidence covers only a small set of events; it does not establish whether other authentication attempts or sessions occurred in the review window.\"\n  ],\n  \"claims_not_established\": [\n    \"The records do not establish who controlled the source IP or whether the successful logon was made by tom.weber.\",\n    \"The evidence does not establish malicious intent, how the credentials were obtained, or whether the successful session led to further activity.\",\n    \"The records do not establish whether the source IP reflects a true originating endpoint or an intermediary.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate the source IP with firewall, DHCP, NAT, and other network records to identify the originating device or intermediary.\",\n    \"Review domain-controller authentication and session records around the event, including subsequent access by the successful logon.\",\n    \"Review WS-TWEBER-01 endpoint and network telemetry around 13:40\u201314:00 UTC, and confirm with the account owner whether the activity was expected.\",\n    \"Check for related logons or use of tom.weber's credentials on other hosts during and after the review window.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 2237,
+    "output": 2230
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.87,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded two failed network logons for tom.weber, both from logged IP 203.0.113.17; both have substatus 0xc000006a, indicating an incorrect password.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T061-00003",
+     "T061-00004"
+    ]
+   },
+   {
+    "claim": "At 13:46 UTC, the domain controller recorded a successful NTLM network logon for tom.weber from the same logged IP, shortly after the two failures.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T061-00003",
+     "T061-00004",
+     "T061-00005"
+    ]
+   },
+   {
+    "claim": "The failure-then-success sequence from a source not identified as an organizational host is suspicious and supports treating the alerted activity as potentially unauthorized.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T061-00003",
+     "T061-00004",
+     "T061-00005"
+    ]
+   },
+   {
+    "claim": "The failed-logon records list the workstation name as 203.0.113.17, while the successful-logon record lists DC-PIN-01; the successful record nevertheless reports the same IP address as the failures.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T061-00003",
+     "T061-00004",
+     "T061-00005"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available records show authentication events but do not show what resources, if any, were accessed after the successful logon.",
+   "The successful-logon record's WorkstationName field differs from the failure records, so the source device cannot be confidently identified from these records alone.",
+   "The evidence covers only a small set of events; it does not establish whether other authentication attempts or sessions occurred in the review window."
+  ],
+  "claims_not_established": [
+   "The records do not establish who controlled the source IP or whether the successful logon was made by tom.weber.",
+   "The evidence does not establish malicious intent, how the credentials were obtained, or whether the successful session led to further activity.",
+   "The records do not establish whether the source IP reflects a true originating endpoint or an intermediary."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate the source IP with firewall, DHCP, NAT, and other network records to identify the originating device or intermediary.",
+   "Review domain-controller authentication and session records around the event, including subsequent access by the successful logon.",
+   "Review WS-TWEBER-01 endpoint and network telemetry around 13:40\u201314:00 UTC, and confirm with the account owner whether the activity was expected.",
+   "Check for related logons or use of tom.weber's credentials on other hosts during and after the review window."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.8
+}

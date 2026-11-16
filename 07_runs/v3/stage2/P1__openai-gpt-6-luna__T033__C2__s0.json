@@ -1,0 +1,89 @@
+{
+ "scenario_id": "T033",
+ "condition": "C2",
+ "variant": "P1",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.87,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:40 UTC, the proxy recorded a successful GET for https://raw.githubusercontent.com/nwd-it/tools/main/u.ps1 from WS-ICHEN-01 under ivy.chen. This coincides with the reported PowerShell-window time.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T033-00089\", \"T033-00091\", \"T033-00093\"]\n    },\n    {\n      \"claim\": \"Shortly before that request, a Kerberos ticket for sam.okafor was requested from WS-ICHEN-01's IP, followed by a network logon as sam.okafor to WS-SOKAFOR-01 from that same IP. This does not match the stated practice that remote administration is performed from WS-SOKAFOR-01.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T033-00008\", \"T033-00014\", \"T033-00019\"]\n    },\n    {\n      \"claim\": \"At 14:13 UTC, WS-ICHEN-01 requested Kerberos tickets as leo.martins for WS-NBLAKE-01, and WS-NBLAKE-01 recorded a network logon as leo.martins from WS-ICHEN-01's IP. This is unexplained by the supplied environment context and is consistent with use of another user's credentials to access a different workstation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T033-00237\", \"T033-00238\", \"T033-00249\"]\n    },\n    {\n      \"claim\": \"Firefox on WS-ICHEN-01 opened the AWS console, and the proxy recorded successful requests to the console and its assets. AWS is not among the listed approved services.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T033-00212\", \"T033-00222\", \"T033-00223\", \"T033-00225\", \"T033-00226\", \"T033-00232\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records show the script URL and a successful proxy response, but not the script contents or whether it was saved, executed, or what it did (T033-00091).\",\n    \"The supplied records do not include process-creation evidence linking the PowerShell window or downloaded script to a command line, parent process, or execution result.\",\n    \"The records establish authentication from WS-ICHEN-01's IP but do not establish who initiated the activity, whether the relevant credentials were compromised, or whether any access was authorized.\"\n  ],\n  \"claims_not_established\": [\n    \"That u.ps1 was executed or contained malicious code.\",\n    \"That sam.okafor's or leo.martins's credentials were stolen, or that the corresponding logons were unauthorized.\",\n    \"That AWS resources were accessed or data was exfiltrated.\",\n    \"That any data was transferred to or from WS-NBLAKE-01 after the recorded logon.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Retrieve and analyze the exact u.ps1 content, repository history, and relevant GitHub/proxy response details.\",\n    \"Collect endpoint process, PowerShell operational/script-block, command-line, file, and authentication telemetry from WS-ICHEN-01 around 13:40 UTC.\",\n    \"Review WS-SOKAFOR-01 and WS-NBLAKE-01 logon, session, and activity records to determine what actions followed the recorded network logons.\",\n    \"Verify with sam.okafor, leo.martins, and ivy.chen whether the credential use, AWS-console activity, and script retrieval were authorized.\",\n    \"Check account and endpoint security telemetry for credential exposure, persistence, and any subsequent lateral movement or data access.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 41045,
+    "output": 2013
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.87,
+  "supporting_observations": [
+   {
+    "claim": "At 13:40 UTC, the proxy recorded a successful GET for https://raw.githubusercontent.com/nwd-it/tools/main/u.ps1 from WS-ICHEN-01 under ivy.chen. This coincides with the reported PowerShell-window time.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T033-00089",
+     "T033-00091",
+     "T033-00093"
+    ]
+   },
+   {
+    "claim": "Shortly before that request, a Kerberos ticket for sam.okafor was requested from WS-ICHEN-01's IP, followed by a network logon as sam.okafor to WS-SOKAFOR-01 from that same IP. This does not match the stated practice that remote administration is performed from WS-SOKAFOR-01.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T033-00008",
+     "T033-00014",
+     "T033-00019"
+    ]
+   },
+   {
+    "claim": "At 14:13 UTC, WS-ICHEN-01 requested Kerberos tickets as leo.martins for WS-NBLAKE-01, and WS-NBLAKE-01 recorded a network logon as leo.martins from WS-ICHEN-01's IP. This is unexplained by the supplied environment context and is consistent with use of another user's credentials to access a different workstation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T033-00237",
+     "T033-00238",
+     "T033-00249"
+    ]
+   },
+   {
+    "claim": "Firefox on WS-ICHEN-01 opened the AWS console, and the proxy recorded successful requests to the console and its assets. AWS is not among the listed approved services.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T033-00212",
+     "T033-00222",
+     "T033-00223",
+     "T033-00225",
+     "T033-00226",
+     "T033-00232"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records show the script URL and a successful proxy response, but not the script contents or whether it was saved, executed, or what it did (T033-00091).",
+   "The supplied records do not include process-creation evidence linking the PowerShell window or downloaded script to a command line, parent process, or execution result.",
+   "The records establish authentication from WS-ICHEN-01's IP but do not establish who initiated the activity, whether the relevant credentials were compromised, or whether any access was authorized."
+  ],
+  "claims_not_established": [
+   "That u.ps1 was executed or contained malicious code.",
+   "That sam.okafor's or leo.martins's credentials were stolen, or that the corresponding logons were unauthorized.",
+   "That AWS resources were accessed or data was exfiltrated.",
+   "That any data was transferred to or from WS-NBLAKE-01 after the recorded logon."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Retrieve and analyze the exact u.ps1 content, repository history, and relevant GitHub/proxy response details.",
+   "Collect endpoint process, PowerShell operational/script-block, command-line, file, and authentication telemetry from WS-ICHEN-01 around 13:40 UTC.",
+   "Review WS-SOKAFOR-01 and WS-NBLAKE-01 logon, session, and activity records to determine what actions followed the recorded network logons.",
+   "Verify with sam.okafor, leo.martins, and ivy.chen whether the credential use, AWS-console activity, and script retrieval were authorized.",
+   "Check account and endpoint security telemetry for credential exposure, persistence, and any subsequent lateral movement or data access."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.1
+}

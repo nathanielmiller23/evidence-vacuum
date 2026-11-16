@@ -1,0 +1,85 @@
+{
+ "scenario_id": "T257",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45:13 UTC, the domain controller recorded creation of adm_temp by ian.doyle. This is the observed creation time, later than the alert's approximate 13:42 time.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T257-00100\"]\n    },\n    {\n      \"claim\": \"About one second after creation, adm_temp was added to a group recorded as Administrators, contrary to the stated practice that temporary accounts never receive administrator rights.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T257-00101\"]\n    },\n    {\n      \"claim\": \"The account name and group assignment do not match the documented help-desk temporary-account practice (v.<name>, Vendors only); the recorded creator is ian.doyle, the IT administrator.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T257-00100\", \"T257-00101\"]\n    },\n    {\n      \"claim\": \"Shortly before the account events, WS-MFISCHER-01 recorded a remote-interactive logon by ian.doyle from 192.0.2.199. The inventory says remote administration is only done from WS-IDOYLE-01, so this is inconsistent with the stated practice; the available records do not directly link this logon to the account changes.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T257-00079\", \"T257-00080\", \"T257-00083\", \"T257-00084\", \"T257-00100\", \"T257-00101\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy log collection was unavailable from 13:20 to 14:10 UTC, overlapping the alert window; proxy requests in that interval cannot be reviewed from proxy records.\",\n    \"The records show the account creation and group-add events, but do not establish the approval context or directly identify the workstation or process that initiated those changes.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the account creation and group assignment had an approved change request or other authorization.\",\n    \"Whether ian.doyle personally performed the actions or the account/session was used by another party.\",\n    \"Whether the recorded group name and SID correspond to the intended effective privileges in the directory.\",\n    \"Whether the remote logon from 192.0.2.199 was involved in the account changes.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Verify the account's current status, group memberships, effective privileges, and subsequent authentication or use; preserve the account and directory audit records.\",\n    \"Review change tickets and confirm the account creation and group assignment with ian.doyle and the relevant approver.\",\n    \"Correlate domain-controller authentication and directory audit data with endpoint logon/session records to identify the source of the account changes.\",\n    \"Investigate the remote-interactive logon to WS-MFISCHER-01 and determine who controlled source address 192.0.2.199.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-MFISCHER-01 recorded creation of a scheduled task named HealthCheck by ian.doyle. Its hidden PowerShell action uses an encoded command that decodes to a request for a script from http://192.0.2.199/a.ps1; investigate separately and do not use this task alone to decide the account alert. (T257-00102)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 27925,
+    "output": 2750
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45:13 UTC, the domain controller recorded creation of adm_temp by ian.doyle. This is the observed creation time, later than the alert's approximate 13:42 time.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T257-00100"
+    ]
+   },
+   {
+    "claim": "About one second after creation, adm_temp was added to a group recorded as Administrators, contrary to the stated practice that temporary accounts never receive administrator rights.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T257-00101"
+    ]
+   },
+   {
+    "claim": "The account name and group assignment do not match the documented help-desk temporary-account practice (v.<name>, Vendors only); the recorded creator is ian.doyle, the IT administrator.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T257-00100",
+     "T257-00101"
+    ]
+   },
+   {
+    "claim": "Shortly before the account events, WS-MFISCHER-01 recorded a remote-interactive logon by ian.doyle from 192.0.2.199. The inventory says remote administration is only done from WS-IDOYLE-01, so this is inconsistent with the stated practice; the available records do not directly link this logon to the account changes.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T257-00079",
+     "T257-00080",
+     "T257-00083",
+     "T257-00084",
+     "T257-00100",
+     "T257-00101"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy log collection was unavailable from 13:20 to 14:10 UTC, overlapping the alert window; proxy requests in that interval cannot be reviewed from proxy records.",
+   "The records show the account creation and group-add events, but do not establish the approval context or directly identify the workstation or process that initiated those changes."
+  ],
+  "claims_not_established": [
+   "Whether the account creation and group assignment had an approved change request or other authorization.",
+   "Whether ian.doyle personally performed the actions or the account/session was used by another party.",
+   "Whether the recorded group name and SID correspond to the intended effective privileges in the directory.",
+   "Whether the remote logon from 192.0.2.199 was involved in the account changes."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Verify the account's current status, group memberships, effective privileges, and subsequent authentication or use; preserve the account and directory audit records.",
+   "Review change tickets and confirm the account creation and group assignment with ian.doyle and the relevant approver.",
+   "Correlate domain-controller authentication and directory audit data with endpoint logon/session records to identify the source of the account changes.",
+   "Investigate the remote-interactive logon to WS-MFISCHER-01 and determine who controlled source address 192.0.2.199."
+  ],
+  "unrelated_findings": [
+   "WS-MFISCHER-01 recorded creation of a scheduled task named HealthCheck by ian.doyle. Its hidden PowerShell action uses an encoded command that decodes to a request for a script from http://192.0.2.199/a.ps1; investigate separately and do not use this task alone to decide the account alert. (T257-00102)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 27.2
+}

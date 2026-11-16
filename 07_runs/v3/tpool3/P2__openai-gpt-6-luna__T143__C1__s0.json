@@ -1,0 +1,99 @@
+{
+ "scenario_id": "T143",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"On WS-JFROST-01, WINWORD.EXE opened C:\\\\Users\\\\julia.frost\\\\Downloads\\\\Statement.docm at 13:44:49 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T143-00205\", \"T143-00208\"]\n    },\n    {\n      \"claim\": \"At 13:44:51 UTC, that Word process spawned PowerShell with -nop, -w hidden, and an encoded command. Decoding the command shows it invokes IEX on a WebClient DownloadString request for https://raw.githubusercontent.com/maplehill-it/tools/main/u.ps1.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T143-00209\", \"T143-00210\"]\n    },\n    {\n      \"claim\": \"The proxy recorded a successful GET for that exact u.ps1 URL shortly afterward, initiated by PowerShell.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T143-00212\", \"T143-00213\", \"T143-00215\"]\n    },\n    {\n      \"claim\": \"PowerShell created a temporary file and launched rundll32.exe to invoke Init in C:\\\\Users\\\\julia.frost\\\\AppData\\\\Roaming\\\\svchelper.dll; both processes then exited within seconds.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T143-00220\", \"T143-00221\", \"T143-00222\", \"T143-00225\", \"T143-00226\", \"T143-00227\", \"T143-00228\"]\n    },\n    {\n      \"claim\": \"The observed process chain is consistent with a document-triggered script download and DLL execution, rather than the help-desk report merely establishing that a PowerShell window appeared. The logged sequence occurred around 13:44:49\u201313:44:55 UTC, later than the reported approximate 13:40 time.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T143-00205\", \"T143-00209\", \"T143-00212\", \"T143-00221\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The logs do not provide the contents or provenance of Statement.docm, the downloaded u.ps1, or svchelper.dll.\",\n    \"The proxy records the URL and successful response status, but not the downloaded response body.\",\n    \"The process records show rundll32 invoked with the DLL path, but the available evidence does not establish what the DLL did or whether it achieved persistence, credential access, or data theft.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether Julia intentionally opened the document or how Statement.docm arrived on the workstation.\",\n    \"The exact behavior or impact of u.ps1 and svchelper.dll, including whether any further actions succeeded.\",\n    \"Whether the activity began before the first logged event or whether related artifacts remain on the host.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze Statement.docm, u.ps1, svchelper.dll, and the temporary file, including hashes and timestamps.\",\n    \"Review endpoint file, module-load, persistence, and subsequent network telemetry for activity associated with the script and DLL.\",\n    \"Determine the document's source and whether the GitHub repository and script were authorized or controlled by the organization.\",\n    \"Contain and investigate WS-JFROST-01, and assess Julia's credentials and any potentially accessed organizational data.\"\n  ],\n  \"unrelated_findings\": [\n    \"Chrome accessed Google Drive pages and related Google Docs resources from WS-JFROST-01; Google Drive is not among the approved services listed in the environment context. The records show page/resource requests, not that files were uploaded or downloaded. Track separately; this does not determine the alerted activity. (T143-00229, T143-00230, T143-00236, T143-00237, T143-00245, T143-00251, T143-00256)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 63651,
+    "output": 1850
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "On WS-JFROST-01, WINWORD.EXE opened C:\\Users\\julia.frost\\Downloads\\Statement.docm at 13:44:49 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T143-00205",
+     "T143-00208"
+    ]
+   },
+   {
+    "claim": "At 13:44:51 UTC, that Word process spawned PowerShell with -nop, -w hidden, and an encoded command. Decoding the command shows it invokes IEX on a WebClient DownloadString request for https://raw.githubusercontent.com/maplehill-it/tools/main/u.ps1.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T143-00209",
+     "T143-00210"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a successful GET for that exact u.ps1 URL shortly afterward, initiated by PowerShell.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T143-00212",
+     "T143-00213",
+     "T143-00215"
+    ]
+   },
+   {
+    "claim": "PowerShell created a temporary file and launched rundll32.exe to invoke Init in C:\\Users\\julia.frost\\AppData\\Roaming\\svchelper.dll; both processes then exited within seconds.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T143-00220",
+     "T143-00221",
+     "T143-00222",
+     "T143-00225",
+     "T143-00226",
+     "T143-00227",
+     "T143-00228"
+    ]
+   },
+   {
+    "claim": "The observed process chain is consistent with a document-triggered script download and DLL execution, rather than the help-desk report merely establishing that a PowerShell window appeared. The logged sequence occurred around 13:44:49\u201313:44:55 UTC, later than the reported approximate 13:40 time.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T143-00205",
+     "T143-00209",
+     "T143-00212",
+     "T143-00221"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The logs do not provide the contents or provenance of Statement.docm, the downloaded u.ps1, or svchelper.dll.",
+   "The proxy records the URL and successful response status, but not the downloaded response body.",
+   "The process records show rundll32 invoked with the DLL path, but the available evidence does not establish what the DLL did or whether it achieved persistence, credential access, or data theft."
+  ],
+  "claims_not_established": [
+   "Whether Julia intentionally opened the document or how Statement.docm arrived on the workstation.",
+   "The exact behavior or impact of u.ps1 and svchelper.dll, including whether any further actions succeeded.",
+   "Whether the activity began before the first logged event or whether related artifacts remain on the host."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze Statement.docm, u.ps1, svchelper.dll, and the temporary file, including hashes and timestamps.",
+   "Review endpoint file, module-load, persistence, and subsequent network telemetry for activity associated with the script and DLL.",
+   "Determine the document's source and whether the GitHub repository and script were authorized or controlled by the organization.",
+   "Contain and investigate WS-JFROST-01, and assess Julia's credentials and any potentially accessed organizational data."
+  ],
+  "unrelated_findings": [
+   "Chrome accessed Google Drive pages and related Google Docs resources from WS-JFROST-01; Google Drive is not among the approved services listed in the environment context. The records show page/resource requests, not that files were uploaded or downloaded. Track separately; this does not determine the alerted activity. (T143-00229, T143-00230, T143-00236, T143-00237, T143-00245, T143-00251, T143-00256)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 18,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.2
+}

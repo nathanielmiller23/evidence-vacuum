@@ -1,0 +1,82 @@
+{
+ "scenario_id": "T080",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.92,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:44:41 UTC, FILE-PIN-01 sent 640,000,368 bytes to the internal proxy at 10.51.20.30:8080 over a connection lasting about 12.5 seconds; the proxy returned 39,163 bytes. This is the large transfer relevant to the alert.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T080-00228\"\n      ]\n    },\n    {\n      \"claim\": \"A smaller FILE-PIN-01-to-proxy connection occurred shortly before the large transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T080-00225\"\n      ]\n    },\n    {\n      \"claim\": \"The transfer's size is consistent with the organization's stated description of approved Vaultline backups, but the available network record does not identify the destination service or the process responsible. The size alone therefore does not establish that this was an authorized backup.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T080-00228\"\n      ]\n    },\n    {\n      \"claim\": \"About 67 seconds before the large transfer, a domain-controller record shows a service-ticket event for svc-bkp from public IP 23.129.64.210. This is concerning in context, but the available records do not link that event to the proxy transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T080-00214\",\n        \"T080-00228\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The provided record for the large transfer identifies the internal proxy endpoint and byte counts, but not the external destination, URL, proxy user, or request content. (T080-00228)\",\n    \"The provided records do not associate the large transfer with a process or executable on FILE-PIN-01. (T080-00228)\",\n    \"The svc-bkp ticket event and large proxy transfer are close in time, but the available records do not establish a causal or account-level link between them. (T080-00214, T080-00228)\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the large transfer went to the approved vaultline-backup.com service or to an unapproved destination. (T080-00228)\",\n    \"Whether the Vaultline agent or another process initiated the transfer. (T080-00228)\",\n    \"Whether the svc-bkp ticket event from 23.129.64.210 was authorized or related to the transfer. (T080-00214, T080-00228)\",\n    \"What files or data, if any, were transferred.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Retrieve PROXY-PIN-01 access logs for the connection at 13:44:41 UTC, including requested host/URL, authenticated identity, and request outcome.\",\n    \"Retrieve FILE-PIN-01 process and network telemetry for the transfer time to identify the initiating executable and user or service account.\",\n    \"Check Vaultline agent and backup-job logs for an upload of this size at the relevant time, and compare the destination and job status with proxy records.\",\n    \"Investigate the svc-bkp ticket event from 23.129.64.210, including authentication source and any corresponding FILE-PIN-01 logon or session records.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-ESTONE-01 recorded explicit use of svc-bkp credentials by taskhostw.exe at 13:54:09 UTC. This is notable for separate investigation, but the supplied records do not link it to the earlier transfer. (T080-00347)\",\n    \"A domain-controller ticket event for emma.stone targeting FILE-PIN-01 is recorded with source IP 10.51.10.21, which the environment identifies as WS-ARUIZ-01. The records do not explain this identity/host combination or connect it to the alerted transfer. (T080-00370)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 54611,
+    "output": 2677
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.92,
+  "supporting_observations": [
+   {
+    "claim": "At 13:44:41 UTC, FILE-PIN-01 sent 640,000,368 bytes to the internal proxy at 10.51.20.30:8080 over a connection lasting about 12.5 seconds; the proxy returned 39,163 bytes. This is the large transfer relevant to the alert.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T080-00228"
+    ]
+   },
+   {
+    "claim": "A smaller FILE-PIN-01-to-proxy connection occurred shortly before the large transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T080-00225"
+    ]
+   },
+   {
+    "claim": "The transfer's size is consistent with the organization's stated description of approved Vaultline backups, but the available network record does not identify the destination service or the process responsible. The size alone therefore does not establish that this was an authorized backup.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T080-00228"
+    ]
+   },
+   {
+    "claim": "About 67 seconds before the large transfer, a domain-controller record shows a service-ticket event for svc-bkp from public IP 23.129.64.210. This is concerning in context, but the available records do not link that event to the proxy transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T080-00214",
+     "T080-00228"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The provided record for the large transfer identifies the internal proxy endpoint and byte counts, but not the external destination, URL, proxy user, or request content. (T080-00228)",
+   "The provided records do not associate the large transfer with a process or executable on FILE-PIN-01. (T080-00228)",
+   "The svc-bkp ticket event and large proxy transfer are close in time, but the available records do not establish a causal or account-level link between them. (T080-00214, T080-00228)"
+  ],
+  "claims_not_established": [
+   "Whether the large transfer went to the approved vaultline-backup.com service or to an unapproved destination. (T080-00228)",
+   "Whether the Vaultline agent or another process initiated the transfer. (T080-00228)",
+   "Whether the svc-bkp ticket event from 23.129.64.210 was authorized or related to the transfer. (T080-00214, T080-00228)",
+   "What files or data, if any, were transferred."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Retrieve PROXY-PIN-01 access logs for the connection at 13:44:41 UTC, including requested host/URL, authenticated identity, and request outcome.",
+   "Retrieve FILE-PIN-01 process and network telemetry for the transfer time to identify the initiating executable and user or service account.",
+   "Check Vaultline agent and backup-job logs for an upload of this size at the relevant time, and compare the destination and job status with proxy records.",
+   "Investigate the svc-bkp ticket event from 23.129.64.210, including authentication source and any corresponding FILE-PIN-01 logon or session records."
+  ],
+  "unrelated_findings": [
+   "WS-ESTONE-01 recorded explicit use of svc-bkp credentials by taskhostw.exe at 13:54:09 UTC. This is notable for separate investigation, but the supplied records do not link it to the earlier transfer. (T080-00347)",
+   "A domain-controller ticket event for emma.stone targeting FILE-PIN-01 is recorded with source IP 10.51.10.21, which the environment identifies as WS-ARUIZ-01. The records do not explain this identity/host combination or connect it to the alerted transfer. (T080-00370)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 5,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 28.6
+}

@@ -1,0 +1,90 @@
+{
+ "scenario_id": "T093",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45:08 UTC, ana.ruiz's Word process opened Statement.docm from Downloads and spawned PowerShell with no-profile, hidden-window, and encoded-command options.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T093-00163\",\n        \"T093-00167\",\n        \"T093-00168\"\n      ]\n    },\n    {\n      \"claim\": \"Decoding the PowerShell command shows it uses IEX with WebClient DownloadString to retrieve a script from raw.githubusercontent.com/pinecrest-it/tools/main/u.ps1. This is consistent with executing remotely retrieved code.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T093-00167\",\n        \"T093-00168\"\n      ]\n    },\n    {\n      \"claim\": \"The PowerShell process made network connections through the explicit proxy shortly after launch; the available connection records show traffic volumes but not the requested content.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T093-00169\",\n        \"T093-00173\",\n        \"T093-00174\",\n        \"T093-00175\",\n        \"T093-00176\",\n        \"T093-00177\"\n      ]\n    },\n    {\n      \"claim\": \"PowerShell then spawned rundll32 with a DLL path under ana.ruiz's Roaming profile, a suspicious follow-on execution step in the same process chain.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T093-00179\",\n        \"T093-00181\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy logs were not collected from 13:25 through 14:10 UTC, including the time of the PowerShell network connections, so destination and request details from that source are unavailable.\",\n    \"The suspicious process chain is recorded at about 13:45 UTC, roughly five minutes after the user's approximate 13:40 report; the available records do not establish the exact time of the briefly observed window.\",\n    \"The supplied records do not show the downloaded script's contents or independently confirm the DLL's contents or subsequent effects.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the retrieved script or DLL performed particular actions, caused damage, or established persistence.\",\n    \"Whether the reported PowerShell window at approximately 13:40 was this 13:45 execution or a separate event.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine Statement.docm, the downloaded u.ps1 content, and the referenced svchelper.dll, including hashes, signatures, and provenance.\",\n    \"Collect endpoint artifacts and available EDR or file-system telemetry for the document, downloads, DLL loading, persistence, and subsequent activity on WS-ARUIZ-01.\",\n    \"Recover any available proxy or upstream records for the 13:45 connections and investigate whether the retrieved content was accessed elsewhere in the environment.\",\n    \"Interview ana.ruiz to clarify what appeared around 13:40 and whether she opened the document or expected the activity.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:20, WS-ARUIZ-01 made a Dropbox desktop endpoint tunnel connection. Dropbox is not among the approved services; the record does not establish file upload or sharing. Investigate separately. (T093-00018)\",\n    \"At 13:34, a Kerberos request for raj.patel originated from WS-ARUIZ-01, followed by a network logon to WS-RPATEL-01 from that workstation. This is outside the stated remote-administration practice; its relationship to the alerted PowerShell activity is not established. Investigate separately. (T093-00121, T093-00123, T093-00126)\",\n    \"At 13:59, tom.weber credentials were requested from WS-ARUIZ-01 and a network logon to WS-TWEBER-01 followed. The available records do not establish why this occurred or connect it to the alert. Investigate separately. (T093-00265, T093-00266, T093-00269)\",\n    \"At 14:16 and 14:18, WS-ARUIZ-01 established TLS connections to WS-TWEBER-01, with svchost.exe identified as the initiating process. The purpose and relationship to the alert are not established. Investigate separately. (T093-00382, T093-00384, T093-00397, T093-00399)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 56714,
+    "output": 3160
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45:08 UTC, ana.ruiz's Word process opened Statement.docm from Downloads and spawned PowerShell with no-profile, hidden-window, and encoded-command options.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T093-00163",
+     "T093-00167",
+     "T093-00168"
+    ]
+   },
+   {
+    "claim": "Decoding the PowerShell command shows it uses IEX with WebClient DownloadString to retrieve a script from raw.githubusercontent.com/pinecrest-it/tools/main/u.ps1. This is consistent with executing remotely retrieved code.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T093-00167",
+     "T093-00168"
+    ]
+   },
+   {
+    "claim": "The PowerShell process made network connections through the explicit proxy shortly after launch; the available connection records show traffic volumes but not the requested content.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T093-00169",
+     "T093-00173",
+     "T093-00174",
+     "T093-00175",
+     "T093-00176",
+     "T093-00177"
+    ]
+   },
+   {
+    "claim": "PowerShell then spawned rundll32 with a DLL path under ana.ruiz's Roaming profile, a suspicious follow-on execution step in the same process chain.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T093-00179",
+     "T093-00181"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy logs were not collected from 13:25 through 14:10 UTC, including the time of the PowerShell network connections, so destination and request details from that source are unavailable.",
+   "The suspicious process chain is recorded at about 13:45 UTC, roughly five minutes after the user's approximate 13:40 report; the available records do not establish the exact time of the briefly observed window.",
+   "The supplied records do not show the downloaded script's contents or independently confirm the DLL's contents or subsequent effects."
+  ],
+  "claims_not_established": [
+   "Whether the retrieved script or DLL performed particular actions, caused damage, or established persistence.",
+   "Whether the reported PowerShell window at approximately 13:40 was this 13:45 execution or a separate event."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine Statement.docm, the downloaded u.ps1 content, and the referenced svchelper.dll, including hashes, signatures, and provenance.",
+   "Collect endpoint artifacts and available EDR or file-system telemetry for the document, downloads, DLL loading, persistence, and subsequent activity on WS-ARUIZ-01.",
+   "Recover any available proxy or upstream records for the 13:45 connections and investigate whether the retrieved content was accessed elsewhere in the environment.",
+   "Interview ana.ruiz to clarify what appeared around 13:40 and whether she opened the document or expected the activity."
+  ],
+  "unrelated_findings": [
+   "At 13:20, WS-ARUIZ-01 made a Dropbox desktop endpoint tunnel connection. Dropbox is not among the approved services; the record does not establish file upload or sharing. Investigate separately. (T093-00018)",
+   "At 13:34, a Kerberos request for raj.patel originated from WS-ARUIZ-01, followed by a network logon to WS-RPATEL-01 from that workstation. This is outside the stated remote-administration practice; its relationship to the alerted PowerShell activity is not established. Investigate separately. (T093-00121, T093-00123, T093-00126)",
+   "At 13:59, tom.weber credentials were requested from WS-ARUIZ-01 and a network logon to WS-TWEBER-01 followed. The available records do not establish why this occurred or connect it to the alert. Investigate separately. (T093-00265, T093-00266, T093-00269)",
+   "At 14:16 and 14:18, WS-ARUIZ-01 established TLS connections to WS-TWEBER-01, with svchost.exe identified as the initiating process. The purpose and relationship to the alert are not established. Investigate separately. (T093-00382, T093-00384, T093-00397, T093-00399)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 30.1
+}

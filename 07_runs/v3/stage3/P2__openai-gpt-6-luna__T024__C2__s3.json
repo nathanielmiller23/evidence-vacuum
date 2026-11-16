@@ -1,0 +1,79 @@
+{
+ "scenario_id": "T024",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 3,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.9,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:38:45 and 13:39:31 UTC, the domain controller issued Kerberos service tickets for the WS-MLOPEZ-01$ machine account to FILE-HD-01, with requests originating from WS-MLOPEZ-01. These records do not identify a PowerShell process or establish what prompted the requests.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T024-00067\",\n        \"T024-00072\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:44:40 UTC, WS-MLOPEZ-01 used the proxy to tunnel to download.windowsupdate.com with a Windows Update Agent user agent; the tunnel transferred about 38.8 MB from the server to the client. This is consistent with update activity but does not establish that the reported PowerShell window initiated it.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T024-00113\",\n        \"T024-00115\"\n      ]\n    },\n    {\n      \"claim\": \"The supplied process-creation records show a short-lived conhost.exe process at 14:12:25 UTC, running as SYSTEM with csrss.exe as its parent; the records do not identify it as PowerShell, and it is well after the reported 13:40 event.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T024-00285\",\n        \"T024-00286\",\n        \"T024-00287\",\n        \"T024-00288\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not include a PowerShell or pwsh process-creation event, command line, script-block log, or console event tied to the reported 13:40 UTC window.\",\n    \"Network and authentication records identify connections and accounts but do not attribute the relevant activity to a user-launched process.\",\n    \"The Windows Update proxy record is several minutes after the reported time and does not identify what initiated the download.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether a PowerShell window actually appeared on WS-MLOPEZ-01 at about 13:40 UTC.\",\n    \"Whether any PowerShell activity was authorized patching, other legitimate administration, or malicious execution.\",\n    \"Whether the FILE-HD-01 Kerberos tickets near the reported time relate to the reported window.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Endpoint EDR or Windows process-creation telemetry for WS-MLOPEZ-01 around 13:40 UTC, including parent process, user, command line, and process start and end times.\",\n    \"PowerShell Operational logs, especially events 4103 and 4104, and any available console or terminal-session telemetry for the same period.\",\n    \"Windows Update and scheduled-task logs to determine what initiated the 13:44 download.\",\n    \"Administrative workstation and FILE-HD-01 share-access records to check whether the documented patching workflow was used.\"\n  ],\n  \"unrelated_findings\": [\n    \"Google Drive File Stream started under maria.lopez at 14:11 UTC and contacted dl.google.com. Google Drive is not listed among approved services; refer for separate review, without treating it as evidence about the reported PowerShell window. (T024-00278, T024-00280, T024-00281, T024-00282)\",\n    \"At 14:11\u201314:12 UTC, svchost.exe accessed lsass.exe with the recorded GrantedAccess values. The records do not identify the service or establish malicious intent; review separately from the alert. (T024-00283, T024-00284, T024-00289)\",\n    \"At 13:57 UTC, FILE-HD-01 initiated a connection to WS-MLOPEZ-01 on TCP port 135. The records do not establish the purpose or outcome; review separately from the reported 13:40 activity. (T024-00169, T024-00170)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 32327,
+    "output": 2882
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.9,
+  "supporting_observations": [
+   {
+    "claim": "At 13:38:45 and 13:39:31 UTC, the domain controller issued Kerberos service tickets for the WS-MLOPEZ-01$ machine account to FILE-HD-01, with requests originating from WS-MLOPEZ-01. These records do not identify a PowerShell process or establish what prompted the requests.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T024-00067",
+     "T024-00072"
+    ]
+   },
+   {
+    "claim": "At 13:44:40 UTC, WS-MLOPEZ-01 used the proxy to tunnel to download.windowsupdate.com with a Windows Update Agent user agent; the tunnel transferred about 38.8 MB from the server to the client. This is consistent with update activity but does not establish that the reported PowerShell window initiated it.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T024-00113",
+     "T024-00115"
+    ]
+   },
+   {
+    "claim": "The supplied process-creation records show a short-lived conhost.exe process at 14:12:25 UTC, running as SYSTEM with csrss.exe as its parent; the records do not identify it as PowerShell, and it is well after the reported 13:40 event.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T024-00285",
+     "T024-00286",
+     "T024-00287",
+     "T024-00288"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not include a PowerShell or pwsh process-creation event, command line, script-block log, or console event tied to the reported 13:40 UTC window.",
+   "Network and authentication records identify connections and accounts but do not attribute the relevant activity to a user-launched process.",
+   "The Windows Update proxy record is several minutes after the reported time and does not identify what initiated the download."
+  ],
+  "claims_not_established": [
+   "Whether a PowerShell window actually appeared on WS-MLOPEZ-01 at about 13:40 UTC.",
+   "Whether any PowerShell activity was authorized patching, other legitimate administration, or malicious execution.",
+   "Whether the FILE-HD-01 Kerberos tickets near the reported time relate to the reported window."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Endpoint EDR or Windows process-creation telemetry for WS-MLOPEZ-01 around 13:40 UTC, including parent process, user, command line, and process start and end times.",
+   "PowerShell Operational logs, especially events 4103 and 4104, and any available console or terminal-session telemetry for the same period.",
+   "Windows Update and scheduled-task logs to determine what initiated the 13:44 download.",
+   "Administrative workstation and FILE-HD-01 share-access records to check whether the documented patching workflow was used."
+  ],
+  "unrelated_findings": [
+   "Google Drive File Stream started under maria.lopez at 14:11 UTC and contacted dl.google.com. Google Drive is not listed among approved services; refer for separate review, without treating it as evidence about the reported PowerShell window. (T024-00278, T024-00280, T024-00281, T024-00282)",
+   "At 14:11\u201314:12 UTC, svchost.exe accessed lsass.exe with the recorded GrantedAccess values. The records do not identify the service or establish malicious intent; review separately from the alert. (T024-00283, T024-00284, T024-00289)",
+   "At 13:57 UTC, FILE-HD-01 initiated a connection to WS-MLOPEZ-01 on TCP port 135. The records do not establish the purpose or outcome; review separately from the reported 13:40 activity. (T024-00169, T024-00170)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 8,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 31.2
+}

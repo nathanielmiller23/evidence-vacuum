@@ -1,0 +1,93 @@
+{
+ "scenario_id": "T243",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"WINWORD.EXE opened C:\\\\Users\\\\zoe.adams\\\\Downloads\\\\Statement.docm; shortly afterward, it spawned PowerShell with no profile, a hidden-window option, and an encoded command, under zoe.adams at medium integrity.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T243-00216\",\n        \"T243-00220\",\n        \"T243-00221\"\n      ]\n    },\n    {\n      \"claim\": \"The encoded PowerShell command decodes to an instruction to execute content downloaded with WebClient.DownloadString from raw.githubusercontent.com/sunridge-it/tools/main/u.ps1. The proxy recorded a successful GET for that URL immediately afterward.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T243-00220\",\n        \"T243-00221\",\n        \"T243-00222\",\n        \"T243-00223\"\n      ]\n    },\n    {\n      \"claim\": \"The PowerShell process then spawned rundll32.exe to invoke C:\\\\Users\\\\zoe.adams\\\\AppData\\\\Roaming\\\\svchelper.dll,Init. The records show the rundll32 process subsequently exited.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T243-00231\",\n        \"T243-00234\",\n        \"T243-00235\",\n        \"T243-00236\"\n      ]\n    },\n    {\n      \"claim\": \"The observed chain\u2014document macro-enabled file, hidden encoded PowerShell downloading and executing a remote script, followed by rundll32 invoking a DLL from the user's roaming profile\u2014supports treating the alerted activity as malicious.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T243-00216\",\n        \"T243-00220\",\n        \"T243-00223\",\n        \"T243-00231\",\n        \"T243-00234\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show the remote script URL and successful request, but do not provide the script contents or establish what the downloaded script did.\",\n    \"The supplied records do not include file-creation or file-content evidence for svchelper.dll, nor evidence of the DLL's signature or contents.\",\n    \"The supplied records do not include PowerShell script-block logging or equivalent execution telemetry that would confirm the full commands and effects.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the GitHub repository or script was authorized or controlled by the organization.\",\n    \"The exact behavior or impact of the downloaded script and DLL, including whether they established persistence, accessed data, or affected other systems.\",\n    \"Whether zoe.adams intentionally opened the document or knew it would launch this activity.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine Statement.docm, svchelper.dll, and any downloaded u.ps1 artifact; collect file hashes, timestamps, signatures, and contents.\",\n    \"Obtain PowerShell operational/script-block logs and endpoint security detections for WS-ZADAMS-01 around 13:42\u201313:44 UTC.\",\n    \"Verify the repository's ownership, commit history, and authorization with the organization; review proxy or network inspection data for the downloaded content.\",\n    \"Investigate subsequent activity and scope for the host and account, including persistence locations and relevant authentication or access events.\"\n  ],\n  \"unrelated_findings\": [\n    \"Google Drive File Stream launched for zoe.adams during the review window; Google Drive is cloud storage not listed among approved services. Track separately; this does not determine the PowerShell alert. (T243-00171, T243-00172)\",\n    \"Chrome made a POST request to Dropbox's shared-links endpoint during the review window; Dropbox is not listed among approved services. Track separately; this does not establish that it is part of the alerted execution chain. (T243-00275, T243-00276, T243-00278)\",\n    \"Cisco AnyConnect components started on the workstation, although the inventory says there is no VPN; these records do not establish a VPN connection and are separate from the alerted process chain. (T243-00077, T243-00078, T243-00397, T243-00398, T243-00400)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 67180,
+    "output": 1828
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "WINWORD.EXE opened C:\\Users\\zoe.adams\\Downloads\\Statement.docm; shortly afterward, it spawned PowerShell with no profile, a hidden-window option, and an encoded command, under zoe.adams at medium integrity.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T243-00216",
+     "T243-00220",
+     "T243-00221"
+    ]
+   },
+   {
+    "claim": "The encoded PowerShell command decodes to an instruction to execute content downloaded with WebClient.DownloadString from raw.githubusercontent.com/sunridge-it/tools/main/u.ps1. The proxy recorded a successful GET for that URL immediately afterward.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T243-00220",
+     "T243-00221",
+     "T243-00222",
+     "T243-00223"
+    ]
+   },
+   {
+    "claim": "The PowerShell process then spawned rundll32.exe to invoke C:\\Users\\zoe.adams\\AppData\\Roaming\\svchelper.dll,Init. The records show the rundll32 process subsequently exited.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T243-00231",
+     "T243-00234",
+     "T243-00235",
+     "T243-00236"
+    ]
+   },
+   {
+    "claim": "The observed chain\u2014document macro-enabled file, hidden encoded PowerShell downloading and executing a remote script, followed by rundll32 invoking a DLL from the user's roaming profile\u2014supports treating the alerted activity as malicious.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T243-00216",
+     "T243-00220",
+     "T243-00223",
+     "T243-00231",
+     "T243-00234"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show the remote script URL and successful request, but do not provide the script contents or establish what the downloaded script did.",
+   "The supplied records do not include file-creation or file-content evidence for svchelper.dll, nor evidence of the DLL's signature or contents.",
+   "The supplied records do not include PowerShell script-block logging or equivalent execution telemetry that would confirm the full commands and effects."
+  ],
+  "claims_not_established": [
+   "Whether the GitHub repository or script was authorized or controlled by the organization.",
+   "The exact behavior or impact of the downloaded script and DLL, including whether they established persistence, accessed data, or affected other systems.",
+   "Whether zoe.adams intentionally opened the document or knew it would launch this activity."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine Statement.docm, svchelper.dll, and any downloaded u.ps1 artifact; collect file hashes, timestamps, signatures, and contents.",
+   "Obtain PowerShell operational/script-block logs and endpoint security detections for WS-ZADAMS-01 around 13:42\u201313:44 UTC.",
+   "Verify the repository's ownership, commit history, and authorization with the organization; review proxy or network inspection data for the downloaded content.",
+   "Investigate subsequent activity and scope for the host and account, including persistence locations and relevant authentication or access events."
+  ],
+  "unrelated_findings": [
+   "Google Drive File Stream launched for zoe.adams during the review window; Google Drive is cloud storage not listed among approved services. Track separately; this does not determine the PowerShell alert. (T243-00171, T243-00172)",
+   "Chrome made a POST request to Dropbox's shared-links endpoint during the review window; Dropbox is not listed among approved services. Track separately; this does not establish that it is part of the alerted execution chain. (T243-00275, T243-00276, T243-00278)",
+   "Cisco AnyConnect components started on the workstation, although the inventory says there is no VPN; these records do not establish a VPN connection and are separate from the alerted process chain. (T243-00077, T243-00078, T243-00397, T243-00398, T243-00400)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 16,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 19.0
+}

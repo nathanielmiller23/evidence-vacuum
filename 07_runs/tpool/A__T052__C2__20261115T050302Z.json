@@ -1,0 +1,78 @@
+{
+ "run_id": "A__T052__C2__20261115T050302Z",
+ "config": "A",
+ "scenario_id": "T052",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 2,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 4662,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Record T052-00001 is a 4648 event on WS-LMARTINS-01 showing SYSTEM using explicit credentials for NWD\\\\svc-render, targeting PROXY-NWD-01; the recorded process is Meridian OpsAgent.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T052-00001\"\n      ]\n    },\n    {\n      \"claim\": \"Record T052-00037 is a 4648 event on WS-NBLAKE-01 showing SYSTEM using explicit credentials for NWD\\\\svc-render, targeting FILE-NWD-01; the recorded process is Meridian OpsAgent.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T052-00037\"\n      ]\n    },\n    {\n      \"claim\": \"The two records show use of svc-render credentials from two workstations other than the designated remote-administration workstation WS-SOKAFOR-01. The records alone do not establish whether these uses were authorized.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T052-00001\",\n        \"T052-00037\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available evidence contains only two 4648 records, not a complete authentication history for the requested time window.\",\n    \"Neither record reports an authentication failure or success, so these records do not verify the alert's claim of repeated failed logons.\",\n    \"The records do not show why svc-render credentials were used, who initiated the activity, or whether the activity was authorized.\"\n  ],\n  \"claims_not_established\": [\n    \"That svc-render logons failed repeatedly around 13:40 UTC.\",\n    \"That either credential use resulted in a successful logon or access to the target.\",\n    \"That the Meridian OpsAgent activity was approved, compromised, or malicious.\",\n    \"That the scheduled password rotation caused these events or that the RenderQueue job was updated correctly.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Collect DC-NWD-01 authentication records for svc-render during 13:20\u201314:20 UTC, including success/failure status, source addresses, and relevant logon events.\",\n    \"Collect process, service, and network telemetry from WS-LMARTINS-01 and WS-NBLAKE-01 for the two recorded events to establish what launched Meridian OpsAgent and what it did.\",\n    \"Verify whether Meridian OpsAgent is approved and whether either workstation was authorized to use svc-render credentials or contact the recorded targets.\",\n    \"Review the svc-render password-rotation and RenderQueue job-update records, including the job's authentication attempts on FILE-NWD-01.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 1330,
+    "output": 1124,
+    "reasoning": 509
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "Record T052-00001 is a 4648 event on WS-LMARTINS-01 showing SYSTEM using explicit credentials for NWD\\svc-render, targeting PROXY-NWD-01; the recorded process is Meridian OpsAgent.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T052-00001"
+    ]
+   },
+   {
+    "claim": "Record T052-00037 is a 4648 event on WS-NBLAKE-01 showing SYSTEM using explicit credentials for NWD\\svc-render, targeting FILE-NWD-01; the recorded process is Meridian OpsAgent.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T052-00037"
+    ]
+   },
+   {
+    "claim": "The two records show use of svc-render credentials from two workstations other than the designated remote-administration workstation WS-SOKAFOR-01. The records alone do not establish whether these uses were authorized.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T052-00001",
+     "T052-00037"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available evidence contains only two 4648 records, not a complete authentication history for the requested time window.",
+   "Neither record reports an authentication failure or success, so these records do not verify the alert's claim of repeated failed logons.",
+   "The records do not show why svc-render credentials were used, who initiated the activity, or whether the activity was authorized."
+  ],
+  "claims_not_established": [
+   "That svc-render logons failed repeatedly around 13:40 UTC.",
+   "That either credential use resulted in a successful logon or access to the target.",
+   "That the Meridian OpsAgent activity was approved, compromised, or malicious.",
+   "That the scheduled password rotation caused these events or that the RenderQueue job was updated correctly."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Collect DC-NWD-01 authentication records for svc-render during 13:20\u201314:20 UTC, including success/failure status, source addresses, and relevant logon events.",
+   "Collect process, service, and network telemetry from WS-LMARTINS-01 and WS-NBLAKE-01 for the two recorded events to establish what launched Meridian OpsAgent and what it did.",
+   "Verify whether Meridian OpsAgent is approved and whether either workstation was authorized to use svc-render credentials or contact the recorded targets.",
+   "Review the svc-render password-rotation and RenderQueue job-update records, including the job's authentication attempts on FILE-NWD-01."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 4,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 11.5
+}

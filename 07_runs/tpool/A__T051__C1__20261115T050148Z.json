@@ -1,0 +1,152 @@
+{
+ "run_id": "A__T051__C1__20261115T050148Z",
+ "config": "A",
+ "scenario_id": "T051",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 38,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 17568,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.84,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Five interactive logon attempts for leo.martins failed on WS-LMARTINS-01 between 13:30:32 and 13:30:56 UTC; the recorded substatus indicates an incorrect password.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T051-00001\", \"T051-00002\", \"T051-00003\", \"T051-00004\", \"T051-00005\"]\n    },\n    {\n      \"claim\": \"Two network logon attempts for leo.martins from 203.0.113.250 failed at 13:45 and 13:46 UTC, followed at 13:48 UTC by a successful network logon for the same account from that IP.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T051-00007\", \"T051-00008\", \"T051-00009\"]\n    },\n    {\n      \"claim\": \"The successful network logon from 203.0.113.250 is an unexplained authentication event: the supplied inventory describes no VPN and says remote administration is only from WS-SOKAFOR-01, but the records do not identify this source as an authorized system or explain the access path.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T051-00009\"]\n    },\n    {\n      \"claim\": \"At 13:53 UTC, the domain controller issued a ticket for leo.martins from 10.40.10.23 to WS-NBLAKE-01, and WS-NBLAKE-01 recorded a successful network logon for that account from the same IP.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T051-00013\", \"T051-00014\", \"T051-00015\"]\n    },\n    {\n      \"claim\": \"At about 14:07 UTC, processes for Zscaler, Cisco AnyConnect, Dropbox, OneDrive, Chrome, cmd.exe, Sublime Text, and Explorer exited on WS-LMARTINS-01; a logoff for leo.martins was also recorded shortly afterward.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T051-00019\", \"T051-00020\", \"T051-00021\", \"T051-00022\", \"T051-00023\", \"T051-00024\", \"T051-00025\", \"T051-00026\", \"T051-00027\", \"T051-00028\", \"T051-00029\", \"T051-00030\", \"T051-00031\", \"T051-00032\", \"T051-00033\", \"T051-00034\", \"T051-00035\", \"T051-00036\"]\n    },\n    {\n      \"claim\": \"Proxy-related user settings changed on WS-LMARTINS-01: Explorer set MigrateProxy to 1 at 14:04 and ProxyEnable to 0 at 14:16.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T051-00018\", \"T051-00038\"]\n    },\n    {\n      \"claim\": \"Dropbox and Cisco AnyConnect processes were present on WS-LMARTINS-01, although the supplied inventory lists no approved file-sharing or remote-access services other than its stated approved services. Their presence and exit are reasons to investigate, but do not by themselves establish malicious activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T051-00023\", \"T051-00024\", \"T051-00025\", \"T051-00026\"]\n    },\n    {\n      \"claim\": \"The available records do not establish whether the external-source authentication was authorized or whether the process exits and proxy changes were user-initiated, routine, or malicious.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T051-00009\", \"T051-00018\", \"T051-00019\", \"T051-00020\", \"T051-00023\", \"T051-00025\", \"T051-00036\", \"T051-00038\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The evidence contains selected authentication, registry, process-exit, and proxy records; it does not provide a complete endpoint or domain-controller event timeline.\",\n    \"The records do not map 203.0.113.250 or 10.40.10.23 to a person, device, approved network path, or physical location.\",\n    \"No process-creation, parent-process, command-line, endpoint detection, or application-installation records are included to explain the process exits or software presence.\",\n    \"The proxy records show a connection to Bing but do not reveal the contents of the TLS tunnel or activity to other destinations.\"\n  ],\n  \"claims_not_established\": [\n    \"That the failed attempts were password guessing by an attacker rather than user error.\",\n    \"That the successful logon from 203.0.113.250 was unauthorized or that the account was compromised.\",\n    \"That the 10.40.10.23 authentication to WS-NBLAKE-01 was interactive, remote, or otherwise inconsistent with authorized activity.\",\n    \"That Dropbox or AnyConnect was installed or used for unauthorized data transfer or remote access.\",\n    \"That the proxy setting change or clustered process exits were intended to evade monitoring or conceal activity.\",\n    \"Whether the 13:30 failures relate to the later successful logons; the supplied change calendar's svc-render password rotation concerns a different account.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate the domain-controller authentication records with full Kerberos, NTLM, and logon events, including source-device identification and any relevant account or password changes.\",\n    \"Determine whether 203.0.113.250 and 10.40.10.23 correspond to authorized infrastructure or users, and verify the network path for the 13:48 logon against the no-VPN and remote-administration policies.\",\n    \"Collect endpoint process-creation and parent-process telemetry, interactive logon/session records, and EDR findings from WS-LMARTINS-01 and WS-NBLAKE-01 for the review window.\",\n    \"Review software inventory, installation history, and file or network-transfer telemetry for Dropbox and AnyConnect on WS-LMARTINS-01.\",\n    \"Retrieve proxy and endpoint configuration history to determine what changed around 14:04\u201314:16 and whether the changes were user- or policy-initiated.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 6168,
+    "output": 3581,
+    "reasoning": 2110
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.84,
+  "supporting_observations": [
+   {
+    "claim": "Five interactive logon attempts for leo.martins failed on WS-LMARTINS-01 between 13:30:32 and 13:30:56 UTC; the recorded substatus indicates an incorrect password.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T051-00001",
+     "T051-00002",
+     "T051-00003",
+     "T051-00004",
+     "T051-00005"
+    ]
+   },
+   {
+    "claim": "Two network logon attempts for leo.martins from 203.0.113.250 failed at 13:45 and 13:46 UTC, followed at 13:48 UTC by a successful network logon for the same account from that IP.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T051-00007",
+     "T051-00008",
+     "T051-00009"
+    ]
+   },
+   {
+    "claim": "The successful network logon from 203.0.113.250 is an unexplained authentication event: the supplied inventory describes no VPN and says remote administration is only from WS-SOKAFOR-01, but the records do not identify this source as an authorized system or explain the access path.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T051-00009"
+    ]
+   },
+   {
+    "claim": "At 13:53 UTC, the domain controller issued a ticket for leo.martins from 10.40.10.23 to WS-NBLAKE-01, and WS-NBLAKE-01 recorded a successful network logon for that account from the same IP.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T051-00013",
+     "T051-00014",
+     "T051-00015"
+    ]
+   },
+   {
+    "claim": "At about 14:07 UTC, processes for Zscaler, Cisco AnyConnect, Dropbox, OneDrive, Chrome, cmd.exe, Sublime Text, and Explorer exited on WS-LMARTINS-01; a logoff for leo.martins was also recorded shortly afterward.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T051-00019",
+     "T051-00020",
+     "T051-00021",
+     "T051-00022",
+     "T051-00023",
+     "T051-00024",
+     "T051-00025",
+     "T051-00026",
+     "T051-00027",
+     "T051-00028",
+     "T051-00029",
+     "T051-00030",
+     "T051-00031",
+     "T051-00032",
+     "T051-00033",
+     "T051-00034",
+     "T051-00035",
+     "T051-00036"
+    ]
+   },
+   {
+    "claim": "Proxy-related user settings changed on WS-LMARTINS-01: Explorer set MigrateProxy to 1 at 14:04 and ProxyEnable to 0 at 14:16.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T051-00018",
+     "T051-00038"
+    ]
+   },
+   {
+    "claim": "Dropbox and Cisco AnyConnect processes were present on WS-LMARTINS-01, although the supplied inventory lists no approved file-sharing or remote-access services other than its stated approved services. Their presence and exit are reasons to investigate, but do not by themselves establish malicious activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T051-00023",
+     "T051-00024",
+     "T051-00025",
+     "T051-00026"
+    ]
+   },
+   {
+    "claim": "The available records do not establish whether the external-source authentication was authorized or whether the process exits and proxy changes were user-initiated, routine, or malicious.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T051-00009",
+     "T051-00018",
+     "T051-00019",
+     "T051-00020",
+     "T051-00023",
+     "T051-00025",
+     "T051-00036",
+     "T051-00038"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The evidence contains selected authentication, registry, process-exit, and proxy records; it does not provide a complete endpoint or domain-controller event timeline.",
+   "The records do not map 203.0.113.250 or 10.40.10.23 to a person, device, approved network path, or physical location.",
+   "No process-creation, parent-process, command-line, endpoint detection, or application-installation records are included to explain the process exits or software presence.",
+   "The proxy records show a connection to Bing but do not reveal the contents of the TLS tunnel or activity to other destinations."
+  ],
+  "claims_not_established": [
+   "That the failed attempts were password guessing by an attacker rather than user error.",
+   "That the successful logon from 203.0.113.250 was unauthorized or that the account was compromised.",
+   "That the 10.40.10.23 authentication to WS-NBLAKE-01 was interactive, remote, or otherwise inconsistent with authorized activity.",
+   "That Dropbox or AnyConnect was installed or used for unauthorized data transfer or remote access.",
+   "That the proxy setting change or clustered process exits were intended to evade monitoring or conceal activity.",
+   "Whether the 13:30 failures relate to the later successful logons; the supplied change calendar's svc-render password rotation concerns a different account."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate the domain-controller authentication records with full Kerberos, NTLM, and logon events, including source-device identification and any relevant account or password changes.",
+   "Determine whether 203.0.113.250 and 10.40.10.23 correspond to authorized infrastructure or users, and verify the network path for the 13:48 logon against the no-VPN and remote-administration policies.",
+   "Collect endpoint process-creation and parent-process telemetry, interactive logon/session records, and EDR findings from WS-LMARTINS-01 and WS-NBLAKE-01 for the review window.",
+   "Review software inventory, installation history, and file or network-transfer telemetry for Dropbox and AnyConnect on WS-LMARTINS-01.",
+   "Retrieve proxy and endpoint configuration history to determine what changed around 14:04\u201314:16 and whether the changes were user- or policy-initiated."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 44,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 36.6
+}

@@ -1,0 +1,99 @@
+{
+ "run_id": "A__T011__C3__20261115T043729Z",
+ "config": "A",
+ "scenario_id": "T011",
+ "condition": "C3",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 6,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 7404,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.86,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded two failed network logons for ben.carter using NTLM from 192.0.2.45; both failures have SubStatus 0xc000006a, indicating an incorrect password.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T011-00003\",\n        \"T011-00004\"\n      ]\n    },\n    {\n      \"claim\": \"About 80 seconds after the second failure, the domain controller recorded a successful Kerberos network logon for ben.carter from the same IP address.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T011-00004\",\n        \"T011-00005\"\n      ]\n    },\n    {\n      \"claim\": \"On WS-BCARTER-01, explorer.exe set the user's ProxyEnable registry value to 0 shortly before the failed logons.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T011-00002\",\n        \"T011-00003\"\n      ]\n    },\n    {\n      \"claim\": \"WS-BCARTER-01 has UserAssist registry entries whose encoded paths decode to Chrome shortly before the logons and Excel shortly after the successful logon; these entries alone do not establish what the user did in either application.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T011-00001\",\n        \"T011-00006\"\n      ]\n    },\n    {\n      \"claim\": \"The sequence of failed logons followed by a success, together with the proxy setting change, warrants investigation, but the supplied events do not establish that the activity was malicious.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T011-00002\",\n        \"T011-00003\",\n        \"T011-00004\",\n        \"T011-00005\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy logs for PROXY-HD-01 were not collected from 2026-10-20 13:30 UTC through 14:10 UTC because of a collection outage.\",\n    \"Although Zeek sensors are reported as operational, no Zeek connection, DNS, or SSL records for this interval were included in the supplied evidence.\",\n    \"The supplied records do not identify which device or person was using 192.0.2.45.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether 192.0.2.45 belonged to ben.carter's workstation, another internal device, or an external source.\",\n    \"Whether the failed attempts were password-entry mistakes, automated guessing, or activity by someone other than ben.carter.\",\n    \"Whether the successful logon led to unauthorized access or any harmful actions.\",\n    \"Whether the proxy setting change was intended to evade monitoring or was a benign configuration change.\",\n    \"Whether any network connections or data transfers occurred during the proxy collection outage.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Resolve 192.0.2.45 to a device and network location using DHCP, IPAM, firewall, or endpoint records for the relevant time.\",\n    \"Collect available endpoint authentication and process/network telemetry from WS-BCARTER-01 and records associated with the successful domain logon.\",\n    \"Review available Zeek, firewall, and proxy-side records for connections involving 192.0.2.45 during 13:20\u201314:20 UTC, accounting for the proxy collection outage.\",\n    \"Confirm with ben.carter whether the logons and proxy setting change were expected, and review account password-change or reset history around the alert.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 2375,
+    "output": 1687,
+    "reasoning": 859
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.86,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded two failed network logons for ben.carter using NTLM from 192.0.2.45; both failures have SubStatus 0xc000006a, indicating an incorrect password.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T011-00003",
+     "T011-00004"
+    ]
+   },
+   {
+    "claim": "About 80 seconds after the second failure, the domain controller recorded a successful Kerberos network logon for ben.carter from the same IP address.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T011-00004",
+     "T011-00005"
+    ]
+   },
+   {
+    "claim": "On WS-BCARTER-01, explorer.exe set the user's ProxyEnable registry value to 0 shortly before the failed logons.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T011-00002",
+     "T011-00003"
+    ]
+   },
+   {
+    "claim": "WS-BCARTER-01 has UserAssist registry entries whose encoded paths decode to Chrome shortly before the logons and Excel shortly after the successful logon; these entries alone do not establish what the user did in either application.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T011-00001",
+     "T011-00006"
+    ]
+   },
+   {
+    "claim": "The sequence of failed logons followed by a success, together with the proxy setting change, warrants investigation, but the supplied events do not establish that the activity was malicious.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T011-00002",
+     "T011-00003",
+     "T011-00004",
+     "T011-00005"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy logs for PROXY-HD-01 were not collected from 2026-10-20 13:30 UTC through 14:10 UTC because of a collection outage.",
+   "Although Zeek sensors are reported as operational, no Zeek connection, DNS, or SSL records for this interval were included in the supplied evidence.",
+   "The supplied records do not identify which device or person was using 192.0.2.45."
+  ],
+  "claims_not_established": [
+   "Whether 192.0.2.45 belonged to ben.carter's workstation, another internal device, or an external source.",
+   "Whether the failed attempts were password-entry mistakes, automated guessing, or activity by someone other than ben.carter.",
+   "Whether the successful logon led to unauthorized access or any harmful actions.",
+   "Whether the proxy setting change was intended to evade monitoring or was a benign configuration change.",
+   "Whether any network connections or data transfers occurred during the proxy collection outage."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Resolve 192.0.2.45 to a device and network location using DHCP, IPAM, firewall, or endpoint records for the relevant time.",
+   "Collect available endpoint authentication and process/network telemetry from WS-BCARTER-01 and records associated with the successful domain logon.",
+   "Review available Zeek, firewall, and proxy-side records for connections involving 192.0.2.45 during 13:20\u201314:20 UTC, accounting for the proxy collection outage.",
+   "Confirm with ben.carter whether the logons and proxy setting change were expected, and review account password-change or reset history around the alert."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 16.1
+}

@@ -1,0 +1,80 @@
+{
+ "scenario_id": "T249",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.92,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:43 UTC, zoe.adams ran PowerShell to compress \\\\\\\\FILE-SUN-01\\\\Shared\\\\Clients into C:\\\\Users\\\\zoe.adams\\\\AppData\\\\Local\\\\Temp\\\\c.zip; the archive was created and the process exited shortly afterward.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T249-00296\",\n        \"T249-00298\",\n        \"T249-00299\",\n        \"T249-00300\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:49 UTC, Chrome traffic from WS-ZADAMS-01 sent about 51 MB of client data through the proxy to zipshare-host.io. The destination is an unapproved file-sharing service under the supplied inventory.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T249-00356\",\n        \"T249-00357\",\n        \"T249-00358\",\n        \"T249-00359\"\n      ]\n    },\n    {\n      \"claim\": \"The archive of a shared Clients directory shortly preceded a large outbound transfer to an unapproved file-sharing site. This sequence strongly suggests possible data exfiltration, although the logs do not establish that c.zip was the file uploaded.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T249-00296\",\n        \"T249-00298\",\n        \"T249-00356\",\n        \"T249-00358\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy record identifies the destination host and transfer byte counts, but does not expose the uploaded filename, request path, or content.\",\n    \"The available records do not directly link the c.zip archive to the 51 MB transfer.\"\n  ],\n  \"claims_not_established\": [\n    \"That c.zip, or any particular file from the Clients directory, was uploaded.\",\n    \"What data the outbound transfer contained or whether it included sensitive client information.\",\n    \"Whether the transfer was authorized or what the user's intent was.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Proxy or endpoint upload/request logs that identify the uploaded filename, request path, or payload.\",\n    \"Endpoint evidence for c.zip and the source directory, including file metadata, contents, and any subsequent access or deletion.\",\n    \"User confirmation and business records establishing whether the archive and external transfer were authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox, an unapproved cloud-storage service, was launched on WS-ZADAMS-01; investigate separately and do not use this alone to determine the alert. (T249-00259, T249-00260, T249-00261)\",\n    \"Cisco AnyConnect's UI was launched on WS-ZADAMS-01 despite the inventory stating there is no VPN; these records show launch only, not a VPN connection. Investigate separately. (T249-00089, T249-00090, T249-00091)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 81598,
+    "output": 1454
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.92,
+  "supporting_observations": [
+   {
+    "claim": "At 13:43 UTC, zoe.adams ran PowerShell to compress \\\\FILE-SUN-01\\Shared\\Clients into C:\\Users\\zoe.adams\\AppData\\Local\\Temp\\c.zip; the archive was created and the process exited shortly afterward.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T249-00296",
+     "T249-00298",
+     "T249-00299",
+     "T249-00300"
+    ]
+   },
+   {
+    "claim": "At 13:49 UTC, Chrome traffic from WS-ZADAMS-01 sent about 51 MB of client data through the proxy to zipshare-host.io. The destination is an unapproved file-sharing service under the supplied inventory.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T249-00356",
+     "T249-00357",
+     "T249-00358",
+     "T249-00359"
+    ]
+   },
+   {
+    "claim": "The archive of a shared Clients directory shortly preceded a large outbound transfer to an unapproved file-sharing site. This sequence strongly suggests possible data exfiltration, although the logs do not establish that c.zip was the file uploaded.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T249-00296",
+     "T249-00298",
+     "T249-00356",
+     "T249-00358"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy record identifies the destination host and transfer byte counts, but does not expose the uploaded filename, request path, or content.",
+   "The available records do not directly link the c.zip archive to the 51 MB transfer."
+  ],
+  "claims_not_established": [
+   "That c.zip, or any particular file from the Clients directory, was uploaded.",
+   "What data the outbound transfer contained or whether it included sensitive client information.",
+   "Whether the transfer was authorized or what the user's intent was."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Proxy or endpoint upload/request logs that identify the uploaded filename, request path, or payload.",
+   "Endpoint evidence for c.zip and the source directory, including file metadata, contents, and any subsequent access or deletion.",
+   "User confirmation and business records establishing whether the archive and external transfer were authorized."
+  ],
+  "unrelated_findings": [
+   "Dropbox, an unapproved cloud-storage service, was launched on WS-ZADAMS-01; investigate separately and do not use this alone to determine the alert. (T249-00259, T249-00260, T249-00261)",
+   "Cisco AnyConnect's UI was launched on WS-ZADAMS-01 despite the inventory stating there is no VPN; these records show launch only, not a VPN connection. Investigate separately. (T249-00089, T249-00090, T249-00091)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 15.5
+}

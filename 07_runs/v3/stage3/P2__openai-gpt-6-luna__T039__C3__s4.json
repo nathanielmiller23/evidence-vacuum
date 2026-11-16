@@ -1,0 +1,66 @@
+{
+ "scenario_id": "T039",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 4,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45:58 UTC, WS-ICHEN-01 had an HTTP connection to the internal proxy at 10.40.20.30:8080 with 51,000,389 bytes recorded from the client and 9,017 bytes in response, consistent with a large client-to-proxy transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T039-00140\"\n      ]\n    },\n    {\n      \"claim\": \"The available flow record identifies the internal proxy, not the ultimate external destination or the content/request associated with the large transfer; it therefore does not establish that data was exfiltrated or that the activity was malicious.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T039-00140\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Collection-status metadata reports that WS-ICHEN-01 winsec and sysmon logs were not collected from 13:30 to 14:10 UTC, covering the alerted transfer.\",\n    \"Collection-status metadata reports that PROXY-NWD-01 proxy logs were not collected from 13:30 to 14:10 UTC, so proxy request details for the transfer are unavailable.\",\n    \"Zeek connection telemetry was available; it records the large connection to the internal proxy but does not identify its ultimate destination or payload in the supplied record (T039-00140).\"\n  ],\n  \"claims_not_established\": [\n    \"What external host, domain, URL, or service\u2014if any\u2014the large transfer was ultimately sent to.\",\n    \"Whether the bytes represented an upload, an allowed application request, or other traffic, and what the transferred content contained.\",\n    \"Which process initiated the large transfer and whether it was authorized by the user or organization.\",\n    \"Whether the proxy forwarded the data externally or whether the transfer was blocked or otherwise handled internally.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover or obtain proxy request and tunnel logs for 13:45:58 UTC, including destination, URL or CONNECT target, user, action, and byte counts.\",\n    \"Obtain endpoint process/network telemetry and relevant application or browser records for WS-ICHEN-01 around 13:45:58 UTC.\",\n    \"Correlate proxy or network egress records to determine whether the proxy forwarded the data externally and identify the destination.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 14:12\u201314:13 UTC, Chrome on WS-ICHEN-01 browsed aws.amazon.com, including the AWS console, through the proxy (T039-00266, T039-00267, T039-00286). This later browsing is not shown to be connected to the 13:45:58 transfer.\",\n    \"At 14:13:46 and 14:17:10 UTC, sysmon recorded svchost.exe and services.exe accessing LSASS, respectively (T039-00304, T039-00305). The supplied evidence does not link these events to the alerted transfer.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 32353,
+    "output": 1952
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45:58 UTC, WS-ICHEN-01 had an HTTP connection to the internal proxy at 10.40.20.30:8080 with 51,000,389 bytes recorded from the client and 9,017 bytes in response, consistent with a large client-to-proxy transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T039-00140"
+    ]
+   },
+   {
+    "claim": "The available flow record identifies the internal proxy, not the ultimate external destination or the content/request associated with the large transfer; it therefore does not establish that data was exfiltrated or that the activity was malicious.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T039-00140"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Collection-status metadata reports that WS-ICHEN-01 winsec and sysmon logs were not collected from 13:30 to 14:10 UTC, covering the alerted transfer.",
+   "Collection-status metadata reports that PROXY-NWD-01 proxy logs were not collected from 13:30 to 14:10 UTC, so proxy request details for the transfer are unavailable.",
+   "Zeek connection telemetry was available; it records the large connection to the internal proxy but does not identify its ultimate destination or payload in the supplied record (T039-00140)."
+  ],
+  "claims_not_established": [
+   "What external host, domain, URL, or service\u2014if any\u2014the large transfer was ultimately sent to.",
+   "Whether the bytes represented an upload, an allowed application request, or other traffic, and what the transferred content contained.",
+   "Which process initiated the large transfer and whether it was authorized by the user or organization.",
+   "Whether the proxy forwarded the data externally or whether the transfer was blocked or otherwise handled internally."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover or obtain proxy request and tunnel logs for 13:45:58 UTC, including destination, URL or CONNECT target, user, action, and byte counts.",
+   "Obtain endpoint process/network telemetry and relevant application or browser records for WS-ICHEN-01 around 13:45:58 UTC.",
+   "Correlate proxy or network egress records to determine whether the proxy forwarded the data externally and identify the destination."
+  ],
+  "unrelated_findings": [
+   "At 14:12\u201314:13 UTC, Chrome on WS-ICHEN-01 browsed aws.amazon.com, including the AWS console, through the proxy (T039-00266, T039-00267, T039-00286). This later browsing is not shown to be connected to the 13:45:58 transfer.",
+   "At 14:13:46 and 14:17:10 UTC, sysmon recorded svchost.exe and services.exe accessing LSASS, respectively (T039-00304, T039-00305). The supplied evidence does not link these events to the alerted transfer."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 2,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.4
+}

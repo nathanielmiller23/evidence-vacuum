@@ -1,0 +1,75 @@
+{
+ "scenario_id": "T110",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.9,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45:43 UTC, FILE-COP-01 (10.52.20.20) initiated an HTTP connection to the internal proxy at 10.52.20.30:8080. Zeek recorded 640,000,259 bytes from the server to the proxy over about 10.5 seconds, consistent with the alerted large transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T110-00300\"]\n    },\n    {\n      \"claim\": \"The inventory describes an approved offsite backup agent on FILE-COP-01 that uploads several hundred MB, so the alerted transfer's size and host are consistent with an authorized backup. The available connection record does not identify the process or the ultimate destination, so this does not establish that the transfer was that backup.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T110-00300\"]\n    },\n    {\n      \"claim\": \"About one minute before the large transfer, a domain-controller event recorded a service ticket for svc-backup to FILE-COP-01$ with the client IP shown as 116.202.120.181. This is unusual given the stated absence of VPN, but the evidence does not connect that authentication to the transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T110-00290\", \"T110-00300\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied network record ends at the internal proxy; there are no proxy request or egress records identifying the external destination, URL, or service.\",\n    \"The supplied records do not attribute the large connection to a process or executable on FILE-COP-01.\",\n    \"The connection record does not reveal the transferred files, their contents, or whether the bytes represent an authorized backup payload.\",\n    \"The svc-backup ticket's timing is close to the transfer, but the records do not establish a causal or operational link between them.\"\n  ],\n  \"claims_not_established\": [\n    \"That the transfer was made by the approved Ironvault agent or was destined for ironvault-cloud.com.\",\n    \"That the transfer was data exfiltration, or that the data was sensitive or unauthorized.\",\n    \"That the svc-backup ticket from 116.202.120.181 was involved in the transfer.\",\n    \"That the svc-backup authentication was legitimate or malicious.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"PROXY-COP-01 access and egress logs for the connection at 13:45:43 UTC, including destination host, URL, HTTP method, and byte counts.\",\n    \"FILE-COP-01 process/network telemetry for the connection, plus Ironvault agent logs showing whether an upload was running and its destination and volume.\",\n    \"Authentication and network records explaining the 13:44:44 UTC svc-backup ticket request from 116.202.120.181, including whether that address is an authorized service endpoint.\",\n    \"Backup job records and file-level audit data for the relevant time to verify what was transferred.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-SALI-01 user sara.ali launched Remote Desktop to FILE-COP-01 at 13:39:43 UTC, and a session from that workstation to FILE-COP-01:3389 began shortly afterward. This is outside the stated remote-administration practice, which permits remote administration only from WS-PBECKER-01. The records do not show that this session caused the alerted transfer; track separately. (T110-00199, T110-00205, T110-00207)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 71998,
+    "output": 2428
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.9,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45:43 UTC, FILE-COP-01 (10.52.20.20) initiated an HTTP connection to the internal proxy at 10.52.20.30:8080. Zeek recorded 640,000,259 bytes from the server to the proxy over about 10.5 seconds, consistent with the alerted large transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T110-00300"
+    ]
+   },
+   {
+    "claim": "The inventory describes an approved offsite backup agent on FILE-COP-01 that uploads several hundred MB, so the alerted transfer's size and host are consistent with an authorized backup. The available connection record does not identify the process or the ultimate destination, so this does not establish that the transfer was that backup.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T110-00300"
+    ]
+   },
+   {
+    "claim": "About one minute before the large transfer, a domain-controller event recorded a service ticket for svc-backup to FILE-COP-01$ with the client IP shown as 116.202.120.181. This is unusual given the stated absence of VPN, but the evidence does not connect that authentication to the transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T110-00290",
+     "T110-00300"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied network record ends at the internal proxy; there are no proxy request or egress records identifying the external destination, URL, or service.",
+   "The supplied records do not attribute the large connection to a process or executable on FILE-COP-01.",
+   "The connection record does not reveal the transferred files, their contents, or whether the bytes represent an authorized backup payload.",
+   "The svc-backup ticket's timing is close to the transfer, but the records do not establish a causal or operational link between them."
+  ],
+  "claims_not_established": [
+   "That the transfer was made by the approved Ironvault agent or was destined for ironvault-cloud.com.",
+   "That the transfer was data exfiltration, or that the data was sensitive or unauthorized.",
+   "That the svc-backup ticket from 116.202.120.181 was involved in the transfer.",
+   "That the svc-backup authentication was legitimate or malicious."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "PROXY-COP-01 access and egress logs for the connection at 13:45:43 UTC, including destination host, URL, HTTP method, and byte counts.",
+   "FILE-COP-01 process/network telemetry for the connection, plus Ironvault agent logs showing whether an upload was running and its destination and volume.",
+   "Authentication and network records explaining the 13:44:44 UTC svc-backup ticket request from 116.202.120.181, including whether that address is an authorized service endpoint.",
+   "Backup job records and file-level audit data for the relevant time to verify what was transferred."
+  ],
+  "unrelated_findings": [
+   "WS-SALI-01 user sara.ali launched Remote Desktop to FILE-COP-01 at 13:39:43 UTC, and a session from that workstation to FILE-COP-01:3389 began shortly afterward. This is outside the stated remote-administration practice, which permits remote administration only from WS-PBECKER-01. The records do not show that this session caused the alerted transfer; track separately. (T110-00199, T110-00205, T110-00207)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 4,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 26.6
+}

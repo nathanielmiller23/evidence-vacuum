@@ -1,0 +1,93 @@
+{
+ "scenario_id": "S21",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.76,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"WS-CPRICE-01 recorded an interactive logon for dev.sharma, followed by mstsc.exe launched with /v:FILE-RB-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S21-00193\", \"S21-00194\", \"S21-00199\", \"S21-00200\"]\n    },\n    {\n      \"claim\": \"The RDP connection to FILE-RB-01 originated from 10.60.10.22, identified in the records as WS-CPRICE-01; FILE-RB-01 accepted a type 10 remote interactive logon for dev.sharma from that address.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S21-00207\", \"S21-00208\", \"S21-00209\", \"S21-00212\"]\n    },\n    {\n      \"claim\": \"This is inconsistent with the stated practice that server administration is only performed from WS-DSHARMA-01 and that staff workstations are never used for administration. The evidence therefore supports treating the alerted session as unauthorized pending investigation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S21-00199\", \"S21-00207\", \"S21-00209\", \"S21-00212\"]\n    },\n    {\n      \"claim\": \"A VetChart hang was reported on WS-CPRICE-01 and a ticket was open, which could provide operational context, but the supplied evidence does not link that ticket to this RDP session or show an approved exception to the stated access practice.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S21-00193\", \"S21-00199\", \"S21-00212\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records establish the RDP client, destination, account, and successful remote logon, but do not show the user\u2019s actions within the remote session.\",\n    \"The records do not establish whether dev.sharma personally initiated the activity or whether the credentials or workstation were being used by someone else.\",\n    \"The supplied evidence does not include the ticket details or an approval record that would confirm whether this session had an authorized exception.\"\n  ],\n  \"claims_not_established\": [\n    \"Who physically or remotely initiated the session.\",\n    \"Whether the VetChart ticket authorized this particular RDP session or whether an exception was approved.\",\n    \"What actions were performed on FILE-RB-01 during the session.\",\n    \"Whether dev.sharma\u2019s credentials or WS-CPRICE-01 were compromised.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"The VetChart ticket and change/approval records, including whether they authorize this session or an exception to the approved administration source.\",\n    \"RDP session activity and process, command, and file-access telemetry on FILE-RB-01 for the session.\",\n    \"WS-CPRICE-01 interactive logon and endpoint telemetry sufficient to establish who initiated mstsc.exe and whether the workstation was compromised.\",\n    \"Authentication and account-use history for dev.sharma around the alert time.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-CPRICE-01 recorded a PowerShell process using explicit credentials for svc-rbbackup to FILE-RB-01; the supplied records do not link this event to the alerted RDP session. Review separately.\",\n    \"FILE-RB-01 ran a Meridian ServiceHealth service-healthcheck executable and it made an outbound proxy connection to www.bing.com using Go-http-client/1.1; the supplied inventory does not list this software or service as approved. Review separately.\",\n    \"WS-DSHARMA-01 launched OpenSSH to connect to PROXY-RB-01 on port 22; this is outside the alerted RDP activity and its purpose is not established by the supplied records. Review separately.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 74257,
+    "output": 3668
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.76,
+  "supporting_observations": [
+   {
+    "claim": "WS-CPRICE-01 recorded an interactive logon for dev.sharma, followed by mstsc.exe launched with /v:FILE-RB-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S21-00193",
+     "S21-00194",
+     "S21-00199",
+     "S21-00200"
+    ]
+   },
+   {
+    "claim": "The RDP connection to FILE-RB-01 originated from 10.60.10.22, identified in the records as WS-CPRICE-01; FILE-RB-01 accepted a type 10 remote interactive logon for dev.sharma from that address.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S21-00207",
+     "S21-00208",
+     "S21-00209",
+     "S21-00212"
+    ]
+   },
+   {
+    "claim": "This is inconsistent with the stated practice that server administration is only performed from WS-DSHARMA-01 and that staff workstations are never used for administration. The evidence therefore supports treating the alerted session as unauthorized pending investigation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S21-00199",
+     "S21-00207",
+     "S21-00209",
+     "S21-00212"
+    ]
+   },
+   {
+    "claim": "A VetChart hang was reported on WS-CPRICE-01 and a ticket was open, which could provide operational context, but the supplied evidence does not link that ticket to this RDP session or show an approved exception to the stated access practice.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S21-00193",
+     "S21-00199",
+     "S21-00212"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records establish the RDP client, destination, account, and successful remote logon, but do not show the user\u2019s actions within the remote session.",
+   "The records do not establish whether dev.sharma personally initiated the activity or whether the credentials or workstation were being used by someone else.",
+   "The supplied evidence does not include the ticket details or an approval record that would confirm whether this session had an authorized exception."
+  ],
+  "claims_not_established": [
+   "Who physically or remotely initiated the session.",
+   "Whether the VetChart ticket authorized this particular RDP session or whether an exception was approved.",
+   "What actions were performed on FILE-RB-01 during the session.",
+   "Whether dev.sharma\u2019s credentials or WS-CPRICE-01 were compromised."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "The VetChart ticket and change/approval records, including whether they authorize this session or an exception to the approved administration source.",
+   "RDP session activity and process, command, and file-access telemetry on FILE-RB-01 for the session.",
+   "WS-CPRICE-01 interactive logon and endpoint telemetry sufficient to establish who initiated mstsc.exe and whether the workstation was compromised.",
+   "Authentication and account-use history for dev.sharma around the alert time."
+  ],
+  "unrelated_findings": [
+   "WS-CPRICE-01 recorded a PowerShell process using explicit credentials for svc-rbbackup to FILE-RB-01; the supplied records do not link this event to the alerted RDP session. Review separately.",
+   "FILE-RB-01 ran a Meridian ServiceHealth service-healthcheck executable and it made an outbound proxy connection to www.bing.com using Go-http-client/1.1; the supplied inventory does not list this software or service as approved. Review separately.",
+   "WS-DSHARMA-01 launched OpenSSH to connect to PROXY-RB-01 on port 22; this is outside the alerted RDP activity and its purpose is not established by the supplied records. Review separately."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 40.9
+}

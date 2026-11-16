@@ -1,0 +1,96 @@
+{
+ "scenario_id": "T164",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.84,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The user reports a PowerShell window around 13:40 UTC, but the supplied records do not show a PowerShell process start at that time. Nearby process records show WmiPrvSE.exe at 13:39:51, followed later by an administrator-run PowerShell process at 13:45:45.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T164-00226\",\n        \"T164-00227\",\n        \"T164-00280\",\n        \"T164-00281\"\n      ]\n    },\n    {\n      \"claim\": \"The 13:45 PowerShell process ran as ali.hassan and invoked the documented workstation patch script from FILE-MAP-01. This is consistent with the stated IT patching practice, but occurs several minutes after the reported window.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T164-00269\",\n        \"T164-00270\",\n        \"T164-00280\",\n        \"T164-00281\"\n      ]\n    },\n    {\n      \"claim\": \"A UserAssist registry record at 14:04:14 contains a ROT13-encoded path that decodes to the Windows PowerShell executable under Julia Frost\u2019s user profile. This supports that PowerShell was recorded as used by Julia, but does not establish when it was launched or what it did.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T164-00343\"\n      ]\n    },\n    {\n      \"claim\": \"Around 13:40\u201313:42, the supplied records show Kerberos and LDAP activity involving the workstation and domain controller, but do not attribute that activity to a PowerShell process.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T164-00228\",\n        \"T164-00229\",\n        \"T164-00231\",\n        \"T164-00239\",\n        \"T164-00242\",\n        \"T164-00249\",\n        \"T164-00256\",\n        \"T164-00261\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available process-creation records do not identify a PowerShell launch at the reported time; the nearby recorded process starts are WmiPrvSE.exe at 13:39:51 and ali.hassan\u2019s PowerShell at 13:45:45 (T164-00226, T164-00227, T164-00280, T164-00281).\",\n    \"The UserAssist entry records a PowerShell executable path but provides no command line, script content, or reliable launch time in the supplied event (T164-00343).\",\n    \"The supplied evidence does not include PowerShell operational logs, transcripts, or an EDR process tree that could establish what Julia\u2019s reported window executed.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether Julia Frost actually launched PowerShell around 13:40 UTC.\",\n    \"Whether the UserAssist entry at 14:04 reflects the reported window or a separate later use of PowerShell.\",\n    \"Whether any script or command ran in Julia\u2019s reported window, and whether it had malicious effects.\",\n    \"Whether the administrator patching activity at 13:45 explains the user\u2019s report; its recorded time is later than the reported window.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Collect endpoint EDR process telemetry, PowerShell Operational logs, and any transcripts for WS-JFROST-01 covering the reported time and the surrounding period.\",\n    \"Retrieve the underlying UserAssist registry data and corroborating endpoint artifacts to determine whether PowerShell was launched and when.\",\n    \"Confirm with Julia Frost the approximate time and visible details of the window, and with ali.hassan whether the patching session began earlier than its recorded process start.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-JFROST-01 authenticated as noah.kim to WS-NKIM-01 at 13:28:21, followed by a network logon on that workstation; investigate separately as cross-workstation account activity (T164-00127, T164-00128, T164-00130).\",\n    \"Julia Frost browsed Google Drive, an unapproved file-sharing service, during 14:11\u201314:12; this is outside the reported PowerShell activity and should be reviewed separately (T164-00442, T164-00443, T164-00470, T164-00477).\",\n    \"Julia Frost browsed Dropbox, also unapproved, during 14:18\u201314:19; investigate separately rather than using it to decide this alert (T164-00626, T164-00627, T164-00635, T164-00651).\",\n    \"Cisco AnyConnect vpnagent.exe started on WS-JFROST-01 despite the inventory stating there is no VPN; review separately (T164-00298, T164-00299).\",\n    \"greta.lund\u2019s credentials were used in a network logon from WS-JFROST-01 to WS-GLUND-01, and greta.lund later launched mstsc targeting WS-JFROST-01. Review this separate help-desk activity; the supplied records do not establish that the RDP connection succeeded (T164-00316, T164-00317, T164-00331, T164-00332, T164-00333).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 113477,
+    "output": 3030
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.84,
+  "supporting_observations": [
+   {
+    "claim": "The user reports a PowerShell window around 13:40 UTC, but the supplied records do not show a PowerShell process start at that time. Nearby process records show WmiPrvSE.exe at 13:39:51, followed later by an administrator-run PowerShell process at 13:45:45.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T164-00226",
+     "T164-00227",
+     "T164-00280",
+     "T164-00281"
+    ]
+   },
+   {
+    "claim": "The 13:45 PowerShell process ran as ali.hassan and invoked the documented workstation patch script from FILE-MAP-01. This is consistent with the stated IT patching practice, but occurs several minutes after the reported window.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T164-00269",
+     "T164-00270",
+     "T164-00280",
+     "T164-00281"
+    ]
+   },
+   {
+    "claim": "A UserAssist registry record at 14:04:14 contains a ROT13-encoded path that decodes to the Windows PowerShell executable under Julia Frost\u2019s user profile. This supports that PowerShell was recorded as used by Julia, but does not establish when it was launched or what it did.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T164-00343"
+    ]
+   },
+   {
+    "claim": "Around 13:40\u201313:42, the supplied records show Kerberos and LDAP activity involving the workstation and domain controller, but do not attribute that activity to a PowerShell process.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T164-00228",
+     "T164-00229",
+     "T164-00231",
+     "T164-00239",
+     "T164-00242",
+     "T164-00249",
+     "T164-00256",
+     "T164-00261"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available process-creation records do not identify a PowerShell launch at the reported time; the nearby recorded process starts are WmiPrvSE.exe at 13:39:51 and ali.hassan\u2019s PowerShell at 13:45:45 (T164-00226, T164-00227, T164-00280, T164-00281).",
+   "The UserAssist entry records a PowerShell executable path but provides no command line, script content, or reliable launch time in the supplied event (T164-00343).",
+   "The supplied evidence does not include PowerShell operational logs, transcripts, or an EDR process tree that could establish what Julia\u2019s reported window executed."
+  ],
+  "claims_not_established": [
+   "Whether Julia Frost actually launched PowerShell around 13:40 UTC.",
+   "Whether the UserAssist entry at 14:04 reflects the reported window or a separate later use of PowerShell.",
+   "Whether any script or command ran in Julia\u2019s reported window, and whether it had malicious effects.",
+   "Whether the administrator patching activity at 13:45 explains the user\u2019s report; its recorded time is later than the reported window."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Collect endpoint EDR process telemetry, PowerShell Operational logs, and any transcripts for WS-JFROST-01 covering the reported time and the surrounding period.",
+   "Retrieve the underlying UserAssist registry data and corroborating endpoint artifacts to determine whether PowerShell was launched and when.",
+   "Confirm with Julia Frost the approximate time and visible details of the window, and with ali.hassan whether the patching session began earlier than its recorded process start."
+  ],
+  "unrelated_findings": [
+   "WS-JFROST-01 authenticated as noah.kim to WS-NKIM-01 at 13:28:21, followed by a network logon on that workstation; investigate separately as cross-workstation account activity (T164-00127, T164-00128, T164-00130).",
+   "Julia Frost browsed Google Drive, an unapproved file-sharing service, during 14:11\u201314:12; this is outside the reported PowerShell activity and should be reviewed separately (T164-00442, T164-00443, T164-00470, T164-00477).",
+   "Julia Frost browsed Dropbox, also unapproved, during 14:18\u201314:19; investigate separately rather than using it to decide this alert (T164-00626, T164-00627, T164-00635, T164-00651).",
+   "Cisco AnyConnect vpnagent.exe started on WS-JFROST-01 despite the inventory stating there is no VPN; review separately (T164-00298, T164-00299).",
+   "greta.lund\u2019s credentials were used in a network logon from WS-JFROST-01 to WS-GLUND-01, and greta.lund later launched mstsc targeting WS-JFROST-01. Review this separate help-desk activity; the supplied records do not establish that the RDP connection succeeded (T164-00316, T164-00317, T164-00331, T164-00332, T164-00333)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 17,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 33.8
+}

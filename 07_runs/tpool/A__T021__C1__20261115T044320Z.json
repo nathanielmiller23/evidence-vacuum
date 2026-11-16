@@ -1,0 +1,113 @@
+{
+ "run_id": "A__T021__C1__20261115T044320Z",
+ "config": "A",
+ "scenario_id": "T021",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 27,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 15668,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.9,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded two failed network logons for ben.carter at 13:45:20 and 13:46:34 UTC. Both reported source address 192.0.2.45 and invalid-password substatus 0xc000006a; the attempts used NTLM.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T021-00002\", \"T021-00003\"]\n    },\n    {\n      \"claim\": \"At 13:48:08 UTC, the domain controller recorded a successful network logon for ben.carter using Kerberos, also reporting source address 192.0.2.45. Its WorkstationName field says DC-HD-01, so the source host is not clearly identified by these fields.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T021-00004\"]\n    },\n    {\n      \"claim\": \"The failed attempts followed by a successful logon from the same reported address merit investigation, but the records do not establish that the attempts came from the same device or actor.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T021-00002\", \"T021-00003\", \"T021-00004\"]\n    },\n    {\n      \"claim\": \"At 13:59:49 UTC, ben.carter had a successful interactive logon on WS-BCARTER-01, followed by userinit.exe and explorer.exe starting under that logon session.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T021-00005\", \"T021-00006\", \"T021-00007\", \"T021-00008\", \"T021-00009\"]\n    },\n    {\n      \"claim\": \"That workstation session launched PowerShell to request an internal Harbor Dental API endpoint; the process exited about 14 seconds later. The records do not establish whether the request was authorized or related to the earlier network logons.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T021-00012\", \"T021-00013\", \"T021-00014\", \"T021-00015\"]\n    },\n    {\n      \"claim\": \"The workstation later connected to graph.microsoft.com through the proxy using Firefox, and Outlook started. Microsoft 365 is listed as approved, but these events do not identify the source of the earlier domain logons.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T021-00016\", \"T021-00017\", \"T021-00021\", \"T021-00024\", \"T021-00025\", \"T021-00026\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records do not map 192.0.2.45 to a device or person, and the successful logon's WorkstationName field does not resolve that ambiguity.\",\n    \"The provided evidence contains no source-host process or network telemetry correlated to the 13:45\u201313:48 domain-controller events.\",\n    \"The evidence is a limited event sample; it does not show the broader authentication history, relevant Kerberos ticket events, or whether the successful network logon led to access on another host.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the failed attempts and subsequent successful logon were made by ben.carter, an authorized application or device, or an unauthorized actor.\",\n    \"Whether the successful network logon at 13:48 resulted in any access or activity beyond the domain-controller authentication.\",\n    \"Whether the interactive logon on WS-BCARTER-01 at 13:59 is connected to the earlier network logons.\",\n    \"Whether the PowerShell request to the internal API was expected and authorized.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Resolve and verify the owner and network location of 192.0.2.45 for the relevant time, using available DHCP, address-management, firewall, or network records.\",\n    \"Collect surrounding domain-controller authentication events, including related Kerberos ticket events and any logon-session or service-access records associated with the 13:48 success.\",\n    \"Collect endpoint and network telemetry from the device mapped to 192.0.2.45 for the failed and successful attempts.\",\n    \"Verify with ben.carter or the relevant system owner whether the authentication attempts and the internal API request were expected.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 5150,
+    "output": 1978,
+    "reasoning": 995
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.9,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded two failed network logons for ben.carter at 13:45:20 and 13:46:34 UTC. Both reported source address 192.0.2.45 and invalid-password substatus 0xc000006a; the attempts used NTLM.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T021-00002",
+     "T021-00003"
+    ]
+   },
+   {
+    "claim": "At 13:48:08 UTC, the domain controller recorded a successful network logon for ben.carter using Kerberos, also reporting source address 192.0.2.45. Its WorkstationName field says DC-HD-01, so the source host is not clearly identified by these fields.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T021-00004"
+    ]
+   },
+   {
+    "claim": "The failed attempts followed by a successful logon from the same reported address merit investigation, but the records do not establish that the attempts came from the same device or actor.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T021-00002",
+     "T021-00003",
+     "T021-00004"
+    ]
+   },
+   {
+    "claim": "At 13:59:49 UTC, ben.carter had a successful interactive logon on WS-BCARTER-01, followed by userinit.exe and explorer.exe starting under that logon session.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T021-00005",
+     "T021-00006",
+     "T021-00007",
+     "T021-00008",
+     "T021-00009"
+    ]
+   },
+   {
+    "claim": "That workstation session launched PowerShell to request an internal Harbor Dental API endpoint; the process exited about 14 seconds later. The records do not establish whether the request was authorized or related to the earlier network logons.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T021-00012",
+     "T021-00013",
+     "T021-00014",
+     "T021-00015"
+    ]
+   },
+   {
+    "claim": "The workstation later connected to graph.microsoft.com through the proxy using Firefox, and Outlook started. Microsoft 365 is listed as approved, but these events do not identify the source of the earlier domain logons.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T021-00016",
+     "T021-00017",
+     "T021-00021",
+     "T021-00024",
+     "T021-00025",
+     "T021-00026"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records do not map 192.0.2.45 to a device or person, and the successful logon's WorkstationName field does not resolve that ambiguity.",
+   "The provided evidence contains no source-host process or network telemetry correlated to the 13:45\u201313:48 domain-controller events.",
+   "The evidence is a limited event sample; it does not show the broader authentication history, relevant Kerberos ticket events, or whether the successful network logon led to access on another host."
+  ],
+  "claims_not_established": [
+   "Whether the failed attempts and subsequent successful logon were made by ben.carter, an authorized application or device, or an unauthorized actor.",
+   "Whether the successful network logon at 13:48 resulted in any access or activity beyond the domain-controller authentication.",
+   "Whether the interactive logon on WS-BCARTER-01 at 13:59 is connected to the earlier network logons.",
+   "Whether the PowerShell request to the internal API was expected and authorized."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Resolve and verify the owner and network location of 192.0.2.45 for the relevant time, using available DHCP, address-management, firewall, or network records.",
+   "Collect surrounding domain-controller authentication events, including related Kerberos ticket events and any logon-session or service-access records associated with the 13:48 success.",
+   "Collect endpoint and network telemetry from the device mapped to 192.0.2.45 for the failed and successful attempts.",
+   "Verify with ben.carter or the relevant system owner whether the authentication attempts and the internal API request were expected."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 21,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.6
+}

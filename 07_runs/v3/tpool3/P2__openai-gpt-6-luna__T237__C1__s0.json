@@ -1,0 +1,93 @@
+{
+ "scenario_id": "T237",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain account adm_temp was created at 13:41:36 by SUNRIDGE\\\\ian.doyle.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T237-00091\"]\n    },\n    {\n      \"claim\": \"Thirteen seconds after creation, adm_temp was added to the domain Administrators group by the same account and logon ID that created it.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T237-00091\", \"T237-00092\"]\n    },\n    {\n      \"claim\": \"This account name and administrator membership conflict with the supplied help-desk practice: temporary accounts use the v.<name> format, belong only to Vendors, and never receive administrator rights.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T237-00091\", \"T237-00092\"]\n    },\n    {\n      \"claim\": \"Shortly before the account change, ian.doyle authenticated to WS-MFISCHER-01 through an RDP logon from 192.0.2.199; the inventory says remote administration is only performed from WS-IDOYLE-01 and there is no VPN.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T237-00075\", \"T237-00078\", \"T237-00079\", \"T237-00080\"]\n    },\n    {\n      \"claim\": \"On WS-MFISCHER-01, a task registered under ian.doyle's observed RDP logon ID runs hidden PowerShell with an encoded command; the task content decodes to an expression that retrieves a script from http://192.0.2.199/a.ps1. The account-change event uses a different logon ID, so a direct link between the task and account change is not established.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T237-00080\", \"T237-00093\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The evidence shows the account creation and administrator-group addition, but does not show subsequent use of adm_temp.\",\n    \"The account-change events identify ian.doyle as the subject, but the supplied records do not establish who controlled those credentials.\",\n    \"The account-change logon ID differs from the RDP session logon ID; the records do not directly connect those actions to the same logon session.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the account creation or administrator assignment had an approved exception not included in the supplied change calendar or practices.\",\n    \"Whether adm_temp was subsequently used, and whether any systems or data were accessed with it.\",\n    \"Whether 192.0.2.199 was controlled by an attacker or whether the observed activity came from a compromised account or host.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Confirm with the account owner and change approvers whether creation of adm_temp and its administrator membership were authorized.\",\n    \"Collect DC-SUN-01 account and group-change audit context, including the originating client/session and any related directory changes.\",\n    \"Check for logons, privilege use, or resource access by adm_temp after creation; preserve the account and group-membership state.\",\n    \"Investigate the WS-MFISCHER-01 RDP session and scheduled task, including task execution results and network telemetry for 192.0.2.199.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-MFISCHER-01 ran the unapproved Meridian OpsAgent, which attempted explicit authentication to FILE-SUN-01 as svc-store; investigate separately, and do not use this alone to decide the account-management alert. (T237-00202, T237-00204)\",\n    \"WS-MFISCHER-01 made a proxy connection to login.salesforce.com, which is not listed among approved services; investigate separately. The connection alone does not establish data transfer or malicious activity. (T237-00181, T237-00182)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 34148,
+    "output": 2705
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "The domain account adm_temp was created at 13:41:36 by SUNRIDGE\\ian.doyle.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T237-00091"
+    ]
+   },
+   {
+    "claim": "Thirteen seconds after creation, adm_temp was added to the domain Administrators group by the same account and logon ID that created it.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T237-00091",
+     "T237-00092"
+    ]
+   },
+   {
+    "claim": "This account name and administrator membership conflict with the supplied help-desk practice: temporary accounts use the v.<name> format, belong only to Vendors, and never receive administrator rights.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T237-00091",
+     "T237-00092"
+    ]
+   },
+   {
+    "claim": "Shortly before the account change, ian.doyle authenticated to WS-MFISCHER-01 through an RDP logon from 192.0.2.199; the inventory says remote administration is only performed from WS-IDOYLE-01 and there is no VPN.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T237-00075",
+     "T237-00078",
+     "T237-00079",
+     "T237-00080"
+    ]
+   },
+   {
+    "claim": "On WS-MFISCHER-01, a task registered under ian.doyle's observed RDP logon ID runs hidden PowerShell with an encoded command; the task content decodes to an expression that retrieves a script from http://192.0.2.199/a.ps1. The account-change event uses a different logon ID, so a direct link between the task and account change is not established.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T237-00080",
+     "T237-00093"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The evidence shows the account creation and administrator-group addition, but does not show subsequent use of adm_temp.",
+   "The account-change events identify ian.doyle as the subject, but the supplied records do not establish who controlled those credentials.",
+   "The account-change logon ID differs from the RDP session logon ID; the records do not directly connect those actions to the same logon session."
+  ],
+  "claims_not_established": [
+   "Whether the account creation or administrator assignment had an approved exception not included in the supplied change calendar or practices.",
+   "Whether adm_temp was subsequently used, and whether any systems or data were accessed with it.",
+   "Whether 192.0.2.199 was controlled by an attacker or whether the observed activity came from a compromised account or host."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Confirm with the account owner and change approvers whether creation of adm_temp and its administrator membership were authorized.",
+   "Collect DC-SUN-01 account and group-change audit context, including the originating client/session and any related directory changes.",
+   "Check for logons, privilege use, or resource access by adm_temp after creation; preserve the account and group-membership state.",
+   "Investigate the WS-MFISCHER-01 RDP session and scheduled task, including task execution results and network telemetry for 192.0.2.199."
+  ],
+  "unrelated_findings": [
+   "WS-MFISCHER-01 ran the unapproved Meridian OpsAgent, which attempted explicit authentication to FILE-SUN-01 as svc-store; investigate separately, and do not use this alone to decide the account-management alert. (T237-00202, T237-00204)",
+   "WS-MFISCHER-01 made a proxy connection to login.salesforce.com, which is not listed among approved services; investigate separately. The connection alone does not establish data transfer or malicious activity. (T237-00181, T237-00182)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 30.0
+}

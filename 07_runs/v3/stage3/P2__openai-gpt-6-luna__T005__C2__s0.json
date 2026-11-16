@@ -1,0 +1,94 @@
+{
+ "scenario_id": "T005",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"During the alerted window, WS-BCARTER-01 made repeated connections to the internal proxy at 10.30.20.30:8080. The available connection records include 13:30:03, 13:36:22, 13:41:10, 13:46:34, 13:51:47, 13:55:57, 14:01:14, and 14:06:22 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T005-00098\",\n        \"T005-00126\",\n        \"T005-00148\",\n        \"T005-00166\",\n        \"T005-00184\",\n        \"T005-00196\",\n        \"T005-00205\",\n        \"T005-00212\"\n      ]\n    },\n    {\n      \"claim\": \"The intervals between these recorded connections are roughly five minutes in several instances, but the records identify only the proxy connection and byte counts, not the HTTPS destination or originating process.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T005-00098\",\n        \"T005-00126\",\n        \"T005-00148\",\n        \"T005-00166\",\n        \"T005-00184\",\n        \"T005-00196\",\n        \"T005-00205\",\n        \"T005-00212\"\n      ]\n    },\n    {\n      \"claim\": \"A periodic updater is one possible benign explanation because the inventory says ChartMate checks for updates about every five minutes; the provided records do not establish that ChartMate generated these connections.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T005-00098\",\n        \"T005-00126\",\n        \"T005-00148\",\n        \"T005-00166\",\n        \"T005-00184\",\n        \"T005-00196\",\n        \"T005-00205\",\n        \"T005-00212\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The provided records for the repeated connections are Zeek summaries to the proxy and do not include the HTTPS hostnames or process IDs, preventing destination and process attribution (T005-00098, T005-00126, T005-00148, T005-00166, T005-00184, T005-00196, T005-00205, T005-00212).\",\n    \"The provided evidence does not include corresponding proxy CONNECT or GET records for those repeated connections; proxy records at 14:10 show later SharePoint activity, but do not establish the destination or cause of the earlier periodic connections (T005-00305, T005-00306, T005-00310, T005-00311).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the repeated proxy connections were to an approved service, an unapproved service, or a malicious destination.\",\n    \"Which process initiated the repeated connections, including whether they came from the approved ChartMate updater.\",\n    \"Whether any data was uploaded or downloaded as part of the alerted connections, beyond the byte counts in the proxy-level connection summaries.\",\n    \"Whether the later SharePoint activity explains or is related to the earlier periodic connections.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Proxy records correlated by timestamp and client source port for the repeated connections, including CONNECT destination hostnames and any inspected request details.\",\n    \"Endpoint process/network telemetry or EDR process-to-socket data for the connections, including process image, command line, user, and signature.\",\n    \"ChartMate installation and updater execution records, including whether cmupdate.exe ran and contacted its documented update host during this window.\",\n    \"DNS, TLS, or other network records that can identify the remote destination and characterize the sessions.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:27:31, dllhost.exe set a registry value whose target is under the Common Startup shell-folder path. This is outside the alerted activity and should be reviewed separately; the record alone does not establish persistence or malicious intent (T005-00070).\",\n    \"At 13:37:15, WS-BCARTER-01 made an SMB connection to DC-HD-01. This is separate from the periodic proxy connections and the provided record does not establish its purpose (T005-00141, T005-00145).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 45153,
+    "output": 2658
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "During the alerted window, WS-BCARTER-01 made repeated connections to the internal proxy at 10.30.20.30:8080. The available connection records include 13:30:03, 13:36:22, 13:41:10, 13:46:34, 13:51:47, 13:55:57, 14:01:14, and 14:06:22 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T005-00098",
+     "T005-00126",
+     "T005-00148",
+     "T005-00166",
+     "T005-00184",
+     "T005-00196",
+     "T005-00205",
+     "T005-00212"
+    ]
+   },
+   {
+    "claim": "The intervals between these recorded connections are roughly five minutes in several instances, but the records identify only the proxy connection and byte counts, not the HTTPS destination or originating process.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T005-00098",
+     "T005-00126",
+     "T005-00148",
+     "T005-00166",
+     "T005-00184",
+     "T005-00196",
+     "T005-00205",
+     "T005-00212"
+    ]
+   },
+   {
+    "claim": "A periodic updater is one possible benign explanation because the inventory says ChartMate checks for updates about every five minutes; the provided records do not establish that ChartMate generated these connections.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T005-00098",
+     "T005-00126",
+     "T005-00148",
+     "T005-00166",
+     "T005-00184",
+     "T005-00196",
+     "T005-00205",
+     "T005-00212"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The provided records for the repeated connections are Zeek summaries to the proxy and do not include the HTTPS hostnames or process IDs, preventing destination and process attribution (T005-00098, T005-00126, T005-00148, T005-00166, T005-00184, T005-00196, T005-00205, T005-00212).",
+   "The provided evidence does not include corresponding proxy CONNECT or GET records for those repeated connections; proxy records at 14:10 show later SharePoint activity, but do not establish the destination or cause of the earlier periodic connections (T005-00305, T005-00306, T005-00310, T005-00311)."
+  ],
+  "claims_not_established": [
+   "Whether the repeated proxy connections were to an approved service, an unapproved service, or a malicious destination.",
+   "Which process initiated the repeated connections, including whether they came from the approved ChartMate updater.",
+   "Whether any data was uploaded or downloaded as part of the alerted connections, beyond the byte counts in the proxy-level connection summaries.",
+   "Whether the later SharePoint activity explains or is related to the earlier periodic connections."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Proxy records correlated by timestamp and client source port for the repeated connections, including CONNECT destination hostnames and any inspected request details.",
+   "Endpoint process/network telemetry or EDR process-to-socket data for the connections, including process image, command line, user, and signature.",
+   "ChartMate installation and updater execution records, including whether cmupdate.exe ran and contacted its documented update host during this window.",
+   "DNS, TLS, or other network records that can identify the remote destination and characterize the sessions."
+  ],
+  "unrelated_findings": [
+   "At 13:27:31, dllhost.exe set a registry value whose target is under the Common Startup shell-folder path. This is outside the alerted activity and should be reviewed separately; the record alone does not establish persistence or malicious intent (T005-00070).",
+   "At 13:37:15, WS-BCARTER-01 made an SMB connection to DC-HD-01. This is separate from the periodic proxy connections and the provided record does not establish its purpose (T005-00141, T005-00145)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 24,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 25.0
+}

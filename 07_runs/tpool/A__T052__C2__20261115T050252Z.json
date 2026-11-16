@@ -1,0 +1,79 @@
+{
+ "run_id": "A__T052__C2__20261115T050252Z",
+ "config": "A",
+ "scenario_id": "T052",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 2,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 4662,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:23:14 UTC, WS-LMARTINS-01 recorded a 4648 explicit-credentials event for svc-render targeting PROXY-NWD-01; the process was Meridian OpsAgent (ops-agent.exe), and the recorded IP address was 10.40.10.22.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T052-00001\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:56:51 UTC, WS-NBLAKE-01 recorded a 4648 explicit-credentials event for svc-render targeting FILE-NWD-01; the process was Meridian OpsAgent (ops-agent.exe), and the recorded IP address was 10.40.10.24.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T052-00037\"\n      ]\n    },\n    {\n      \"claim\": \"The two records show svc-render explicit-credential use from two workstations, rather than establishing that the RenderQueue job on FILE-NWD-01 performed the activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T052-00001\",\n        \"T052-00037\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Only two records are provided for the requested one-hour review window.\",\n    \"The provided events are 4648 explicit-credentials events; they do not establish whether authentication succeeded or failed.\",\n    \"No domain-controller authentication outcomes, target-side logs, process ancestry, or network connection details beyond the recorded IP addresses are included.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether either credential use succeeded or failed.\",\n    \"Whether these events are the repeated failed domain logons described in the alert; the supplied records do not show failure outcomes.\",\n    \"Whether Meridian OpsAgent is authorized to use svc-render or whether it was operating legitimately.\",\n    \"Whether the svc-render password rotation and RenderQueue job update were completed as scheduled.\",\n    \"Whether any unauthorized access, persistence, or data access occurred.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Retrieve all relevant events for the full 13:20\u201314:20 UTC window, including domain-controller events that report authentication success or failure (such as 4624, 4625, 4771, and 4776 where available).\",\n    \"Correlate the events with FILE-NWD-01 and PROXY-NWD-01 authentication and application logs.\",\n    \"Validate whether Meridian OpsAgent is installed and authorized on WS-LMARTINS-01 and WS-NBLAKE-01, and collect process ancestry and endpoint telemetry for the recorded events.\",\n    \"Review password-rotation records and RenderQueue configuration or job logs around 13:30 UTC.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 1330,
+    "output": 1155,
+    "reasoning": 512
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "At 13:23:14 UTC, WS-LMARTINS-01 recorded a 4648 explicit-credentials event for svc-render targeting PROXY-NWD-01; the process was Meridian OpsAgent (ops-agent.exe), and the recorded IP address was 10.40.10.22.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T052-00001"
+    ]
+   },
+   {
+    "claim": "At 13:56:51 UTC, WS-NBLAKE-01 recorded a 4648 explicit-credentials event for svc-render targeting FILE-NWD-01; the process was Meridian OpsAgent (ops-agent.exe), and the recorded IP address was 10.40.10.24.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T052-00037"
+    ]
+   },
+   {
+    "claim": "The two records show svc-render explicit-credential use from two workstations, rather than establishing that the RenderQueue job on FILE-NWD-01 performed the activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T052-00001",
+     "T052-00037"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Only two records are provided for the requested one-hour review window.",
+   "The provided events are 4648 explicit-credentials events; they do not establish whether authentication succeeded or failed.",
+   "No domain-controller authentication outcomes, target-side logs, process ancestry, or network connection details beyond the recorded IP addresses are included."
+  ],
+  "claims_not_established": [
+   "Whether either credential use succeeded or failed.",
+   "Whether these events are the repeated failed domain logons described in the alert; the supplied records do not show failure outcomes.",
+   "Whether Meridian OpsAgent is authorized to use svc-render or whether it was operating legitimately.",
+   "Whether the svc-render password rotation and RenderQueue job update were completed as scheduled.",
+   "Whether any unauthorized access, persistence, or data access occurred."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Retrieve all relevant events for the full 13:20\u201314:20 UTC window, including domain-controller events that report authentication success or failure (such as 4624, 4625, 4771, and 4776 where available).",
+   "Correlate the events with FILE-NWD-01 and PROXY-NWD-01 authentication and application logs.",
+   "Validate whether Meridian OpsAgent is installed and authorized on WS-LMARTINS-01 and WS-NBLAKE-01, and collect process ancestry and endpoint telemetry for the recorded events.",
+   "Review password-rotation records and RenderQueue configuration or job logs around 13:30 UTC."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 4,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 11.7
+}

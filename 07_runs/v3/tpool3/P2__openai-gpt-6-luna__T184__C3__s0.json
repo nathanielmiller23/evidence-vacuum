@@ -1,0 +1,92 @@
+{
+ "scenario_id": "T184",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:39:42 UTC, WS-MSANTOS-01 connected to DC-BLU-01 over SMB, and the domain controller recorded a network logon for the workstation computer account. The records do not identify the share or files accessed.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T184-00209\",\n        \"T184-00213\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:41:04 UTC, the domain controller issued a Kerberos service ticket for ken.ito to WS-MSANTOS-01 from 10.54.10.23. The inventory identifies WS-KITO-01 as the authorized remote-administration workstation; this ticket alone does not establish that a remote session or command ran.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T184-00220\",\n        \"T184-00381\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:52 UTC, DC-BLU-01 initiated connection attempts to WS-MSANTOS-01 on ports 8443, 443, 135, and 445. The records show failed, reset, or incomplete connections and do not establish what prompted them or whether they relate to the reported PowerShell window.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T184-00300\",\n        \"T184-00301\",\n        \"T184-00302\",\n        \"T184-00309\",\n        \"T184-00310\",\n        \"T184-00311\",\n        \"T184-00312\",\n        \"T184-00313\"\n      ]\n    },\n    {\n      \"claim\": \"The available process records show conhost.exe running under SYSTEM with csrss.exe as parent at 14:16 UTC, then exiting. This is after the reported time and does not establish that PowerShell ran around 13:40.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T184-00423\",\n        \"T184-00424\",\n        \"T184-00430\",\n        \"T184-00431\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"WS-MSANTOS-01 winsec and Sysmon collection was unavailable from 13:20 through 14:15 UTC due to a collection outage. This covers the reported activity time and the observed SMB and remote-administration-related events.\",\n    \"The supplied evidence contains no endpoint process-creation or PowerShell execution records for WS-MSANTOS-01 during the outage. Network and domain-controller records do not identify the command, script, or interactive window on the workstation.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether PowerShell actually ran on WS-MSANTOS-01 around 13:40 UTC, and if so, its command line, parent process, user, or purpose.\",\n    \"Whether the 13:39 SMB activity or the later activity involving ken.ito and DC-BLU-01 was connected to the reported window.\",\n    \"Whether any files were accessed or changed, or whether the workstation was compromised.\",\n    \"Whether the reported window was caused by authorized IT work, another benign process, or malicious activity.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover endpoint EDR, process-creation, PowerShell Operational, and script-block logs for WS-MSANTOS-01 covering at least 13:20\u201314:20 UTC, if available from local or centralized retention.\",\n    \"Review WS-KITO-01 remote-administration records and the relevant authentication/session logs to establish whether ken.ito initiated a session or ran commands on WS-MSANTOS-01.\",\n    \"Review DC-BLU-01 and WS-MSANTOS-01 SMB and remote-management logs to identify the share or resource accessed and the purpose of the 13:39 and 13:52 activity.\",\n    \"Check workstation forensic artifacts and endpoint security detections for PowerShell history, scripts, persistence, or changes around the reported time.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:29 UTC, WS-MSANTOS-01 accessed a customer.cloud.com Citrix StoreWeb page. The inventory does not list other remote-access services as approved; the records show web requests, not whether a remote session was established. Review separately if needed. Records: T184-00100, T184-00104, T184-00121.\",\n    \"At 14:15 UTC, WS-MSANTOS-01 made a request to secure-client-updates.cisco.com with a Cisco Secure Client user agent. The inventory says the organization has no VPN; this update traffic merits separate review and does not establish VPN use or relate it to the alerted activity. Records: T184-00421, T184-00422.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 38407,
+    "output": 2733
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "At 13:39:42 UTC, WS-MSANTOS-01 connected to DC-BLU-01 over SMB, and the domain controller recorded a network logon for the workstation computer account. The records do not identify the share or files accessed.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T184-00209",
+     "T184-00213"
+    ]
+   },
+   {
+    "claim": "At 13:41:04 UTC, the domain controller issued a Kerberos service ticket for ken.ito to WS-MSANTOS-01 from 10.54.10.23. The inventory identifies WS-KITO-01 as the authorized remote-administration workstation; this ticket alone does not establish that a remote session or command ran.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T184-00220",
+     "T184-00381"
+    ]
+   },
+   {
+    "claim": "At 13:52 UTC, DC-BLU-01 initiated connection attempts to WS-MSANTOS-01 on ports 8443, 443, 135, and 445. The records show failed, reset, or incomplete connections and do not establish what prompted them or whether they relate to the reported PowerShell window.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T184-00300",
+     "T184-00301",
+     "T184-00302",
+     "T184-00309",
+     "T184-00310",
+     "T184-00311",
+     "T184-00312",
+     "T184-00313"
+    ]
+   },
+   {
+    "claim": "The available process records show conhost.exe running under SYSTEM with csrss.exe as parent at 14:16 UTC, then exiting. This is after the reported time and does not establish that PowerShell ran around 13:40.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T184-00423",
+     "T184-00424",
+     "T184-00430",
+     "T184-00431"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "WS-MSANTOS-01 winsec and Sysmon collection was unavailable from 13:20 through 14:15 UTC due to a collection outage. This covers the reported activity time and the observed SMB and remote-administration-related events.",
+   "The supplied evidence contains no endpoint process-creation or PowerShell execution records for WS-MSANTOS-01 during the outage. Network and domain-controller records do not identify the command, script, or interactive window on the workstation."
+  ],
+  "claims_not_established": [
+   "Whether PowerShell actually ran on WS-MSANTOS-01 around 13:40 UTC, and if so, its command line, parent process, user, or purpose.",
+   "Whether the 13:39 SMB activity or the later activity involving ken.ito and DC-BLU-01 was connected to the reported window.",
+   "Whether any files were accessed or changed, or whether the workstation was compromised.",
+   "Whether the reported window was caused by authorized IT work, another benign process, or malicious activity."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover endpoint EDR, process-creation, PowerShell Operational, and script-block logs for WS-MSANTOS-01 covering at least 13:20\u201314:20 UTC, if available from local or centralized retention.",
+   "Review WS-KITO-01 remote-administration records and the relevant authentication/session logs to establish whether ken.ito initiated a session or ran commands on WS-MSANTOS-01.",
+   "Review DC-BLU-01 and WS-MSANTOS-01 SMB and remote-management logs to identify the share or resource accessed and the purpose of the 13:39 and 13:52 activity.",
+   "Check workstation forensic artifacts and endpoint security detections for PowerShell history, scripts, persistence, or changes around the reported time."
+  ],
+  "unrelated_findings": [
+   "At 13:29 UTC, WS-MSANTOS-01 accessed a customer.cloud.com Citrix StoreWeb page. The inventory does not list other remote-access services as approved; the records show web requests, not whether a remote session was established. Review separately if needed. Records: T184-00100, T184-00104, T184-00121.",
+   "At 14:15 UTC, WS-MSANTOS-01 made a request to secure-client-updates.cisco.com with a Cisco Secure Client user agent. The inventory says the organization has no VPN; this update traffic merits separate review and does not establish VPN use or relate it to the alerted activity. Records: T184-00421, T184-00422."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 16,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 26.4
+}

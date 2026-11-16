@@ -1,0 +1,102 @@
+{
+ "scenario_id": "T197",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45:23 UTC, ken.ito was recorded as creating the BLUEFIN account svc_update on DC-BLU-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T197-00075\"]\n    },\n    {\n      \"claim\": \"About two seconds later, svc_update was added to the domain Administrators group by ken.ito under the same DC logon ID as the account creation.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T197-00075\", \"T197-00076\"]\n    },\n    {\n      \"claim\": \"The account's administrator membership is inconsistent with the inventory description of the help desk's temporary-account process, which uses c.<name> accounts in the Seasonal group and never grants administrator rights.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T197-00075\", \"T197-00076\"]\n    },\n    {\n      \"claim\": \"Shortly before the account creation, ken.ito successfully established an RDP logon to WS-EBROOKS-01 from 203.0.113.133; the host also logged an inbound connection from that address to TCP/3389. This is inconsistent with the inventory context that remote administration is only performed from WS-KITO-01 and there is no VPN.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T197-00061\", \"T197-00064\", \"T197-00065\", \"T197-00066\"]\n    },\n    {\n      \"claim\": \"After the RDP logon, a task authored by ken.ito was created on WS-EBROOKS-01 with hidden PowerShell arguments that decode to downloading and executing a script from http://203.0.113.133/a.ps1. This is suspicious contextual activity, although the records do not establish that the task executed or that it created svc_update.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T197-00066\", \"T197-00077\"]\n    },\n    {\n      \"claim\": \"The scheduled change was for svc-inventory's password at 13:30 UTC, followed by manually updating InventorySync; the observed action instead created a differently named account and granted it administrator membership.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T197-00075\", \"T197-00076\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available records show account creation and group membership changes, but do not show the account's subsequent logons or use.\",\n    \"The scheduled task record shows its definition, not whether it ran or what the downloaded script contained.\",\n    \"The DC account-management events and workstation RDP session have different logon IDs; the records do not directly prove that the RDP session caused the DC changes.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether svc_update was authorized under an unprovided change request or exception.\",\n    \"Whether the source address identifies the actual person or system behind the activity.\",\n    \"Whether the task executed, whether its script was retrieved, or what that script did.\",\n    \"Whether svc_update was used after creation or whether any systems were affected.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Validate the svc_update creation and administrator-group change against approved change records and interview the account owner.\",\n    \"Collect DC and endpoint authentication and process telemetry around the activity to correlate the remote session with the account changes.\",\n    \"Determine whether svc_update authenticated or was used for access after creation; review its current group memberships and disable or contain it pending validation.\",\n    \"Retrieve the task's execution history and, if available, the contents and network retrieval evidence for the referenced script.\",\n    \"Investigate the source address and the RDP access path using relevant firewall, routing, and remote-access records.\"\n  ],\n  \"unrelated_findings\": [\n    \"GlobalProtect PanGPS.exe was observed starting on WS-EBROOKS-01; the inventory states there is no VPN. Review this software separately, as its presence does not establish how svc_update was created. (T197-00073, T197-00074)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 25288,
+    "output": 2516
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45:23 UTC, ken.ito was recorded as creating the BLUEFIN account svc_update on DC-BLU-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T197-00075"
+    ]
+   },
+   {
+    "claim": "About two seconds later, svc_update was added to the domain Administrators group by ken.ito under the same DC logon ID as the account creation.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T197-00075",
+     "T197-00076"
+    ]
+   },
+   {
+    "claim": "The account's administrator membership is inconsistent with the inventory description of the help desk's temporary-account process, which uses c.<name> accounts in the Seasonal group and never grants administrator rights.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T197-00075",
+     "T197-00076"
+    ]
+   },
+   {
+    "claim": "Shortly before the account creation, ken.ito successfully established an RDP logon to WS-EBROOKS-01 from 203.0.113.133; the host also logged an inbound connection from that address to TCP/3389. This is inconsistent with the inventory context that remote administration is only performed from WS-KITO-01 and there is no VPN.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T197-00061",
+     "T197-00064",
+     "T197-00065",
+     "T197-00066"
+    ]
+   },
+   {
+    "claim": "After the RDP logon, a task authored by ken.ito was created on WS-EBROOKS-01 with hidden PowerShell arguments that decode to downloading and executing a script from http://203.0.113.133/a.ps1. This is suspicious contextual activity, although the records do not establish that the task executed or that it created svc_update.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T197-00066",
+     "T197-00077"
+    ]
+   },
+   {
+    "claim": "The scheduled change was for svc-inventory's password at 13:30 UTC, followed by manually updating InventorySync; the observed action instead created a differently named account and granted it administrator membership.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T197-00075",
+     "T197-00076"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available records show account creation and group membership changes, but do not show the account's subsequent logons or use.",
+   "The scheduled task record shows its definition, not whether it ran or what the downloaded script contained.",
+   "The DC account-management events and workstation RDP session have different logon IDs; the records do not directly prove that the RDP session caused the DC changes."
+  ],
+  "claims_not_established": [
+   "Whether svc_update was authorized under an unprovided change request or exception.",
+   "Whether the source address identifies the actual person or system behind the activity.",
+   "Whether the task executed, whether its script was retrieved, or what that script did.",
+   "Whether svc_update was used after creation or whether any systems were affected."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Validate the svc_update creation and administrator-group change against approved change records and interview the account owner.",
+   "Collect DC and endpoint authentication and process telemetry around the activity to correlate the remote session with the account changes.",
+   "Determine whether svc_update authenticated or was used for access after creation; review its current group memberships and disable or contain it pending validation.",
+   "Retrieve the task's execution history and, if available, the contents and network retrieval evidence for the referenced script.",
+   "Investigate the source address and the RDP access path using relevant firewall, routing, and remote-access records."
+  ],
+  "unrelated_findings": [
+   "GlobalProtect PanGPS.exe was observed starting on WS-EBROOKS-01; the inventory states there is no VPN. Review this software separately, as its presence does not establish how svc_update was created. (T197-00073, T197-00074)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 27.9
+}

@@ -1,0 +1,87 @@
+{
+ "scenario_id": "T163",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:46:07 UTC, PowerShell ran as julia.frost with hidden-window, no-profile, and encoded-command options, and its parent was WINWORD.EXE opening C:\\\\Users\\\\julia.frost\\\\Downloads\\\\Statement.docm. This is later than the reported approximate 13:40 time, but falls within the review window.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T163-00155\",\n        \"T163-00159\",\n        \"T163-00160\"\n      ]\n    },\n    {\n      \"claim\": \"The encoded PowerShell command decodes to an expression that downloads and executes a script from raw.githubusercontent.com/maplehill-it/tools/main/u.ps1. The proxy recorded a successful GET for that script shortly afterward.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T163-00159\",\n        \"T163-00164\"\n      ]\n    },\n    {\n      \"claim\": \"PowerShell launched rundll32.exe with C:\\\\Users\\\\julia.frost\\\\AppData\\\\Roaming\\\\svchelper.dll,Init as its command line.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T163-00161\",\n        \"T163-00165\"\n      ]\n    },\n    {\n      \"claim\": \"The sequence of a macro-enabled document opening, hidden encoded PowerShell fetching a script, and a subsequent rundll32 invocation of a DLL in the user's roaming profile supports a malicious-activity finding.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T163-00155\",\n        \"T163-00159\",\n        \"T163-00161\",\n        \"T163-00164\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available records show the encoded command and a successful script request, but do not include the downloaded u.ps1 contents or establish what that script did after retrieval (T163-00159, T163-00164).\",\n    \"The available records show rundll32 invoked with the svchelper.dll path, but do not establish the DLL's contents, hash, provenance, or effects (T163-00161, T163-00165).\",\n    \"The process records establish WINWORD.EXE as PowerShell's parent, but do not show how Statement.docm was obtained or which document feature caused the child process (T163-00155, T163-00159).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the downloaded script successfully executed and what actions it performed.\",\n    \"Whether svchelper.dll was successfully loaded and whether it established persistence, accessed data, or communicated externally.\",\n    \"Whether Julia intentionally opened or authorized Statement.docm.\",\n    \"Whether any data was accessed, modified, or exfiltrated.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and analyze Statement.docm, including its origin, macro contents, and relevant Office telemetry.\",\n    \"Recover u.ps1 and svchelper.dll from the host or proxy/cache where available; record hashes and analyze their contents.\",\n    \"Collect endpoint telemetry for file creation, registry changes, persistence, subsequent process activity, and network connections associated with the PowerShell and rundll32 processes.\",\n    \"Review proxy and endpoint records for activity attributable to the downloaded script or DLL beyond the events shown.\"\n  ],\n  \"unrelated_findings\": [\n    \"An unapproved Dropbox-related service contacted desktop.dropbox.com from WS-JFROST-01 at 14:19 UTC; handle separately and do not use this to decide the alerted activity (T163-00323, T163-00324).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 50956,
+    "output": 1514
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:46:07 UTC, PowerShell ran as julia.frost with hidden-window, no-profile, and encoded-command options, and its parent was WINWORD.EXE opening C:\\Users\\julia.frost\\Downloads\\Statement.docm. This is later than the reported approximate 13:40 time, but falls within the review window.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T163-00155",
+     "T163-00159",
+     "T163-00160"
+    ]
+   },
+   {
+    "claim": "The encoded PowerShell command decodes to an expression that downloads and executes a script from raw.githubusercontent.com/maplehill-it/tools/main/u.ps1. The proxy recorded a successful GET for that script shortly afterward.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T163-00159",
+     "T163-00164"
+    ]
+   },
+   {
+    "claim": "PowerShell launched rundll32.exe with C:\\Users\\julia.frost\\AppData\\Roaming\\svchelper.dll,Init as its command line.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T163-00161",
+     "T163-00165"
+    ]
+   },
+   {
+    "claim": "The sequence of a macro-enabled document opening, hidden encoded PowerShell fetching a script, and a subsequent rundll32 invocation of a DLL in the user's roaming profile supports a malicious-activity finding.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T163-00155",
+     "T163-00159",
+     "T163-00161",
+     "T163-00164"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available records show the encoded command and a successful script request, but do not include the downloaded u.ps1 contents or establish what that script did after retrieval (T163-00159, T163-00164).",
+   "The available records show rundll32 invoked with the svchelper.dll path, but do not establish the DLL's contents, hash, provenance, or effects (T163-00161, T163-00165).",
+   "The process records establish WINWORD.EXE as PowerShell's parent, but do not show how Statement.docm was obtained or which document feature caused the child process (T163-00155, T163-00159)."
+  ],
+  "claims_not_established": [
+   "Whether the downloaded script successfully executed and what actions it performed.",
+   "Whether svchelper.dll was successfully loaded and whether it established persistence, accessed data, or communicated externally.",
+   "Whether Julia intentionally opened or authorized Statement.docm.",
+   "Whether any data was accessed, modified, or exfiltrated."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and analyze Statement.docm, including its origin, macro contents, and relevant Office telemetry.",
+   "Recover u.ps1 and svchelper.dll from the host or proxy/cache where available; record hashes and analyze their contents.",
+   "Collect endpoint telemetry for file creation, registry changes, persistence, subsequent process activity, and network connections associated with the PowerShell and rundll32 processes.",
+   "Review proxy and endpoint records for activity attributable to the downloaded script or DLL beyond the events shown."
+  ],
+  "unrelated_findings": [
+   "An unapproved Dropbox-related service contacted desktop.dropbox.com from WS-JFROST-01 at 14:19 UTC; handle separately and do not use this to decide the alerted activity (T163-00323, T163-00324)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 17.7
+}

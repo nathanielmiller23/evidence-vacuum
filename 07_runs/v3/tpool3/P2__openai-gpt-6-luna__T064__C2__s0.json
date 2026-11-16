@@ -1,0 +1,86 @@
+{
+ "scenario_id": "T064",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.84,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:40:04 UTC, WS-ARUIZ-01 obtained Kerberos tickets as its machine account; shortly afterward it connected to DC-PIN-01 over SMB and established a network logon as WS-ARUIZ-01$.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T064-00113\",\n        \"T064-00115\",\n        \"T064-00116\",\n        \"T064-00120\"\n      ]\n    },\n    {\n      \"claim\": \"The SMB session to DC-PIN-01 ended at 13:40:36 UTC; these records do not identify a PowerShell process or show what activity occurred over SMB.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T064-00116\",\n        \"T064-00120\",\n        \"T064-00121\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:42:09 UTC, DC-PIN-01 recorded a service ticket for raj.patel to WS-ARUIZ-01$, originating from 10.51.10.23. This is consistent with access from WS-RPATEL-01, but does not establish that it caused the reported window or what command, if any, was run.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T064-00142\"\n      ]\n    },\n    {\n      \"claim\": \"The supplied process records show taskhostw.exe at 14:15:33 and conhost.exe at 14:17:16, with conhost.exe parented by csrss.exe; they do not document the reported PowerShell window around 13:40.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T064-00294\",\n        \"T064-00295\",\n        \"T064-00301\",\n        \"T064-00302\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The provided records do not include process-creation telemetry for the reported time around 13:40, nor command-line, PowerShell script-block, or console-session evidence for that time.\",\n    \"The SMB connection records establish a connection and network logon, but do not expose the SMB share, accessed files, or commands.\",\n    \"The raj.patel service-ticket record does not by itself show a successful interactive or remote logon, command execution, or a causal link to the reported window.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether PowerShell actually ran on WS-ARUIZ-01 around 13:40 UTC, and, if so, its command line, script contents, parent process, and initiating account.\",\n    \"Whether the 13:40 SMB session or the later raj.patel service ticket was related to the reported window.\",\n    \"Whether the activity was authorized workstation patching or malicious activity.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Retrieve complete endpoint process-creation and PowerShell logging for WS-ARUIZ-01 around 13:20\u201314:20 UTC, including command lines, parent-child relationships, script-block logs, and console history if available.\",\n    \"Correlate WS-RPATEL-01 remote-administration logs and raj.patel's activity with the 13:40\u201313:42 events; confirm whether a patch operation was initiated and what target and commands it used.\",\n    \"Review SMB server/share auditing on DC-PIN-01 for the 13:40 session to identify the accessed share and files.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 14:06 UTC, DC-PIN-01 recorded an NTLM validation for ana.ruiz with Workstation=DC-PIN-01, and WS-RPATEL-01 recorded a network logon for ana.ruiz with the source address of DC-PIN-01. This cross-host authentication pattern is unexplained by the supplied records and should be investigated separately; it does not establish anything about the reported 13:40 activity. (T064-00242, T064-00243)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 30713,
+    "output": 2136
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.84,
+  "supporting_observations": [
+   {
+    "claim": "At 13:40:04 UTC, WS-ARUIZ-01 obtained Kerberos tickets as its machine account; shortly afterward it connected to DC-PIN-01 over SMB and established a network logon as WS-ARUIZ-01$.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T064-00113",
+     "T064-00115",
+     "T064-00116",
+     "T064-00120"
+    ]
+   },
+   {
+    "claim": "The SMB session to DC-PIN-01 ended at 13:40:36 UTC; these records do not identify a PowerShell process or show what activity occurred over SMB.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T064-00116",
+     "T064-00120",
+     "T064-00121"
+    ]
+   },
+   {
+    "claim": "At 13:42:09 UTC, DC-PIN-01 recorded a service ticket for raj.patel to WS-ARUIZ-01$, originating from 10.51.10.23. This is consistent with access from WS-RPATEL-01, but does not establish that it caused the reported window or what command, if any, was run.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T064-00142"
+    ]
+   },
+   {
+    "claim": "The supplied process records show taskhostw.exe at 14:15:33 and conhost.exe at 14:17:16, with conhost.exe parented by csrss.exe; they do not document the reported PowerShell window around 13:40.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T064-00294",
+     "T064-00295",
+     "T064-00301",
+     "T064-00302"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The provided records do not include process-creation telemetry for the reported time around 13:40, nor command-line, PowerShell script-block, or console-session evidence for that time.",
+   "The SMB connection records establish a connection and network logon, but do not expose the SMB share, accessed files, or commands.",
+   "The raj.patel service-ticket record does not by itself show a successful interactive or remote logon, command execution, or a causal link to the reported window."
+  ],
+  "claims_not_established": [
+   "Whether PowerShell actually ran on WS-ARUIZ-01 around 13:40 UTC, and, if so, its command line, script contents, parent process, and initiating account.",
+   "Whether the 13:40 SMB session or the later raj.patel service ticket was related to the reported window.",
+   "Whether the activity was authorized workstation patching or malicious activity."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Retrieve complete endpoint process-creation and PowerShell logging for WS-ARUIZ-01 around 13:20\u201314:20 UTC, including command lines, parent-child relationships, script-block logs, and console history if available.",
+   "Correlate WS-RPATEL-01 remote-administration logs and raj.patel's activity with the 13:40\u201313:42 events; confirm whether a patch operation was initiated and what target and commands it used.",
+   "Review SMB server/share auditing on DC-PIN-01 for the 13:40 session to identify the accessed share and files."
+  ],
+  "unrelated_findings": [
+   "At 14:06 UTC, DC-PIN-01 recorded an NTLM validation for ana.ruiz with Workstation=DC-PIN-01, and WS-RPATEL-01 recorded a network logon for ana.ruiz with the source address of DC-PIN-01. This cross-host authentication pattern is unexplained by the supplied records and should be investigated separately; it does not establish anything about the reported 13:40 activity. (T064-00242, T064-00243)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 26.4
+}

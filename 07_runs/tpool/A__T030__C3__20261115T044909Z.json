@@ -1,0 +1,80 @@
+{
+ "run_id": "A__T030__C3__20261115T044909Z",
+ "config": "A",
+ "scenario_id": "T030",
+ "condition": "C3",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 408,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 162652,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.9,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:48:44 UTC, a Kerberos service-ticket event identifies svc-bkp as the target user and 45.79.19.196 as the source IP requesting access to FILE-HD-01$. This is an anomalous external-source authentication signal; the record alone does not establish whether it was authorized.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T030-00269\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:46 UTC, FILE-HD-01 connected to DC-HD-01 over SMB. The associated log records an ANONYMOUS LOGON NTLM session and a connection with 5,155 origin bytes and 3,124 response bytes; these records do not show the reported large transfer going to an external destination.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T030-00241\",\n        \"T030-00242\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:29:25 UTC, an explicit-credentials event on FILE-HD-01 records Veeam.Backup.Service.exe targeting svc-claimsync, shortly before the scheduled password rotation. The record does not establish the purpose or authorization of this authentication.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T030-00071\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied coverage status reports a collection outage for FILE-HD-01 winsec and Sysmon from 13:30 to 14:10 UTC, overlapping the alert time.\",\n    \"The supplied coverage status reports a PROXY-HD-01 proxy-log collection outage from 13:30 to 14:10 UTC, overlapping the alert time.\",\n    \"Although Zeek connection, DNS, and SSL sensors are reported as available, the supplied records do not identify the process responsible for the reported transfer or establish its destination and contents.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the reported hundreds-of-megabytes transfer occurred as described, and its exact destination, protocol, duration, and byte counts.\",\n    \"Whether the transfer was made by the approved CobaltVault agent or another process.\",\n    \"Whether the svc-bkp service-ticket request from 45.79.19.196 was authorized, and whether it is related to the reported transfer.\",\n    \"Whether the svc-claimsync credential use was part of an authorized job update or unrelated activity.\",\n    \"Whether data was accessed or exfiltrated without authorization.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Recover or obtain endpoint process, network-connection, and authentication telemetry for FILE-HD-01 covering 13:30\u201314:10 UTC.\",\n    \"Obtain proxy, firewall, and network-flow records for the reported transfer, including destination, volume, and timing.\",\n    \"Review CobaltVault job and agent logs to determine whether an expected backup ran and whether its destination and volume match the alert.\",\n    \"Investigate the svc-bkp service-ticket request from 45.79.19.196, including source ownership, authentication details, and any related account or host activity.\",\n    \"Verify the svc-claimsync password-rotation and manual job-update change records, and determine why Veeam.Backup.Service.exe used explicit credentials for that account.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 60635,
+    "output": 2196,
+    "reasoning": 1428
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.9,
+  "supporting_observations": [
+   {
+    "claim": "At 13:48:44 UTC, a Kerberos service-ticket event identifies svc-bkp as the target user and 45.79.19.196 as the source IP requesting access to FILE-HD-01$. This is an anomalous external-source authentication signal; the record alone does not establish whether it was authorized.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T030-00269"
+    ]
+   },
+   {
+    "claim": "At 13:46 UTC, FILE-HD-01 connected to DC-HD-01 over SMB. The associated log records an ANONYMOUS LOGON NTLM session and a connection with 5,155 origin bytes and 3,124 response bytes; these records do not show the reported large transfer going to an external destination.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T030-00241",
+     "T030-00242"
+    ]
+   },
+   {
+    "claim": "At 13:29:25 UTC, an explicit-credentials event on FILE-HD-01 records Veeam.Backup.Service.exe targeting svc-claimsync, shortly before the scheduled password rotation. The record does not establish the purpose or authorization of this authentication.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T030-00071"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied coverage status reports a collection outage for FILE-HD-01 winsec and Sysmon from 13:30 to 14:10 UTC, overlapping the alert time.",
+   "The supplied coverage status reports a PROXY-HD-01 proxy-log collection outage from 13:30 to 14:10 UTC, overlapping the alert time.",
+   "Although Zeek connection, DNS, and SSL sensors are reported as available, the supplied records do not identify the process responsible for the reported transfer or establish its destination and contents."
+  ],
+  "claims_not_established": [
+   "Whether the reported hundreds-of-megabytes transfer occurred as described, and its exact destination, protocol, duration, and byte counts.",
+   "Whether the transfer was made by the approved CobaltVault agent or another process.",
+   "Whether the svc-bkp service-ticket request from 45.79.19.196 was authorized, and whether it is related to the reported transfer.",
+   "Whether the svc-claimsync credential use was part of an authorized job update or unrelated activity.",
+   "Whether data was accessed or exfiltrated without authorization."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Recover or obtain endpoint process, network-connection, and authentication telemetry for FILE-HD-01 covering 13:30\u201314:10 UTC.",
+   "Obtain proxy, firewall, and network-flow records for the reported transfer, including destination, volume, and timing.",
+   "Review CobaltVault job and agent logs to determine whether an expected backup ran and whether its destination and volume match the alert.",
+   "Investigate the svc-bkp service-ticket request from 45.79.19.196, including source ownership, authentication details, and any related account or host activity.",
+   "Verify the svc-claimsync password-rotation and manual job-update change records, and determine why Veeam.Backup.Service.exe used explicit credentials for that account."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 4,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.7
+}

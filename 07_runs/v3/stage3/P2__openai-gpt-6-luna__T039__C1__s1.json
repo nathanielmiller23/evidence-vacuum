@@ -1,0 +1,89 @@
+{
+ "scenario_id": "T039",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 1,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.93,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:39 UTC, ivy.chen ran PowerShell to compress \\\\\\\\FILE-NWD-01\\\\Shared\\\\Clients into C:\\\\Users\\\\ivy.chen\\\\AppData\\\\Local\\\\Temp\\\\c.zip; a file-creation event confirms c.zip was created.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T039-00104\", \"T039-00105\", \"T039-00106\"]\n    },\n    {\n      \"claim\": \"Chrome was launched under ivy.chen's account to open quickshare-drop.net, a file-sharing service that the inventory says is not approved.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T039-00133\", \"T039-00135\"]\n    },\n    {\n      \"claim\": \"The proxy recorded a successful tunnel to quickshare-drop.net with about 51 MB client-to-server and 8.8 KB server-to-client, consistent with a large outbound upload. Chrome's connection to the explicit proxy is corroborated by endpoint and connection telemetry.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T039-00138\", \"T039-00139\", \"T039-00140\", \"T039-00141\"]\n    },\n    {\n      \"claim\": \"The close timing and sequence of archiving the Clients share, opening an unapproved file-sharing site, and sending tens of MB outbound strongly support suspected data exfiltration.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T039-00104\", \"T039-00106\", \"T039-00133\", \"T039-00138\", \"T039-00140\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records tunnel metadata and byte counts, not the contents of the encrypted transfer.\",\n    \"The available records do not show the archive's contents or independently link the uploaded bytes to c.zip.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether c.zip contained sensitive or confidential client data.\",\n    \"Whether the upload completed successfully or what was retained by the remote service.\",\n    \"Who received or accessed the uploaded data.\",\n    \"Whether ivy.chen had authorization or a legitimate business purpose for this transfer.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and inspect c.zip, including its hash, file listing, and contents, and determine what files were read from the Clients share.\",\n    \"Obtain endpoint/browser download and upload artifacts, and any available proxy or service-side records identifying the destination account, object, and transfer result.\",\n    \"Confirm with the user and relevant business/data owners whether the transfer was authorized and whether the data was exposed.\"\n  ],\n  \"unrelated_findings\": [\n    \"Chrome accessed Slack later in the review window; Slack is not listed as an approved service. This is separate from the alerted quickshare-drop.net transfer. (T039-00193, T039-00194, T039-00200, T039-00210)\",\n    \"Chrome accessed the AWS website and console later in the review window; AWS is not listed as an approved service. The records show web access, not AWS account use or data transfer. (T039-00266, T039-00267, T039-00286)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 47627,
+    "output": 1261
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.93,
+  "supporting_observations": [
+   {
+    "claim": "At 13:39 UTC, ivy.chen ran PowerShell to compress \\\\FILE-NWD-01\\Shared\\Clients into C:\\Users\\ivy.chen\\AppData\\Local\\Temp\\c.zip; a file-creation event confirms c.zip was created.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T039-00104",
+     "T039-00105",
+     "T039-00106"
+    ]
+   },
+   {
+    "claim": "Chrome was launched under ivy.chen's account to open quickshare-drop.net, a file-sharing service that the inventory says is not approved.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T039-00133",
+     "T039-00135"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a successful tunnel to quickshare-drop.net with about 51 MB client-to-server and 8.8 KB server-to-client, consistent with a large outbound upload. Chrome's connection to the explicit proxy is corroborated by endpoint and connection telemetry.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T039-00138",
+     "T039-00139",
+     "T039-00140",
+     "T039-00141"
+    ]
+   },
+   {
+    "claim": "The close timing and sequence of archiving the Clients share, opening an unapproved file-sharing site, and sending tens of MB outbound strongly support suspected data exfiltration.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T039-00104",
+     "T039-00106",
+     "T039-00133",
+     "T039-00138",
+     "T039-00140"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records tunnel metadata and byte counts, not the contents of the encrypted transfer.",
+   "The available records do not show the archive's contents or independently link the uploaded bytes to c.zip."
+  ],
+  "claims_not_established": [
+   "Whether c.zip contained sensitive or confidential client data.",
+   "Whether the upload completed successfully or what was retained by the remote service.",
+   "Who received or accessed the uploaded data.",
+   "Whether ivy.chen had authorization or a legitimate business purpose for this transfer."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and inspect c.zip, including its hash, file listing, and contents, and determine what files were read from the Clients share.",
+   "Obtain endpoint/browser download and upload artifacts, and any available proxy or service-side records identifying the destination account, object, and transfer result.",
+   "Confirm with the user and relevant business/data owners whether the transfer was authorized and whether the data was exposed."
+  ],
+  "unrelated_findings": [
+   "Chrome accessed Slack later in the review window; Slack is not listed as an approved service. This is separate from the alerted quickshare-drop.net transfer. (T039-00193, T039-00194, T039-00200, T039-00210)",
+   "Chrome accessed the AWS website and console later in the review window; AWS is not listed as an approved service. The records show web access, not AWS account use or data transfer. (T039-00266, T039-00267, T039-00286)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 14,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 12.1
+}

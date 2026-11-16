@@ -1,0 +1,81 @@
+{
+ "scenario_id": "T299",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:43:30 UTC, amy.cole ran PowerShell from Explorer to compress \\\\\\\\FILE-ORC-01\\\\Shared\\\\Clients into C:\\\\Users\\\\amy.cole\\\\AppData\\\\Local\\\\Temp\\\\c.zip; Sysmon recorded the archive file being created shortly afterward.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T299-00158\", \"T299-00159\", \"T299-00160\"]\n    },\n    {\n      \"claim\": \"At 13:48:41 UTC, the proxy recorded 51,000,000 client-to-server bytes in a Chrome CONNECT tunnel to megadrop-files.com; the corresponding proxy connection record shows 51,000,222 originating bytes and 9,036 response bytes.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T299-00193\", \"T299-00195\", \"T299-00196\"]\n    },\n    {\n      \"claim\": \"The transfer went to a file-sharing service that is not among the organization's approved services, and closely followed creation of an archive from a shared Clients folder. This combination supports treating the alerted activity as likely unauthorized data exfiltration, though the records do not prove the archive was the uploaded payload.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T299-00158\", \"T299-00160\", \"T299-00193\", \"T299-00195\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records show the destination hostname and tunnel byte counts, but not the HTTPS request path, uploaded filename, or payload contents.\",\n    \"The available records do not directly link C:\\\\Users\\\\amy.cole\\\\AppData\\\\Local\\\\Temp\\\\c.zip to the outbound transfer.\",\n    \"The transfer is associated with amy.cole's account and Chrome process, but the records alone do not establish who physically initiated it or their intent.\"\n  ],\n  \"claims_not_established\": [\n    \"That c.zip was the file uploaded to megadrop-files.com.\",\n    \"What files or data were contained in c.zip or in the outbound transfer.\",\n    \"Whether amy.cole had authorization for this particular transfer.\",\n    \"Whether any recipient accessed or retained the transferred data.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine c.zip, including its hash, contents, timestamps, and any available endpoint file-access records for the source folder.\",\n    \"Obtain detailed proxy or network telemetry, if available, that identifies HTTPS request metadata, upload filenames, or the transfer's destination account.\",\n    \"Review browser history and endpoint telemetry around the archive creation and transfer to establish how the upload was initiated and whether other files were sent.\",\n    \"Confirm with amy.cole and the relevant data owner whether the archive and external transfer were authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:58:09 UTC, GlobalProtect PanGPS.exe was launched on WS-ACOLE-01, although the inventory says the organization has no VPN and remote administration is only performed from WS-SBYRNE-01. This is outside the alerted transfer and should be investigated separately.\",\n    \"Earlier Chrome connections to other destinations, including i.redd.it and upload.wikimedia.org, are visible in the window but are not the alerted large transfer and do not determine this assessment.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 50794,
+    "output": 1214
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "At 13:43:30 UTC, amy.cole ran PowerShell from Explorer to compress \\\\FILE-ORC-01\\Shared\\Clients into C:\\Users\\amy.cole\\AppData\\Local\\Temp\\c.zip; Sysmon recorded the archive file being created shortly afterward.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T299-00158",
+     "T299-00159",
+     "T299-00160"
+    ]
+   },
+   {
+    "claim": "At 13:48:41 UTC, the proxy recorded 51,000,000 client-to-server bytes in a Chrome CONNECT tunnel to megadrop-files.com; the corresponding proxy connection record shows 51,000,222 originating bytes and 9,036 response bytes.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T299-00193",
+     "T299-00195",
+     "T299-00196"
+    ]
+   },
+   {
+    "claim": "The transfer went to a file-sharing service that is not among the organization's approved services, and closely followed creation of an archive from a shared Clients folder. This combination supports treating the alerted activity as likely unauthorized data exfiltration, though the records do not prove the archive was the uploaded payload.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T299-00158",
+     "T299-00160",
+     "T299-00193",
+     "T299-00195"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records show the destination hostname and tunnel byte counts, but not the HTTPS request path, uploaded filename, or payload contents.",
+   "The available records do not directly link C:\\Users\\amy.cole\\AppData\\Local\\Temp\\c.zip to the outbound transfer.",
+   "The transfer is associated with amy.cole's account and Chrome process, but the records alone do not establish who physically initiated it or their intent."
+  ],
+  "claims_not_established": [
+   "That c.zip was the file uploaded to megadrop-files.com.",
+   "What files or data were contained in c.zip or in the outbound transfer.",
+   "Whether amy.cole had authorization for this particular transfer.",
+   "Whether any recipient accessed or retained the transferred data."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine c.zip, including its hash, contents, timestamps, and any available endpoint file-access records for the source folder.",
+   "Obtain detailed proxy or network telemetry, if available, that identifies HTTPS request metadata, upload filenames, or the transfer's destination account.",
+   "Review browser history and endpoint telemetry around the archive creation and transfer to establish how the upload was initiated and whether other files were sent.",
+   "Confirm with amy.cole and the relevant data owner whether the archive and external transfer were authorized."
+  ],
+  "unrelated_findings": [
+   "At 13:58:09 UTC, GlobalProtect PanGPS.exe was launched on WS-ACOLE-01, although the inventory says the organization has no VPN and remote administration is only performed from WS-SBYRNE-01. This is outside the alerted transfer and should be investigated separately.",
+   "Earlier Chrome connections to other destinations, including i.redd.it and upload.wikimedia.org, are visible in the window but are not the alerted large transfer and do not determine this assessment."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 13.2
+}

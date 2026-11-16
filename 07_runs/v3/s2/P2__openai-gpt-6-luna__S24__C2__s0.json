@@ -1,0 +1,68 @@
+{
+ "scenario_id": "S24",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.93,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:39:33 UTC, the WS-HITO-01 machine account requested a Kerberos service ticket for FILE-RB-01. This is consistent with possible access to the deployment file server, but does not establish that an installer was accessed or that a deployment task ran.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"S24-00107\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:48 UTC, WS-HITO-01 made an SMB connection to DC-RB-01 and authenticated to it as the WS-HITO-01 machine account; this is not evidence of an installer being accessed from FILE-RB-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"S24-00134\",\n        \"S24-00138\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not include details of the alerted task registration, such as its name, action, executable, arguments, principal, creator, or trigger.\",\n    \"The supplied records lack process-creation and task-scheduler telemetry needed to connect the task to an installer, deployment activity, or a user.\",\n    \"The FILE-RB-01 service ticket is not proof that the workstation accessed a deployment share or used an approved installer.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the task was the expected \\\\RB-IT\\\\Deploy-<App> task or an unauthorized task.\",\n    \"Whether the task ran msiexec on a VetChart installer from the approved deployment share.\",\n    \"Who created the task, what permissions it used, and whether its action or payload was malicious.\",\n    \"Whether the observed network activity was caused by the alerted task.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Retrieve the task registration event and Task Scheduler Operational logs, including the task XML and registration details.\",\n    \"Collect EDR or process-creation telemetry around 13:41 UTC to identify the registering process, task action, executable, arguments, and execution history.\",\n    \"Review FILE-RB-01 share-access logs and the installer\u2019s path, signature, hash, and provenance.\",\n    \"Verify the deployment against the change calendar and obtain the relevant deployment or change ticket.\"\n  ],\n  \"unrelated_findings\": [\n    \"PROXY-RB-01 connected inbound to WS-HITO-01 on TCP port 135 at 13:52 UTC. The records do not establish the purpose or link this connection to the alerted task; review separately against the organization\u2019s remote-administration policy. (S24-00141, S24-00142)\",\n    \"WS-HITO-01 queried mozilla.cloudflare-dns.com at 14:08 UTC and received a public IP answer. The provided records do not show a subsequent connection or establish why the lookup occurred; review separately. (S24-00188, S24-00189)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 24334,
+    "output": 1699
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.93,
+  "supporting_observations": [
+   {
+    "claim": "At 13:39:33 UTC, the WS-HITO-01 machine account requested a Kerberos service ticket for FILE-RB-01. This is consistent with possible access to the deployment file server, but does not establish that an installer was accessed or that a deployment task ran.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S24-00107"
+    ]
+   },
+   {
+    "claim": "At 13:48 UTC, WS-HITO-01 made an SMB connection to DC-RB-01 and authenticated to it as the WS-HITO-01 machine account; this is not evidence of an installer being accessed from FILE-RB-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S24-00134",
+     "S24-00138"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not include details of the alerted task registration, such as its name, action, executable, arguments, principal, creator, or trigger.",
+   "The supplied records lack process-creation and task-scheduler telemetry needed to connect the task to an installer, deployment activity, or a user.",
+   "The FILE-RB-01 service ticket is not proof that the workstation accessed a deployment share or used an approved installer."
+  ],
+  "claims_not_established": [
+   "Whether the task was the expected \\RB-IT\\Deploy-<App> task or an unauthorized task.",
+   "Whether the task ran msiexec on a VetChart installer from the approved deployment share.",
+   "Who created the task, what permissions it used, and whether its action or payload was malicious.",
+   "Whether the observed network activity was caused by the alerted task."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Retrieve the task registration event and Task Scheduler Operational logs, including the task XML and registration details.",
+   "Collect EDR or process-creation telemetry around 13:41 UTC to identify the registering process, task action, executable, arguments, and execution history.",
+   "Review FILE-RB-01 share-access logs and the installer\u2019s path, signature, hash, and provenance.",
+   "Verify the deployment against the change calendar and obtain the relevant deployment or change ticket."
+  ],
+  "unrelated_findings": [
+   "PROXY-RB-01 connected inbound to WS-HITO-01 on TCP port 135 at 13:52 UTC. The records do not establish the purpose or link this connection to the alerted task; review separately against the organization\u2019s remote-administration policy. (S24-00141, S24-00142)",
+   "WS-HITO-01 queried mozilla.cloudflare-dns.com at 14:08 UTC and received a public IP answer. The provided records do not show a subsequent connection or establish why the lookup occurred; review separately. (S24-00188, S24-00189)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 3,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 17.3
+}

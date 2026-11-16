@@ -1,0 +1,80 @@
+{
+ "scenario_id": "T129",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:44:52 UTC, dan.reyes launched PowerShell to compress \\\\\\\\FILE-COP-01\\\\Shared\\\\Clients into C:\\\\Users\\\\dan.reyes\\\\AppData\\\\Local\\\\Temp\\\\c.zip; Sysmon recorded creation of that archive at 13:44:57 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T129-00190\",\n        \"T129-00191\",\n        \"T129-00192\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:51:07 UTC, the proxy recorded approximately 51 MB of client-to-server bytes from WS-DREYES-01 to fastfile-share.io. Zeek independently recorded 51,000,325 originating bytes for the connection; both records associate the activity with Firefox/browser traffic.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T129-00240\",\n        \"T129-00242\"\n      ]\n    },\n    {\n      \"claim\": \"The archive operation shortly preceded a large transfer to a file-sharing domain, and the inventory says no file-sharing services other than the specifically approved services are approved. This sequence strongly supports unauthorized data exfiltration as the explanation for the alerted activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T129-00190\",\n        \"T129-00192\",\n        \"T129-00240\",\n        \"T129-00242\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The large transfer is recorded at 13:51:07 UTC, rather than exactly around 13:46 UTC as stated in the alert; the reviewed evidence does not establish the alert's precise timestamp. Records: T129-00240, T129-00242.\",\n    \"The available proxy and Zeek records establish the destination and byte volume, but do not identify the uploaded filename or contents. Records: T129-00240, T129-00242.\",\n    \"The archive creation is observed, but these records do not directly prove that c.zip was the file uploaded in the later transfer. Records: T129-00190, T129-00192, T129-00240, T129-00242.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether c.zip, or any particular files from the Clients share, were included in the 51 MB transfer.\",\n    \"Whether dan.reyes intended or was authorized to transfer the data; the logs show the account and activity but not intent or business justification.\",\n    \"Who controlled fastfile-share.io or who ultimately received or accessed the transferred data.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Retrieve proxy or DLP transaction details for the fastfile-share.io session, including upload endpoint, filename, and any content or policy match metadata.\",\n    \"Collect endpoint file-access evidence and relevant file-server audit records to determine which files from the Clients share were read and whether c.zip was accessed by the browser.\",\n    \"Confirm with the user and data owner whether this transfer had an approved business purpose; preserve the workstation and relevant proxy and file-server logs.\"\n  ],\n  \"unrelated_findings\": [\n    \"Firefox accessed Google Drive, including drive.google.com/drive/my-drive, during the review window. Google Drive is not among the listed approved services; review separately and do not use this alone to decide the alert. Records: T129-00105, T129-00106.\",\n    \"Firefox launched the AWS console during the review window; AWS is not among the listed approved services. Review separately. Records: T129-00181, T129-00182, T129-00186.\",\n    \"The workstation accessed Webex and Slack, which are not among the listed approved services. Review separately. Records: T129-00236, T129-00258, T129-00259.\",\n    \"Firefox attempted to access Facebook; the proxy returned a gateway error. This is unrelated to the large transfer and should not decide this alert. Records: T129-00244, T129-00249.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 52847,
+    "output": 2656
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "At 13:44:52 UTC, dan.reyes launched PowerShell to compress \\\\FILE-COP-01\\Shared\\Clients into C:\\Users\\dan.reyes\\AppData\\Local\\Temp\\c.zip; Sysmon recorded creation of that archive at 13:44:57 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T129-00190",
+     "T129-00191",
+     "T129-00192"
+    ]
+   },
+   {
+    "claim": "At 13:51:07 UTC, the proxy recorded approximately 51 MB of client-to-server bytes from WS-DREYES-01 to fastfile-share.io. Zeek independently recorded 51,000,325 originating bytes for the connection; both records associate the activity with Firefox/browser traffic.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T129-00240",
+     "T129-00242"
+    ]
+   },
+   {
+    "claim": "The archive operation shortly preceded a large transfer to a file-sharing domain, and the inventory says no file-sharing services other than the specifically approved services are approved. This sequence strongly supports unauthorized data exfiltration as the explanation for the alerted activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T129-00190",
+     "T129-00192",
+     "T129-00240",
+     "T129-00242"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The large transfer is recorded at 13:51:07 UTC, rather than exactly around 13:46 UTC as stated in the alert; the reviewed evidence does not establish the alert's precise timestamp. Records: T129-00240, T129-00242.",
+   "The available proxy and Zeek records establish the destination and byte volume, but do not identify the uploaded filename or contents. Records: T129-00240, T129-00242.",
+   "The archive creation is observed, but these records do not directly prove that c.zip was the file uploaded in the later transfer. Records: T129-00190, T129-00192, T129-00240, T129-00242."
+  ],
+  "claims_not_established": [
+   "Whether c.zip, or any particular files from the Clients share, were included in the 51 MB transfer.",
+   "Whether dan.reyes intended or was authorized to transfer the data; the logs show the account and activity but not intent or business justification.",
+   "Who controlled fastfile-share.io or who ultimately received or accessed the transferred data."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Retrieve proxy or DLP transaction details for the fastfile-share.io session, including upload endpoint, filename, and any content or policy match metadata.",
+   "Collect endpoint file-access evidence and relevant file-server audit records to determine which files from the Clients share were read and whether c.zip was accessed by the browser.",
+   "Confirm with the user and data owner whether this transfer had an approved business purpose; preserve the workstation and relevant proxy and file-server logs."
+  ],
+  "unrelated_findings": [
+   "Firefox accessed Google Drive, including drive.google.com/drive/my-drive, during the review window. Google Drive is not among the listed approved services; review separately and do not use this alone to decide the alert. Records: T129-00105, T129-00106.",
+   "Firefox launched the AWS console during the review window; AWS is not among the listed approved services. Review separately. Records: T129-00181, T129-00182, T129-00186.",
+   "The workstation accessed Webex and Slack, which are not among the listed approved services. Review separately. Records: T129-00236, T129-00258, T129-00259.",
+   "Firefox attempted to access Facebook; the proxy returned a gateway error. This is unrelated to the large transfer and should not decide this alert. Records: T129-00244, T129-00249."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 9,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 31.5
+}

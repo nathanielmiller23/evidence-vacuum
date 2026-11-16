@@ -1,0 +1,99 @@
+{
+ "scenario_id": "T125",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.82,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted recurring HTTPS activity is attributable to routewiseupd.exe running from Kim Nguyen's AppData\\\\Local\\\\RouteWise directory, rather than the inventory-listed Program Files location. The process started at 13:40:33 UTC and made proxy connections to update.routewise.co, which differs from the inventory-listed update.routewise.com.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T125-00162\",\n        \"T125-00163\",\n        \"T125-00164\",\n        \"T125-00166\",\n        \"T125-00167\"\n      ]\n    },\n    {\n      \"claim\": \"The same process made recurring proxy connections to update.routewise.co at approximately five-minute intervals: 13:40:36, 13:45:28, 13:50:45, 13:55:06, 14:00:31, 14:05:57, and 14:10:22 UTC. This matches the alert's cadence, but the observed executable path and destination domain do not match the approved RouteWise details.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T125-00164\",\n        \"T125-00166\",\n        \"T125-00183\",\n        \"T125-00184\",\n        \"T125-00220\",\n        \"T125-00221\",\n        \"T125-00232\",\n        \"T125-00233\",\n        \"T125-00241\",\n        \"T125-00243\",\n        \"T125-00250\",\n        \"T125-00252\",\n        \"T125-00265\",\n        \"T125-00267\"\n      ]\n    },\n    {\n      \"claim\": \"The evidence supports treating the alerted activity as suspicious and escalating it: an updater-like process uses both a user-profile path and a destination domain that differ from the approved updater's inventory details. The records do not, by themselves, prove the executable is malware.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T125-00162\",\n        \"T125-00164\",\n        \"T125-00167\",\n        \"T125-00221\",\n        \"T125-00244\",\n        \"T125-00250\",\n        \"T125-00253\",\n        \"T125-00265\",\n        \"T125-00268\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records support the recurring activity from 13:40:36 through 14:10:22 UTC; they do not show the alerted activity between 13:30 and 13:40 UTC.\",\n    \"The proxy records identify the CONNECT destination and tunnel byte counts, but the supplied evidence does not establish the contents of the HTTPS traffic.\",\n    \"The supplied records do not include a hash, signature validation, or forensic analysis of the observed routewiseupd.exe file.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether update.routewise.co is controlled by the legitimate RouteWise vendor or is an impersonating domain.\",\n    \"Whether the executable downloaded or executed a payload, or whether any data was sent beyond the recorded tunnel byte counts.\",\n    \"Whether the process was installed or knowingly launched by Kim Nguyen.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine the routewiseupd.exe file from the recorded AppData path; obtain its hash, signature status, and file metadata.\",\n    \"Investigate ownership, certificate, DNS history, and reputation of update.routewise.co, and compare it with the legitimate RouteWise update infrastructure.\",\n    \"Collect endpoint and proxy details for the HTTPS sessions, including available TLS certificate and inspection data, and check for related downloads, persistence, or execution.\"\n  ],\n  \"unrelated_findings\": [\n    \"Google Drive File Stream ran on the workstation, and Firefox accessed drive.google.com; Google Drive is not among the approved services listed in the environment context. Handle separately; this does not establish that it caused the alerted RouteWise connections. (T125-00100, T125-00122, T125-00123)\",\n    \"Slack.exe ran on the workstation; Slack is not among the approved services listed in the environment context. The cited records show process execution, not network activity from Slack. (T125-00091, T125-00093)\",\n    \"GlobalProtect PanGPA.exe ran despite the environment context stating there is no VPN. The supplied record shows execution only and does not establish a VPN connection. (T125-00097, T125-00099)\",\n    \"Kim Nguyen launched PowerShell, which launched psql.exe using the postgres account; a PostgreSQL connection to 10.52.10.24 was also observed. This is separate from the alerted HTTPS activity. (T125-00111, T125-00113, T125-00114, T125-00115)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 48389,
+    "output": 2778
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.82,
+  "supporting_observations": [
+   {
+    "claim": "The alerted recurring HTTPS activity is attributable to routewiseupd.exe running from Kim Nguyen's AppData\\Local\\RouteWise directory, rather than the inventory-listed Program Files location. The process started at 13:40:33 UTC and made proxy connections to update.routewise.co, which differs from the inventory-listed update.routewise.com.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T125-00162",
+     "T125-00163",
+     "T125-00164",
+     "T125-00166",
+     "T125-00167"
+    ]
+   },
+   {
+    "claim": "The same process made recurring proxy connections to update.routewise.co at approximately five-minute intervals: 13:40:36, 13:45:28, 13:50:45, 13:55:06, 14:00:31, 14:05:57, and 14:10:22 UTC. This matches the alert's cadence, but the observed executable path and destination domain do not match the approved RouteWise details.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T125-00164",
+     "T125-00166",
+     "T125-00183",
+     "T125-00184",
+     "T125-00220",
+     "T125-00221",
+     "T125-00232",
+     "T125-00233",
+     "T125-00241",
+     "T125-00243",
+     "T125-00250",
+     "T125-00252",
+     "T125-00265",
+     "T125-00267"
+    ]
+   },
+   {
+    "claim": "The evidence supports treating the alerted activity as suspicious and escalating it: an updater-like process uses both a user-profile path and a destination domain that differ from the approved updater's inventory details. The records do not, by themselves, prove the executable is malware.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T125-00162",
+     "T125-00164",
+     "T125-00167",
+     "T125-00221",
+     "T125-00244",
+     "T125-00250",
+     "T125-00253",
+     "T125-00265",
+     "T125-00268"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records support the recurring activity from 13:40:36 through 14:10:22 UTC; they do not show the alerted activity between 13:30 and 13:40 UTC.",
+   "The proxy records identify the CONNECT destination and tunnel byte counts, but the supplied evidence does not establish the contents of the HTTPS traffic.",
+   "The supplied records do not include a hash, signature validation, or forensic analysis of the observed routewiseupd.exe file."
+  ],
+  "claims_not_established": [
+   "Whether update.routewise.co is controlled by the legitimate RouteWise vendor or is an impersonating domain.",
+   "Whether the executable downloaded or executed a payload, or whether any data was sent beyond the recorded tunnel byte counts.",
+   "Whether the process was installed or knowingly launched by Kim Nguyen."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine the routewiseupd.exe file from the recorded AppData path; obtain its hash, signature status, and file metadata.",
+   "Investigate ownership, certificate, DNS history, and reputation of update.routewise.co, and compare it with the legitimate RouteWise update infrastructure.",
+   "Collect endpoint and proxy details for the HTTPS sessions, including available TLS certificate and inspection data, and check for related downloads, persistence, or execution."
+  ],
+  "unrelated_findings": [
+   "Google Drive File Stream ran on the workstation, and Firefox accessed drive.google.com; Google Drive is not among the approved services listed in the environment context. Handle separately; this does not establish that it caused the alerted RouteWise connections. (T125-00100, T125-00122, T125-00123)",
+   "Slack.exe ran on the workstation; Slack is not among the approved services listed in the environment context. The cited records show process execution, not network activity from Slack. (T125-00091, T125-00093)",
+   "GlobalProtect PanGPA.exe ran despite the environment context stating there is no VPN. The supplied record shows execution only and does not establish a VPN connection. (T125-00097, T125-00099)",
+   "Kim Nguyen launched PowerShell, which launched psql.exe using the postgres account; a PostgreSQL connection to 10.52.10.24 was also observed. This is separate from the alerted HTTPS activity. (T125-00111, T125-00113, T125-00114, T125-00115)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 28,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 26.5
+}

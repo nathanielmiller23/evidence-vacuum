@@ -1,0 +1,82 @@
+{
+ "scenario_id": "T040",
+ "condition": "C3",
+ "variant": "P1",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.78,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Nora Blake launched Remote Desktop to FILE-NWD-01, and a connection from WS-NBLAKE-01 to that server's RDP port lasted about 13 minutes. This is inconsistent with the stated practice that remote administration is done only from WS-SOKAFOR-01.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T040-00098\",\n        \"T040-00103\",\n        \"T040-00106\",\n        \"T040-00108\"\n      ]\n    },\n    {\n      \"claim\": \"During the RDP connection from WS-NBLAKE-01, FILE-NWD-01 sent 640,000,221 bytes to the explicit web proxy in a connection lasting about 12 seconds. The records do not identify the ultimate destination or the process responsible.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T040-00103\",\n        \"T040-00204\"\n      ]\n    },\n    {\n      \"claim\": \"Before the large transfer, the domain controller recorded a service-ticket event for svc-archive targeting FILE-NWD-01$ with source IP 139.162.174.124, a public address and an unexpected source given the stated absence of VPN access.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T040-00193\"\n      ]\n    },\n    {\n      \"claim\": \"The transfer volume is also consistent with the documented size of approved StratoSafe backups, so the available network record alone does not establish that the upload itself was unauthorized.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T040-00204\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Coverage metadata (which supplies no record IDs) reports that FILE-NWD-01 winsec and Sysmon logs were not collected from 13:30 to 14:10 UTC, overlapping the RDP session and transfer.\",\n    \"Coverage metadata (which supplies no record IDs) reports that proxy logs were not collected from 13:30 to 14:10 UTC, so the transfer's ultimate destination and proxy request details are unavailable.\",\n    \"The available Zeek record identifies the proxy as the connection destination and gives the byte count, but does not identify the initiating process, transferred content, or final external recipient (T040-00204).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the 640 MB transfer was an authorized StratoSafe backup or an upload to an unapproved destination.\",\n    \"Which process or account initiated the transfer, and whether it was causally related to Nora Blake's RDP session.\",\n    \"Whether the svc-archive ticket request from the public IP represents successful unauthorized access, or what generated that request.\",\n    \"Whether Nora Blake's RDP session had an authorized help-desk purpose.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Recover FILE-NWD-01 endpoint, service, and authentication logs for 13:30\u201314:10 UTC, including process creation, scheduled-task/job history, and RDP session details.\",\n    \"Obtain PROXY-NWD-01 access and request logs for the transfer, including the upstream host, URL, authenticated identity, and byte counts.\",\n    \"Review StratoSafe agent and backup-job logs, and verify whether a backup was scheduled or running at the transfer time.\",\n    \"Investigate the 139.162.174.124 ticket-request source using DC/KDC and network perimeter records; verify whether the source and svc-archive activity are legitimate.\",\n    \"Confirm with IT and help desk whether Nora Blake's RDP access and the associated activity were authorized.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 52244,
+    "output": 2314
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.78,
+  "supporting_observations": [
+   {
+    "claim": "Nora Blake launched Remote Desktop to FILE-NWD-01, and a connection from WS-NBLAKE-01 to that server's RDP port lasted about 13 minutes. This is inconsistent with the stated practice that remote administration is done only from WS-SOKAFOR-01.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T040-00098",
+     "T040-00103",
+     "T040-00106",
+     "T040-00108"
+    ]
+   },
+   {
+    "claim": "During the RDP connection from WS-NBLAKE-01, FILE-NWD-01 sent 640,000,221 bytes to the explicit web proxy in a connection lasting about 12 seconds. The records do not identify the ultimate destination or the process responsible.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T040-00103",
+     "T040-00204"
+    ]
+   },
+   {
+    "claim": "Before the large transfer, the domain controller recorded a service-ticket event for svc-archive targeting FILE-NWD-01$ with source IP 139.162.174.124, a public address and an unexpected source given the stated absence of VPN access.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T040-00193"
+    ]
+   },
+   {
+    "claim": "The transfer volume is also consistent with the documented size of approved StratoSafe backups, so the available network record alone does not establish that the upload itself was unauthorized.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T040-00204"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Coverage metadata (which supplies no record IDs) reports that FILE-NWD-01 winsec and Sysmon logs were not collected from 13:30 to 14:10 UTC, overlapping the RDP session and transfer.",
+   "Coverage metadata (which supplies no record IDs) reports that proxy logs were not collected from 13:30 to 14:10 UTC, so the transfer's ultimate destination and proxy request details are unavailable.",
+   "The available Zeek record identifies the proxy as the connection destination and gives the byte count, but does not identify the initiating process, transferred content, or final external recipient (T040-00204)."
+  ],
+  "claims_not_established": [
+   "Whether the 640 MB transfer was an authorized StratoSafe backup or an upload to an unapproved destination.",
+   "Which process or account initiated the transfer, and whether it was causally related to Nora Blake's RDP session.",
+   "Whether the svc-archive ticket request from the public IP represents successful unauthorized access, or what generated that request.",
+   "Whether Nora Blake's RDP session had an authorized help-desk purpose."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Recover FILE-NWD-01 endpoint, service, and authentication logs for 13:30\u201314:10 UTC, including process creation, scheduled-task/job history, and RDP session details.",
+   "Obtain PROXY-NWD-01 access and request logs for the transfer, including the upstream host, URL, authenticated identity, and byte counts.",
+   "Review StratoSafe agent and backup-job logs, and verify whether a backup was scheduled or running at the transfer time.",
+   "Investigate the 139.162.174.124 ticket-request source using DC/KDC and network perimeter records; verify whether the source and svc-archive activity are legitimate.",
+   "Confirm with IT and help desk whether Nora Blake's RDP access and the associated activity were authorized."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 8,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 25.1
+}

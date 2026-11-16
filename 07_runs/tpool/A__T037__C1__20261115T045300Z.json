@@ -1,0 +1,117 @@
+{
+ "run_id": "A__T037__C1__20261115T045300Z",
+ "config": "A",
+ "scenario_id": "T037",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 194,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 80456,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded creation of sysmaint by sam.okafor at 13:41:49 UTC, followed about two seconds later by adding sysmaint to the Administrators group.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T037-00109\",\n        \"T037-00110\"\n      ]\n    },\n    {\n      \"claim\": \"The new account's name and administrator-group membership conflict with the stated practice that temporary accounts use the ext.<name> format and are not administrators.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T037-00109\",\n        \"T037-00110\"\n      ]\n    },\n    {\n      \"claim\": \"WS-LMARTINS-01 accepted an RDP logon for sam.okafor from 203.0.113.250; the logon was Type 10 and was followed by a special-privileges event for that account.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T037-00073\",\n        \"T037-00074\",\n        \"T037-00075\",\n        \"T037-00076\"\n      ]\n    },\n    {\n      \"claim\": \"That remote access is inconsistent with the supplied context that there is no VPN and remote administration is only done from WS-SOKAFOR-01.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T037-00073\",\n        \"T037-00075\"\n      ]\n    },\n    {\n      \"claim\": \"Under sam.okafor's logon on WS-LMARTINS-01, a task named HealthCheck was registered with an immediate trigger and a hidden PowerShell command that decodes to fetching and executing a script from http://203.0.113.250/a.ps1.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T037-00111\"\n      ]\n    },\n    {\n      \"claim\": \"The task's script host IP matches the IP that connected to WS-LMARTINS-01 by RDP shortly beforehand.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T037-00073\",\n        \"T037-00111\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:46 UTC, OpsAgent ran on WS-LMARTINS-01 as SYSTEM and explicitly supplied svc-render credentials to the proxy; the inventory places svc-render's RenderQueue job on FILE-NWD-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T037-00117\",\n        \"T037-00118\",\n        \"T037-00119\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The task-registration record establishes its configured action, but the supplied records do not establish that the task ran or that the remote script was retrieved or executed.\",\n    \"The account-creation event uses SubjectLogonId 0x11d4adcd, while the observed RDP session uses 0x3fdf003; the supplied records do not directly correlate the account creation to that RDP session.\",\n    \"The evidence identifies the remote IP address but does not establish who controlled it or whether it was spoofed or relayed.\",\n    \"The supplied activity records do not provide a complete process, network, or authentication history for the hosts and accounts.\"\n  ],\n  \"claims_not_established\": [\n    \"Who operated the RDP session or whether sam.okafor's credentials were compromised.\",\n    \"Whether the HealthCheck task executed and what the remote script would have done.\",\n    \"Whether sysmaint was subsequently used, and whether it remains enabled or in the Administrators group.\",\n    \"Why OpsAgent used svc-render credentials on a workstation, or whether that use was authorized.\",\n    \"Whether data was accessed, changed, or exfiltrated.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Collect WS-LMARTINS-01 task scheduler operational logs and endpoint process/network telemetry to determine whether HealthCheck ran and whether it contacted 203.0.113.250.\",\n    \"Obtain the referenced script, if available, and proxy, DNS, firewall, and perimeter records for 203.0.113.250.\",\n    \"Correlate DC authentication and account-management audit records around 13:41 UTC, including the subject logon session associated with sysmaint's creation.\",\n    \"Verify sysmaint's current status, group memberships, password and subsequent logons; preserve and examine relevant endpoint and domain-controller evidence.\",\n    \"Confirm whether the RDP source and OpsAgent use of svc-render were authorized with the responsible administrator and service owner.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 29734,
+    "output": 2009,
+    "reasoning": 953
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded creation of sysmaint by sam.okafor at 13:41:49 UTC, followed about two seconds later by adding sysmaint to the Administrators group.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00109",
+     "T037-00110"
+    ]
+   },
+   {
+    "claim": "The new account's name and administrator-group membership conflict with the stated practice that temporary accounts use the ext.<name> format and are not administrators.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T037-00109",
+     "T037-00110"
+    ]
+   },
+   {
+    "claim": "WS-LMARTINS-01 accepted an RDP logon for sam.okafor from 203.0.113.250; the logon was Type 10 and was followed by a special-privileges event for that account.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00073",
+     "T037-00074",
+     "T037-00075",
+     "T037-00076"
+    ]
+   },
+   {
+    "claim": "That remote access is inconsistent with the supplied context that there is no VPN and remote administration is only done from WS-SOKAFOR-01.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T037-00073",
+     "T037-00075"
+    ]
+   },
+   {
+    "claim": "Under sam.okafor's logon on WS-LMARTINS-01, a task named HealthCheck was registered with an immediate trigger and a hidden PowerShell command that decodes to fetching and executing a script from http://203.0.113.250/a.ps1.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T037-00111"
+    ]
+   },
+   {
+    "claim": "The task's script host IP matches the IP that connected to WS-LMARTINS-01 by RDP shortly beforehand.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00073",
+     "T037-00111"
+    ]
+   },
+   {
+    "claim": "At 13:46 UTC, OpsAgent ran on WS-LMARTINS-01 as SYSTEM and explicitly supplied svc-render credentials to the proxy; the inventory places svc-render's RenderQueue job on FILE-NWD-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00117",
+     "T037-00118",
+     "T037-00119"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The task-registration record establishes its configured action, but the supplied records do not establish that the task ran or that the remote script was retrieved or executed.",
+   "The account-creation event uses SubjectLogonId 0x11d4adcd, while the observed RDP session uses 0x3fdf003; the supplied records do not directly correlate the account creation to that RDP session.",
+   "The evidence identifies the remote IP address but does not establish who controlled it or whether it was spoofed or relayed.",
+   "The supplied activity records do not provide a complete process, network, or authentication history for the hosts and accounts."
+  ],
+  "claims_not_established": [
+   "Who operated the RDP session or whether sam.okafor's credentials were compromised.",
+   "Whether the HealthCheck task executed and what the remote script would have done.",
+   "Whether sysmaint was subsequently used, and whether it remains enabled or in the Administrators group.",
+   "Why OpsAgent used svc-render credentials on a workstation, or whether that use was authorized.",
+   "Whether data was accessed, changed, or exfiltrated."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Collect WS-LMARTINS-01 task scheduler operational logs and endpoint process/network telemetry to determine whether HealthCheck ran and whether it contacted 203.0.113.250.",
+   "Obtain the referenced script, if available, and proxy, DNS, firewall, and perimeter records for 203.0.113.250.",
+   "Correlate DC authentication and account-management audit records around 13:41 UTC, including the subject logon session associated with sysmaint's creation.",
+   "Verify sysmaint's current status, group memberships, password and subsequent logons; preserve and examine relevant endpoint and domain-controller evidence.",
+   "Confirm whether the RDP source and OpsAgent use of svc-render were authorized with the responsible administrator and service owner."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 16,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.9
+}

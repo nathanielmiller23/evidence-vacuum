@@ -1,0 +1,97 @@
+{
+ "scenario_id": "T142",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The svc-docsync failures begin at 13:36 UTC and recur at approximately one-minute intervals through at least 13:51 UTC, consistent with the supplied inventory description that the DocSync job re-authenticates each minute.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T142-00001\", \"T142-00002\", \"T142-00004\", \"T142-00007\", \"T142-00011\", \"T142-00013\", \"T142-00016\", \"T142-00019\", \"T142-00023\", \"T142-00026\", \"T142-00031\", \"T142-00035\", \"T142-00038\"]\n    },\n    {\n      \"claim\": \"The authentication failures identify FILE-MAP-01 as the workstation and repeatedly show source IP 10.53.20.20; the FILE-MAP-01 records report LogonType 3 and process C:\\\\Windows\\\\System32\\\\lsass.exe.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T142-00002\", \"T142-00011\", \"T142-00038\"]\n    },\n    {\n      \"claim\": \"The records report failed authentication for svc-docsync, including 4625 SubStatus=0xc000006a and 4776 Status=0xc000006a; 4771 records also report Status=0x18.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T142-00001\", \"T142-00002\", \"T142-00003\", \"T142-00010\", \"T142-00012\", \"T142-00037\", \"T142-00038\"]\n    },\n    {\n      \"claim\": \"The supplied change calendar schedules svc-docsync password rotation at 13:30 UTC, and the supplied service context says the job must then be updated manually. The subsequent repeated failures from the scheduled job's host are consistent with the job continuing to use a stale credential, rather than by themselves indicating malicious activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T142-00002\", \"T142-00004\", \"T142-00011\", \"T142-00019\", \"T142-00031\", \"T142-00038\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records cover this pattern only through 13:51 UTC, not the remainder of the requested 13:20\u201314:20 UTC window.\",\n    \"The records show authentication failures but do not show whether or when the DocSync job was updated or whether a later authentication succeeded.\",\n    \"The authentication records identify lsass.exe, but do not identify the specific DocSync executable, job instance, or person responsible for any configuration change.\"\n  ],\n  \"claims_not_established\": [\n    \"The logs do not establish whether the password rotation was completed at the scheduled time or whether the job was later updated with the new password.\",\n    \"The logs do not establish an attacker, intentional password guessing, compromise, or successful use of svc-docsync.\",\n    \"The logs do not independently map IP address 10.53.20.20 to a host beyond the workstation name reported in the authentication events.\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 6440,
+    "output": 1821
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "The svc-docsync failures begin at 13:36 UTC and recur at approximately one-minute intervals through at least 13:51 UTC, consistent with the supplied inventory description that the DocSync job re-authenticates each minute.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T142-00001",
+     "T142-00002",
+     "T142-00004",
+     "T142-00007",
+     "T142-00011",
+     "T142-00013",
+     "T142-00016",
+     "T142-00019",
+     "T142-00023",
+     "T142-00026",
+     "T142-00031",
+     "T142-00035",
+     "T142-00038"
+    ]
+   },
+   {
+    "claim": "The authentication failures identify FILE-MAP-01 as the workstation and repeatedly show source IP 10.53.20.20; the FILE-MAP-01 records report LogonType 3 and process C:\\Windows\\System32\\lsass.exe.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T142-00002",
+     "T142-00011",
+     "T142-00038"
+    ]
+   },
+   {
+    "claim": "The records report failed authentication for svc-docsync, including 4625 SubStatus=0xc000006a and 4776 Status=0xc000006a; 4771 records also report Status=0x18.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T142-00001",
+     "T142-00002",
+     "T142-00003",
+     "T142-00010",
+     "T142-00012",
+     "T142-00037",
+     "T142-00038"
+    ]
+   },
+   {
+    "claim": "The supplied change calendar schedules svc-docsync password rotation at 13:30 UTC, and the supplied service context says the job must then be updated manually. The subsequent repeated failures from the scheduled job's host are consistent with the job continuing to use a stale credential, rather than by themselves indicating malicious activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T142-00002",
+     "T142-00004",
+     "T142-00011",
+     "T142-00019",
+     "T142-00031",
+     "T142-00038"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records cover this pattern only through 13:51 UTC, not the remainder of the requested 13:20\u201314:20 UTC window.",
+   "The records show authentication failures but do not show whether or when the DocSync job was updated or whether a later authentication succeeded.",
+   "The authentication records identify lsass.exe, but do not identify the specific DocSync executable, job instance, or person responsible for any configuration change."
+  ],
+  "claims_not_established": [
+   "The logs do not establish whether the password rotation was completed at the scheduled time or whether the job was later updated with the new password.",
+   "The logs do not establish an attacker, intentional password guessing, compromise, or successful use of svc-docsync.",
+   "The logs do not independently map IP address 10.53.20.20 to a host beyond the workstation name reported in the authentication events."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 29,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 17.2
+}

@@ -1,0 +1,87 @@
+{
+ "scenario_id": "T279",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:42 UTC, amy.cole ran PowerShell to compress \\\\\\\\FILE-ORC-01\\\\Shared\\\\Clients into C:\\\\Users\\\\amy.cole\\\\AppData\\\\Local\\\\Temp\\\\c.zip; Sysmon records creation of that archive.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T279-00190\", \"T279-00192\"]\n    },\n    {\n      \"claim\": \"At 13:48:11 UTC, WS-ACOLE-01 sent about 51 MB through the proxy tunnel to megadrop-files.com, with only about 8.8 KB in the reverse direction. The destination is not among the approved services listed in the environment context.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T279-00227\", \"T279-00228\"]\n    },\n    {\n      \"claim\": \"The large transfer is attributable to Chrome running as amy.cole on WS-ACOLE-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T279-00229\", \"T279-00230\"]\n    },\n    {\n      \"claim\": \"The close timing between archiving the Clients share and the large outbound transfer to an unapproved file-sharing destination strongly supports suspected data exfiltration.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T279-00190\", \"T279-00192\", \"T279-00227\", \"T279-00228\", \"T279-00229\", \"T279-00230\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The alert describes activity around 13:46 UTC, while the available bulk-transfer records are timestamped 13:48:11 UTC; the records establish a large transfer within the review window, but not an exact 13:46 transfer. (T279-00227, T279-00228)\",\n    \"The proxy record identifies a CONNECT tunnel and byte counts, not the uploaded URL, filename, or payload; Zeek likewise supplies connection-level byte counts. (T279-00227, T279-00228)\",\n    \"The available records do not directly link c.zip to the bytes sent in the later tunnel.\"\n  ],\n  \"claims_not_established\": [\n    \"That c.zip, rather than another file or data, was the payload of the megadrop-files.com transfer. (T279-00192, T279-00227, T279-00228)\",\n    \"The exact contents of the archive or whether the external service received and retained the data.\",\n    \"Whether amy.cole had authorization or a legitimate business reason for accessing or transferring the Clients data.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine WS-ACOLE-01, including c.zip, its contents and metadata, relevant browser history, and file-access records for the Clients share.\",\n    \"Obtain proxy or endpoint telemetry that can identify the uploaded object and confirm the destination-side transfer, and check for related activity by amy.cole.\",\n    \"Verify with the data owner and amy.cole whether the archive or transfer was authorized; consider containment and account-protection steps while investigating.\"\n  ],\n  \"unrelated_findings\": [\n    \"Earlier that day, amy.cole browsed Google Drive through Chrome; these records show browsing, not a large upload, and are separate from the alerted megadrop-files.com transfer. (T279-00009, T279-00010)\",\n    \"VS Code accessed dbeaver.io from WS-ACOLE-01; this is separate web activity and is not evidence for the alerted transfer. (T279-00089, T279-00091, T279-00092, T279-00095)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 61429,
+    "output": 2307
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "At 13:42 UTC, amy.cole ran PowerShell to compress \\\\FILE-ORC-01\\Shared\\Clients into C:\\Users\\amy.cole\\AppData\\Local\\Temp\\c.zip; Sysmon records creation of that archive.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T279-00190",
+     "T279-00192"
+    ]
+   },
+   {
+    "claim": "At 13:48:11 UTC, WS-ACOLE-01 sent about 51 MB through the proxy tunnel to megadrop-files.com, with only about 8.8 KB in the reverse direction. The destination is not among the approved services listed in the environment context.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T279-00227",
+     "T279-00228"
+    ]
+   },
+   {
+    "claim": "The large transfer is attributable to Chrome running as amy.cole on WS-ACOLE-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T279-00229",
+     "T279-00230"
+    ]
+   },
+   {
+    "claim": "The close timing between archiving the Clients share and the large outbound transfer to an unapproved file-sharing destination strongly supports suspected data exfiltration.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T279-00190",
+     "T279-00192",
+     "T279-00227",
+     "T279-00228",
+     "T279-00229",
+     "T279-00230"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The alert describes activity around 13:46 UTC, while the available bulk-transfer records are timestamped 13:48:11 UTC; the records establish a large transfer within the review window, but not an exact 13:46 transfer. (T279-00227, T279-00228)",
+   "The proxy record identifies a CONNECT tunnel and byte counts, not the uploaded URL, filename, or payload; Zeek likewise supplies connection-level byte counts. (T279-00227, T279-00228)",
+   "The available records do not directly link c.zip to the bytes sent in the later tunnel."
+  ],
+  "claims_not_established": [
+   "That c.zip, rather than another file or data, was the payload of the megadrop-files.com transfer. (T279-00192, T279-00227, T279-00228)",
+   "The exact contents of the archive or whether the external service received and retained the data.",
+   "Whether amy.cole had authorization or a legitimate business reason for accessing or transferring the Clients data."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine WS-ACOLE-01, including c.zip, its contents and metadata, relevant browser history, and file-access records for the Clients share.",
+   "Obtain proxy or endpoint telemetry that can identify the uploaded object and confirm the destination-side transfer, and check for related activity by amy.cole.",
+   "Verify with the data owner and amy.cole whether the archive or transfer was authorized; consider containment and account-protection steps while investigating."
+  ],
+  "unrelated_findings": [
+   "Earlier that day, amy.cole browsed Google Drive through Chrome; these records show browsing, not a large upload, and are separate from the alerted megadrop-files.com transfer. (T279-00009, T279-00010)",
+   "VS Code accessed dbeaver.io from WS-ACOLE-01; this is separate web activity and is not evidence for the alerted transfer. (T279-00089, T279-00091, T279-00092, T279-00095)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.6
+}

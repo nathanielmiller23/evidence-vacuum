@@ -1,0 +1,100 @@
+{
+ "scenario_id": "T050",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 3,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:46:51 UTC, FILE-NWD-01 launched C:\\\\Program Files\\\\StratoSafe\\\\stsync.exe as NWD\\\\svc-archive with the Nightly job and ingest.stratosafe-backup.com as its target.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T050-00237\", \"T050-00238\"]\n    },\n    {\n      \"claim\": \"The proxy and network records show a successful connection to ingest.stratosafe-backup.com and approximately 640 MB sent from FILE-NWD-01; the originating process is identified as stsync.exe running as svc-archive.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T050-00244\", \"T050-00245\", \"T050-00246\", \"T050-00247\"]\n    },\n    {\n      \"claim\": \"The executable, account, destination, and transfer size match the supplied inventory description of the approved StratoSafe backup agent, which uploads several hundred MB.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T050-00237\", \"T050-00238\", \"T050-00244\", \"T050-00245\"]\n    },\n    {\n      \"claim\": \"Just before the backup process started, the domain controller recorded a Kerberos service-ticket event for svc-archive from 45.79.19.196; FILE-NWD-01 then logged svc-archive on locally and launched the transfer under that logon.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T050-00223\", \"T050-00224\", \"T050-00237\", \"T050-00238\"]\n    },\n    {\n      \"claim\": \"The records do not establish whether the svc-archive ticket event from 45.79.19.196 is legitimate or connected to the backup execution. Because it concerns the account used for the alerted transfer, the otherwise strongly matching approved-backup evidence is not enough to resolve the alert as benign.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T050-00223\", \"T050-00224\", \"T050-00237\", \"T050-00238\", \"T050-00244\", \"T050-00245\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Winsec and Sysmon collection for WS-NBLAKE-01 was unavailable from 13:30 to 14:10 UTC. FILE-NWD-01 transfer-related records are present; proxy and Zeek collection is reported as available.\",\n    \"The supplied records do not show a definitive link between the svc-archive Kerberos event from 45.79.19.196 and the local service logon or backup process.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the svc-archive authentication event from 45.79.19.196 was authorized, and what system or actor initiated it.\",\n    \"Whether that authentication event supplied credentials or access used in the alerted transfer.\",\n    \"Whether the backup job and the uploaded data were expected and authorized on this specific run, beyond the strong match to the supplied inventory description.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Validate the 45.79.19.196 svc-archive Kerberos event against domain-controller authentication details, ticket issuance records, and the service account's authorized source systems.\",\n    \"Obtain StratoSafe job and server-side receipt logs for the Nightly run, including the uploaded objects and job authorization.\",\n    \"Correlate FILE-NWD-01 service-logon and process-execution telemetry with the ticket event to determine whether they share a session or causal chain.\"\n  ],\n  \"unrelated_findings\": [\n    \"The Meridian integration-worker Java process on FILE-NWD-01 contacted receiver.citrix.com; the supplied inventory does not list this service as approved. T050-00165, T050-00249, T050-00250, T050-00251.\",\n    \"Help-desk user nora.blake initiated an RDP session to FILE-NWD-01 after the alerted transfer. The environment context says remote administration is only done from WS-SOKAFOR-01. This is outside the alerted transfer and should be reviewed separately. T050-00441, T050-00442, T050-00444, T050-00448, T050-00459.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 73275,
+    "output": 2530
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "At 13:46:51 UTC, FILE-NWD-01 launched C:\\Program Files\\StratoSafe\\stsync.exe as NWD\\svc-archive with the Nightly job and ingest.stratosafe-backup.com as its target.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T050-00237",
+     "T050-00238"
+    ]
+   },
+   {
+    "claim": "The proxy and network records show a successful connection to ingest.stratosafe-backup.com and approximately 640 MB sent from FILE-NWD-01; the originating process is identified as stsync.exe running as svc-archive.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T050-00244",
+     "T050-00245",
+     "T050-00246",
+     "T050-00247"
+    ]
+   },
+   {
+    "claim": "The executable, account, destination, and transfer size match the supplied inventory description of the approved StratoSafe backup agent, which uploads several hundred MB.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T050-00237",
+     "T050-00238",
+     "T050-00244",
+     "T050-00245"
+    ]
+   },
+   {
+    "claim": "Just before the backup process started, the domain controller recorded a Kerberos service-ticket event for svc-archive from 45.79.19.196; FILE-NWD-01 then logged svc-archive on locally and launched the transfer under that logon.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T050-00223",
+     "T050-00224",
+     "T050-00237",
+     "T050-00238"
+    ]
+   },
+   {
+    "claim": "The records do not establish whether the svc-archive ticket event from 45.79.19.196 is legitimate or connected to the backup execution. Because it concerns the account used for the alerted transfer, the otherwise strongly matching approved-backup evidence is not enough to resolve the alert as benign.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T050-00223",
+     "T050-00224",
+     "T050-00237",
+     "T050-00238",
+     "T050-00244",
+     "T050-00245"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Winsec and Sysmon collection for WS-NBLAKE-01 was unavailable from 13:30 to 14:10 UTC. FILE-NWD-01 transfer-related records are present; proxy and Zeek collection is reported as available.",
+   "The supplied records do not show a definitive link between the svc-archive Kerberos event from 45.79.19.196 and the local service logon or backup process."
+  ],
+  "claims_not_established": [
+   "Whether the svc-archive authentication event from 45.79.19.196 was authorized, and what system or actor initiated it.",
+   "Whether that authentication event supplied credentials or access used in the alerted transfer.",
+   "Whether the backup job and the uploaded data were expected and authorized on this specific run, beyond the strong match to the supplied inventory description."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Validate the 45.79.19.196 svc-archive Kerberos event against domain-controller authentication details, ticket issuance records, and the service account's authorized source systems.",
+   "Obtain StratoSafe job and server-side receipt logs for the Nightly run, including the uploaded objects and job authorization.",
+   "Correlate FILE-NWD-01 service-logon and process-execution telemetry with the ticket event to determine whether they share a session or causal chain."
+  ],
+  "unrelated_findings": [
+   "The Meridian integration-worker Java process on FILE-NWD-01 contacted receiver.citrix.com; the supplied inventory does not list this service as approved. T050-00165, T050-00249, T050-00250, T050-00251.",
+   "Help-desk user nora.blake initiated an RDP session to FILE-NWD-01 after the alerted transfer. The environment context says remote administration is only done from WS-SOKAFOR-01. This is outside the alerted transfer and should be reviewed separately. T050-00441, T050-00442, T050-00444, T050-00448, T050-00459."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 20,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 28.0
+}

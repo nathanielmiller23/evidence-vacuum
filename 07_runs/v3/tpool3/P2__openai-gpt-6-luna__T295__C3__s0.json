@@ -1,0 +1,114 @@
+{
+ "scenario_id": "T295",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.86,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The GradeBook Pro-named updater ran from Raul Diaz's user AppData directory, rather than the inventory-listed C:\\\\Program Files\\\\GradeBookPro path.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T295-00136\", \"T295-00137\"]\n    },\n    {\n      \"claim\": \"That process connected through the explicit proxy to update.gradebookpro.co, while the inventory identifies update.gradebookpro.com as the approved updater endpoint. The .co hostname is a material mismatch with the approved domain.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T295-00138\", \"T295-00139\", \"T295-00141\"]\n    },\n    {\n      \"claim\": \"The .co endpoint was contacted repeatedly at roughly five-minute intervals: successful proxy tunnels are recorded at 13:43:25, 13:48:50, 13:54:01, 13:58:42, 14:03:12, and 14:08:35 UTC. Sysmon attributes the connections to the same updater process, PID 6124.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T295-00172\", \"T295-00174\", \"T295-00208\", \"T295-00211\", \"T295-00215\", \"T295-00217\", \"T295-00239\", \"T295-00241\", \"T295-00251\", \"T295-00250\", \"T295-00296\", \"T295-00298\"]\n    },\n    {\n      \"claim\": \"The first observed connection to update.gradebookpro.co returned proxy status 502; later connections to that same hostname returned status 200.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T295-00138\", \"T295-00172\", \"T295-00208\", \"T295-00215\", \"T295-00239\", \"T295-00251\", \"T295-00296\"]\n    },\n    {\n      \"claim\": \"The nonstandard executable location combined with repeated connections to a lookalike, non-inventory-listed hostname supports treating the alerted activity as malicious, rather than as the approved GradeBook Pro updater behavior.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T295-00136\", \"T295-00138\", \"T295-00172\", \"T295-00208\", \"T295-00215\", \"T295-00239\", \"T295-00251\", \"T295-00296\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Winsec collection on DC-ORC-01 was unavailable from 13:30 to 14:10 UTC. Sysmon, proxy, Zeek connection, and Zeek DNS collection are reported as available during the window.\",\n    \"The proxy records show HTTPS CONNECT tunnels and byte counts, but do not establish the encrypted application content or downloaded payload.\",\n    \"The supplied evidence does not include a hash, signature verification, or reputation results for the AppData updater executable.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish who created or installed the AppData executable, or whether it is a malicious replacement, unauthorized copy, or other software.\",\n    \"The evidence does not establish the ownership or intent of update.gradebookpro.co, or what content was exchanged in the successful HTTPS tunnels.\",\n    \"The observed byte counts alone do not establish that sensitive data was exfiltrated.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze the updater executable from C:\\\\Users\\\\raul.diaz\\\\AppData\\\\Local\\\\GradeBookPro\\\\, including hash, signature, timestamps, and comparison with the approved GradeBook Pro binary.\",\n    \"Obtain DNS, certificate, and domain-registration/reputation information for update.gradebookpro.co and compare it with the approved update.gradebookpro.com endpoint.\",\n    \"Review proxy TLS inspection or endpoint network/content telemetry, if available, to determine what the successful tunnels transferred.\",\n    \"Investigate the executable's creation and execution history and confirm with the software owner whether this AppData installation is authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"Cisco AnyConnect VPN UI was launched by Raul Diaz on WS-RDIAZ-01, although the environment context says there is no VPN. The supplied records show process launch and a signed Cisco module, but do not show a VPN connection; track separately. (T295-00318, T295-00319, T295-00320)\",\n    \"Raul Diaz's browser accessed Slack during the review window; Slack is not listed among the approved services in the supplied inventory. This is separate from the alerted updater activity. (T295-00333, T295-00338, T295-00339)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 52396,
+    "output": 2958
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.86,
+  "supporting_observations": [
+   {
+    "claim": "The GradeBook Pro-named updater ran from Raul Diaz's user AppData directory, rather than the inventory-listed C:\\Program Files\\GradeBookPro path.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T295-00136",
+     "T295-00137"
+    ]
+   },
+   {
+    "claim": "That process connected through the explicit proxy to update.gradebookpro.co, while the inventory identifies update.gradebookpro.com as the approved updater endpoint. The .co hostname is a material mismatch with the approved domain.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T295-00138",
+     "T295-00139",
+     "T295-00141"
+    ]
+   },
+   {
+    "claim": "The .co endpoint was contacted repeatedly at roughly five-minute intervals: successful proxy tunnels are recorded at 13:43:25, 13:48:50, 13:54:01, 13:58:42, 14:03:12, and 14:08:35 UTC. Sysmon attributes the connections to the same updater process, PID 6124.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T295-00172",
+     "T295-00174",
+     "T295-00208",
+     "T295-00211",
+     "T295-00215",
+     "T295-00217",
+     "T295-00239",
+     "T295-00241",
+     "T295-00251",
+     "T295-00250",
+     "T295-00296",
+     "T295-00298"
+    ]
+   },
+   {
+    "claim": "The first observed connection to update.gradebookpro.co returned proxy status 502; later connections to that same hostname returned status 200.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T295-00138",
+     "T295-00172",
+     "T295-00208",
+     "T295-00215",
+     "T295-00239",
+     "T295-00251",
+     "T295-00296"
+    ]
+   },
+   {
+    "claim": "The nonstandard executable location combined with repeated connections to a lookalike, non-inventory-listed hostname supports treating the alerted activity as malicious, rather than as the approved GradeBook Pro updater behavior.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T295-00136",
+     "T295-00138",
+     "T295-00172",
+     "T295-00208",
+     "T295-00215",
+     "T295-00239",
+     "T295-00251",
+     "T295-00296"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Winsec collection on DC-ORC-01 was unavailable from 13:30 to 14:10 UTC. Sysmon, proxy, Zeek connection, and Zeek DNS collection are reported as available during the window.",
+   "The proxy records show HTTPS CONNECT tunnels and byte counts, but do not establish the encrypted application content or downloaded payload.",
+   "The supplied evidence does not include a hash, signature verification, or reputation results for the AppData updater executable."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish who created or installed the AppData executable, or whether it is a malicious replacement, unauthorized copy, or other software.",
+   "The evidence does not establish the ownership or intent of update.gradebookpro.co, or what content was exchanged in the successful HTTPS tunnels.",
+   "The observed byte counts alone do not establish that sensitive data was exfiltrated."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze the updater executable from C:\\Users\\raul.diaz\\AppData\\Local\\GradeBookPro\\, including hash, signature, timestamps, and comparison with the approved GradeBook Pro binary.",
+   "Obtain DNS, certificate, and domain-registration/reputation information for update.gradebookpro.co and compare it with the approved update.gradebookpro.com endpoint.",
+   "Review proxy TLS inspection or endpoint network/content telemetry, if available, to determine what the successful tunnels transferred.",
+   "Investigate the executable's creation and execution history and confirm with the software owner whether this AppData installation is authorized."
+  ],
+  "unrelated_findings": [
+   "Cisco AnyConnect VPN UI was launched by Raul Diaz on WS-RDIAZ-01, although the environment context says there is no VPN. The supplied records show process launch and a signed Cisco module, but do not show a VPN connection; track separately. (T295-00318, T295-00319, T295-00320)",
+   "Raul Diaz's browser accessed Slack during the review window; Slack is not listed among the approved services in the supplied inventory. This is separate from the alerted updater activity. (T295-00333, T295-00338, T295-00339)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 32,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 29.7
+}

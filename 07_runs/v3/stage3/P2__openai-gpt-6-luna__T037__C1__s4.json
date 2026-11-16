@@ -1,0 +1,83 @@
+{
+ "scenario_id": "T037",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 4,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded creation of the alerted account sysmaint by sam.okafor at 13:41:49 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T037-00109\"]\n    },\n    {\n      \"claim\": \"Two seconds later, sysmaint was added to the Administrators group. This conflicts with the stated practice that temporary accounts are named ext.<name>, added only to Freelancers, and never receive administrator rights.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T037-00110\"]\n    },\n    {\n      \"claim\": \"Shortly before the account changes, sam.okafor logged on to WS-LMARTINS-01 over RDP from 203.0.113.250; the environment says remote administration is only done from WS-SOKAFOR-01 and there is no VPN.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T037-00073\", \"T037-00074\", \"T037-00075\"]\n    },\n    {\n      \"claim\": \"In sam.okafor's session on WS-LMARTINS-01, a scheduled task named HealthCheck was created with hidden PowerShell and an encoded command that decodes to retrieving and executing a script from http://203.0.113.250/a.ps1. The URL host matches the RDP source address; the task's creation is suspicious, though these records do not show it executing.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T037-00075\", \"T037-00111\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available records show the task being registered, but do not establish whether it ran or what the referenced script contained.\",\n    \"The records identify the account-change subject as sam.okafor, but do not independently establish who was operating that account at the time.\",\n    \"The records do not establish the source or method used to create the account and add it to Administrators beyond the recorded subject identity.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether sam.okafor personally initiated the RDP session and account changes, or the account was used by another party.\",\n    \"Whether the sysmaint account was subsequently used, and for what purpose.\",\n    \"Whether the HealthCheck task executed successfully or caused further activity.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate the DC account-change events with domain-controller logon and directory-service audit records to identify the originating session and client.\",\n    \"Verify with sam.okafor whether the RDP session, sysmaint account, administrator-group addition, and HealthCheck task were authorized.\",\n    \"Collect task execution history, PowerShell and process telemetry, and network or proxy records for access to 203.0.113.250 and the referenced script.\",\n    \"Review authentication and activity for sysmaint after creation; preserve the account and task evidence before containment.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox is present and running on WS-LMARTINS-01, although Dropbox is not among the listed approved software or services. Investigate separately; this does not determine the sysmaint alert. (T037-00048, T037-00049, T037-00050, T037-00190, T037-00191)\",\n    \"Meridian OpsAgent ran on WS-LMARTINS-01 and used explicit credentials for svc-render to access the proxy. The inventory describes svc-render as a RenderQueue account on FILE-NWD-01, so investigate this separately; the records do not establish a connection to the alerted account changes. (T037-00117, T037-00119)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 29868,
+    "output": 2190
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded creation of the alerted account sysmaint by sam.okafor at 13:41:49 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00109"
+    ]
+   },
+   {
+    "claim": "Two seconds later, sysmaint was added to the Administrators group. This conflicts with the stated practice that temporary accounts are named ext.<name>, added only to Freelancers, and never receive administrator rights.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00110"
+    ]
+   },
+   {
+    "claim": "Shortly before the account changes, sam.okafor logged on to WS-LMARTINS-01 over RDP from 203.0.113.250; the environment says remote administration is only done from WS-SOKAFOR-01 and there is no VPN.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00073",
+     "T037-00074",
+     "T037-00075"
+    ]
+   },
+   {
+    "claim": "In sam.okafor's session on WS-LMARTINS-01, a scheduled task named HealthCheck was created with hidden PowerShell and an encoded command that decodes to retrieving and executing a script from http://203.0.113.250/a.ps1. The URL host matches the RDP source address; the task's creation is suspicious, though these records do not show it executing.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T037-00075",
+     "T037-00111"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available records show the task being registered, but do not establish whether it ran or what the referenced script contained.",
+   "The records identify the account-change subject as sam.okafor, but do not independently establish who was operating that account at the time.",
+   "The records do not establish the source or method used to create the account and add it to Administrators beyond the recorded subject identity."
+  ],
+  "claims_not_established": [
+   "Whether sam.okafor personally initiated the RDP session and account changes, or the account was used by another party.",
+   "Whether the sysmaint account was subsequently used, and for what purpose.",
+   "Whether the HealthCheck task executed successfully or caused further activity."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate the DC account-change events with domain-controller logon and directory-service audit records to identify the originating session and client.",
+   "Verify with sam.okafor whether the RDP session, sysmaint account, administrator-group addition, and HealthCheck task were authorized.",
+   "Collect task execution history, PowerShell and process telemetry, and network or proxy records for access to 203.0.113.250 and the referenced script.",
+   "Review authentication and activity for sysmaint after creation; preserve the account and task evidence before containment."
+  ],
+  "unrelated_findings": [
+   "Dropbox is present and running on WS-LMARTINS-01, although Dropbox is not among the listed approved software or services. Investigate separately; this does not determine the sysmaint alert. (T037-00048, T037-00049, T037-00050, T037-00190, T037-00191)",
+   "Meridian OpsAgent ran on WS-LMARTINS-01 and used explicit credentials for svc-render to access the proxy. The inventory describes svc-render as a RenderQueue account on FILE-NWD-01, so investigate this separately; the records do not establish a connection to the alerted account changes. (T037-00117, T037-00119)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 7,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.8
+}

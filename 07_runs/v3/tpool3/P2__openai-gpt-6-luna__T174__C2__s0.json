@@ -1,0 +1,92 @@
+{
+ "scenario_id": "T174",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.76,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The only PowerShell process creation shown on WS-JFROST-01 in the provided records is at 13:42:53 UTC, running as ali.hassan with the exact approved command to execute \\\\\\\\FILE-MAP-01\\\\IT\\\\Patch-Workstations.ps1. The matching process-creation records identify the same logon ID.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T174-00217\", \"T174-00218\"]\n    },\n    {\n      \"claim\": \"A network logon for ali.hassan from WS-AHASSAN-01 to WS-JFROST-01 occurred shortly before that PowerShell process and used the same logon ID as the process. This is consistent with the stated remote-patching practice, though it does not establish who initiated the session.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T174-00216\", \"T174-00217\", \"T174-00218\"]\n    },\n    {\n      \"claim\": \"The PowerShell process launched wusa.exe to install a Windows 11 KB update, which is consistent with workstation patching.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T174-00223\", \"T174-00224\"]\n    },\n    {\n      \"claim\": \"Explorer recorded UserAssist registry updates by julia.frost for a ROT13-encoded path that decodes to powershell.exe, at 13:32:27 and 14:12:59 UTC. These records do not show the associated process command line or establish that a Julia-launched PowerShell window appeared around 13:40.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T174-00079\", \"T174-00515\"]\n    },\n    {\n      \"claim\": \"The reported time is approximate, and the observed authorized patch-script PowerShell process began at 13:42:53 UTC; the available records do not directly identify a PowerShell process at 13:40.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T174-00217\", \"T174-00218\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied process records do not establish whether the PowerShell window reported by Julia was the 13:42:53 patch-script process or another execution.\",\n    \"The records show the patch script path and its child installer, but not the script contents, integrity, or complete execution output.\",\n    \"The UserAssist entries record a PowerShell path but do not provide the launched process's command line or explain what it did.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether Julia's reported window corresponds to the PowerShell process running as ali.hassan at 13:42:53 UTC.\",\n    \"Whether Julia launched PowerShell herself around 13:40, or what command or script any such execution used.\",\n    \"Whether the patch session was authorized and initiated by ali.hassan, beyond its consistency with the stated practice and account/logon records.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"PowerShell operational and script-block logs, including event IDs 4103 and 4104, for WS-JFROST-01 around 13:20\u201314:20 UTC.\",\n    \"Endpoint process telemetry or EDR records that can identify any PowerShell process not represented in the supplied process-creation records.\",\n    \"The patch script contents and hash, plus WS-AHASSAN-01 remote-administration or orchestration logs showing who initiated the session.\"\n  ],\n  \"unrelated_findings\": [\n    \"A Dropbox updater process ran on WS-JFROST-01, although Dropbox or other file-sharing services are not approved in the supplied inventory. These records establish updater execution, not Dropbox file-sharing activity; handle separately. (T174-00226, T174-00227, T174-00308, T174-00309)\",\n    \"PROXY-MAP-01's address, 10.53.20.30, made a short RDP connection to WS-JFROST-01 and later connection attempts to ports 443 and 22. The supplied records do not establish an authenticated remote session or link these attempts to the alerted PowerShell activity; handle separately. (T174-00074, T174-00075, T174-00076, T174-00077, T174-00078)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 76489,
+    "output": 4094
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.76,
+  "supporting_observations": [
+   {
+    "claim": "The only PowerShell process creation shown on WS-JFROST-01 in the provided records is at 13:42:53 UTC, running as ali.hassan with the exact approved command to execute \\\\FILE-MAP-01\\IT\\Patch-Workstations.ps1. The matching process-creation records identify the same logon ID.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T174-00217",
+     "T174-00218"
+    ]
+   },
+   {
+    "claim": "A network logon for ali.hassan from WS-AHASSAN-01 to WS-JFROST-01 occurred shortly before that PowerShell process and used the same logon ID as the process. This is consistent with the stated remote-patching practice, though it does not establish who initiated the session.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T174-00216",
+     "T174-00217",
+     "T174-00218"
+    ]
+   },
+   {
+    "claim": "The PowerShell process launched wusa.exe to install a Windows 11 KB update, which is consistent with workstation patching.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T174-00223",
+     "T174-00224"
+    ]
+   },
+   {
+    "claim": "Explorer recorded UserAssist registry updates by julia.frost for a ROT13-encoded path that decodes to powershell.exe, at 13:32:27 and 14:12:59 UTC. These records do not show the associated process command line or establish that a Julia-launched PowerShell window appeared around 13:40.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T174-00079",
+     "T174-00515"
+    ]
+   },
+   {
+    "claim": "The reported time is approximate, and the observed authorized patch-script PowerShell process began at 13:42:53 UTC; the available records do not directly identify a PowerShell process at 13:40.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T174-00217",
+     "T174-00218"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied process records do not establish whether the PowerShell window reported by Julia was the 13:42:53 patch-script process or another execution.",
+   "The records show the patch script path and its child installer, but not the script contents, integrity, or complete execution output.",
+   "The UserAssist entries record a PowerShell path but do not provide the launched process's command line or explain what it did."
+  ],
+  "claims_not_established": [
+   "Whether Julia's reported window corresponds to the PowerShell process running as ali.hassan at 13:42:53 UTC.",
+   "Whether Julia launched PowerShell herself around 13:40, or what command or script any such execution used.",
+   "Whether the patch session was authorized and initiated by ali.hassan, beyond its consistency with the stated practice and account/logon records."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "PowerShell operational and script-block logs, including event IDs 4103 and 4104, for WS-JFROST-01 around 13:20\u201314:20 UTC.",
+   "Endpoint process telemetry or EDR records that can identify any PowerShell process not represented in the supplied process-creation records.",
+   "The patch script contents and hash, plus WS-AHASSAN-01 remote-administration or orchestration logs showing who initiated the session."
+  ],
+  "unrelated_findings": [
+   "A Dropbox updater process ran on WS-JFROST-01, although Dropbox or other file-sharing services are not approved in the supplied inventory. These records establish updater execution, not Dropbox file-sharing activity; handle separately. (T174-00226, T174-00227, T174-00308, T174-00309)",
+   "PROXY-MAP-01's address, 10.53.20.30, made a short RDP connection to WS-JFROST-01 and later connection attempts to ports 443 and 22. The supplied records do not establish an authenticated remote session or link these attempts to the alerted PowerShell activity; handle separately. (T174-00074, T174-00075, T174-00076, T174-00077, T174-00078)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 44.9
+}

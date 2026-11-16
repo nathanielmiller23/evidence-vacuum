@@ -1,0 +1,83 @@
+{
+ "scenario_id": "T112",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alert description reports repeated failed domain logons involving svc-routes around 13:40 UTC on 2026-09-15, but no underlying authentication-event records or event IDs are provided.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"provided_alert_description\"\n      ]\n    },\n    {\n      \"claim\": \"Windows security and Sysmon collection were unavailable on both DC-COP-01 and FILE-COP-01 for the full review window, preventing direct review of authentication and host activity on those systems.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"sensor_coverage:winsec:DC-COP-01:2026-09-15T13:20:00Z/14:20:00Z\",\n        \"sensor_coverage:winsec:FILE-COP-01:2026-09-15T13:20:00Z/14:20:00Z\",\n        \"sensor_coverage:sysmon:DC-COP-01:2026-09-15T13:20:00Z/14:20:00Z\",\n        \"sensor_coverage:sysmon:FILE-COP-01:2026-09-15T13:20:00Z/14:20:00Z\"\n      ]\n    },\n    {\n      \"claim\": \"The provided context says svc-routes was scheduled for a password rotation at 13:30 UTC and re-authenticates every minute; this could explain failures after rotation, but the available evidence does not establish that explanation occurred.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"provided_environment_context:change_calendar\",\n        \"provided_environment_context:service_accounts\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"DC-COP-01 and FILE-COP-01 Windows security and Sysmon logs were not collected during the entire review window because of a collection outage.\",\n    \"Although proxy and Zeek sensors are listed as operational, no corresponding event records for the review window were supplied.\",\n    \"The alert is presented as a summary and has no underlying authentication-event records or event IDs in the supplied evidence.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the reported failed logons occurred as described, how many occurred, or their precise timestamps and status codes.\",\n    \"The source host, source address, authentication protocol, or logon type for the reported attempts.\",\n    \"Whether the failures resulted from the scheduled svc-routes password rotation or an unauthorized actor.\",\n    \"Whether svc-routes was successfully updated and whether any successful logons followed the failures.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover or obtain domain-controller authentication records for 2026-09-15 13:20\u201314:20 UTC, including relevant failed and successful logon events and their source, status, and logon-type fields.\",\n    \"Obtain FILE-COP-01 security and application/task logs for the same window to determine RouteSync execution and authentication outcomes.\",\n    \"Obtain the password-rotation and RouteSync update records to verify when the password changed and when the job configuration was updated.\",\n    \"Review any available proxy and Zeek event records for the window if they may identify activity associated with the reported attempts.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 1656,
+    "output": 1688
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "The alert description reports repeated failed domain logons involving svc-routes around 13:40 UTC on 2026-09-15, but no underlying authentication-event records or event IDs are provided.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "provided_alert_description"
+    ]
+   },
+   {
+    "claim": "Windows security and Sysmon collection were unavailable on both DC-COP-01 and FILE-COP-01 for the full review window, preventing direct review of authentication and host activity on those systems.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "sensor_coverage:winsec:DC-COP-01:2026-09-15T13:20:00Z/14:20:00Z",
+     "sensor_coverage:winsec:FILE-COP-01:2026-09-15T13:20:00Z/14:20:00Z",
+     "sensor_coverage:sysmon:DC-COP-01:2026-09-15T13:20:00Z/14:20:00Z",
+     "sensor_coverage:sysmon:FILE-COP-01:2026-09-15T13:20:00Z/14:20:00Z"
+    ]
+   },
+   {
+    "claim": "The provided context says svc-routes was scheduled for a password rotation at 13:30 UTC and re-authenticates every minute; this could explain failures after rotation, but the available evidence does not establish that explanation occurred.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "provided_environment_context:change_calendar",
+     "provided_environment_context:service_accounts"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "DC-COP-01 and FILE-COP-01 Windows security and Sysmon logs were not collected during the entire review window because of a collection outage.",
+   "Although proxy and Zeek sensors are listed as operational, no corresponding event records for the review window were supplied.",
+   "The alert is presented as a summary and has no underlying authentication-event records or event IDs in the supplied evidence."
+  ],
+  "claims_not_established": [
+   "Whether the reported failed logons occurred as described, how many occurred, or their precise timestamps and status codes.",
+   "The source host, source address, authentication protocol, or logon type for the reported attempts.",
+   "Whether the failures resulted from the scheduled svc-routes password rotation or an unauthorized actor.",
+   "Whether svc-routes was successfully updated and whether any successful logons followed the failures."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover or obtain domain-controller authentication records for 2026-09-15 13:20\u201314:20 UTC, including relevant failed and successful logon events and their source, status, and logon-type fields.",
+   "Obtain FILE-COP-01 security and application/task logs for the same window to determine RouteSync execution and authentication outcomes.",
+   "Obtain the password-rotation and RouteSync update records to verify when the password changed and when the job configuration was updated.",
+   "Review any available proxy and Zeek event records for the window if they may identify activity associated with the reported attempts."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 7,
+  "n_missing": 7,
+  "missing": [
+   "provided_alert_description",
+   "sensor_coverage:winsec:DC-COP-01:2026-09-15T13:20:00Z/14:20:00Z",
+   "sensor_coverage:winsec:FILE-COP-01:2026-09-15T13:20:00Z/14:20:00Z",
+   "sensor_coverage:sysmon:DC-COP-01:2026-09-15T13:20:00Z/14:20:00Z",
+   "sensor_coverage:sysmon:FILE-COP-01:2026-09-15T13:20:00Z/14:20:00Z",
+   "provided_environment_context:change_calendar",
+   "provided_environment_context:service_accounts"
+  ]
+ },
+ "duration_s": 26.3
+}

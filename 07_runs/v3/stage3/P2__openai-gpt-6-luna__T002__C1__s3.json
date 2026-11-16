@@ -1,0 +1,81 @@
+{
+ "scenario_id": "T002",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 3,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.86,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The failed svc-claimsync network logons recur at roughly one-minute intervals from FILE-HD-01, with WorkstationName=FILE-HD-01, source IP 10.30.20.20, and the same LSASS process. Examples span 13:31 through 13:46 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T002-00001\", \"T002-00003\", \"T002-00015\", \"T002-00020\", \"T002-00028\", \"T002-00035\"]\n    },\n    {\n      \"claim\": \"The failures report an incorrect password: the FILE-HD-01 4625 records show SubStatus=0xc000006a, while corresponding domain-controller records show bad-preauthentication status 0x18 or bad-password status 0xc000006a.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T002-00001\", \"T002-00002\", \"T002-00010\", \"T002-00020\", \"T002-00021\", \"T002-00022\"]\n    },\n    {\n      \"claim\": \"The observed cadence and source are consistent with the inventory-described ClaimSync job re-authenticating each minute on FILE-HD-01 and the scheduled 13:30 UTC password rotation leaving the job with a stale password. The records do not, by themselves, establish malicious activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T002-00001\", \"T002-00003\", \"T002-00015\", \"T002-00020\", \"T002-00023\", \"T002-00028\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records end at 13:46 UTC, so they do not cover the remainder of the requested 13:20\u201314:20 UTC window.\",\n    \"The supplied records do not show the password rotation, the manual ClaimSync job update, or the job's configuration and execution logs.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the ClaimSync job was updated with the rotated password, or whether its stale credential fully explains the failures.\",\n    \"Whether any svc-claimsync authentication succeeded during the remainder of the requested window.\",\n    \"Whether the separate explicit-credentials event on WS-LPARK-01 is connected to the FILE-HD-01 failure sequence.\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [],\n  \"unrelated_findings\": [\n    \"Separate review: WS-LPARK-01 recorded a SYSTEM-process explicit-credentials event using svc-claimsync to target PROXY-HD-01, with process C:\\\\Program Files\\\\Commvault\\\\ContentStore\\\\Base\\\\GxCVD.exe. The supplied context does not establish a connection to the FILE-HD-01 failed-logon sequence; do not use this event alone to determine this alert. (T002-00019)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 6360,
+    "output": 2530
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.86,
+  "supporting_observations": [
+   {
+    "claim": "The failed svc-claimsync network logons recur at roughly one-minute intervals from FILE-HD-01, with WorkstationName=FILE-HD-01, source IP 10.30.20.20, and the same LSASS process. Examples span 13:31 through 13:46 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T002-00001",
+     "T002-00003",
+     "T002-00015",
+     "T002-00020",
+     "T002-00028",
+     "T002-00035"
+    ]
+   },
+   {
+    "claim": "The failures report an incorrect password: the FILE-HD-01 4625 records show SubStatus=0xc000006a, while corresponding domain-controller records show bad-preauthentication status 0x18 or bad-password status 0xc000006a.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T002-00001",
+     "T002-00002",
+     "T002-00010",
+     "T002-00020",
+     "T002-00021",
+     "T002-00022"
+    ]
+   },
+   {
+    "claim": "The observed cadence and source are consistent with the inventory-described ClaimSync job re-authenticating each minute on FILE-HD-01 and the scheduled 13:30 UTC password rotation leaving the job with a stale password. The records do not, by themselves, establish malicious activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T002-00001",
+     "T002-00003",
+     "T002-00015",
+     "T002-00020",
+     "T002-00023",
+     "T002-00028"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records end at 13:46 UTC, so they do not cover the remainder of the requested 13:20\u201314:20 UTC window.",
+   "The supplied records do not show the password rotation, the manual ClaimSync job update, or the job's configuration and execution logs."
+  ],
+  "claims_not_established": [
+   "Whether the ClaimSync job was updated with the rotated password, or whether its stale credential fully explains the failures.",
+   "Whether any svc-claimsync authentication succeeded during the remainder of the requested window.",
+   "Whether the separate explicit-credentials event on WS-LPARK-01 is connected to the FILE-HD-01 failure sequence."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [],
+  "unrelated_findings": [
+   "Separate review: WS-LPARK-01 recorded a SYSTEM-process explicit-credentials event using svc-claimsync to target PROXY-HD-01, with process C:\\Program Files\\Commvault\\ContentStore\\Base\\GxCVD.exe. The supplied context does not establish a connection to the FILE-HD-01 failed-logon sequence; do not use this event alone to determine this alert. (T002-00019)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 18,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 27.5
+}

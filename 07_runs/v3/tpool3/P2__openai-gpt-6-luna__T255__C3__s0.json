@@ -1,0 +1,107 @@
+{
+ "scenario_id": "T255",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "error": "APIConnectionError: Connection error."
+  },
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted HTTPS attempts recur at roughly five-minute intervals: proxy records show connections to update.ledgerlink.co at 13:39:09, 13:43:56, 13:49:21, 13:53:45, 13:59:21, 14:04:09, and 14:08:56 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T255-00084\", \"T255-00149\", \"T255-00175\", \"T255-00190\", \"T255-00202\", \"T255-00226\", \"T255-00284\"]\n    },\n    {\n      \"claim\": \"Sysmon attributes the outbound proxy connections to ledgerlinkupd.exe running from max.fischer's AppData\\\\Local\\\\LedgerLink directory; the process was launched at 13:39:07 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T255-00082\", \"T255-00085\", \"T255-00087\", \"T255-00153\", \"T255-00154\", \"T255-00176\", \"T255-00177\", \"T255-00227\", \"T255-00229\", \"T255-00285\", \"T255-00286\"]\n    },\n    {\n      \"claim\": \"The observed hostname is update.ledgerlink.co, whereas the supplied inventory identifies update.ledgerlink.com as the approved LedgerLink update host; the observed executable is in a user AppData location, whereas the inventory gives a Program Files location.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T255-00082\", \"T255-00084\", \"T255-00149\", \"T255-00202\", \"T255-00226\"]\n    },\n    {\n      \"claim\": \"Some attempts received proxy gateway errors (502 and 503), but attempts to the same hostname continued on the roughly five-minute pattern.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T255-00190\", \"T255-00202\", \"T255-00226\", \"T255-00284\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied collection-status information reports a winsec collection outage on DC-SUN-01 from 13:25 to 14:10 UTC; the available evidence therefore lacks that host's winsec telemetry during much of the review window.\",\n    \"The proxy records establish HTTPS CONNECT attempts and byte counts, but do not establish the content delivered in those tunnels or the remote server's identity.\"\n  ],\n  \"claims_not_established\": [\n    \"The file's hash, signature, provenance, and contents are not established by these records.\",\n    \"The records do not establish whether any payload was downloaded or executed, or whether the activity caused compromise.\",\n    \"The records do not establish whether the .co hostname is operated by or authorized by LedgerLink.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and validate the ledgerlinkupd.exe file from the recorded AppData path, including hash, signature, origin, and comparison with the approved Program Files installation.\",\n    \"Confirm with LedgerLink and the organization's software owner whether update.ledgerlink.co is authorized, and obtain proxy/TLS or destination-resolution evidence identifying the remote service.\",\n    \"Review the workstation for updater persistence, downloaded files, and subsequent execution, and determine whether the user or another process installed or replaced the executable.\"\n  ],\n  \"unrelated_findings\": [\n    \"Firefox was launched to files.slack.com and the proxy recorded access; Slack file sharing is not approved in the supplied environment context. Separate ticket; not used to assess the alerted connections. (T255-00124, T255-00130)\",\n    \"Google Drive File Stream was launched, and a proxy request used a GoogleDriveFS user agent; Google Drive is not among the approved cloud-storage services in the supplied context. Separate ticket; not used to assess the alerted connections. (T255-00134, T255-00179)\",\n    \"Dropbox.exe was launched on WS-MFISCHER-01; Dropbox is not among the approved cloud-storage services in the supplied context. The cited records do not show a Dropbox network connection. Separate ticket. (T255-00409, T255-00410)\",\n    \"A SYSTEM PowerShell endpoint-inventory script was run, followed by an explicit-credentials event targeting svc-ledger at PROXY-SUN-01; these records do not establish successful authentication or a connection to the alerted updater activity. Separate ticket. (T255-00164, T255-00166)\",\n    \"Cisco AnyConnect's UI was launched, although the supplied context says there is no VPN; the cited records do not establish a VPN connection. Separate ticket. (T255-00365, T255-00366, T255-00367)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 62442,
+    "output": 3080
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "The alerted HTTPS attempts recur at roughly five-minute intervals: proxy records show connections to update.ledgerlink.co at 13:39:09, 13:43:56, 13:49:21, 13:53:45, 13:59:21, 14:04:09, and 14:08:56 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T255-00084",
+     "T255-00149",
+     "T255-00175",
+     "T255-00190",
+     "T255-00202",
+     "T255-00226",
+     "T255-00284"
+    ]
+   },
+   {
+    "claim": "Sysmon attributes the outbound proxy connections to ledgerlinkupd.exe running from max.fischer's AppData\\Local\\LedgerLink directory; the process was launched at 13:39:07 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T255-00082",
+     "T255-00085",
+     "T255-00087",
+     "T255-00153",
+     "T255-00154",
+     "T255-00176",
+     "T255-00177",
+     "T255-00227",
+     "T255-00229",
+     "T255-00285",
+     "T255-00286"
+    ]
+   },
+   {
+    "claim": "The observed hostname is update.ledgerlink.co, whereas the supplied inventory identifies update.ledgerlink.com as the approved LedgerLink update host; the observed executable is in a user AppData location, whereas the inventory gives a Program Files location.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T255-00082",
+     "T255-00084",
+     "T255-00149",
+     "T255-00202",
+     "T255-00226"
+    ]
+   },
+   {
+    "claim": "Some attempts received proxy gateway errors (502 and 503), but attempts to the same hostname continued on the roughly five-minute pattern.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T255-00190",
+     "T255-00202",
+     "T255-00226",
+     "T255-00284"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied collection-status information reports a winsec collection outage on DC-SUN-01 from 13:25 to 14:10 UTC; the available evidence therefore lacks that host's winsec telemetry during much of the review window.",
+   "The proxy records establish HTTPS CONNECT attempts and byte counts, but do not establish the content delivered in those tunnels or the remote server's identity."
+  ],
+  "claims_not_established": [
+   "The file's hash, signature, provenance, and contents are not established by these records.",
+   "The records do not establish whether any payload was downloaded or executed, or whether the activity caused compromise.",
+   "The records do not establish whether the .co hostname is operated by or authorized by LedgerLink."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and validate the ledgerlinkupd.exe file from the recorded AppData path, including hash, signature, origin, and comparison with the approved Program Files installation.",
+   "Confirm with LedgerLink and the organization's software owner whether update.ledgerlink.co is authorized, and obtain proxy/TLS or destination-resolution evidence identifying the remote service.",
+   "Review the workstation for updater persistence, downloaded files, and subsequent execution, and determine whether the user or another process installed or replaced the executable."
+  ],
+  "unrelated_findings": [
+   "Firefox was launched to files.slack.com and the proxy recorded access; Slack file sharing is not approved in the supplied environment context. Separate ticket; not used to assess the alerted connections. (T255-00124, T255-00130)",
+   "Google Drive File Stream was launched, and a proxy request used a GoogleDriveFS user agent; Google Drive is not among the approved cloud-storage services in the supplied context. Separate ticket; not used to assess the alerted connections. (T255-00134, T255-00179)",
+   "Dropbox.exe was launched on WS-MFISCHER-01; Dropbox is not among the approved cloud-storage services in the supplied context. The cited records do not show a Dropbox network connection. Separate ticket. (T255-00409, T255-00410)",
+   "A SYSTEM PowerShell endpoint-inventory script was run, followed by an explicit-credentials event targeting svc-ledger at PROXY-SUN-01; these records do not establish successful authentication or a connection to the alerted updater activity. Separate ticket. (T255-00164, T255-00166)",
+   "Cisco AnyConnect's UI was launched, although the supplied context says there is no VPN; the cited records do not establish a VPN connection. Separate ticket. (T255-00365, T255-00366, T255-00367)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 27,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 40.2
+}

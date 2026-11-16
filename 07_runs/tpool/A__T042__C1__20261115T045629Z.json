@@ -1,0 +1,134 @@
+{
+ "run_id": "A__T042__C1__20261115T045629Z",
+ "config": "A",
+ "scenario_id": "T042",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 39,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 18339,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.9,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Repeated authentication failures for svc-render originate from FILE-NWD-01, use the same reported source IP (10.40.20.20), and recur roughly once per minute from 13:32 through 13:47. The FILE-NWD-01 events report bad-password substatus 0xc000006a.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T042-00001\",\n        \"T042-00004\",\n        \"T042-00007\",\n        \"T042-00010\",\n        \"T042-00012\",\n        \"T042-00015\",\n        \"T042-00018\",\n        \"T042-00021\",\n        \"T042-00023\",\n        \"T042-00026\",\n        \"T042-00028\",\n        \"T042-00031\",\n        \"T042-00035\",\n        \"T042-00036\",\n        \"T042-00039\"\n      ]\n    },\n    {\n      \"claim\": \"Domain-controller records corroborate failed svc-render authentication from FILE-NWD-01, including NTLM validation failures and Kerberos pre-authentication failures.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T042-00002\",\n        \"T042-00003\",\n        \"T042-00006\",\n        \"T042-00008\",\n        \"T042-00011\",\n        \"T042-00013\",\n        \"T042-00014\",\n        \"T042-00016\",\n        \"T042-00017\",\n        \"T042-00019\",\n        \"T042-00020\",\n        \"T042-00022\",\n        \"T042-00024\",\n        \"T042-00025\",\n        \"T042-00027\",\n        \"T042-00029\",\n        \"T042-00030\",\n        \"T042-00032\",\n        \"T042-00033\",\n        \"T042-00034\",\n        \"T042-00037\",\n        \"T042-00038\"\n      ]\n    },\n    {\n      \"claim\": \"A separate event on WS-NBLAKE-01 records PowerShell running as SYSTEM using explicit credentials for svc-render with PROXY-NWD-01 as the target server. This differs from the repeated failures reported from FILE-NWD-01 and is not explained by the supplied records.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T042-00009\"\n      ]\n    },\n    {\n      \"claim\": \"The regular failures from FILE-NWD-01 are consistent with the supplied context that svc-render re-authenticates each minute and its password was scheduled for rotation at 13:30, potentially leaving the job with stale credentials. This does not explain the separate PowerShell credential-use event on WS-NBLAKE-01.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T042-00001\",\n        \"T042-00004\",\n        \"T042-00007\",\n        \"T042-00009\",\n        \"T042-00010\",\n        \"T042-00012\",\n        \"T042-00015\",\n        \"T042-00018\",\n        \"T042-00021\",\n        \"T042-00023\",\n        \"T042-00026\",\n        \"T042-00028\",\n        \"T042-00031\",\n        \"T042-00035\",\n        \"T042-00036\",\n        \"T042-00039\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records end at 13:47:38 UTC, so they do not cover the full requested 13:20\u201314:20 UTC interval.\",\n    \"The records show authentication failures and an explicit-credential event, but do not show whether the credential use on WS-NBLAKE-01 succeeded or what PowerShell command was executed.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether svc-render's password was actually rotated at 13:30 and whether the RenderQueue job was updated afterward.\",\n    \"Whether the WS-NBLAKE-01 PowerShell process or its use of svc-render credentials was authorized.\",\n    \"Whether the credential use targeting PROXY-NWD-01 resulted in successful authentication or any proxy activity.\",\n    \"Whether any other successful svc-render logons or subsequent actions occurred during the full review window.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Endpoint process and PowerShell logs for WS-NBLAKE-01 around 13:36 UTC, including parent process, command line or script content, and user/session context.\",\n    \"PROXY-NWD-01 authentication and web-proxy logs around 13:36 UTC to determine whether svc-render authenticated and what activity followed.\",\n    \"FILE-NWD-01 service/job configuration and relevant process telemetry to verify the RenderQueue schedule, credential update, and source of the recurring authentication attempts.\",\n    \"Domain-controller authentication records and endpoint telemetry covering the remainder of 13:20\u201314:20 UTC, including any successful logons for svc-render.\",\n    \"Change or administrative records confirming the svc-render password rotation and whether the WS-NBLAKE-01 activity was authorized.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 6514,
+    "output": 1862,
+    "reasoning": 695
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.9,
+  "supporting_observations": [
+   {
+    "claim": "Repeated authentication failures for svc-render originate from FILE-NWD-01, use the same reported source IP (10.40.20.20), and recur roughly once per minute from 13:32 through 13:47. The FILE-NWD-01 events report bad-password substatus 0xc000006a.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T042-00001",
+     "T042-00004",
+     "T042-00007",
+     "T042-00010",
+     "T042-00012",
+     "T042-00015",
+     "T042-00018",
+     "T042-00021",
+     "T042-00023",
+     "T042-00026",
+     "T042-00028",
+     "T042-00031",
+     "T042-00035",
+     "T042-00036",
+     "T042-00039"
+    ]
+   },
+   {
+    "claim": "Domain-controller records corroborate failed svc-render authentication from FILE-NWD-01, including NTLM validation failures and Kerberos pre-authentication failures.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T042-00002",
+     "T042-00003",
+     "T042-00006",
+     "T042-00008",
+     "T042-00011",
+     "T042-00013",
+     "T042-00014",
+     "T042-00016",
+     "T042-00017",
+     "T042-00019",
+     "T042-00020",
+     "T042-00022",
+     "T042-00024",
+     "T042-00025",
+     "T042-00027",
+     "T042-00029",
+     "T042-00030",
+     "T042-00032",
+     "T042-00033",
+     "T042-00034",
+     "T042-00037",
+     "T042-00038"
+    ]
+   },
+   {
+    "claim": "A separate event on WS-NBLAKE-01 records PowerShell running as SYSTEM using explicit credentials for svc-render with PROXY-NWD-01 as the target server. This differs from the repeated failures reported from FILE-NWD-01 and is not explained by the supplied records.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T042-00009"
+    ]
+   },
+   {
+    "claim": "The regular failures from FILE-NWD-01 are consistent with the supplied context that svc-render re-authenticates each minute and its password was scheduled for rotation at 13:30, potentially leaving the job with stale credentials. This does not explain the separate PowerShell credential-use event on WS-NBLAKE-01.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T042-00001",
+     "T042-00004",
+     "T042-00007",
+     "T042-00009",
+     "T042-00010",
+     "T042-00012",
+     "T042-00015",
+     "T042-00018",
+     "T042-00021",
+     "T042-00023",
+     "T042-00026",
+     "T042-00028",
+     "T042-00031",
+     "T042-00035",
+     "T042-00036",
+     "T042-00039"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records end at 13:47:38 UTC, so they do not cover the full requested 13:20\u201314:20 UTC interval.",
+   "The records show authentication failures and an explicit-credential event, but do not show whether the credential use on WS-NBLAKE-01 succeeded or what PowerShell command was executed."
+  ],
+  "claims_not_established": [
+   "Whether svc-render's password was actually rotated at 13:30 and whether the RenderQueue job was updated afterward.",
+   "Whether the WS-NBLAKE-01 PowerShell process or its use of svc-render credentials was authorized.",
+   "Whether the credential use targeting PROXY-NWD-01 resulted in successful authentication or any proxy activity.",
+   "Whether any other successful svc-render logons or subsequent actions occurred during the full review window."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Endpoint process and PowerShell logs for WS-NBLAKE-01 around 13:36 UTC, including parent process, command line or script content, and user/session context.",
+   "PROXY-NWD-01 authentication and web-proxy logs around 13:36 UTC to determine whether svc-render authenticated and what activity followed.",
+   "FILE-NWD-01 service/job configuration and relevant process telemetry to verify the RenderQueue schedule, credential update, and source of the recurring authentication attempts.",
+   "Domain-controller authentication records and endpoint telemetry covering the remainder of 13:20\u201314:20 UTC, including any successful logons for svc-render.",
+   "Change or administrative records confirming the svc-render password rotation and whether the WS-NBLAKE-01 activity was authorized."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 54,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 15.7
+}

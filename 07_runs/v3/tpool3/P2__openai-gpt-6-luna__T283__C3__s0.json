@@ -1,0 +1,94 @@
+{
+ "scenario_id": "T283",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Amy Cole's interactive session was active on WS-ACOLE-01, and WINWORD.EXE opened C:\\\\Users\\\\amy.cole\\\\Downloads\\\\Statement.docm shortly before the reported PowerShell activity.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T283-00063\", \"T283-00115\", \"T283-00118\"]\n    },\n    {\n      \"claim\": \"WINWORD.EXE spawned PowerShell with the flags -nop -w hidden -enc. The encoded command decodes to an expression that uses Net.WebClient.DownloadString to retrieve and execute a script from https://raw.githubusercontent.com/orchard-it/tools/main/u.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T283-00119\", \"T283-00120\"]\n    },\n    {\n      \"claim\": \"The proxy recorded a successful request for that exact u.ps1 URL, and network records show the PowerShell process communicating with the explicit proxy at the same time.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T283-00123\", \"T283-00124\", \"T283-00125\", \"T283-00128\", \"T283-00129\"]\n    },\n    {\n      \"claim\": \"PowerShell spawned rundll32.exe with a command line invoking C:\\\\Users\\\\amy.cole\\\\AppData\\\\Roaming\\\\svchelper.dll,Init. This sequence strongly supports malicious execution rather than ordinary user-launched PowerShell or the documented IT patching procedure.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T283-00119\", \"T283-00120\", \"T283-00135\", \"T283-00136\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records identify the requested script URL and request status but do not provide the downloaded script contents; the available records also do not provide the document contents or the DLL's contents, hash, or signature. Relevant records: T283-00123, T283-00125, T283-00135.\",\n    \"A Defender DetectionHistory file was created at 14:01, but the supplied record does not include its contents or establish whether it relates to the alerted execution. Record: T283-00403.\",\n    \"The supplied collection-status metadata reports a winsec and Sysmon collection outage on WS-THART-01 from 13:20 to 14:00 UTC; this is not the alerted host, WS-ACOLE-01.\"\n  ],\n  \"claims_not_established\": [\n    \"The content, source provenance, or authorization status of Statement.docm and the downloaded u.ps1 script are not established by the available records.\",\n    \"The records show rundll32 invoked with svchelper.dll,Init, but do not establish the DLL's contents, whether its intended behavior completed, or what effects it had.\",\n    \"The available evidence does not establish the user's intent, whether the activity resulted in persistence, credential theft, lateral movement, or data exfiltration.\",\n    \"The contents and disposition of the Defender DetectionHistory entry are not established.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and analyze Statement.docm, including its origin, signature, and macro contents.\",\n    \"Acquire and analyze u.ps1 and svchelper.dll, including hashes, signatures, provenance, and behavioral analysis; collect relevant file-system and quarantine records.\",\n    \"Collect PowerShell script-block/module logs, endpoint memory or EDR telemetry, and the complete process tree around 13:40 UTC to determine execution and impact.\",\n    \"Retrieve the Defender DetectionHistory entry and any associated alert, quarantine, or remediation details.\",\n    \"Check the GitHub repository and URL history to establish whether the content was authorized or altered.\"\n  ],\n  \"unrelated_findings\": [\n    \"Google Drive File Stream started on WS-ACOLE-01, although the inventory lists Microsoft OneDrive rather than Google Drive as approved cloud storage. Separate review recommended. Records: T283-00289, T283-00290, T283-00295.\",\n    \"Webex.exe was launched with an app.slack.com URL, while Slack is not listed among approved services. Separate review recommended. Records: T283-00291, T283-00296.\",\n    \"Meridian OpsAgent ran as SYSTEM on WS-ACOLE-01 and attempted explicit authentication as svc-safe to FILE-ORC-01; the inventory describes svc-safe as the backup agent account on FILE-ORC-01. This is outside the alerted execution and merits separate review. Records: T283-00404, T283-00406.\",\n    \"DBeaver connected from WS-ACOLE-01 to 10.56.10.24:5432, and Amy's PowerShell later launched sqlcmd to query sqlprod01; the observed connection attempt to 10.56.20.110:1433 had no established session. These database activities are outside the alerted execution and merit separate review. Records: T283-00277, T283-00280, T283-00281, T283-00249, T283-00251, T283-00258, T283-00259.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 77245,
+    "output": 3292
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "Amy Cole's interactive session was active on WS-ACOLE-01, and WINWORD.EXE opened C:\\Users\\amy.cole\\Downloads\\Statement.docm shortly before the reported PowerShell activity.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T283-00063",
+     "T283-00115",
+     "T283-00118"
+    ]
+   },
+   {
+    "claim": "WINWORD.EXE spawned PowerShell with the flags -nop -w hidden -enc. The encoded command decodes to an expression that uses Net.WebClient.DownloadString to retrieve and execute a script from https://raw.githubusercontent.com/orchard-it/tools/main/u.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T283-00119",
+     "T283-00120"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a successful request for that exact u.ps1 URL, and network records show the PowerShell process communicating with the explicit proxy at the same time.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T283-00123",
+     "T283-00124",
+     "T283-00125",
+     "T283-00128",
+     "T283-00129"
+    ]
+   },
+   {
+    "claim": "PowerShell spawned rundll32.exe with a command line invoking C:\\Users\\amy.cole\\AppData\\Roaming\\svchelper.dll,Init. This sequence strongly supports malicious execution rather than ordinary user-launched PowerShell or the documented IT patching procedure.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T283-00119",
+     "T283-00120",
+     "T283-00135",
+     "T283-00136"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records identify the requested script URL and request status but do not provide the downloaded script contents; the available records also do not provide the document contents or the DLL's contents, hash, or signature. Relevant records: T283-00123, T283-00125, T283-00135.",
+   "A Defender DetectionHistory file was created at 14:01, but the supplied record does not include its contents or establish whether it relates to the alerted execution. Record: T283-00403.",
+   "The supplied collection-status metadata reports a winsec and Sysmon collection outage on WS-THART-01 from 13:20 to 14:00 UTC; this is not the alerted host, WS-ACOLE-01."
+  ],
+  "claims_not_established": [
+   "The content, source provenance, or authorization status of Statement.docm and the downloaded u.ps1 script are not established by the available records.",
+   "The records show rundll32 invoked with svchelper.dll,Init, but do not establish the DLL's contents, whether its intended behavior completed, or what effects it had.",
+   "The available evidence does not establish the user's intent, whether the activity resulted in persistence, credential theft, lateral movement, or data exfiltration.",
+   "The contents and disposition of the Defender DetectionHistory entry are not established."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and analyze Statement.docm, including its origin, signature, and macro contents.",
+   "Acquire and analyze u.ps1 and svchelper.dll, including hashes, signatures, provenance, and behavioral analysis; collect relevant file-system and quarantine records.",
+   "Collect PowerShell script-block/module logs, endpoint memory or EDR telemetry, and the complete process tree around 13:40 UTC to determine execution and impact.",
+   "Retrieve the Defender DetectionHistory entry and any associated alert, quarantine, or remediation details.",
+   "Check the GitHub repository and URL history to establish whether the content was authorized or altered."
+  ],
+  "unrelated_findings": [
+   "Google Drive File Stream started on WS-ACOLE-01, although the inventory lists Microsoft OneDrive rather than Google Drive as approved cloud storage. Separate review recommended. Records: T283-00289, T283-00290, T283-00295.",
+   "Webex.exe was launched with an app.slack.com URL, while Slack is not listed among approved services. Separate review recommended. Records: T283-00291, T283-00296.",
+   "Meridian OpsAgent ran as SYSTEM on WS-ACOLE-01 and attempted explicit authentication as svc-safe to FILE-ORC-01; the inventory describes svc-safe as the backup agent account on FILE-ORC-01. This is outside the alerted execution and merits separate review. Records: T283-00404, T283-00406.",
+   "DBeaver connected from WS-ACOLE-01 to 10.56.10.24:5432, and Amy's PowerShell later launched sqlcmd to query sqlprod01; the observed connection attempt to 10.56.20.110:1433 had no established session. These database activities are outside the alerted execution and merit separate review. Records: T283-00277, T283-00280, T283-00281, T283-00249, T283-00251, T283-00258, T283-00259."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 14,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 33.6
+}

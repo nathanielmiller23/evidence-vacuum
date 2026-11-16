@@ -1,0 +1,81 @@
+{
+ "scenario_id": "T290",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"FILE-ORC-01 ran C:\\\\Program Files\\\\Keystone\\\\agent.exe as ORCHARD\\\\svc-safe with the command line targeting ingest.keystone-backup.net; the process was launched by services.exe.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T290-00216\", \"T290-00217\", \"T290-00218\"]\n    },\n    {\n      \"claim\": \"The proxy recorded an outbound transfer of 640,000,000 client bytes to ingest.keystone-backup.net, and Zeek recorded 639,967,746 originating bytes for the corresponding connection. The destination and agent path match the organization's listed approved backup service.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T290-00219\", \"T290-00224\", \"T290-00225\", \"T290-00226\"]\n    },\n    {\n      \"claim\": \"Shortly before the backup agent started, the domain controller logged a service-ticket event for svc-safe from 91.219.236.174. This is unusual in the stated environment and is temporally close to the transfer, but the available records do not establish that this request caused the agent run.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T290-00215\", \"T290-00217\", \"T290-00219\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy and Zeek records show the transfer's destination and volume, but the transfer used a TLS tunnel; the records do not reveal the uploaded contents.\",\n    \"Winsec and Sysmon collection was unavailable on WS-THART-01 from 13:20 to 14:00 UTC. This limits visibility into activity on that workstation, but does not itself explain the FILE-ORC-01 transfer.\",\n    \"The records do not include backup job manifests, file-level upload details, or evidence validating the source IP in the svc-safe ticket event.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the svc-safe ticket request from 91.219.236.174 was authorized, accurately attributed, or related to the backup run.\",\n    \"Whether the transferred data was the expected backup set or included data selected for unauthorized disclosure.\",\n    \"Whether svc-safe credentials, the backup service configuration, or the Keystone agent were compromised.\",\n    \"Whether the backup run was scheduled or otherwise authorized at this specific time.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Verify 91.219.236.174 against network, firewall, and domain-controller records; determine how it could reach the domain controller and whether the svc-safe ticket request was authorized.\",\n    \"Review FILE-ORC-01 service and scheduled-job configuration and Keystone job logs to confirm the run time, job identity, and uploaded file manifest.\",\n    \"Validate the Keystone agent's signature, hash, and configuration, and review Keystone-side records for the corresponding upload.\",\n    \"Check svc-safe credential use and rotation history and investigate any other authentication from the same external address.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:26, FILE-ORC-01 made a proxy CONNECT request to www.bing.com with a Wget user agent. This is separate from the alerted Keystone transfer. (T290-00034)\",\n    \"At 13:47, FILE-ORC-01 made a denied proxy request to updates.paloaltonetworks.com with a GlobalProtect user agent. This is separate from the alerted transfer. (T290-00273)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 76845,
+    "output": 2708
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "FILE-ORC-01 ran C:\\Program Files\\Keystone\\agent.exe as ORCHARD\\svc-safe with the command line targeting ingest.keystone-backup.net; the process was launched by services.exe.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T290-00216",
+     "T290-00217",
+     "T290-00218"
+    ]
+   },
+   {
+    "claim": "The proxy recorded an outbound transfer of 640,000,000 client bytes to ingest.keystone-backup.net, and Zeek recorded 639,967,746 originating bytes for the corresponding connection. The destination and agent path match the organization's listed approved backup service.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T290-00219",
+     "T290-00224",
+     "T290-00225",
+     "T290-00226"
+    ]
+   },
+   {
+    "claim": "Shortly before the backup agent started, the domain controller logged a service-ticket event for svc-safe from 91.219.236.174. This is unusual in the stated environment and is temporally close to the transfer, but the available records do not establish that this request caused the agent run.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T290-00215",
+     "T290-00217",
+     "T290-00219"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy and Zeek records show the transfer's destination and volume, but the transfer used a TLS tunnel; the records do not reveal the uploaded contents.",
+   "Winsec and Sysmon collection was unavailable on WS-THART-01 from 13:20 to 14:00 UTC. This limits visibility into activity on that workstation, but does not itself explain the FILE-ORC-01 transfer.",
+   "The records do not include backup job manifests, file-level upload details, or evidence validating the source IP in the svc-safe ticket event."
+  ],
+  "claims_not_established": [
+   "Whether the svc-safe ticket request from 91.219.236.174 was authorized, accurately attributed, or related to the backup run.",
+   "Whether the transferred data was the expected backup set or included data selected for unauthorized disclosure.",
+   "Whether svc-safe credentials, the backup service configuration, or the Keystone agent were compromised.",
+   "Whether the backup run was scheduled or otherwise authorized at this specific time."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Verify 91.219.236.174 against network, firewall, and domain-controller records; determine how it could reach the domain controller and whether the svc-safe ticket request was authorized.",
+   "Review FILE-ORC-01 service and scheduled-job configuration and Keystone job logs to confirm the run time, job identity, and uploaded file manifest.",
+   "Validate the Keystone agent's signature, hash, and configuration, and review Keystone-side records for the corresponding upload.",
+   "Check svc-safe credential use and rotation history and investigate any other authentication from the same external address."
+  ],
+  "unrelated_findings": [
+   "At 13:26, FILE-ORC-01 made a proxy CONNECT request to www.bing.com with a Wget user agent. This is separate from the alerted Keystone transfer. (T290-00034)",
+   "At 13:47, FILE-ORC-01 made a denied proxy request to updates.paloaltonetworks.com with a GlobalProtect user agent. This is separate from the alerted transfer. (T290-00273)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 30.0
+}

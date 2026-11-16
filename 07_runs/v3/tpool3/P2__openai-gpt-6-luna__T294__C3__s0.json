@@ -1,0 +1,83 @@
+{
+ "scenario_id": "T294",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.89,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"A network logon for sean.byrne to WS-ACOLE-01 was recorded shortly before the PowerShell process; the logon and PowerShell event share LogonId 0x1072f79b.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T294-00088\", \"T294-00089\", \"T294-00111\", \"T294-00112\"]\n    },\n    {\n      \"claim\": \"At 13:43 UTC, PowerShell ran the documented \\\\FILE-ORC-01\\\\IT\\\\Patch-Workstations.ps1 command as sean.byrne. This matches the documented IT workstation-patching practice, though the logs do not independently verify who initiated the session.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T294-00111\", \"T294-00112\"]\n    },\n    {\n      \"claim\": \"The PowerShell process launched wusa.exe to install a Windows update package from the local patches directory, then exited about 24 seconds after it started. This is consistent with the reported brief window and the documented patching activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T294-00111\", \"T294-00118\", \"T294-00119\", \"T294-00126\", \"T294-00127\"]\n    },\n    {\n      \"claim\": \"PowerShell made a connection through the explicit proxy during execution, but the available Zeek record provides connection-level byte counts rather than the request destination or content.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T294-00115\", \"T294-00116\", \"T294-00117\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy logs were not collected from 13:30 to 14:00 UTC, so there is no proxy record to identify or assess the PowerShell connection at 13:43. The sensor status supplied with the alert reports this collection outage.\",\n    \"The available records do not include the contents of Patch-Workstations.ps1 or telemetry showing what appeared on the user\u2019s screen.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish that the person who initiated the sean.byrne session was sean.byrne, or map source IP 10.56.10.23 to WS-SBYRNE-01.\",\n    \"The destination and content of the PowerShell-associated proxy request are not established.\",\n    \"The evidence does not establish whether the user-visible PowerShell window was interactive or what the user saw.\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [],\n  \"unrelated_findings\": [\n    \"Separate review recommended: SYSTEM on WS-ACOLE-01 explicitly attempted to use svc-safe credentials against DC-ORC-01 from taskhostw.exe. This is outside the alerted PowerShell activity; the inventory describes svc-safe as a backup agent account on FILE-ORC-01. (T294-00142)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 42902,
+    "output": 2532
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.89,
+  "supporting_observations": [
+   {
+    "claim": "A network logon for sean.byrne to WS-ACOLE-01 was recorded shortly before the PowerShell process; the logon and PowerShell event share LogonId 0x1072f79b.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T294-00088",
+     "T294-00089",
+     "T294-00111",
+     "T294-00112"
+    ]
+   },
+   {
+    "claim": "At 13:43 UTC, PowerShell ran the documented \\FILE-ORC-01\\IT\\Patch-Workstations.ps1 command as sean.byrne. This matches the documented IT workstation-patching practice, though the logs do not independently verify who initiated the session.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T294-00111",
+     "T294-00112"
+    ]
+   },
+   {
+    "claim": "The PowerShell process launched wusa.exe to install a Windows update package from the local patches directory, then exited about 24 seconds after it started. This is consistent with the reported brief window and the documented patching activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T294-00111",
+     "T294-00118",
+     "T294-00119",
+     "T294-00126",
+     "T294-00127"
+    ]
+   },
+   {
+    "claim": "PowerShell made a connection through the explicit proxy during execution, but the available Zeek record provides connection-level byte counts rather than the request destination or content.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T294-00115",
+     "T294-00116",
+     "T294-00117"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy logs were not collected from 13:30 to 14:00 UTC, so there is no proxy record to identify or assess the PowerShell connection at 13:43. The sensor status supplied with the alert reports this collection outage.",
+   "The available records do not include the contents of Patch-Workstations.ps1 or telemetry showing what appeared on the user\u2019s screen."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish that the person who initiated the sean.byrne session was sean.byrne, or map source IP 10.56.10.23 to WS-SBYRNE-01.",
+   "The destination and content of the PowerShell-associated proxy request are not established.",
+   "The evidence does not establish whether the user-visible PowerShell window was interactive or what the user saw."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [],
+  "unrelated_findings": [
+   "Separate review recommended: SYSTEM on WS-ACOLE-01 explicitly attempted to use svc-safe credentials against DC-ORC-01 from taskhostw.exe. This is outside the alerted PowerShell activity; the inventory describes svc-safe as a backup agent account on FILE-ORC-01. (T294-00142)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 14,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 30.0
+}

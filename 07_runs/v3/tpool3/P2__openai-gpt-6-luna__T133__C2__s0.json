@@ -1,0 +1,105 @@
+{
+ "scenario_id": "T133",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"WINWORD.EXE opened C:\\\\Users\\\\dan.reyes\\\\Downloads\\\\Statement.docm, and a PowerShell process was then launched as its child under dan.reyes.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T133-00151\", \"T133-00155\", \"T133-00156\"]\n    },\n    {\n      \"claim\": \"The PowerShell command used -nop, -w hidden, and an encoded command. Decoding the provided command shows it uses IEX with WebClient.DownloadString to request and execute a script from https://raw.githubusercontent.com/copperline-it/tools/main/u.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T133-00155\", \"T133-00156\"]\n    },\n    {\n      \"claim\": \"PowerShell made connections to the organization's proxy at 10.52.20.30:8080, with one connection transferring 12,222 response bytes; the records do not identify the URL requested in that proxy traffic.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T133-00159\", \"T133-00160\", \"T133-00161\", \"T133-00164\", \"T133-00165\", \"T133-00166\"]\n    },\n    {\n      \"claim\": \"PowerShell created a temporary file and launched rundll32.exe with C:\\\\Users\\\\dan.reyes\\\\AppData\\\\Roaming\\\\svchelper.dll,Init as its command line.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T133-00162\", \"T133-00167\", \"T133-00168\"]\n    },\n    {\n      \"claim\": \"The sequence of a document launching hidden, encoded PowerShell that requests and executes a remote script, followed by rundll32 loading a DLL from the user's Roaming directory, strongly supports malicious activity on the alerted workstation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T133-00151\", \"T133-00155\", \"T133-00159\", \"T133-00160\", \"T133-00162\", \"T133-00167\", \"T133-00168\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The provided records do not include proxy request details or content, so they do not confirm which URL was fetched or what the response contained.\",\n    \"The records do not include the contents, hashes, or provenance of Statement.docm, the downloaded script, the temporary file, or svchelper.dll.\",\n    \"The provided evidence does not include PowerShell script-block logs or telemetry showing the DLL's behavior after rundll32 launched it.\"\n  ],\n  \"claims_not_established\": [\n    \"The exact contents and actions of the remote script or svchelper.dll.\",\n    \"Whether the temporary file was the downloaded script, the DLL, or another artifact.\",\n    \"Whether the DLL established persistence, communicated further, or caused additional impact.\",\n    \"How Statement.docm was obtained or whether dan.reyes knowingly opened it.\",\n    \"Whether data was accessed or exfiltrated.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and acquire WS-DREYES-01 artifacts, especially Statement.docm, the temporary file, and svchelper.dll; collect hashes, timestamps, and file metadata.\",\n    \"Obtain proxy logs and, if available, content or detonation results for the request to raw.githubusercontent.com and the associated response.\",\n    \"Collect PowerShell operational/script-block logs, endpoint detection telemetry, and a forensic timeline for the document, PowerShell, and rundll32 processes.\",\n    \"Analyze svchelper.dll and the document in a controlled environment; check for persistence, follow-on execution, and related activity on other hosts.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox Update ran as SYSTEM on WS-DREYES-01; Dropbox is not among the approved software or services in the supplied inventory. Review separately. (T133-00208, T133-00209, T133-00210, T133-00289, T133-00290)\",\n    \"Google Drive File Stream launched for dan.reyes on WS-DREYES-01; Google Drive is not among the approved cloud-storage services in the supplied inventory. Review separately. (T133-00376, T133-00377, T133-00378)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 54474,
+    "output": 1850
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "WINWORD.EXE opened C:\\Users\\dan.reyes\\Downloads\\Statement.docm, and a PowerShell process was then launched as its child under dan.reyes.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T133-00151",
+     "T133-00155",
+     "T133-00156"
+    ]
+   },
+   {
+    "claim": "The PowerShell command used -nop, -w hidden, and an encoded command. Decoding the provided command shows it uses IEX with WebClient.DownloadString to request and execute a script from https://raw.githubusercontent.com/copperline-it/tools/main/u.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T133-00155",
+     "T133-00156"
+    ]
+   },
+   {
+    "claim": "PowerShell made connections to the organization's proxy at 10.52.20.30:8080, with one connection transferring 12,222 response bytes; the records do not identify the URL requested in that proxy traffic.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T133-00159",
+     "T133-00160",
+     "T133-00161",
+     "T133-00164",
+     "T133-00165",
+     "T133-00166"
+    ]
+   },
+   {
+    "claim": "PowerShell created a temporary file and launched rundll32.exe with C:\\Users\\dan.reyes\\AppData\\Roaming\\svchelper.dll,Init as its command line.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T133-00162",
+     "T133-00167",
+     "T133-00168"
+    ]
+   },
+   {
+    "claim": "The sequence of a document launching hidden, encoded PowerShell that requests and executes a remote script, followed by rundll32 loading a DLL from the user's Roaming directory, strongly supports malicious activity on the alerted workstation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T133-00151",
+     "T133-00155",
+     "T133-00159",
+     "T133-00160",
+     "T133-00162",
+     "T133-00167",
+     "T133-00168"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The provided records do not include proxy request details or content, so they do not confirm which URL was fetched or what the response contained.",
+   "The records do not include the contents, hashes, or provenance of Statement.docm, the downloaded script, the temporary file, or svchelper.dll.",
+   "The provided evidence does not include PowerShell script-block logs or telemetry showing the DLL's behavior after rundll32 launched it."
+  ],
+  "claims_not_established": [
+   "The exact contents and actions of the remote script or svchelper.dll.",
+   "Whether the temporary file was the downloaded script, the DLL, or another artifact.",
+   "Whether the DLL established persistence, communicated further, or caused additional impact.",
+   "How Statement.docm was obtained or whether dan.reyes knowingly opened it.",
+   "Whether data was accessed or exfiltrated."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and acquire WS-DREYES-01 artifacts, especially Statement.docm, the temporary file, and svchelper.dll; collect hashes, timestamps, and file metadata.",
+   "Obtain proxy logs and, if available, content or detonation results for the request to raw.githubusercontent.com and the associated response.",
+   "Collect PowerShell operational/script-block logs, endpoint detection telemetry, and a forensic timeline for the document, PowerShell, and rundll32 processes.",
+   "Analyze svchelper.dll and the document in a controlled environment; check for persistence, follow-on execution, and related activity on other hosts."
+  ],
+  "unrelated_findings": [
+   "Dropbox Update ran as SYSTEM on WS-DREYES-01; Dropbox is not among the approved software or services in the supplied inventory. Review separately. (T133-00208, T133-00209, T133-00210, T133-00289, T133-00290)",
+   "Google Drive File Stream launched for dan.reyes on WS-DREYES-01; Google Drive is not among the approved cloud-storage services in the supplied inventory. Review separately. (T133-00376, T133-00377, T133-00378)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 21,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.7
+}

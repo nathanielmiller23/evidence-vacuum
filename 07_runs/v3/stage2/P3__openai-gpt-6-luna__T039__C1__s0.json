@@ -1,0 +1,87 @@
+{
+ "scenario_id": "T039",
+ "condition": "C1",
+ "variant": "P3",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:39:46 UTC, ivy.chen ran PowerShell to compress \\\\\\\\FILE-NWD-01\\\\Shared\\\\Clients into C:\\\\Users\\\\ivy.chen\\\\AppData\\\\Local\\\\Temp\\\\c.zip; a file-creation event confirms c.zip was created moments later.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T039-00104\", \"T039-00105\", \"T039-00106\"]\n    },\n    {\n      \"claim\": \"At 13:45:32 UTC, ivy.chen launched Chrome to quickshare-drop.net. The environment inventory says no file-sharing services other than Microsoft 365/OneDrive are approved.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T039-00133\", \"T039-00135\"]\n    },\n    {\n      \"claim\": \"The proxy recorded a successful CONNECT tunnel to quickshare-drop.net with 51,000,000 client-to-server bytes over about nine seconds. Chrome\u2019s network event and the connection record corroborate traffic from WS-ICHEN-01 to the proxy.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T039-00138\", \"T039-00139\", \"T039-00140\", \"T039-00141\"]\n    },\n    {\n      \"claim\": \"The sequence of archiving the Clients share and then sending tens of megabytes through a browser to an unapproved file-sharing destination strongly supports an attempted data exfiltration finding.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T039-00104\", \"T039-00106\", \"T039-00133\", \"T039-00138\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The quickshare-drop.net record is a CONNECT tunnel with byte counts; the available record does not expose the uploaded payload or specific request path. (T039-00138)\",\n    \"The evidence shows the archive command and subsequent outbound transfer, but does not directly establish that c.zip was the transferred object. (T039-00104, T039-00106, T039-00138)\"\n  ],\n  \"claims_not_established\": [\n    \"The contents of c.zip or whether the outbound payload contained the archived client files.\",\n    \"Whether ivy.chen had an authorized business reason to use quickshare-drop.net or intended to exfiltrate data.\",\n    \"Who controlled the destination account or whether the transfer completed storage of a file there.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Recover and examine c.zip and relevant source-file access records to determine what data was staged.\",\n    \"Obtain proxy/TLS inspection or destination-side records, if available, to identify the uploaded object and confirm transfer completion.\",\n    \"Verify with ivy.chen and the relevant business owner whether this transfer was authorized, and preserve endpoint evidence for investigation.\"\n  ],\n  \"unrelated_findings\": [\n    \"Cisco AnyConnect vpnui.exe was launched by ivy.chen, although the environment context states there is no VPN. These records show the UI process and a signed Cisco DLL load, but do not establish an active VPN connection. (T039-00190, T039-00191, T039-00192)\",\n    \"A Zscaler ZSATunnel.exe process started as SYSTEM. The available records do not establish what connection it made or whether it is authorized; investigate separately. (T039-00264, T039-00265)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 47738,
+    "output": 1766
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "At 13:39:46 UTC, ivy.chen ran PowerShell to compress \\\\FILE-NWD-01\\Shared\\Clients into C:\\Users\\ivy.chen\\AppData\\Local\\Temp\\c.zip; a file-creation event confirms c.zip was created moments later.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T039-00104",
+     "T039-00105",
+     "T039-00106"
+    ]
+   },
+   {
+    "claim": "At 13:45:32 UTC, ivy.chen launched Chrome to quickshare-drop.net. The environment inventory says no file-sharing services other than Microsoft 365/OneDrive are approved.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T039-00133",
+     "T039-00135"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a successful CONNECT tunnel to quickshare-drop.net with 51,000,000 client-to-server bytes over about nine seconds. Chrome\u2019s network event and the connection record corroborate traffic from WS-ICHEN-01 to the proxy.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T039-00138",
+     "T039-00139",
+     "T039-00140",
+     "T039-00141"
+    ]
+   },
+   {
+    "claim": "The sequence of archiving the Clients share and then sending tens of megabytes through a browser to an unapproved file-sharing destination strongly supports an attempted data exfiltration finding.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T039-00104",
+     "T039-00106",
+     "T039-00133",
+     "T039-00138"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The quickshare-drop.net record is a CONNECT tunnel with byte counts; the available record does not expose the uploaded payload or specific request path. (T039-00138)",
+   "The evidence shows the archive command and subsequent outbound transfer, but does not directly establish that c.zip was the transferred object. (T039-00104, T039-00106, T039-00138)"
+  ],
+  "claims_not_established": [
+   "The contents of c.zip or whether the outbound payload contained the archived client files.",
+   "Whether ivy.chen had an authorized business reason to use quickshare-drop.net or intended to exfiltrate data.",
+   "Who controlled the destination account or whether the transfer completed storage of a file there."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Recover and examine c.zip and relevant source-file access records to determine what data was staged.",
+   "Obtain proxy/TLS inspection or destination-side records, if available, to identify the uploaded object and confirm transfer completion.",
+   "Verify with ivy.chen and the relevant business owner whether this transfer was authorized, and preserve endpoint evidence for investigation."
+  ],
+  "unrelated_findings": [
+   "Cisco AnyConnect vpnui.exe was launched by ivy.chen, although the environment context states there is no VPN. These records show the UI process and a signed Cisco DLL load, but do not establish an active VPN connection. (T039-00190, T039-00191, T039-00192)",
+   "A Zscaler ZSATunnel.exe process started as SYSTEM. The available records do not establish what connection it made or whether it is authorized; investigate separately. (T039-00264, T039-00265)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 17.8
+}

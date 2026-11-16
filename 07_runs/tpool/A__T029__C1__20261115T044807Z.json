@@ -1,0 +1,94 @@
+{
+ "run_id": "A__T029__C1__20261115T044807Z",
+ "config": "A",
+ "scenario_id": "T029",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 308,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 128464,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Maria Lopez ran PowerShell to compress the Clients directory on FILE-HD-01 into c.zip in her local Temp directory; a file-creation event confirms c.zip was created.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T029-00132\", \"T029-00133\", \"T029-00134\"]\n    },\n    {\n      \"claim\": \"Chrome was then launched by Maria Lopez to open sendbox-files.io, a file-sharing destination not included among the approved services in the supplied environment context.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T029-00155\", \"T029-00156\"]\n    },\n    {\n      \"claim\": \"The proxy recorded 51,000,000 client-to-server bytes and 8,800 server-to-client bytes in a roughly 15-second tunnel to sendbox-files.io; Zeek and endpoint network telemetry also show the Chrome connection to the explicit proxy.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T029-00173\", \"T029-00174\", \"T029-00175\", \"T029-00176\"]\n    },\n    {\n      \"claim\": \"The sequence of archiving a shared Clients directory, opening an unapproved file-sharing site, and sending tens of megabytes outbound strongly supports likely data exfiltration and a malicious-activity finding.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T029-00132\", \"T029-00134\", \"T029-00155\", \"T029-00173\", \"T029-00174\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy tunnel is recorded as CONNECT traffic; the available records do not expose the encrypted application payload or identify the uploaded file by name.\",\n    \"The records show the archive was created and a large outbound transfer followed, but do not directly establish that c.zip was the transferred payload.\",\n    \"The available evidence does not independently verify who was physically operating the workstation or whether an exception or business authorization existed.\"\n  ],\n  \"claims_not_established\": [\n    \"The exact files or sensitive information contained in c.zip.\",\n    \"That c.zip, rather than other data, accounted for the outbound bytes.\",\n    \"Whether Maria Lopez knowingly initiated the transfer or whether it was performed under her session by another party.\",\n    \"Whether the transfer had any specific external recipient or was successfully retained by the destination.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine c.zip and its metadata, including contents, hash, and creation or access history.\",\n    \"Obtain proxy or destination-side records that identify the upload request, uploaded object, and transfer outcome.\",\n    \"Review FILE-HD-01 file-access auditing for reads of the Clients directory and correlate those accesses with the workstation session.\",\n    \"Collect browser history and relevant endpoint artifacts, and confirm with Maria Lopez whether the transfer was authorized.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 47389,
+    "output": 1162,
+    "reasoning": 490
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "Maria Lopez ran PowerShell to compress the Clients directory on FILE-HD-01 into c.zip in her local Temp directory; a file-creation event confirms c.zip was created.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T029-00132",
+     "T029-00133",
+     "T029-00134"
+    ]
+   },
+   {
+    "claim": "Chrome was then launched by Maria Lopez to open sendbox-files.io, a file-sharing destination not included among the approved services in the supplied environment context.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T029-00155",
+     "T029-00156"
+    ]
+   },
+   {
+    "claim": "The proxy recorded 51,000,000 client-to-server bytes and 8,800 server-to-client bytes in a roughly 15-second tunnel to sendbox-files.io; Zeek and endpoint network telemetry also show the Chrome connection to the explicit proxy.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T029-00173",
+     "T029-00174",
+     "T029-00175",
+     "T029-00176"
+    ]
+   },
+   {
+    "claim": "The sequence of archiving a shared Clients directory, opening an unapproved file-sharing site, and sending tens of megabytes outbound strongly supports likely data exfiltration and a malicious-activity finding.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T029-00132",
+     "T029-00134",
+     "T029-00155",
+     "T029-00173",
+     "T029-00174"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy tunnel is recorded as CONNECT traffic; the available records do not expose the encrypted application payload or identify the uploaded file by name.",
+   "The records show the archive was created and a large outbound transfer followed, but do not directly establish that c.zip was the transferred payload.",
+   "The available evidence does not independently verify who was physically operating the workstation or whether an exception or business authorization existed."
+  ],
+  "claims_not_established": [
+   "The exact files or sensitive information contained in c.zip.",
+   "That c.zip, rather than other data, accounted for the outbound bytes.",
+   "Whether Maria Lopez knowingly initiated the transfer or whether it was performed under her session by another party.",
+   "Whether the transfer had any specific external recipient or was successfully retained by the destination."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine c.zip and its metadata, including contents, hash, and creation or access history.",
+   "Obtain proxy or destination-side records that identify the upload request, uploaded object, and transfer outcome.",
+   "Review FILE-HD-01 file-access auditing for reads of the Clients directory and correlate those accesses with the workstation session.",
+   "Collect browser history and relevant endpoint artifacts, and confirm with Maria Lopez whether the transfer was authorized."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 14,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 12.5
+}

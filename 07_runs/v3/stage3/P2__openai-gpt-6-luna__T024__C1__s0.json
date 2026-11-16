@@ -1,0 +1,91 @@
+{
+ "scenario_id": "T024",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:42:39 UTC, WS-MLOPEZ-01 recorded a network logon for omar.haddad from WS-OHADDAD-01, followed by a privileged-logon event for the same account and logon ID.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T024-00082\",\n        \"T024-00083\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:44:39 UTC, PowerShell ran on WS-MLOPEZ-01 as omar.haddad with the command line invoking the organization's specified patch script, \\\\\\\\FILE-HD-01\\\\IT\\\\Deploy-Patches.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T024-00111\",\n        \"T024-00112\"\n      ]\n    },\n    {\n      \"claim\": \"The observed PowerShell execution is consistent with the documented IT practice and scheduled workstation patching; the available evidence supports it as the likely explanation for the reported window.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T024-00082\",\n        \"T024-00111\",\n        \"T024-00112\"\n      ]\n    },\n    {\n      \"claim\": \"The PowerShell process launched wusa.exe to install a Windows 11 update, and the proxy recorded a Windows Update download during the same period.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T024-00113\",\n        \"T024-00118\",\n        \"T024-00119\"\n      ]\n    },\n    {\n      \"claim\": \"The PowerShell process terminated at 13:45:06 UTC, shortly after the update installer process terminated.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T024-00122\",\n        \"T024-00123\",\n        \"T024-00124\",\n        \"T024-00125\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show the PowerShell command line and its child process, but do not provide the contents, hash, signature, or execution output of Deploy-Patches.ps1.\",\n    \"The logs do not establish whether the patch installation completed successfully.\",\n    \"The evidence records process execution, not whether or how long a PowerShell window was visible to maria.lopez.\"\n  ],\n  \"claims_not_established\": [\n    \"The logs do not establish the integrity or full behavior of the patch script itself.\",\n    \"The logs do not establish that maria.lopez's reported window appeared at precisely 13:40 UTC; the recorded PowerShell start is 13:44:39 UTC.\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [],\n  \"unrelated_findings\": [\n    \"A taskhostw.exe process on WS-MLOPEZ-01 attempted explicit authentication to PROXY-HD-01 using svc-bkp; inventory describes svc-bkp as a backup agent account on FILE-HD-01. Review separately; this does not decide the alerted PowerShell activity. (T024-00043, T024-00045)\",\n    \"Google Drive File Stream launched under maria.lopez, although the inventory lists Microsoft 365/OneDrive as approved and no other cloud-storage services as approved. The records establish execution, not data upload; review separately. (T024-00278, T024-00280, T024-00281)\",\n    \"Palo Alto GlobalProtect PanGPS.exe ran as SYSTEM on WS-MLOPEZ-01, while the inventory states there is no VPN. The records do not establish a VPN connection; review separately. (T024-00039, T024-00040)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 48432,
+    "output": 1825
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "At 13:42:39 UTC, WS-MLOPEZ-01 recorded a network logon for omar.haddad from WS-OHADDAD-01, followed by a privileged-logon event for the same account and logon ID.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T024-00082",
+     "T024-00083"
+    ]
+   },
+   {
+    "claim": "At 13:44:39 UTC, PowerShell ran on WS-MLOPEZ-01 as omar.haddad with the command line invoking the organization's specified patch script, \\\\FILE-HD-01\\IT\\Deploy-Patches.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T024-00111",
+     "T024-00112"
+    ]
+   },
+   {
+    "claim": "The observed PowerShell execution is consistent with the documented IT practice and scheduled workstation patching; the available evidence supports it as the likely explanation for the reported window.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T024-00082",
+     "T024-00111",
+     "T024-00112"
+    ]
+   },
+   {
+    "claim": "The PowerShell process launched wusa.exe to install a Windows 11 update, and the proxy recorded a Windows Update download during the same period.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T024-00113",
+     "T024-00118",
+     "T024-00119"
+    ]
+   },
+   {
+    "claim": "The PowerShell process terminated at 13:45:06 UTC, shortly after the update installer process terminated.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T024-00122",
+     "T024-00123",
+     "T024-00124",
+     "T024-00125"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show the PowerShell command line and its child process, but do not provide the contents, hash, signature, or execution output of Deploy-Patches.ps1.",
+   "The logs do not establish whether the patch installation completed successfully.",
+   "The evidence records process execution, not whether or how long a PowerShell window was visible to maria.lopez."
+  ],
+  "claims_not_established": [
+   "The logs do not establish the integrity or full behavior of the patch script itself.",
+   "The logs do not establish that maria.lopez's reported window appeared at precisely 13:40 UTC; the recorded PowerShell start is 13:44:39 UTC."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [],
+  "unrelated_findings": [
+   "A taskhostw.exe process on WS-MLOPEZ-01 attempted explicit authentication to PROXY-HD-01 using svc-bkp; inventory describes svc-bkp as a backup agent account on FILE-HD-01. Review separately; this does not decide the alerted PowerShell activity. (T024-00043, T024-00045)",
+   "Google Drive File Stream launched under maria.lopez, although the inventory lists Microsoft 365/OneDrive as approved and no other cloud-storage services as approved. The records establish execution, not data upload; review separately. (T024-00278, T024-00280, T024-00281)",
+   "Palo Alto GlobalProtect PanGPS.exe ran as SYSTEM on WS-MLOPEZ-01, while the inventory states there is no VPN. The records do not establish a VPN connection; review separately. (T024-00039, T024-00040)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 14,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.6
+}

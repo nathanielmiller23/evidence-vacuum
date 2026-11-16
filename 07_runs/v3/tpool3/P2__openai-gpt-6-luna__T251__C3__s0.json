@@ -1,0 +1,79 @@
+{
+ "scenario_id": "T251",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "error": "APIConnectionError: Connection error."
+  },
+  {
+   "error": "APIConnectionError: Connection error."
+  },
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.78,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Two network logon attempts for SUNRIDGE\\\\max.fischer from 192.0.2.199 failed with bad-password status, followed about 76 seconds later by a successful NTLM network logon for the same account from the same IP.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T251-00001\", \"T251-00002\", \"T251-00003\"]\n    },\n    {\n      \"claim\": \"The successful event is a LogonType 3 authentication, and its logged source IP is not identified in the supplied asset inventory; the organization states that remote administration is only performed from WS-IDOYLE-01 and that it has no VPN.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T251-00003\"]\n    },\n    {\n      \"claim\": \"A separate interactive logon for max.fischer was recorded on WS-MFISCHER-01 at 13:57 UTC. The available records do not establish that this local session was performed by the same actor as the earlier network authentication.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T251-00004\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy logs for 13:20\u201314:20 UTC were not collected because of a logging outage; proxy activity and destinations in that window cannot be assessed from those logs.\",\n    \"The supplied records do not identify the device or person behind 192.0.2.199.\"\n  ],\n  \"claims_not_established\": [\n    \"The physical or logical device that originated the authentication attempts, or whether the logged IP was translated, spoofed, or otherwise a placeholder.\",\n    \"Who performed the attempts or how a valid password was obtained.\",\n    \"Whether the successful network logon led to access to any particular resource or was associated with the later local interactive session.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Map 192.0.2.199 to a device and network location using DHCP, IPAM, firewall, NAT, and relevant connection records for the event times.\",\n    \"Determine which service or resource accepted the successful network logon and review its access logs and follow-on activity.\",\n    \"Validate the authentication with max.fischer and review credential exposure; consider resetting the account credentials while investigating.\"\n  ],\n  \"unrelated_findings\": [\n    \"Cisco AnyConnect's VPN UI was launched on WS-MFISCHER-01 during the later local session. The organization reports no VPN and no approved remote-access services; these records show the UI and a valid Cisco-signed module, but do not establish that a VPN connection was made. Track separately from the alerted authentication. (T251-00013, T251-00014, T251-00015)\",\n    \"During the later local session, cmd.exe launched WMIC to query disk model, size, and status. This is outside the alerted authentication activity and is not by itself evidence of malicious behavior. (T251-00011, T251-00012, T251-00031, T251-00032)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 5651,
+    "output": 2699
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.78,
+  "supporting_observations": [
+   {
+    "claim": "Two network logon attempts for SUNRIDGE\\max.fischer from 192.0.2.199 failed with bad-password status, followed about 76 seconds later by a successful NTLM network logon for the same account from the same IP.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T251-00001",
+     "T251-00002",
+     "T251-00003"
+    ]
+   },
+   {
+    "claim": "The successful event is a LogonType 3 authentication, and its logged source IP is not identified in the supplied asset inventory; the organization states that remote administration is only performed from WS-IDOYLE-01 and that it has no VPN.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T251-00003"
+    ]
+   },
+   {
+    "claim": "A separate interactive logon for max.fischer was recorded on WS-MFISCHER-01 at 13:57 UTC. The available records do not establish that this local session was performed by the same actor as the earlier network authentication.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T251-00004"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy logs for 13:20\u201314:20 UTC were not collected because of a logging outage; proxy activity and destinations in that window cannot be assessed from those logs.",
+   "The supplied records do not identify the device or person behind 192.0.2.199."
+  ],
+  "claims_not_established": [
+   "The physical or logical device that originated the authentication attempts, or whether the logged IP was translated, spoofed, or otherwise a placeholder.",
+   "Who performed the attempts or how a valid password was obtained.",
+   "Whether the successful network logon led to access to any particular resource or was associated with the later local interactive session."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Map 192.0.2.199 to a device and network location using DHCP, IPAM, firewall, NAT, and relevant connection records for the event times.",
+   "Determine which service or resource accepted the successful network logon and review its access logs and follow-on activity.",
+   "Validate the authentication with max.fischer and review credential exposure; consider resetting the account credentials while investigating."
+  ],
+  "unrelated_findings": [
+   "Cisco AnyConnect's VPN UI was launched on WS-MFISCHER-01 during the later local session. The organization reports no VPN and no approved remote-access services; these records show the UI and a valid Cisco-signed module, but do not establish that a VPN connection was made. Track separately from the alerted authentication. (T251-00013, T251-00014, T251-00015)",
+   "During the later local session, cmd.exe launched WMIC to query disk model, size, and status. This is outside the alerted authentication activity and is not by itself evidence of malicious behavior. (T251-00011, T251-00012, T251-00031, T251-00032)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 5,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 56.9
+}

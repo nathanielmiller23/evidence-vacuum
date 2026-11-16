@@ -1,0 +1,79 @@
+{
+ "scenario_id": "S27",
+ "condition": "C2",
+ "variant": "P1",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.86,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:42:53 UTC, the domain controller recorded cole.price being added to Remote Desktop Users. The change\u2019s subject account was dev.sharma.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S27-00048\"]\n    },\n    {\n      \"claim\": \"The membership change is inconsistent with the supplied environment context: cole.price is a vet tech, Remote Desktop Users membership is restricted to IT, and the listed planned access change was Billing-Share access for hana.ito\u2014not Remote Desktop Users access for cole.price.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S27-00048\"]\n    },\n    {\n      \"claim\": \"About 62 seconds after the group change, a UserAssist registry update on cole.price\u2019s workstation corresponds to the Windows mstsc.exe run path. This is consistent with recent use of the Remote Desktop client, but does not by itself establish a successful remote connection.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S27-00048\", \"S27-00060\"]\n    },\n    {\n      \"claim\": \"Separately, dev.sharma launched mstsc.exe from WS-DSHARMA-01 to FILE-RB-01, and FILE-RB-01 recorded a Remote Desktop logon for dev.sharma from that workstation. This matches the stated administrative access practice but does not explain or validate cole.price\u2019s group addition.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S27-00049\", \"S27-00052\", \"S27-00053\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied cole.price workstation records show UserAssist registry updates, not a process-creation or network-connection event for mstsc.exe; the records therefore do not confirm a successful RDP session by cole.price (S27-00001, S27-00060, S27-00072).\",\n    \"The supplied records do not include a ticket or change-approval record for the Remote Desktop Users membership change; the group-change event itself is recorded in S27-00048.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether cole.price successfully connected to any host using Remote Desktop.\",\n    \"Whether an approved exception or ticket existed for adding cole.price to Remote Desktop Users.\",\n    \"Whether dev.sharma personally performed the change or whether the account or session was used by someone else.\",\n    \"Whether the observed mstsc.exe activity on WS-CPRICE-01 was related to the group change or what host it may have targeted.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Verify the change-management and ticketing systems for approval or a documented exception covering cole.price\u2019s Remote Desktop Users membership.\",\n    \"Collect RDP authentication and connection records from candidate destination hosts, including logon events and Terminal Services operational logs, around the alert window.\",\n    \"Review DC audit and authentication records, including the source and session context for the group change, and validate the dev.sharma account/session with the administrator.\",\n    \"Collect process and network telemetry from WS-CPRICE-01 around 13:43 UTC to determine whether mstsc.exe ran and whether it established a connection.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 13494,
+    "output": 2528
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.86,
+  "supporting_observations": [
+   {
+    "claim": "At 13:42:53 UTC, the domain controller recorded cole.price being added to Remote Desktop Users. The change\u2019s subject account was dev.sharma.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S27-00048"
+    ]
+   },
+   {
+    "claim": "The membership change is inconsistent with the supplied environment context: cole.price is a vet tech, Remote Desktop Users membership is restricted to IT, and the listed planned access change was Billing-Share access for hana.ito\u2014not Remote Desktop Users access for cole.price.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S27-00048"
+    ]
+   },
+   {
+    "claim": "About 62 seconds after the group change, a UserAssist registry update on cole.price\u2019s workstation corresponds to the Windows mstsc.exe run path. This is consistent with recent use of the Remote Desktop client, but does not by itself establish a successful remote connection.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S27-00048",
+     "S27-00060"
+    ]
+   },
+   {
+    "claim": "Separately, dev.sharma launched mstsc.exe from WS-DSHARMA-01 to FILE-RB-01, and FILE-RB-01 recorded a Remote Desktop logon for dev.sharma from that workstation. This matches the stated administrative access practice but does not explain or validate cole.price\u2019s group addition.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S27-00049",
+     "S27-00052",
+     "S27-00053"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied cole.price workstation records show UserAssist registry updates, not a process-creation or network-connection event for mstsc.exe; the records therefore do not confirm a successful RDP session by cole.price (S27-00001, S27-00060, S27-00072).",
+   "The supplied records do not include a ticket or change-approval record for the Remote Desktop Users membership change; the group-change event itself is recorded in S27-00048."
+  ],
+  "claims_not_established": [
+   "Whether cole.price successfully connected to any host using Remote Desktop.",
+   "Whether an approved exception or ticket existed for adding cole.price to Remote Desktop Users.",
+   "Whether dev.sharma personally performed the change or whether the account or session was used by someone else.",
+   "Whether the observed mstsc.exe activity on WS-CPRICE-01 was related to the group change or what host it may have targeted."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Verify the change-management and ticketing systems for approval or a documented exception covering cole.price\u2019s Remote Desktop Users membership.",
+   "Collect RDP authentication and connection records from candidate destination hosts, including logon events and Terminal Services operational logs, around the alert window.",
+   "Review DC audit and authentication records, including the source and session context for the group change, and validate the dev.sharma account/session with the administrator.",
+   "Collect process and network telemetry from WS-CPRICE-01 around 13:43 UTC to determine whether mstsc.exe ran and whether it established a connection."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 7,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 26.8
+}

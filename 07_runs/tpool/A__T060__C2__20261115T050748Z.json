@@ -1,0 +1,96 @@
+{
+ "run_id": "A__T060__C2__20261115T050748Z",
+ "config": "A",
+ "scenario_id": "T060",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 395,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 155707,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.87,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:49:22 UTC, the domain controller recorded a Kerberos service-ticket event for svc-archive, requesting a ticket for FILE-NWD-01$, with the client IP shown as 139.162.174.124. That externally addressed source is inconsistent with the supplied context that there is no VPN and that remote administration is restricted to WS-SOKAFOR-01.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T060-00279\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:50:07 UTC, FILE-NWD-01 sent 640,000,237 bytes to PROXY-NWD-01 over TCP/8080 in a connection lasting about 30 seconds. The record establishes the large transfer to the proxy, but not its ultimate destination or contents.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T060-00298\"\n      ]\n    },\n    {\n      \"claim\": \"At 14:14:37 UTC, PROXY-NWD-01 made an RDP connection to FILE-NWD-01, followed by a failed NTLM network logon for the disabled account svc_mgmt. This is anomalous given the supplied remote-administration policy, but the failure does not establish a successful login.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T060-00500\",\n        \"T060-00501\",\n        \"T060-00502\",\n        \"T060-00503\"\n      ]\n    },\n    {\n      \"claim\": \"At 14:14:39 UTC, FILE-NWD-01 made an SSH connection to PROXY-NWD-01. SSH is not listed among approved remote-access services; the connection record alone does not establish successful authentication or what occurred over the connection.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T060-00504\"\n      ]\n    },\n    {\n      \"claim\": \"There was also an RDP session initiated by sam.okafor from the designated administration workstation WS-SOKAFOR-01, consistent with the supplied IT practice. This provides a plausible explanation for that separate RDP activity, not for the proxy-originated connection.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T060-00121\",\n        \"T060-00127\",\n        \"T060-00131\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The large transfer record identifies FILE-NWD-01, PROXY-NWD-01, byte count, and duration, but does not identify the originating process, proxy request destination, or transferred data. The record is T060-00298.\",\n    \"The svc-archive Kerberos event records an external client IP, but does not by itself establish how the request was made, whether the account credentials were compromised, or whether a corresponding successful logon occurred. The record is T060-00279.\",\n    \"The proxy-originated RDP attempt is followed by a failed logon, and the SSH record shows a connection but not its authentication outcome or payload. Records: T060-00500\u2013T060-00504.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish that the 640 MB transfer reached an unapproved external destination or contained stolen data (T060-00298).\",\n    \"The evidence does not establish that svc-archive was compromised or that the Kerberos event resulted in a successful interactive or service logon (T060-00279).\",\n    \"The evidence does not establish successful RDP authentication from PROXY-NWD-01 or successful SSH authentication from FILE-NWD-01 (T060-00500\u2013T060-00504).\",\n    \"The evidence does not identify the process responsible for the large transfer or prove malware was present (T060-00298).\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Obtain the proxy's detailed access and CONNECT logs for the 640 MB connection, including destination host, URL or tunnel target, user, and byte counts; correlate them with T060-00298.\",\n    \"Collect process-level network telemetry and service/backup-agent logs from FILE-NWD-01 around 13:49\u201313:51 UTC to determine whether the transfer was made by the approved StratoSafe agent.\",\n    \"Investigate the svc-archive event in domain-controller and endpoint authentication logs, including the source-IP attribution and any successful logons around T060-00279.\",\n    \"Review FILE-NWD-01 and PROXY-NWD-01 authentication, RDP, and SSH logs around 14:14 UTC to determine whether either connection was authenticated and what actions followed.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 58617,
+    "output": 3159,
+    "reasoning": 2080
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.87,
+  "supporting_observations": [
+   {
+    "claim": "At 13:49:22 UTC, the domain controller recorded a Kerberos service-ticket event for svc-archive, requesting a ticket for FILE-NWD-01$, with the client IP shown as 139.162.174.124. That externally addressed source is inconsistent with the supplied context that there is no VPN and that remote administration is restricted to WS-SOKAFOR-01.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T060-00279"
+    ]
+   },
+   {
+    "claim": "At 13:50:07 UTC, FILE-NWD-01 sent 640,000,237 bytes to PROXY-NWD-01 over TCP/8080 in a connection lasting about 30 seconds. The record establishes the large transfer to the proxy, but not its ultimate destination or contents.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T060-00298"
+    ]
+   },
+   {
+    "claim": "At 14:14:37 UTC, PROXY-NWD-01 made an RDP connection to FILE-NWD-01, followed by a failed NTLM network logon for the disabled account svc_mgmt. This is anomalous given the supplied remote-administration policy, but the failure does not establish a successful login.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T060-00500",
+     "T060-00501",
+     "T060-00502",
+     "T060-00503"
+    ]
+   },
+   {
+    "claim": "At 14:14:39 UTC, FILE-NWD-01 made an SSH connection to PROXY-NWD-01. SSH is not listed among approved remote-access services; the connection record alone does not establish successful authentication or what occurred over the connection.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T060-00504"
+    ]
+   },
+   {
+    "claim": "There was also an RDP session initiated by sam.okafor from the designated administration workstation WS-SOKAFOR-01, consistent with the supplied IT practice. This provides a plausible explanation for that separate RDP activity, not for the proxy-originated connection.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T060-00121",
+     "T060-00127",
+     "T060-00131"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The large transfer record identifies FILE-NWD-01, PROXY-NWD-01, byte count, and duration, but does not identify the originating process, proxy request destination, or transferred data. The record is T060-00298.",
+   "The svc-archive Kerberos event records an external client IP, but does not by itself establish how the request was made, whether the account credentials were compromised, or whether a corresponding successful logon occurred. The record is T060-00279.",
+   "The proxy-originated RDP attempt is followed by a failed logon, and the SSH record shows a connection but not its authentication outcome or payload. Records: T060-00500\u2013T060-00504."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish that the 640 MB transfer reached an unapproved external destination or contained stolen data (T060-00298).",
+   "The evidence does not establish that svc-archive was compromised or that the Kerberos event resulted in a successful interactive or service logon (T060-00279).",
+   "The evidence does not establish successful RDP authentication from PROXY-NWD-01 or successful SSH authentication from FILE-NWD-01 (T060-00500\u2013T060-00504).",
+   "The evidence does not identify the process responsible for the large transfer or prove malware was present (T060-00298)."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Obtain the proxy's detailed access and CONNECT logs for the 640 MB connection, including destination host, URL or tunnel target, user, and byte counts; correlate them with T060-00298.",
+   "Collect process-level network telemetry and service/backup-agent logs from FILE-NWD-01 around 13:49\u201313:51 UTC to determine whether the transfer was made by the approved StratoSafe agent.",
+   "Investigate the svc-archive event in domain-controller and endpoint authentication logs, including the source-IP attribution and any successful logons around T060-00279.",
+   "Review FILE-NWD-01 and PROXY-NWD-01 authentication, RDP, and SSH logs around 14:14 UTC to determine whether either connection was authenticated and what actions followed."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 32.8
+}

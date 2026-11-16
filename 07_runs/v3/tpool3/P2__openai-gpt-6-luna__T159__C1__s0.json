@@ -1,0 +1,88 @@
+{
+ "scenario_id": "T159",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"PowerShell run as julia.frost archived the file-server path \\\\\\\\FILE-MAP-01\\\\Shared\\\\Clients into C:\\\\Users\\\\julia.frost\\\\AppData\\\\Local\\\\Temp\\\\c.zip; a file-creation event records c.zip shortly afterward.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T159-00148\", \"T159-00149\", \"T159-00150\"]\n    },\n    {\n      \"claim\": \"At 13:50:21 UTC, WS-JFROST-01 sent about 51 MB through the explicit proxy to sharefast-files.com; proxy tunnel and Zeek flow records show roughly 51 MB outbound and only about 9 KB inbound.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T159-00203\", \"T159-00204\"]\n    },\n    {\n      \"claim\": \"The large outbound transfer is strongly consistent with exfiltration: it followed creation of an archive of client files, and its destination is a file-sharing service not listed as approved in the supplied environment context.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T159-00148\", \"T159-00150\", \"T159-00203\", \"T159-00204\"]\n    },\n    {\n      \"claim\": \"The transfer was made by Firefox running as julia.frost, connecting from WS-JFROST-01 to the proxy.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T159-00203\", \"T159-00205\", \"T159-00206\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show the archive was created and a large transfer followed, but do not directly establish that c.zip was the file uploaded.\",\n    \"The proxy and Zeek records provide byte counts and the destination hostname, but the transfer content and remote-side file details are not shown.\",\n    \"The alert describes activity around 13:46 UTC, while the recorded large transfer is at 13:50:21 UTC; the exact alert-event timestamp or correlation basis is not provided.\"\n  ],\n  \"claims_not_established\": [\n    \"The exact contents, sensitivity, and size of the Shared\\\\Clients data or c.zip.\",\n    \"Whether the upload contained c.zip, whether the transfer completed as a stored file, or who controlled the destination account.\",\n    \"Whether julia.frost was acting with authorization or knowledge.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Obtain the exact alert timestamp and underlying network-flow or proxy event used to generate it, and reconcile it with the 13:50:21 transfer.\",\n    \"Preserve and inspect c.zip and relevant endpoint file-system artifacts, including hashes, archive contents, and access history for the source directory.\",\n    \"Collect proxy/TLS inspection, DNS, endpoint, and destination-side records that could identify the uploaded object, account, and completion status.\",\n    \"Confirm with the data owner and julia.frost whether the client-data archive and transfer were authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"Google Drive File Stream started on WS-JFROST-01, although the supplied approved-services context does not list Google Drive; these records do not establish that it participated in the alerted transfer. Review separately. (T159-00011, T159-00012, T159-00013)\",\n    \"Firefox accessed the AWS console and AWS static assets from WS-JFROST-01; the supplied approved-services context does not explain this activity. Review separately; it is not evidence about the large transfer. (T159-00053, T159-00054, T159-00058, T159-00059)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 52716,
+    "output": 1357
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "PowerShell run as julia.frost archived the file-server path \\\\FILE-MAP-01\\Shared\\Clients into C:\\Users\\julia.frost\\AppData\\Local\\Temp\\c.zip; a file-creation event records c.zip shortly afterward.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T159-00148",
+     "T159-00149",
+     "T159-00150"
+    ]
+   },
+   {
+    "claim": "At 13:50:21 UTC, WS-JFROST-01 sent about 51 MB through the explicit proxy to sharefast-files.com; proxy tunnel and Zeek flow records show roughly 51 MB outbound and only about 9 KB inbound.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T159-00203",
+     "T159-00204"
+    ]
+   },
+   {
+    "claim": "The large outbound transfer is strongly consistent with exfiltration: it followed creation of an archive of client files, and its destination is a file-sharing service not listed as approved in the supplied environment context.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T159-00148",
+     "T159-00150",
+     "T159-00203",
+     "T159-00204"
+    ]
+   },
+   {
+    "claim": "The transfer was made by Firefox running as julia.frost, connecting from WS-JFROST-01 to the proxy.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T159-00203",
+     "T159-00205",
+     "T159-00206"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show the archive was created and a large transfer followed, but do not directly establish that c.zip was the file uploaded.",
+   "The proxy and Zeek records provide byte counts and the destination hostname, but the transfer content and remote-side file details are not shown.",
+   "The alert describes activity around 13:46 UTC, while the recorded large transfer is at 13:50:21 UTC; the exact alert-event timestamp or correlation basis is not provided."
+  ],
+  "claims_not_established": [
+   "The exact contents, sensitivity, and size of the Shared\\Clients data or c.zip.",
+   "Whether the upload contained c.zip, whether the transfer completed as a stored file, or who controlled the destination account.",
+   "Whether julia.frost was acting with authorization or knowledge."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Obtain the exact alert timestamp and underlying network-flow or proxy event used to generate it, and reconcile it with the 13:50:21 transfer.",
+   "Preserve and inspect c.zip and relevant endpoint file-system artifacts, including hashes, archive contents, and access history for the source directory.",
+   "Collect proxy/TLS inspection, DNS, endpoint, and destination-side records that could identify the uploaded object, account, and completion status.",
+   "Confirm with the data owner and julia.frost whether the client-data archive and transfer were authorized."
+  ],
+  "unrelated_findings": [
+   "Google Drive File Stream started on WS-JFROST-01, although the supplied approved-services context does not list Google Drive; these records do not establish that it participated in the alerted transfer. Review separately. (T159-00011, T159-00012, T159-00013)",
+   "Firefox accessed the AWS console and AWS static assets from WS-JFROST-01; the supplied approved-services context does not explain this activity. Review separately; it is not evidence about the large transfer. (T159-00053, T159-00054, T159-00058, T159-00059)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 13.5
+}

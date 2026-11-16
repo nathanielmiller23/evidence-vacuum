@@ -1,0 +1,83 @@
+{
+ "scenario_id": "T227",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The account was actually created at 13:47:16 UTC, not around the alert's stated 13:42 time. The domain-controller event records ian.doyle as the subject creating adm_temp.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T227-00154\"]\n    },\n    {\n      \"claim\": \"About two minutes later, ian.doyle was recorded adding adm_temp to the SUNRIDGE Administrators group. This conflicts with the stated practice that temporary accounts do not receive administrator rights.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T227-00155\"]\n    },\n    {\n      \"claim\": \"At 13:42:49 UTC, ian.doyle logged on interactively to WS-MFISCHER-01 over RDP from 192.0.2.199 using NTLM. The inventory says remote administration is only performed from WS-IDOYLE-01 and there is no VPN.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T227-00076\", \"T227-00077\", \"T227-00078\"]\n    },\n    {\n      \"claim\": \"At 13:47:19 UTC, ian.doyle created a scheduled task on WS-MFISCHER-01 that runs hidden PowerShell with an encoded command. The command decodes to downloading and invoking a script from http://192.0.2.199/a.ps1, which is strong evidence of malicious activity. The logs establish task creation, not that the task ran.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T227-00156\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The account creation and administrator-group change use DC logon ID 0x1382ab23, while the RDP session on WS-MFISCHER-01 uses logon ID 0xa66836d; the supplied records do not directly link those logon IDs.\",\n    \"The task-creation event does not establish whether the task executed or whether the script was successfully retrieved.\",\n    \"The records do not establish who controlled the RDP source address 192.0.2.199 or whether the activity had authorization.\",\n    \"The alert's approximate 13:42 creation time differs from the recorded account-creation time of 13:47:16 UTC.\"\n  ],\n  \"claims_not_established\": [\n    \"That the scheduled task executed or that its downloaded script caused further activity.\",\n    \"That the same person who initiated the RDP session performed the domain account changes, despite the records naming ian.doyle as the subject.\",\n    \"That the activity was authorized or that ian.doyle's credentials were not compromised.\",\n    \"Whether adm_temp was subsequently used or what other group memberships or permissions it received.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate the domain-controller account-management events with authentication records, source host/IP, and the relevant logon IDs to establish how the changes were performed.\",\n    \"Collect scheduled-task execution history and endpoint process, network, and file telemetry from WS-MFISCHER-01; investigate the referenced URL and obtain the script if available.\",\n    \"Verify the RDP session and source address against authorized change records and with ian.doyle; investigate possible credential compromise.\",\n    \"Review adm_temp's current status, group memberships, password and authentication history, and disable or remove it if unauthorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-MFISCHER-01 browsed Zoom and Atlassian services, which are not among the approved services in the supplied inventory; track separately and do not use this to determine the account alert. Records include T227-00133, T227-00134, T227-00321, and T227-00322.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 52292,
+    "output": 1896
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "The account was actually created at 13:47:16 UTC, not around the alert's stated 13:42 time. The domain-controller event records ian.doyle as the subject creating adm_temp.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T227-00154"
+    ]
+   },
+   {
+    "claim": "About two minutes later, ian.doyle was recorded adding adm_temp to the SUNRIDGE Administrators group. This conflicts with the stated practice that temporary accounts do not receive administrator rights.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T227-00155"
+    ]
+   },
+   {
+    "claim": "At 13:42:49 UTC, ian.doyle logged on interactively to WS-MFISCHER-01 over RDP from 192.0.2.199 using NTLM. The inventory says remote administration is only performed from WS-IDOYLE-01 and there is no VPN.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T227-00076",
+     "T227-00077",
+     "T227-00078"
+    ]
+   },
+   {
+    "claim": "At 13:47:19 UTC, ian.doyle created a scheduled task on WS-MFISCHER-01 that runs hidden PowerShell with an encoded command. The command decodes to downloading and invoking a script from http://192.0.2.199/a.ps1, which is strong evidence of malicious activity. The logs establish task creation, not that the task ran.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T227-00156"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The account creation and administrator-group change use DC logon ID 0x1382ab23, while the RDP session on WS-MFISCHER-01 uses logon ID 0xa66836d; the supplied records do not directly link those logon IDs.",
+   "The task-creation event does not establish whether the task executed or whether the script was successfully retrieved.",
+   "The records do not establish who controlled the RDP source address 192.0.2.199 or whether the activity had authorization.",
+   "The alert's approximate 13:42 creation time differs from the recorded account-creation time of 13:47:16 UTC."
+  ],
+  "claims_not_established": [
+   "That the scheduled task executed or that its downloaded script caused further activity.",
+   "That the same person who initiated the RDP session performed the domain account changes, despite the records naming ian.doyle as the subject.",
+   "That the activity was authorized or that ian.doyle's credentials were not compromised.",
+   "Whether adm_temp was subsequently used or what other group memberships or permissions it received."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate the domain-controller account-management events with authentication records, source host/IP, and the relevant logon IDs to establish how the changes were performed.",
+   "Collect scheduled-task execution history and endpoint process, network, and file telemetry from WS-MFISCHER-01; investigate the referenced URL and obtain the script if available.",
+   "Verify the RDP session and source address against authorized change records and with ian.doyle; investigate possible credential compromise.",
+   "Review adm_temp's current status, group memberships, password and authentication history, and disable or remove it if unauthorized."
+  ],
+  "unrelated_findings": [
+   "WS-MFISCHER-01 browsed Zoom and Atlassian services, which are not among the approved services in the supplied inventory; track separately and do not use this to determine the account alert. Records include T227-00133, T227-00134, T227-00321, and T227-00322."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 6,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.7
+}

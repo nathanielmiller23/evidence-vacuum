@@ -1,0 +1,87 @@
+{
+ "scenario_id": "T039",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:39:46, ivy.chen ran PowerShell to compress \\\\\\\\FILE-NWD-01\\\\Shared\\\\Clients into C:\\\\Users\\\\ivy.chen\\\\AppData\\\\Local\\\\Temp\\\\c.zip; Sysmon subsequently recorded creation of that archive.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T039-00104\",\n        \"T039-00105\",\n        \"T039-00106\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:45:32, ivy.chen's Chrome process was launched to open quickshare-drop.net, a file-sharing service not listed as approved in the supplied environment context.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T039-00133\",\n        \"T039-00135\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:45:58, the proxy recorded a successful CONNECT tunnel to quickshare-drop.net with 51,000,000 client-to-server bytes and 8,800 server-to-client bytes; Zeek recorded about 51 MB originating from the workstation on the corresponding proxy connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T039-00138\",\n        \"T039-00140\"\n      ]\n    },\n    {\n      \"claim\": \"The sequence of archiving a shared Clients directory, opening an unapproved file-sharing site, and sending about 51 MB through its tunnel strongly supports suspected data exfiltration and warrants a malicious-activity finding.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T039-00104\",\n        \"T039-00106\",\n        \"T039-00133\",\n        \"T039-00138\",\n        \"T039-00140\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and Zeek records show the size and direction of traffic through the CONNECT tunnel, but do not expose the encrypted application payload or identify which file or files were transferred (T039-00138, T039-00140).\",\n    \"The archive creation and large transfer are closely sequenced, but the available records do not directly link c.zip to the bytes sent through the tunnel (T039-00106, T039-00138, T039-00140).\",\n    \"The tunnel status and byte counts do not establish what the remote service did with the data or whether an application-level upload completed successfully (T039-00138).\"\n  ],\n  \"claims_not_established\": [\n    \"The exact contents or sensitivity of the archived files are not established by the available records (T039-00104, T039-00106).\",\n    \"The available records do not establish that c.zip was the specific payload sent, or whether the transfer was authorized by the organization (T039-00106, T039-00138, T039-00140).\",\n    \"The available records do not establish the remote service's final receipt or retention of the transmitted data (T039-00138).\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine c.zip, including its contents, timestamps, and hash; correlate it with file-access and file-server audit records for the source directory.\",\n    \"Obtain available endpoint/browser and proxy TLS inspection or upload metadata to determine the uploaded object's identity and destination-side result.\",\n    \"Confirm with ivy.chen and the relevant data owner whether the archive and transfer were authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"Cisco AnyConnect vpnui.exe was launched under ivy.chen's account at 14:04; the supplied environment context says there is no VPN. The records establish process launch and a validly signed Cisco DLL load, but do not show that a VPN connection was made. Track separately; it does not determine the alerted transfer (T039-00190, T039-00191, T039-00192).\",\n    \"Zscaler ZSATunnel.exe started under SYSTEM at 14:12. Verify separately whether this software is authorized and expected; these records do not establish a connection or link it to the alerted transfer (T039-00264, T039-00265).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 47627,
+    "output": 1896
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "At 13:39:46, ivy.chen ran PowerShell to compress \\\\FILE-NWD-01\\Shared\\Clients into C:\\Users\\ivy.chen\\AppData\\Local\\Temp\\c.zip; Sysmon subsequently recorded creation of that archive.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T039-00104",
+     "T039-00105",
+     "T039-00106"
+    ]
+   },
+   {
+    "claim": "At 13:45:32, ivy.chen's Chrome process was launched to open quickshare-drop.net, a file-sharing service not listed as approved in the supplied environment context.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T039-00133",
+     "T039-00135"
+    ]
+   },
+   {
+    "claim": "At 13:45:58, the proxy recorded a successful CONNECT tunnel to quickshare-drop.net with 51,000,000 client-to-server bytes and 8,800 server-to-client bytes; Zeek recorded about 51 MB originating from the workstation on the corresponding proxy connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T039-00138",
+     "T039-00140"
+    ]
+   },
+   {
+    "claim": "The sequence of archiving a shared Clients directory, opening an unapproved file-sharing site, and sending about 51 MB through its tunnel strongly supports suspected data exfiltration and warrants a malicious-activity finding.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T039-00104",
+     "T039-00106",
+     "T039-00133",
+     "T039-00138",
+     "T039-00140"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and Zeek records show the size and direction of traffic through the CONNECT tunnel, but do not expose the encrypted application payload or identify which file or files were transferred (T039-00138, T039-00140).",
+   "The archive creation and large transfer are closely sequenced, but the available records do not directly link c.zip to the bytes sent through the tunnel (T039-00106, T039-00138, T039-00140).",
+   "The tunnel status and byte counts do not establish what the remote service did with the data or whether an application-level upload completed successfully (T039-00138)."
+  ],
+  "claims_not_established": [
+   "The exact contents or sensitivity of the archived files are not established by the available records (T039-00104, T039-00106).",
+   "The available records do not establish that c.zip was the specific payload sent, or whether the transfer was authorized by the organization (T039-00106, T039-00138, T039-00140).",
+   "The available records do not establish the remote service's final receipt or retention of the transmitted data (T039-00138)."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine c.zip, including its contents, timestamps, and hash; correlate it with file-access and file-server audit records for the source directory.",
+   "Obtain available endpoint/browser and proxy TLS inspection or upload metadata to determine the uploaded object's identity and destination-side result.",
+   "Confirm with ivy.chen and the relevant data owner whether the archive and transfer were authorized."
+  ],
+  "unrelated_findings": [
+   "Cisco AnyConnect vpnui.exe was launched under ivy.chen's account at 14:04; the supplied environment context says there is no VPN. The records establish process launch and a validly signed Cisco DLL load, but do not show that a VPN connection was made. Track separately; it does not determine the alerted transfer (T039-00190, T039-00191, T039-00192).",
+   "Zscaler ZSATunnel.exe started under SYSTEM at 14:12. Verify separately whether this software is authorized and expected; these records do not establish a connection or link it to the alerted transfer (T039-00264, T039-00265)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.7
+}

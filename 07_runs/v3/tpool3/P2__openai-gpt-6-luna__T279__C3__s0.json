@@ -1,0 +1,74 @@
+{
+ "scenario_id": "T279",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.9,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:48:11 UTC, WS-ACOLE-01 connected to the explicit proxy on port 8080; Zeek recorded 51,000,299 bytes from the workstation to the proxy and 8,898 bytes in the reverse direction.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T279-00228\"]\n    },\n    {\n      \"claim\": \"The connection's large workstation-to-proxy byte count is consistent with a substantial upload, but the connection record alone does not establish what was sent or whether it reached an external destination.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T279-00228\"]\n    },\n    {\n      \"claim\": \"About 29 seconds before the large proxy connection, the domain controller recorded a service ticket for WS-ACOLE-01$ to FILE-ORC-01$; this establishes authentication activity, not that files were accessed or that it caused the transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T279-00220\", \"T279-00228\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied collection status says WS-ACOLE-01 winsec and sysmon logs were not collected from 13:25 to 14:20 UTC, leaving the alerted connection without endpoint process or user attribution.\",\n    \"The supplied collection status says PROXY-ORC-01 proxy logs were not collected from 13:25 to 14:20 UTC, so the proxy request's destination, URL, method, and outcome are unavailable.\",\n    \"Zeek connection telemetry is available for the alerted connection, but the supplied record contains no payload or application-level details beyond the proxy connection and byte counts.\"\n  ],\n  \"claims_not_established\": [\n    \"What external service or destination, if any, received the data.\",\n    \"Which process and user initiated the connection.\",\n    \"What data was sent, whether it contained sensitive information, or whether the transfer completed successfully.\",\n    \"Whether the transfer was authorized or related to a legitimate user activity.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover proxy access or transaction logs for the 13:48:11 UTC connection, including destination, URL, HTTP method, response status, and request size.\",\n    \"Obtain endpoint EDR, process, browser, and file-access evidence for WS-ACOLE-01 around 13:46\u201313:49 UTC to identify the initiating process and data source.\",\n    \"Correlate the connection with OneDrive or other approved-service audit records and with the user's activity.\",\n    \"Check network or proxy records for the same connection's destination and outcome, and determine whether the FILE-ORC-01 service-ticket activity corresponds to any actual file access.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:22 UTC, explorer.exe loaded a 7-Zip DLL whose signature was reported as false, with signature status unavailable. This is separate from the alerted transfer and is not enough by itself to establish malicious activity. (T279-00001)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 25666,
+    "output": 1696
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.9,
+  "supporting_observations": [
+   {
+    "claim": "At 13:48:11 UTC, WS-ACOLE-01 connected to the explicit proxy on port 8080; Zeek recorded 51,000,299 bytes from the workstation to the proxy and 8,898 bytes in the reverse direction.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T279-00228"
+    ]
+   },
+   {
+    "claim": "The connection's large workstation-to-proxy byte count is consistent with a substantial upload, but the connection record alone does not establish what was sent or whether it reached an external destination.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T279-00228"
+    ]
+   },
+   {
+    "claim": "About 29 seconds before the large proxy connection, the domain controller recorded a service ticket for WS-ACOLE-01$ to FILE-ORC-01$; this establishes authentication activity, not that files were accessed or that it caused the transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T279-00220",
+     "T279-00228"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied collection status says WS-ACOLE-01 winsec and sysmon logs were not collected from 13:25 to 14:20 UTC, leaving the alerted connection without endpoint process or user attribution.",
+   "The supplied collection status says PROXY-ORC-01 proxy logs were not collected from 13:25 to 14:20 UTC, so the proxy request's destination, URL, method, and outcome are unavailable.",
+   "Zeek connection telemetry is available for the alerted connection, but the supplied record contains no payload or application-level details beyond the proxy connection and byte counts."
+  ],
+  "claims_not_established": [
+   "What external service or destination, if any, received the data.",
+   "Which process and user initiated the connection.",
+   "What data was sent, whether it contained sensitive information, or whether the transfer completed successfully.",
+   "Whether the transfer was authorized or related to a legitimate user activity."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover proxy access or transaction logs for the 13:48:11 UTC connection, including destination, URL, HTTP method, response status, and request size.",
+   "Obtain endpoint EDR, process, browser, and file-access evidence for WS-ACOLE-01 around 13:46\u201313:49 UTC to identify the initiating process and data source.",
+   "Correlate the connection with OneDrive or other approved-service audit records and with the user's activity.",
+   "Check network or proxy records for the same connection's destination and outcome, and determine whether the FILE-ORC-01 service-ticket activity corresponds to any actual file access."
+  ],
+  "unrelated_findings": [
+   "At 13:22 UTC, explorer.exe loaded a 7-Zip DLL whose signature was reported as false, with signature status unavailable. This is separate from the alerted transfer and is not enough by itself to establish malicious activity. (T279-00001)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 4,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 19.5
+}

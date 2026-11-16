@@ -1,0 +1,97 @@
+{
+ "scenario_id": "T062",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.84,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The repeated svc-billing failures are reported from FILE-PIN-01, with logon type 3 and incorrect-password status 0xc000006a; corresponding domain-controller records also show credential-validation failures.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T062-00003\",\n        \"T062-00004\",\n        \"T062-00015\",\n        \"T062-00017\",\n        \"T062-00035\",\n        \"T062-00036\"\n      ]\n    },\n    {\n      \"claim\": \"The failures recur at roughly one-minute intervals and identify FILE-PIN-01 as the workstation, consistent with the supplied context that BillingSync runs every minute and re-authenticates each run. The scheduled password rotation makes a stale job credential a plausible explanation, but the records do not establish that this is the cause.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T062-00003\",\n        \"T062-00005\",\n        \"T062-00007\",\n        \"T062-00009\",\n        \"T062-00012\",\n        \"T062-00015\",\n        \"T062-00016\",\n        \"T062-00018\",\n        \"T062-00021\",\n        \"T062-00023\",\n        \"T062-00025\",\n        \"T062-00026\",\n        \"T062-00028\",\n        \"T062-00030\",\n        \"T062-00033\",\n        \"T062-00035\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:35, WS-ESTONE-01 recorded a SYSTEM PowerShell process using explicit credentials for svc-billing to target DC-PIN-01. The record does not show the command or explain why this occurred.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T062-00002\"\n      ]\n    },\n    {\n      \"claim\": \"Before the repeated failures, DC-PIN-01 also recorded a SYSTEM PowerShell process using explicit svc-billing credentials to target FILE-PIN-01; its relationship to the later failures is unknown.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T062-00001\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show failed authentication attempts but do not show whether any related authentication succeeded.\",\n    \"The explicit-credential events identify PowerShell but provide no command line, script contents, or initiating user beyond SYSTEM.\",\n    \"The logs do not identify the exact application or scheduled task responsible for the FILE-PIN-01 attempts.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the FILE-PIN-01 failures were caused by BillingSync retaining the pre-rotation password.\",\n    \"Whether the WS-ESTONE-01 explicit-credential event was authorized or connected to the password rotation.\",\n    \"Whether any account or host was compromised, or whether the observed attempts led to successful access.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"BillingSync and scheduled-task logs, configuration, and credential-update history around 13:30 UTC.\",\n    \"Change records confirming whether the svc-billing password rotation occurred and who performed it.\",\n    \"PowerShell operational logs, script-block or command-line telemetry, and process/task history for WS-ESTONE-01 and DC-PIN-01 around the two 4648 events.\",\n    \"Successful logon and account-use records for svc-billing on FILE-PIN-01, DC-PIN-01, and WS-ESTONE-01 during the review window.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 6283,
+    "output": 2131
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.84,
+  "supporting_observations": [
+   {
+    "claim": "The repeated svc-billing failures are reported from FILE-PIN-01, with logon type 3 and incorrect-password status 0xc000006a; corresponding domain-controller records also show credential-validation failures.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T062-00003",
+     "T062-00004",
+     "T062-00015",
+     "T062-00017",
+     "T062-00035",
+     "T062-00036"
+    ]
+   },
+   {
+    "claim": "The failures recur at roughly one-minute intervals and identify FILE-PIN-01 as the workstation, consistent with the supplied context that BillingSync runs every minute and re-authenticates each run. The scheduled password rotation makes a stale job credential a plausible explanation, but the records do not establish that this is the cause.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T062-00003",
+     "T062-00005",
+     "T062-00007",
+     "T062-00009",
+     "T062-00012",
+     "T062-00015",
+     "T062-00016",
+     "T062-00018",
+     "T062-00021",
+     "T062-00023",
+     "T062-00025",
+     "T062-00026",
+     "T062-00028",
+     "T062-00030",
+     "T062-00033",
+     "T062-00035"
+    ]
+   },
+   {
+    "claim": "At 13:35, WS-ESTONE-01 recorded a SYSTEM PowerShell process using explicit credentials for svc-billing to target DC-PIN-01. The record does not show the command or explain why this occurred.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T062-00002"
+    ]
+   },
+   {
+    "claim": "Before the repeated failures, DC-PIN-01 also recorded a SYSTEM PowerShell process using explicit svc-billing credentials to target FILE-PIN-01; its relationship to the later failures is unknown.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T062-00001"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show failed authentication attempts but do not show whether any related authentication succeeded.",
+   "The explicit-credential events identify PowerShell but provide no command line, script contents, or initiating user beyond SYSTEM.",
+   "The logs do not identify the exact application or scheduled task responsible for the FILE-PIN-01 attempts."
+  ],
+  "claims_not_established": [
+   "Whether the FILE-PIN-01 failures were caused by BillingSync retaining the pre-rotation password.",
+   "Whether the WS-ESTONE-01 explicit-credential event was authorized or connected to the password rotation.",
+   "Whether any account or host was compromised, or whether the observed attempts led to successful access."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "BillingSync and scheduled-task logs, configuration, and credential-update history around 13:30 UTC.",
+   "Change records confirming whether the svc-billing password rotation occurred and who performed it.",
+   "PowerShell operational logs, script-block or command-line telemetry, and process/task history for WS-ESTONE-01 and DC-PIN-01 around the two 4648 events.",
+   "Successful logon and account-use records for svc-billing on FILE-PIN-01, DC-PIN-01, and WS-ESTONE-01 during the review window."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 24,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.3
+}

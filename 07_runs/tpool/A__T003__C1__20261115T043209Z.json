@@ -1,0 +1,114 @@
+{
+ "run_id": "A__T003__C1__20261115T043209Z",
+ "config": "A",
+ "scenario_id": "T003",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 451,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 193097,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:39:48 UTC, Maria's Word process opened Downloads\\\\Statement.docm; about one second later, Word launched PowerShell with hidden-window and no-profile options and an encoded command, under Maria's medium-integrity session.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T003-00205\",\n        \"T003-00208\",\n        \"T003-00211\",\n        \"T003-00212\"\n      ]\n    },\n    {\n      \"claim\": \"The encoded PowerShell command decodes to an in-memory download-and-execute expression (IEX) that retrieves u.ps1 from raw.githubusercontent.com/harbor-dental-it/tools/main; proxy records show a successful request for that same script by the PowerShell process.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T003-00211\",\n        \"T003-00212\",\n        \"T003-00213\",\n        \"T003-00214\",\n        \"T003-00215\",\n        \"T003-00217\"\n      ]\n    },\n    {\n      \"claim\": \"PowerShell created a temporary file and launched rundll32 to call Init in C:\\\\Users\\\\maria.lopez\\\\AppData\\\\Roaming\\\\svchelper.dll. The rundll32, PowerShell, and Word processes then exited within seconds.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T003-00222\",\n        \"T003-00223\",\n        \"T003-00224\",\n        \"T003-00225\",\n        \"T003-00226\",\n        \"T003-00230\",\n        \"T003-00231\",\n        \"T003-00232\",\n        \"T003-00233\"\n      ]\n    },\n    {\n      \"claim\": \"The hidden encoded PowerShell download-and-execute behavior, followed by execution of a DLL through rundll32 from the user's roaming profile, supports a malicious-activity finding rather than a normal help-desk or patching action.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T003-00211\",\n        \"T003-00214\",\n        \"T003-00223\"\n      ]\n    },\n    {\n      \"claim\": \"Chrome accessed Google Drive shortly before the document was opened, including the Drive data endpoint; these records establish access, not an upload.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T003-00180\",\n        \"T003-00181\",\n        \"T003-00200\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied proxy records show the GitHub script request but not the downloaded script's contents; the PowerShell command and request are recorded in T003-00211 and T003-00214.\",\n    \"The supplied records show rundll32 invoked with the roaming-profile DLL path, but do not include the DLL's contents, hash, signature, or a file-creation record for that DLL; see T003-00223.\",\n    \"The supplied records do not establish what Statement.docm contained or how it reached the workstation; its opening is recorded in T003-00205.\",\n    \"The Google Drive records show browsing and a data-endpoint request, but do not establish that any file was uploaded; see T003-00180, T003-00181, and T003-00200.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the downloaded script or DLL completed its intended actions, and what those actions were.\",\n    \"Whether Statement.docm was malicious or was the mechanism that caused the PowerShell launch; the records establish Word as PowerShell's parent, not the document's contents.\",\n    \"Whether data was collected or exfiltrated, including through Google Drive.\",\n    \"Whether the DLL or other components established persistence, affected other accounts, or reached other hosts.\",\n    \"Whether the GitHub repository or script was authorized or controlled by the organization.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Isolate and preserve WS-MLOPEZ-01 for endpoint triage; collect memory and a forensic image, including the document, downloaded script, temporary file, and svchelper.dll.\",\n    \"Obtain hashes, signatures, and content for Statement.docm, u.ps1, and svchelper.dll; review the GitHub repository and its history for the requested script.\",\n    \"Collect endpoint protection and EDR detections, execution and persistence artifacts, and relevant file-system and registry telemetry around the event.\",\n    \"Review email, browser-download, and Microsoft 365 records to determine the document's source and whether it was shared with other users.\",\n    \"Review Google Drive audit and proxy data for file transfers, and check DC-HD-01, FILE-HD-01, and other endpoints for related activity.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 71466,
+    "output": 1997,
+    "reasoning": 912
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:39:48 UTC, Maria's Word process opened Downloads\\Statement.docm; about one second later, Word launched PowerShell with hidden-window and no-profile options and an encoded command, under Maria's medium-integrity session.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T003-00205",
+     "T003-00208",
+     "T003-00211",
+     "T003-00212"
+    ]
+   },
+   {
+    "claim": "The encoded PowerShell command decodes to an in-memory download-and-execute expression (IEX) that retrieves u.ps1 from raw.githubusercontent.com/harbor-dental-it/tools/main; proxy records show a successful request for that same script by the PowerShell process.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T003-00211",
+     "T003-00212",
+     "T003-00213",
+     "T003-00214",
+     "T003-00215",
+     "T003-00217"
+    ]
+   },
+   {
+    "claim": "PowerShell created a temporary file and launched rundll32 to call Init in C:\\Users\\maria.lopez\\AppData\\Roaming\\svchelper.dll. The rundll32, PowerShell, and Word processes then exited within seconds.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T003-00222",
+     "T003-00223",
+     "T003-00224",
+     "T003-00225",
+     "T003-00226",
+     "T003-00230",
+     "T003-00231",
+     "T003-00232",
+     "T003-00233"
+    ]
+   },
+   {
+    "claim": "The hidden encoded PowerShell download-and-execute behavior, followed by execution of a DLL through rundll32 from the user's roaming profile, supports a malicious-activity finding rather than a normal help-desk or patching action.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T003-00211",
+     "T003-00214",
+     "T003-00223"
+    ]
+   },
+   {
+    "claim": "Chrome accessed Google Drive shortly before the document was opened, including the Drive data endpoint; these records establish access, not an upload.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T003-00180",
+     "T003-00181",
+     "T003-00200"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied proxy records show the GitHub script request but not the downloaded script's contents; the PowerShell command and request are recorded in T003-00211 and T003-00214.",
+   "The supplied records show rundll32 invoked with the roaming-profile DLL path, but do not include the DLL's contents, hash, signature, or a file-creation record for that DLL; see T003-00223.",
+   "The supplied records do not establish what Statement.docm contained or how it reached the workstation; its opening is recorded in T003-00205.",
+   "The Google Drive records show browsing and a data-endpoint request, but do not establish that any file was uploaded; see T003-00180, T003-00181, and T003-00200."
+  ],
+  "claims_not_established": [
+   "Whether the downloaded script or DLL completed its intended actions, and what those actions were.",
+   "Whether Statement.docm was malicious or was the mechanism that caused the PowerShell launch; the records establish Word as PowerShell's parent, not the document's contents.",
+   "Whether data was collected or exfiltrated, including through Google Drive.",
+   "Whether the DLL or other components established persistence, affected other accounts, or reached other hosts.",
+   "Whether the GitHub repository or script was authorized or controlled by the organization."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Isolate and preserve WS-MLOPEZ-01 for endpoint triage; collect memory and a forensic image, including the document, downloaded script, temporary file, and svchelper.dll.",
+   "Obtain hashes, signatures, and content for Statement.docm, u.ps1, and svchelper.dll; review the GitHub repository and its history for the requested script.",
+   "Collect endpoint protection and EDR detections, execution and persistence artifacts, and relevant file-system and registry telemetry around the event.",
+   "Review email, browser-download, and Microsoft 365 records to determine the document's source and whether it was shared with other users.",
+   "Review Google Drive audit and proxy data for file transfers, and check DC-HD-01, FILE-HD-01, and other endpoints for related activity."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 25,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.6
+}

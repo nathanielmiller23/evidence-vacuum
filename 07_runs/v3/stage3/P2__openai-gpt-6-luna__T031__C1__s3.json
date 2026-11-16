@@ -1,0 +1,80 @@
+{
+ "scenario_id": "T031",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 3,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.78,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded two failed network logons for leo.martins using NTLM from 203.0.113.250, with the failure substatus indicating an incorrect password.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T031-00002\",\n        \"T031-00003\"\n      ]\n    },\n    {\n      \"claim\": \"About 80 seconds after the second failure, the domain controller recorded a successful network logon for leo.martins using Kerberos from the same IP address.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T031-00003\",\n        \"T031-00005\"\n      ]\n    },\n    {\n      \"claim\": \"The sequence of repeated incorrect-password attempts followed by a successful logon from the same recorded IP is suspicious and supports treating the alerted activity as potentially malicious.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T031-00002\",\n        \"T031-00003\",\n        \"T031-00005\"\n      ]\n    },\n    {\n      \"claim\": \"The successful logon is associated with an IP address rather than the named remote-administration workstation in the supplied environment context; the context says remote administration is only performed from WS-SOKAFOR-01.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T031-00005\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show authentication outcomes and reported source fields, but do not identify the person or device behind 203.0.113.250.\",\n    \"The available evidence contains no endpoint telemetry showing what happened during or after the successful logon.\",\n    \"The successful event uses Kerberos while the preceding failures use NTLM; the records do not establish whether all three attempts came from the same actor or process.\"\n  ],\n  \"claims_not_established\": [\n    \"That an unauthorized person controlled the source associated with 203.0.113.250.\",\n    \"That leo.martins's credentials were compromised rather than the successful logon being authorized.\",\n    \"What resources or actions, if any, followed the successful logon.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate domain-controller authentication and logon-session records with network, firewall, and endpoint telemetry to identify the source behind 203.0.113.250.\",\n    \"Verify with leo.martins and relevant IT staff whether this logon was expected.\",\n    \"Review activity associated with the successful logon, including accessed services, resources, and any subsequent authentication events.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 2291,
+    "output": 1561
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.78,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded two failed network logons for leo.martins using NTLM from 203.0.113.250, with the failure substatus indicating an incorrect password.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T031-00002",
+     "T031-00003"
+    ]
+   },
+   {
+    "claim": "About 80 seconds after the second failure, the domain controller recorded a successful network logon for leo.martins using Kerberos from the same IP address.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T031-00003",
+     "T031-00005"
+    ]
+   },
+   {
+    "claim": "The sequence of repeated incorrect-password attempts followed by a successful logon from the same recorded IP is suspicious and supports treating the alerted activity as potentially malicious.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T031-00002",
+     "T031-00003",
+     "T031-00005"
+    ]
+   },
+   {
+    "claim": "The successful logon is associated with an IP address rather than the named remote-administration workstation in the supplied environment context; the context says remote administration is only performed from WS-SOKAFOR-01.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T031-00005"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show authentication outcomes and reported source fields, but do not identify the person or device behind 203.0.113.250.",
+   "The available evidence contains no endpoint telemetry showing what happened during or after the successful logon.",
+   "The successful event uses Kerberos while the preceding failures use NTLM; the records do not establish whether all three attempts came from the same actor or process."
+  ],
+  "claims_not_established": [
+   "That an unauthorized person controlled the source associated with 203.0.113.250.",
+   "That leo.martins's credentials were compromised rather than the successful logon being authorized.",
+   "What resources or actions, if any, followed the successful logon."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate domain-controller authentication and logon-session records with network, firewall, and endpoint telemetry to identify the source behind 203.0.113.250.",
+   "Verify with leo.martins and relevant IT staff whether this logon was expected.",
+   "Review activity associated with the successful logon, including accessed services, resources, and any subsequent authentication events."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 8,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 15.6
+}

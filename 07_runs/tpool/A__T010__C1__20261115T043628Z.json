@@ -1,0 +1,114 @@
+{
+ "run_id": "A__T010__C1__20261115T043628Z",
+ "config": "A",
+ "scenario_id": "T010",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 708,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 280996,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45:23, FILE-HD-01 started the inventory-listed CobaltVault agent as HARBOR-DENTAL\\\\svc-bkp with a Nightly job targeting ingest.cobaltvault.net.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T010-00320\", \"T010-00321\"]\n    },\n    {\n      \"claim\": \"The proxy recorded a connection and GET to the approved CobaltVault destination, followed by a 407 response on a later connection; the recorded proxy byte counts are small and do not establish a transfer of hundreds of MB.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T010-00322\", \"T010-00323\", \"T010-00325\", \"T010-00329\", \"T010-00331\"]\n    },\n    {\n      \"claim\": \"The CobaltVault process exited at 13:45:58, shortly before the alert time, but these records do not show whether it later transferred data or whether it caused the flagged transfer.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T010-00336\", \"T010-00337\"]\n    },\n    {\n      \"claim\": \"At 14:04, the proxy recorded a curl user agent connecting to downloads.cloud.com, which is not among the listed approved services; the recorded connection volume is small and does not establish large-scale exfiltration.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T010-00515\", \"T010-00516\"]\n    },\n    {\n      \"claim\": \"FILE-HD-01 obtained a service ticket from WS-OHADDAD-01 before the alert, and FILE-HD-01 later initiated RPC traffic to that workstation. The records do not show the patch script being run or establish the purpose of these connections.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T010-00281\", \"T010-00382\", \"T010-00383\", \"T010-00528\", \"T010-00529\", \"T010-00530\"]\n    },\n    {\n      \"claim\": \"The proxy host connected to FILE-HD-01 over SMB shortly before the alert window; the available records do not identify the purpose of that connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T010-00248\", \"T010-00249\", \"T010-00250\", \"T010-00251\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not provide external network-flow totals or payload-level evidence sufficient to quantify or identify the alert's hundreds-of-MB transfer.\",\n    \"The proxy records show request and tunnel metadata, but do not link the alert's transfer to the CobaltVault process or identify the process responsible for the separate curl connection.\",\n    \"The records shown do not include a process creation event establishing what initiated the curl connection to downloads.cloud.com.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the flagged large transfer actually went to ingest.cobaltvault.net or another destination.\",\n    \"Whether the alert reflects an authorized CobaltVault backup, malicious exfiltration, or another transfer.\",\n    \"Whether the downloads.cloud.com connection was related to the alert or was authorized.\",\n    \"Whether the workstation and proxy-to-file-server connections were part of legitimate administration or unrelated activity.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Network flow or firewall records for the alert interval showing destination, byte counts, duration, and direction of the large transfer.\",\n    \"Proxy logs with complete request and tunnel accounting for FILE-HD-01 around 13:45\u201313:47 UTC, including any subsequent CobaltVault connections.\",\n    \"Process execution and network telemetry on FILE-HD-01 covering 13:20\u201314:20 UTC, including the parent process and command line associated with the curl connection.\",\n    \"CobaltVault agent job and upload logs confirming whether the Nightly job ran and what data and volume it sent.\",\n    \"Remote-administration and change records confirming the purpose of the WS-OHADDAD-01 and proxy-to-FILE-HD-01 connections.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 103669,
+    "output": 2152,
+    "reasoning": 1197
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45:23, FILE-HD-01 started the inventory-listed CobaltVault agent as HARBOR-DENTAL\\svc-bkp with a Nightly job targeting ingest.cobaltvault.net.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T010-00320",
+     "T010-00321"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a connection and GET to the approved CobaltVault destination, followed by a 407 response on a later connection; the recorded proxy byte counts are small and do not establish a transfer of hundreds of MB.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T010-00322",
+     "T010-00323",
+     "T010-00325",
+     "T010-00329",
+     "T010-00331"
+    ]
+   },
+   {
+    "claim": "The CobaltVault process exited at 13:45:58, shortly before the alert time, but these records do not show whether it later transferred data or whether it caused the flagged transfer.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T010-00336",
+     "T010-00337"
+    ]
+   },
+   {
+    "claim": "At 14:04, the proxy recorded a curl user agent connecting to downloads.cloud.com, which is not among the listed approved services; the recorded connection volume is small and does not establish large-scale exfiltration.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T010-00515",
+     "T010-00516"
+    ]
+   },
+   {
+    "claim": "FILE-HD-01 obtained a service ticket from WS-OHADDAD-01 before the alert, and FILE-HD-01 later initiated RPC traffic to that workstation. The records do not show the patch script being run or establish the purpose of these connections.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T010-00281",
+     "T010-00382",
+     "T010-00383",
+     "T010-00528",
+     "T010-00529",
+     "T010-00530"
+    ]
+   },
+   {
+    "claim": "The proxy host connected to FILE-HD-01 over SMB shortly before the alert window; the available records do not identify the purpose of that connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T010-00248",
+     "T010-00249",
+     "T010-00250",
+     "T010-00251"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not provide external network-flow totals or payload-level evidence sufficient to quantify or identify the alert's hundreds-of-MB transfer.",
+   "The proxy records show request and tunnel metadata, but do not link the alert's transfer to the CobaltVault process or identify the process responsible for the separate curl connection.",
+   "The records shown do not include a process creation event establishing what initiated the curl connection to downloads.cloud.com."
+  ],
+  "claims_not_established": [
+   "Whether the flagged large transfer actually went to ingest.cobaltvault.net or another destination.",
+   "Whether the alert reflects an authorized CobaltVault backup, malicious exfiltration, or another transfer.",
+   "Whether the downloads.cloud.com connection was related to the alert or was authorized.",
+   "Whether the workstation and proxy-to-file-server connections were part of legitimate administration or unrelated activity."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Network flow or firewall records for the alert interval showing destination, byte counts, duration, and direction of the large transfer.",
+   "Proxy logs with complete request and tunnel accounting for FILE-HD-01 around 13:45\u201313:47 UTC, including any subsequent CobaltVault connections.",
+   "Process execution and network telemetry on FILE-HD-01 covering 13:20\u201314:20 UTC, including the parent process and command line associated with the curl connection.",
+   "CobaltVault agent job and upload logs confirming whether the Nightly job ran and what data and volume it sent.",
+   "Remote-administration and change records confirming the purpose of the WS-OHADDAD-01 and proxy-to-FILE-HD-01 connections."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 21,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.8
+}

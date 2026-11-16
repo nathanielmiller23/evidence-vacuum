@@ -1,0 +1,65 @@
+{
+ "scenario_id": "T147",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.84,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:43:25 UTC, a successful network logon to WS-AHASSAN-01 targeted ali.hassan, with WS-NKIM-01 and 10.53.10.22 recorded as the source. This is shortly after the alert time and is atypical given the supplied inventory that remote administration is only performed from WS-AHASSAN-01; the record does not establish that this logon was related to creating helpdesk2.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T147-00127\"\n      ]\n    },\n    {\n      \"claim\": \"WS-NKIM-01 made Kerberos and SMB connections to the domain controller shortly before the alert, but these flow records do not identify the accounts or operations involved.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T147-00114\",\n        \"T147-00118\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The provided records include network-flow metadata and a Windows 4624 logon event, but no domain-controller account-management event or process/command telemetry confirming an account creation. The nearby Kerberos and SMB records do not expose the actions performed. (T147-00114, T147-00118, T147-00127)\"\n  ],\n  \"claims_not_established\": [\n    \"Whether helpdesk2 was actually created, and the precise creation time, actor, and originating host.\",\n    \"Whether the ali.hassan network logon from WS-NKIM-01 was connected to the alert or authorized.\",\n    \"Whether helpdesk2 was added to any groups or granted privileges.\",\n    \"Who was operating WS-NKIM-01 at the time.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Domain-controller security and directory audit events for the alert window, especially account creation, group membership changes, and the associated subject, logon ID, and source.\",\n    \"Endpoint process and command-line telemetry from WS-NKIM-01 and WS-AHASSAN-01 around 13:42\u201313:44 UTC.\",\n    \"Authentication and session details that can link or rule out the 13:43:25 ali.hassan logon from WS-NKIM-01 to the account-management alert.\",\n    \"The helpdesk2 account's current and historical group memberships, enabled status, and creation attributes.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-NKIM-01 accessed a Google Docs document and made a connection to Google Drive, services outside the supplied approved-services list. Track separately; this does not establish who created helpdesk2. (T147-00242, T147-00243, T147-00295)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 21230,
+    "output": 2068
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.84,
+  "supporting_observations": [
+   {
+    "claim": "At 13:43:25 UTC, a successful network logon to WS-AHASSAN-01 targeted ali.hassan, with WS-NKIM-01 and 10.53.10.22 recorded as the source. This is shortly after the alert time and is atypical given the supplied inventory that remote administration is only performed from WS-AHASSAN-01; the record does not establish that this logon was related to creating helpdesk2.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T147-00127"
+    ]
+   },
+   {
+    "claim": "WS-NKIM-01 made Kerberos and SMB connections to the domain controller shortly before the alert, but these flow records do not identify the accounts or operations involved.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T147-00114",
+     "T147-00118"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The provided records include network-flow metadata and a Windows 4624 logon event, but no domain-controller account-management event or process/command telemetry confirming an account creation. The nearby Kerberos and SMB records do not expose the actions performed. (T147-00114, T147-00118, T147-00127)"
+  ],
+  "claims_not_established": [
+   "Whether helpdesk2 was actually created, and the precise creation time, actor, and originating host.",
+   "Whether the ali.hassan network logon from WS-NKIM-01 was connected to the alert or authorized.",
+   "Whether helpdesk2 was added to any groups or granted privileges.",
+   "Who was operating WS-NKIM-01 at the time."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Domain-controller security and directory audit events for the alert window, especially account creation, group membership changes, and the associated subject, logon ID, and source.",
+   "Endpoint process and command-line telemetry from WS-NKIM-01 and WS-AHASSAN-01 around 13:42\u201313:44 UTC.",
+   "Authentication and session details that can link or rule out the 13:43:25 ali.hassan logon from WS-NKIM-01 to the account-management alert.",
+   "The helpdesk2 account's current and historical group memberships, enabled status, and creation attributes."
+  ],
+  "unrelated_findings": [
+   "WS-NKIM-01 accessed a Google Docs document and made a connection to Google Drive, services outside the supplied approved-services list. Track separately; this does not establish who created helpdesk2. (T147-00242, T147-00243, T147-00295)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 3,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 24.4
+}

@@ -1,0 +1,112 @@
+{
+ "scenario_id": "T225",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.9,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted HTTPS activity is associated with ledgerlinkupd.exe, running as max.fischer from the user-writable AppData\\\\Local\\\\LedgerLink path. The inventory instead identifies the approved updater as C:\\\\Program Files\\\\LedgerLink\\\\ledgerlinkupd.exe.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T225-00167\", \"T225-00168\", \"T225-00181\", \"T225-00183\"]\n    },\n    {\n      \"claim\": \"The updater repeatedly connected through the proxy to update.ledgerlink.co, beginning at 13:41:02 and continuing at roughly five-minute intervals through 14:10:40. The inventory lists update.ledgerlink.com as the approved update host, not the observed .co domain.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T225-00180\", \"T225-00181\", \"T225-00183\", \"T225-00184\", \"T225-00185\", \"T225-00187\", \"T225-00232\", \"T225-00233\", \"T225-00235\", \"T225-00252\", \"T225-00253\", \"T225-00255\", \"T225-00273\", \"T225-00280\", \"T225-00282\", \"T225-00289\", \"T225-00290\", \"T225-00292\", \"T225-00314\", \"T225-00315\", \"T225-00317\"]\n    },\n    {\n      \"claim\": \"The process also generated a file-creation event for its own executable path shortly after launch; this is consistent with possible self-modification, though the event alone does not establish why the file was written.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T225-00167\", \"T225-00169\"]\n    },\n    {\n      \"claim\": \"Taken together, the unapproved-looking executable location and the mismatch between the observed .co host and the inventoried .com update host support treating this alerted activity as malicious and escalating it.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T225-00167\", \"T225-00168\", \"T225-00180\", \"T225-00181\", \"T225-00184\", \"T225-00252\", \"T225-00289\", \"T225-00314\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied process and network records identify the executable path and proxy destination, but do not provide a file hash, signature, download origin, or binary contents (for example, T225-00167, T225-00169, T225-00183).\",\n    \"Proxy CONNECT records show requests to the .co hostname, but the supplied evidence does not expose the TLS application payload or establish what content was exchanged. Some requests returned gateway errors, while others returned status 200 (for example, T225-00180, T225-00232, T225-00273, T225-00314).\",\n    \"The supplied records show the observed periodic activity starting at 13:41:02; they do not independently establish activity beginning at 13:30.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether update.ledgerlink.co is controlled by LedgerLink or otherwise authorized.\",\n    \"Whether the executable is malicious, signed, or a legitimate alternate installation despite its path and the observed domain mismatch.\",\n    \"Whether the updater downloaded or executed additional content, or whether any data was exfiltrated.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Collect and analyze the executable, including its hash, signature, creation and download provenance, and endpoint protection verdict.\",\n    \"Validate the .co domain and its DNS, certificate, hosting, and vendor ownership against LedgerLink through an independent trusted source.\",\n    \"Retrieve proxy or TLS inspection details and endpoint file/process telemetry for the sessions and process 6708 to determine what was transferred or executed.\",\n    \"Check for the same executable path, hash, or update.ledgerlink.co connections on other hosts.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate review: DBeaver was launched by max.fischer from cmd.exe and connected to 10.55.10.24:5432; the supplied inventory does not identify that destination or authorize this database activity. This does not determine the alerted HTTPS finding. (T225-00195, T225-00198, T225-00199)\",\n    \"Separate review: DC-SUN-01 initiated connections toward WS-MFISCHER-01 on ports 80, 135, 8080, and 443; the records show no completed connection on those attempts. These are outside the alerted outbound HTTPS activity. (T225-00262, T225-00263, T225-00264, T225-00265, T225-00266, T225-00267, T225-00269, T225-00270)\",\n    \"Separate review: UserAssist recorded a PowerShell executable path for max.fischer, but this record alone does not establish a PowerShell process execution or link it to the alerted updater. (T225-00224)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 55439,
+    "output": 3646
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.9,
+  "supporting_observations": [
+   {
+    "claim": "The alerted HTTPS activity is associated with ledgerlinkupd.exe, running as max.fischer from the user-writable AppData\\Local\\LedgerLink path. The inventory instead identifies the approved updater as C:\\Program Files\\LedgerLink\\ledgerlinkupd.exe.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T225-00167",
+     "T225-00168",
+     "T225-00181",
+     "T225-00183"
+    ]
+   },
+   {
+    "claim": "The updater repeatedly connected through the proxy to update.ledgerlink.co, beginning at 13:41:02 and continuing at roughly five-minute intervals through 14:10:40. The inventory lists update.ledgerlink.com as the approved update host, not the observed .co domain.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T225-00180",
+     "T225-00181",
+     "T225-00183",
+     "T225-00184",
+     "T225-00185",
+     "T225-00187",
+     "T225-00232",
+     "T225-00233",
+     "T225-00235",
+     "T225-00252",
+     "T225-00253",
+     "T225-00255",
+     "T225-00273",
+     "T225-00280",
+     "T225-00282",
+     "T225-00289",
+     "T225-00290",
+     "T225-00292",
+     "T225-00314",
+     "T225-00315",
+     "T225-00317"
+    ]
+   },
+   {
+    "claim": "The process also generated a file-creation event for its own executable path shortly after launch; this is consistent with possible self-modification, though the event alone does not establish why the file was written.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T225-00167",
+     "T225-00169"
+    ]
+   },
+   {
+    "claim": "Taken together, the unapproved-looking executable location and the mismatch between the observed .co host and the inventoried .com update host support treating this alerted activity as malicious and escalating it.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T225-00167",
+     "T225-00168",
+     "T225-00180",
+     "T225-00181",
+     "T225-00184",
+     "T225-00252",
+     "T225-00289",
+     "T225-00314"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied process and network records identify the executable path and proxy destination, but do not provide a file hash, signature, download origin, or binary contents (for example, T225-00167, T225-00169, T225-00183).",
+   "Proxy CONNECT records show requests to the .co hostname, but the supplied evidence does not expose the TLS application payload or establish what content was exchanged. Some requests returned gateway errors, while others returned status 200 (for example, T225-00180, T225-00232, T225-00273, T225-00314).",
+   "The supplied records show the observed periodic activity starting at 13:41:02; they do not independently establish activity beginning at 13:30."
+  ],
+  "claims_not_established": [
+   "Whether update.ledgerlink.co is controlled by LedgerLink or otherwise authorized.",
+   "Whether the executable is malicious, signed, or a legitimate alternate installation despite its path and the observed domain mismatch.",
+   "Whether the updater downloaded or executed additional content, or whether any data was exfiltrated."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Collect and analyze the executable, including its hash, signature, creation and download provenance, and endpoint protection verdict.",
+   "Validate the .co domain and its DNS, certificate, hosting, and vendor ownership against LedgerLink through an independent trusted source.",
+   "Retrieve proxy or TLS inspection details and endpoint file/process telemetry for the sessions and process 6708 to determine what was transferred or executed.",
+   "Check for the same executable path, hash, or update.ledgerlink.co connections on other hosts."
+  ],
+  "unrelated_findings": [
+   "Separate review: DBeaver was launched by max.fischer from cmd.exe and connected to 10.55.10.24:5432; the supplied inventory does not identify that destination or authorize this database activity. This does not determine the alerted HTTPS finding. (T225-00195, T225-00198, T225-00199)",
+   "Separate review: DC-SUN-01 initiated connections toward WS-MFISCHER-01 on ports 80, 135, 8080, and 443; the records show no completed connection on those attempts. These are outside the alerted outbound HTTPS activity. (T225-00262, T225-00263, T225-00264, T225-00265, T225-00266, T225-00267, T225-00269, T225-00270)",
+   "Separate review: UserAssist recorded a PowerShell executable path for max.fischer, but this record alone does not establish a PowerShell process execution or link it to the alerted updater. (T225-00224)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 35,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 33.6
+}

@@ -1,0 +1,90 @@
+{
+ "scenario_id": "T249",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The large outbound transfer is recorded at 13:49 UTC: the proxy reports a Chrome CONNECT to zipshare-host.io with 51,000,000 client-to-server bytes, and Zeek records 51,000,341 originating bytes for the same workstation-to-proxy connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T249-00356\", \"T249-00357\", \"T249-00358\", \"T249-00359\"]\n    },\n    {\n      \"claim\": \"About six minutes earlier, zoe.adams ran PowerShell to compress \\\\\\\\FILE-SUN-01\\\\Shared\\\\Clients into C:\\\\Users\\\\zoe.adams\\\\AppData\\\\Local\\\\Temp\\\\c.zip; Sysmon then recorded creation of that archive.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T249-00296\", \"T249-00297\", \"T249-00298\"]\n    },\n    {\n      \"claim\": \"The archive creation followed by a roughly 51 MB transfer to zipshare-host.io, a service not listed as approved, strongly supports attempted exfiltration of the client-share data.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T249-00296\", \"T249-00298\", \"T249-00356\", \"T249-00358\"]\n    },\n    {\n      \"claim\": \"The stated alert time of around 13:46 does not match the logged large transfer time: the 13:46 proxy/Zeek activity is a small request, while the large transfer appears at 13:49.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T249-00314\", \"T249-00317\", \"T249-00356\", \"T249-00358\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and Zeek records provide destination and byte counts but do not establish the contents of the transfer or identify which local file was sent (T249-00356, T249-00358).\",\n    \"The available records do not show whether the destination accepted or retained the transferred data (T249-00356, T249-00358).\"\n  ],\n  \"claims_not_established\": [\n    \"That c.zip, rather than other data, was the payload of the zipshare-host.io transfer.\",\n    \"The contents or sensitivity of the files in the Clients share or the archive.\",\n    \"Whether the transfer had any authorization or legitimate business purpose.\",\n    \"The identity of the person operating the workstation at the time.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and inspect c.zip, including its hash, size, contents, and creation/access metadata.\",\n    \"Collect endpoint browser and network artifacts to connect the uploaded payload to a local file and user action.\",\n    \"Obtain proxy or destination-side records, if available, to establish transfer outcome and any account or upload metadata.\",\n    \"Confirm with the business owner whether the Clients data transfer was authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox.exe was launched on WS-ZADAMS-01 during the review window; Dropbox is not an approved file-sharing service. Handle this separately and do not use it to decide this alert (T249-00259, T249-00260, T249-00261).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 81956,
+    "output": 1897
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "The large outbound transfer is recorded at 13:49 UTC: the proxy reports a Chrome CONNECT to zipshare-host.io with 51,000,000 client-to-server bytes, and Zeek records 51,000,341 originating bytes for the same workstation-to-proxy connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T249-00356",
+     "T249-00357",
+     "T249-00358",
+     "T249-00359"
+    ]
+   },
+   {
+    "claim": "About six minutes earlier, zoe.adams ran PowerShell to compress \\\\FILE-SUN-01\\Shared\\Clients into C:\\Users\\zoe.adams\\AppData\\Local\\Temp\\c.zip; Sysmon then recorded creation of that archive.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T249-00296",
+     "T249-00297",
+     "T249-00298"
+    ]
+   },
+   {
+    "claim": "The archive creation followed by a roughly 51 MB transfer to zipshare-host.io, a service not listed as approved, strongly supports attempted exfiltration of the client-share data.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T249-00296",
+     "T249-00298",
+     "T249-00356",
+     "T249-00358"
+    ]
+   },
+   {
+    "claim": "The stated alert time of around 13:46 does not match the logged large transfer time: the 13:46 proxy/Zeek activity is a small request, while the large transfer appears at 13:49.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T249-00314",
+     "T249-00317",
+     "T249-00356",
+     "T249-00358"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and Zeek records provide destination and byte counts but do not establish the contents of the transfer or identify which local file was sent (T249-00356, T249-00358).",
+   "The available records do not show whether the destination accepted or retained the transferred data (T249-00356, T249-00358)."
+  ],
+  "claims_not_established": [
+   "That c.zip, rather than other data, was the payload of the zipshare-host.io transfer.",
+   "The contents or sensitivity of the files in the Clients share or the archive.",
+   "Whether the transfer had any authorization or legitimate business purpose.",
+   "The identity of the person operating the workstation at the time."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and inspect c.zip, including its hash, size, contents, and creation/access metadata.",
+   "Collect endpoint browser and network artifacts to connect the uploaded payload to a local file and user action.",
+   "Obtain proxy or destination-side records, if available, to establish transfer outcome and any account or upload metadata.",
+   "Confirm with the business owner whether the Clients data transfer was authorized."
+  ],
+  "unrelated_findings": [
+   "Dropbox.exe was launched on WS-ZADAMS-01 during the review window; Dropbox is not an approved file-sharing service. Handle this separately and do not use it to decide this alert (T249-00259, T249-00260, T249-00261)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 19.6
+}

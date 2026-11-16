@@ -1,0 +1,92 @@
+{
+ "scenario_id": "T076",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The observed periodic connections from WS-TWEBER-01 went through the explicit proxy to update.medledger.com:443, and the proxy returned status 200. They occurred at 13:36:11, 13:41:02, 13:45:44, 13:50:51, 13:55:43, 14:00:51, and 14:06:01 UTC\u2014roughly five-minute intervals.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T076-00226\", \"T076-00273\", \"T076-00318\", \"T076-00390\", \"T076-00400\", \"T076-00419\", \"T076-00433\"]\n    },\n    {\n      \"claim\": \"The connections are correlated with PID 4868, C:\\\\Program Files\\\\MediLedger\\\\medledgerupd.exe, which was launched before the first observed check; Windows filtering and Sysmon records show that process connecting to the proxy at the same times as several proxy entries.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T076-00224\", \"T076-00227\", \"T076-00229\", \"T076-00274\", \"T076-00276\", \"T076-00315\", \"T076-00317\", \"T076-00401\", \"T076-00403\", \"T076-00420\", \"T076-00422\", \"T076-00434\", \"T076-00436\"]\n    },\n    {\n      \"claim\": \"The destination and cadence match the supplied inventory description of the approved MediLedger updater, which checks update.medledger.com about every five minutes. This supports a benign disposition for the alerted activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T076-00226\", \"T076-00273\", \"T076-00318\", \"T076-00390\", \"T076-00400\", \"T076-00419\", \"T076-00433\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records show HTTPS CONNECT tunnels and metadata, not the decrypted TLS payload or the contents of any update.\",\n    \"The available records do not establish the remote server's certificate details or the integrity and provenance of any downloaded content.\",\n    \"The proxy CONNECT entries report a Firefox user agent although the correlated socket events identify medledgerupd.exe; the records establish the process-to-proxy connection, but do not explain that user-agent discrepancy.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish what data, if any, was exchanged inside the encrypted sessions beyond the recorded connection metadata and byte counts.\",\n    \"The evidence does not independently verify that the remote endpoint or any update content was authentic.\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [],\n  \"unrelated_findings\": [\n    \"A scheduled PowerShell task on WS-TWEBER-01 ran service-health.ps1 as SYSTEM and recorded explicit credential use for svc-bkp. This is outside the alerted HTTPS activity and warrants separate review. (T076-00391, T076-00397)\",\n    \"DropboxUpdate.exe ran on WS-TWEBER-01, although Dropbox is not among the approved services in the supplied inventory. This is separate from the alerted MediLedger connections. (T076-00277, T076-00278)\",\n    \"Firefox on WS-TWEBER-01 used the proxy to CONNECT to customer.cloud.com:443, a service not listed as approved in the supplied inventory. This is separate from the alert. (T076-00050)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 79614,
+    "output": 2049
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "The observed periodic connections from WS-TWEBER-01 went through the explicit proxy to update.medledger.com:443, and the proxy returned status 200. They occurred at 13:36:11, 13:41:02, 13:45:44, 13:50:51, 13:55:43, 14:00:51, and 14:06:01 UTC\u2014roughly five-minute intervals.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T076-00226",
+     "T076-00273",
+     "T076-00318",
+     "T076-00390",
+     "T076-00400",
+     "T076-00419",
+     "T076-00433"
+    ]
+   },
+   {
+    "claim": "The connections are correlated with PID 4868, C:\\Program Files\\MediLedger\\medledgerupd.exe, which was launched before the first observed check; Windows filtering and Sysmon records show that process connecting to the proxy at the same times as several proxy entries.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T076-00224",
+     "T076-00227",
+     "T076-00229",
+     "T076-00274",
+     "T076-00276",
+     "T076-00315",
+     "T076-00317",
+     "T076-00401",
+     "T076-00403",
+     "T076-00420",
+     "T076-00422",
+     "T076-00434",
+     "T076-00436"
+    ]
+   },
+   {
+    "claim": "The destination and cadence match the supplied inventory description of the approved MediLedger updater, which checks update.medledger.com about every five minutes. This supports a benign disposition for the alerted activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T076-00226",
+     "T076-00273",
+     "T076-00318",
+     "T076-00390",
+     "T076-00400",
+     "T076-00419",
+     "T076-00433"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records show HTTPS CONNECT tunnels and metadata, not the decrypted TLS payload or the contents of any update.",
+   "The available records do not establish the remote server's certificate details or the integrity and provenance of any downloaded content.",
+   "The proxy CONNECT entries report a Firefox user agent although the correlated socket events identify medledgerupd.exe; the records establish the process-to-proxy connection, but do not explain that user-agent discrepancy."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish what data, if any, was exchanged inside the encrypted sessions beyond the recorded connection metadata and byte counts.",
+   "The evidence does not independently verify that the remote endpoint or any update content was authentic."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [],
+  "unrelated_findings": [
+   "A scheduled PowerShell task on WS-TWEBER-01 ran service-health.ps1 as SYSTEM and recorded explicit credential use for svc-bkp. This is outside the alerted HTTPS activity and warrants separate review. (T076-00391, T076-00397)",
+   "DropboxUpdate.exe ran on WS-TWEBER-01, although Dropbox is not among the approved services in the supplied inventory. This is separate from the alerted MediLedger connections. (T076-00277, T076-00278)",
+   "Firefox on WS-TWEBER-01 used the proxy to CONNECT to customer.cloud.com:443, a service not listed as approved in the supplied inventory. This is separate from the alert. (T076-00050)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 27,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.4
+}

@@ -1,0 +1,104 @@
+{
+ "run_id": "A__T041__C3__20261115T045602Z",
+ "config": "A",
+ "scenario_id": "T041",
+ "condition": "C3",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 24,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 14862,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.82,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded two failed type 3 NTLM logons for leo.martins from 203.0.113.250, followed about a minute later by a successful type 3 Kerberos logon for the same account from that address.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T041-00001\", \"T041-00002\", \"T041-00003\"]\n    },\n    {\n      \"claim\": \"The successful network logon from 203.0.113.250 is anomalous in the stated environment, which has no VPN; the records do not identify who controlled that source address.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T041-00003\"]\n    },\n    {\n      \"claim\": \"Dropbox.exe ran in leo.martins's session on WS-LMARTINS-01. Dropbox is a file-sharing service, and the inventory says no file-sharing or cloud-storage services other than the listed approved services are approved.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T041-00020\", \"T041-00021\", \"T041-00022\"]\n    },\n    {\n      \"claim\": \"A separate successful type 3 logon for leo.martins on WS-LMARTINS-01 was attributed to workstation WS-SOKAFOR-01; this is unusual for leo.martins, though the records do not establish why it occurred.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T041-00019\"]\n    },\n    {\n      \"claim\": \"The record shows a successful local interactive logon for leo.martins followed by userinit.exe and explorer.exe, which is consistent with a normal workstation session but does not explain the preceding network logon.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T041-00004\", \"T041-00005\", \"T041-00007\"]\n    },\n    {\n      \"claim\": \"At 14:16 UTC, the proxy recorded a successful CONNECT tunnel from leo.martins's workstation to ca.slack-edge.com; Slack is not among the approved services listed in the inventory.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T041-00024\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy logs for the proxy host were not collected from 13:30 through 14:10 UTC because of a collection outage, according to the supplied sensor-coverage metadata.\",\n    \"The successful network logon record reports a source address but does not establish the device, person, or mechanism behind that address.\"\n  ],\n  \"claims_not_established\": [\n    \"That the successful logon from 203.0.113.250 was performed by an attacker or that leo.martins's credentials were compromised.\",\n    \"That Dropbox uploaded or synchronized any files, or what data it accessed.\",\n    \"That the Slack tunnel involved a user action beyond establishing the recorded connection.\",\n    \"Why leo.martins had a network logon attributed to WS-SOKAFOR-01, or whether that activity was authorized.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate the 13:42\u201313:45 domain-controller logons with firewall, network, and endpoint records to identify the source and destination of the connection and validate the reported source address.\",\n    \"Review WS-LMARTINS-01 and WS-SOKAFOR-01 for account-use, remote-access, and session evidence around 13:40\u201313:55 UTC, including the reason for the leo.martins network logon.\",\n    \"Determine whether Dropbox was configured to sync, which files it accessed or transferred, and whether its installation or use was authorized.\",\n    \"Obtain available proxy and network telemetry for 13:30\u201314:10 UTC and review the Slack tunnel and other outbound connections.\",\n    \"Confirm with the account owner and IT whether the logons and software activity were expected.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 4932,
+    "output": 2600,
+    "reasoning": 1680
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.82,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded two failed type 3 NTLM logons for leo.martins from 203.0.113.250, followed about a minute later by a successful type 3 Kerberos logon for the same account from that address.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T041-00001",
+     "T041-00002",
+     "T041-00003"
+    ]
+   },
+   {
+    "claim": "The successful network logon from 203.0.113.250 is anomalous in the stated environment, which has no VPN; the records do not identify who controlled that source address.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T041-00003"
+    ]
+   },
+   {
+    "claim": "Dropbox.exe ran in leo.martins's session on WS-LMARTINS-01. Dropbox is a file-sharing service, and the inventory says no file-sharing or cloud-storage services other than the listed approved services are approved.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T041-00020",
+     "T041-00021",
+     "T041-00022"
+    ]
+   },
+   {
+    "claim": "A separate successful type 3 logon for leo.martins on WS-LMARTINS-01 was attributed to workstation WS-SOKAFOR-01; this is unusual for leo.martins, though the records do not establish why it occurred.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T041-00019"
+    ]
+   },
+   {
+    "claim": "The record shows a successful local interactive logon for leo.martins followed by userinit.exe and explorer.exe, which is consistent with a normal workstation session but does not explain the preceding network logon.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T041-00004",
+     "T041-00005",
+     "T041-00007"
+    ]
+   },
+   {
+    "claim": "At 14:16 UTC, the proxy recorded a successful CONNECT tunnel from leo.martins's workstation to ca.slack-edge.com; Slack is not among the approved services listed in the inventory.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T041-00024"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy logs for the proxy host were not collected from 13:30 through 14:10 UTC because of a collection outage, according to the supplied sensor-coverage metadata.",
+   "The successful network logon record reports a source address but does not establish the device, person, or mechanism behind that address."
+  ],
+  "claims_not_established": [
+   "That the successful logon from 203.0.113.250 was performed by an attacker or that leo.martins's credentials were compromised.",
+   "That Dropbox uploaded or synchronized any files, or what data it accessed.",
+   "That the Slack tunnel involved a user action beyond establishing the recorded connection.",
+   "Why leo.martins had a network logon attributed to WS-SOKAFOR-01, or whether that activity was authorized."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate the 13:42\u201313:45 domain-controller logons with firewall, network, and endpoint records to identify the source and destination of the connection and validate the reported source address.",
+   "Review WS-LMARTINS-01 and WS-SOKAFOR-01 for account-use, remote-access, and session evidence around 13:40\u201313:55 UTC, including the reason for the leo.martins network logon.",
+   "Determine whether Dropbox was configured to sync, which files it accessed or transferred, and whether its installation or use was authorized.",
+   "Obtain available proxy and network telemetry for 13:30\u201314:10 UTC and review the Slack tunnel and other outbound connections.",
+   "Confirm with the account owner and IT whether the logons and software activity were expected."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 25.5
+}

@@ -1,0 +1,83 @@
+{
+ "scenario_id": "T211",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.87,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded two failed network logons for eli.brooks using NTLM from 203.0.113.133; both failures indicate an incorrect password.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T211-00006\",\n        \"T211-00013\"\n      ]\n    },\n    {\n      \"claim\": \"About 86 seconds after the second failure, the domain controller recorded a successful NTLM network logon for eli.brooks from the same 203.0.113.133 address.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T211-00013\",\n        \"T211-00014\"\n      ]\n    },\n    {\n      \"claim\": \"The source address is not identified as an organizational host in the supplied inventory, and the successful event's WorkstationName is DC-BLU-01 despite its recorded source address being 203.0.113.133. This makes the source attribution unclear and warrants investigation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T211-00006\",\n        \"T211-00013\",\n        \"T211-00014\"\n      ]\n    },\n    {\n      \"claim\": \"A successful Kerberos network logon for eli.brooks to FILE-BLU-01 was later recorded from 10.54.20.10; the available record does not establish whether it was related to the earlier NTLM activity.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T211-00053\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy logs were not collected for 13:20\u201314:10 UTC because of a collection outage, limiting visibility into web activity during that period.\",\n    \"The supplied evidence does not identify or attribute 203.0.113.133 to a specific device or person.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the successful logon was performed by eli.brooks or an unauthorized party using the account.\",\n    \"The actual device or network endpoint represented by 203.0.113.133, or why the successful event reports WorkstationName DC-BLU-01.\",\n    \"What activity, if any, followed the successful NTLM logon, including whether data or resources were accessed.\",\n    \"Whether the later FILE-BLU-01 logon was connected to the alerted activity.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Attribute 203.0.113.133 using firewall, NAT, DHCP, network-flow, and other available source-address records.\",\n    \"Review domain-controller authentication and session records around 13:40\u201314:00 UTC for related logons, session details, and subsequent resource access.\",\n    \"Check endpoint and identity telemetry for eli.brooks and any device associated with the source address, including evidence of account compromise.\",\n    \"Determine whether the later FILE-BLU-01 logon from 10.54.20.10 is expected and related.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox.exe was launched under eli.brooks on WS-EBROOKS-01. Dropbox is not among the approved services listed in the supplied environment context; investigate separately without treating this as evidence that decides the alerted authentication activity. (T211-00001, T211-00002, T211-00003)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 7775,
+    "output": 1681
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.87,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded two failed network logons for eli.brooks using NTLM from 203.0.113.133; both failures indicate an incorrect password.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T211-00006",
+     "T211-00013"
+    ]
+   },
+   {
+    "claim": "About 86 seconds after the second failure, the domain controller recorded a successful NTLM network logon for eli.brooks from the same 203.0.113.133 address.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T211-00013",
+     "T211-00014"
+    ]
+   },
+   {
+    "claim": "The source address is not identified as an organizational host in the supplied inventory, and the successful event's WorkstationName is DC-BLU-01 despite its recorded source address being 203.0.113.133. This makes the source attribution unclear and warrants investigation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T211-00006",
+     "T211-00013",
+     "T211-00014"
+    ]
+   },
+   {
+    "claim": "A successful Kerberos network logon for eli.brooks to FILE-BLU-01 was later recorded from 10.54.20.10; the available record does not establish whether it was related to the earlier NTLM activity.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T211-00053"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy logs were not collected for 13:20\u201314:10 UTC because of a collection outage, limiting visibility into web activity during that period.",
+   "The supplied evidence does not identify or attribute 203.0.113.133 to a specific device or person."
+  ],
+  "claims_not_established": [
+   "Whether the successful logon was performed by eli.brooks or an unauthorized party using the account.",
+   "The actual device or network endpoint represented by 203.0.113.133, or why the successful event reports WorkstationName DC-BLU-01.",
+   "What activity, if any, followed the successful NTLM logon, including whether data or resources were accessed.",
+   "Whether the later FILE-BLU-01 logon was connected to the alerted activity."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Attribute 203.0.113.133 using firewall, NAT, DHCP, network-flow, and other available source-address records.",
+   "Review domain-controller authentication and session records around 13:40\u201314:00 UTC for related logons, session details, and subsequent resource access.",
+   "Check endpoint and identity telemetry for eli.brooks and any device associated with the source address, including evidence of account compromise.",
+   "Determine whether the later FILE-BLU-01 logon from 10.54.20.10 is expected and related."
+  ],
+  "unrelated_findings": [
+   "Dropbox.exe was launched under eli.brooks on WS-EBROOKS-01. Dropbox is not among the approved services listed in the supplied environment context; investigate separately without treating this as evidence that decides the alerted authentication activity. (T211-00001, T211-00002, T211-00003)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 8,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.5
+}

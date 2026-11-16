@@ -1,0 +1,91 @@
+{
+ "scenario_id": "T101",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.78,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded two failed NTLM network logons for kim.nguyen from 192.0.2.88, both with the bad-password substatus, at 13:41:35 and 13:42:36 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T101-00028\", \"T101-00047\"]\n    },\n    {\n      \"claim\": \"At 13:44:06 UTC, the domain controller recorded a successful Kerberos network logon for kim.nguyen from the same address, 192.0.2.88, following those failures.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T101-00076\", \"T101-00028\", \"T101-00047\"]\n    },\n    {\n      \"claim\": \"Repeated bad-password attempts followed by a successful network authentication from the same unaccounted-for source are consistent with potentially unauthorized account access and warrant escalation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T101-00028\", \"T101-00047\", \"T101-00076\"]\n    },\n    {\n      \"claim\": \"Separate local interactive logon failures for kim.nguyen occurred on WS-KNGUYEN-01 shortly before the domain-controller failures; these were LogonType 2 attempts by winlogon with a bad-password substatus.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T101-00012\", \"T101-00013\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The evidence does not map 192.0.2.88 to an organization asset, user, or network location; the records alone do not identify who initiated the attempts.\",\n    \"The logs show a successful authentication from the same address after the failures, but do not establish that the success was performed by the same actor as the failed attempts.\",\n    \"The supplied records do not show what resource, if any, was accessed after the successful domain-controller logon or what actions followed.\",\n    \"The supplied event sample may not contain all authentication events or related endpoint and network telemetry for the review window.\"\n  ],\n  \"claims_not_established\": [\n    \"That the failed and successful authentications from 192.0.2.88 were performed by the same person or system.\",\n    \"That the successful authentication was unauthorized or that kim.nguyen's account or credentials were compromised.\",\n    \"That the successful logon resulted in access to WS-KNGUYEN-01 or any other particular resource.\",\n    \"That the local interactive failures were related to the network logons from 192.0.2.88.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Identify and validate the source represented by 192.0.2.88 using network, address-assignment, and domain-controller context.\",\n    \"Retrieve surrounding domain-controller authentication and Kerberos ticket records to determine the source and destination of the successful authentication and whether it was authorized.\",\n    \"Correlate the successful logon with endpoint, firewall, and network activity to determine any subsequent access or actions.\",\n    \"Confirm with kim.nguyen and IT whether any authentication from that source was expected.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox.exe ran under kim.nguyen on WS-KNGUYEN-01; Dropbox is not listed as approved file-sharing or cloud-storage software. This is separate from the domain logon attempts. (T101-00015, T101-00016, T101-00017)\",\n    \"Edge accessed the Cloudflare dashboard during the review window; this service is not listed among approved services. This does not establish a connection to the alerted authentication activity. (T101-00037, T101-00038, T101-00043, T101-00044)\",\n    \"GlobalProtect PanGPA.exe ran on WS-KNGUYEN-01, although the inventory says there is no VPN and no other remote-access service is approved. This process record does not establish a VPN connection or link to the alert. (T101-00067, T101-00069)\",\n    \"Sara.ali used mstsc.exe with kim.nguyen as the target account to connect to WS-KNGUYEN-01. The evidence does not establish whether this was authorized or related to the failed attempts; review separately against help-desk practices. (T101-00024)\",\n    \"kim.nguyen ran sqlcmd.exe from WS-KNGUYEN-01 to query INFORMATION_SCHEMA.TABLES in webapp_prod. The available evidence does not establish whether this database activity was authorized. (T101-00053, T101-00054)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 14226,
+    "output": 2880
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.78,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded two failed NTLM network logons for kim.nguyen from 192.0.2.88, both with the bad-password substatus, at 13:41:35 and 13:42:36 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T101-00028",
+     "T101-00047"
+    ]
+   },
+   {
+    "claim": "At 13:44:06 UTC, the domain controller recorded a successful Kerberos network logon for kim.nguyen from the same address, 192.0.2.88, following those failures.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T101-00076",
+     "T101-00028",
+     "T101-00047"
+    ]
+   },
+   {
+    "claim": "Repeated bad-password attempts followed by a successful network authentication from the same unaccounted-for source are consistent with potentially unauthorized account access and warrant escalation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T101-00028",
+     "T101-00047",
+     "T101-00076"
+    ]
+   },
+   {
+    "claim": "Separate local interactive logon failures for kim.nguyen occurred on WS-KNGUYEN-01 shortly before the domain-controller failures; these were LogonType 2 attempts by winlogon with a bad-password substatus.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T101-00012",
+     "T101-00013"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The evidence does not map 192.0.2.88 to an organization asset, user, or network location; the records alone do not identify who initiated the attempts.",
+   "The logs show a successful authentication from the same address after the failures, but do not establish that the success was performed by the same actor as the failed attempts.",
+   "The supplied records do not show what resource, if any, was accessed after the successful domain-controller logon or what actions followed.",
+   "The supplied event sample may not contain all authentication events or related endpoint and network telemetry for the review window."
+  ],
+  "claims_not_established": [
+   "That the failed and successful authentications from 192.0.2.88 were performed by the same person or system.",
+   "That the successful authentication was unauthorized or that kim.nguyen's account or credentials were compromised.",
+   "That the successful logon resulted in access to WS-KNGUYEN-01 or any other particular resource.",
+   "That the local interactive failures were related to the network logons from 192.0.2.88."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Identify and validate the source represented by 192.0.2.88 using network, address-assignment, and domain-controller context.",
+   "Retrieve surrounding domain-controller authentication and Kerberos ticket records to determine the source and destination of the successful authentication and whether it was authorized.",
+   "Correlate the successful logon with endpoint, firewall, and network activity to determine any subsequent access or actions.",
+   "Confirm with kim.nguyen and IT whether any authentication from that source was expected."
+  ],
+  "unrelated_findings": [
+   "Dropbox.exe ran under kim.nguyen on WS-KNGUYEN-01; Dropbox is not listed as approved file-sharing or cloud-storage software. This is separate from the domain logon attempts. (T101-00015, T101-00016, T101-00017)",
+   "Edge accessed the Cloudflare dashboard during the review window; this service is not listed among approved services. This does not establish a connection to the alerted authentication activity. (T101-00037, T101-00038, T101-00043, T101-00044)",
+   "GlobalProtect PanGPA.exe ran on WS-KNGUYEN-01, although the inventory says there is no VPN and no other remote-access service is approved. This process record does not establish a VPN connection or link to the alert. (T101-00067, T101-00069)",
+   "Sara.ali used mstsc.exe with kim.nguyen as the target account to connect to WS-KNGUYEN-01. The evidence does not establish whether this was authorized or related to the failed attempts; review separately against help-desk practices. (T101-00024)",
+   "kim.nguyen ran sqlcmd.exe from WS-KNGUYEN-01 to query INFORMATION_SCHEMA.TABLES in webapp_prod. The available evidence does not establish whether this database activity was authorized. (T101-00053, T101-00054)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 28.4
+}

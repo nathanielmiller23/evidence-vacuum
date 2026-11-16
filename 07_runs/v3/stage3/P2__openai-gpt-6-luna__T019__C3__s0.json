@@ -1,0 +1,88 @@
+{
+ "scenario_id": "T019",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Maria Lopez ran PowerShell to compress \\\\\\\\FILE-HD-01\\\\Shared\\\\Clients into C:\\\\Users\\\\maria.lopez\\\\AppData\\\\Local\\\\Temp\\\\c.zip, and Sysmon recorded creation of that archive.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T019-00117\", \"T019-00119\"]\n    },\n    {\n      \"claim\": \"Chrome was launched by Maria Lopez to open sendbox-files.io shortly after the archive was created.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T019-00150\", \"T019-00154\"]\n    },\n    {\n      \"claim\": \"At 13:48 UTC, the proxy recorded a 51,000,000-byte client-to-server transfer through a tunnel to sendbox-files.io; Zeek recorded 50,? bytes outbound (orig_bytes=51000251) in the corresponding proxy connection, and endpoint telemetry attributes the proxy connection to Chrome PID 4896.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T019-00170\", \"T019-00171\", \"T019-00172\", \"T019-00173\"]\n    },\n    {\n      \"claim\": \"The sequence of archiving a shared Clients directory, opening an unapproved file-transfer service, and sending approximately 51 MB outbound strongly supports an exfiltration finding. The evidence does not establish whether the user was authorized or whether the archive contained sensitive client data.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T019-00117\", \"T019-00119\", \"T019-00150\", \"T019-00170\", \"T019-00171\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The upload is observed as an encrypted CONNECT tunnel; the available proxy and connection records establish destination and byte counts but do not reveal the uploaded payload.\",\n    \"The stated winsec and Sysmon collection outage is for WS-LPARK-01, not the alerted host WS-MLOPEZ-01; the provided coverage status reports collection as OK for other hosts.\"\n  ],\n  \"claims_not_established\": [\n    \"The contents, size, and hash of c.zip, including whether it contained client-identifying, clinical, or other sensitive data.\",\n    \"Whether Maria Lopez was authorized to package or upload the directory, or whether the activity was performed by someone else using her session.\",\n    \"The recipient, account, retention, or subsequent access to the uploaded material.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine c.zip and the source directory; record archive contents, size, and hash.\",\n    \"Obtain endpoint/browser history and any available file-upload artifacts to confirm the selected file and upload completion.\",\n    \"Request sendbox-files.io account, upload, and access records if available; correlate them with the 13:48 UTC transfer.\",\n    \"Confirm with Maria Lopez and relevant data owners whether this transfer was authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"A dotnet-sdk-installer.exe ran quietly from Maria Lopez's Temp directory; validate whether this installation was authorized in a separate ticket. This evidence does not establish that it caused the alerted transfer. [T019-00181, T019-00182, T019-00185, T019-00186]\",\n    \"Zoom.exe started from Maria Lopez's Roaming profile. Review separately if policy requires; it is not linked by the available records to the alerted transfer. [T019-00248, T019-00250]\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 49118,
+    "output": 1940
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "Maria Lopez ran PowerShell to compress \\\\FILE-HD-01\\Shared\\Clients into C:\\Users\\maria.lopez\\AppData\\Local\\Temp\\c.zip, and Sysmon recorded creation of that archive.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00117",
+     "T019-00119"
+    ]
+   },
+   {
+    "claim": "Chrome was launched by Maria Lopez to open sendbox-files.io shortly after the archive was created.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00150",
+     "T019-00154"
+    ]
+   },
+   {
+    "claim": "At 13:48 UTC, the proxy recorded a 51,000,000-byte client-to-server transfer through a tunnel to sendbox-files.io; Zeek recorded 50,? bytes outbound (orig_bytes=51000251) in the corresponding proxy connection, and endpoint telemetry attributes the proxy connection to Chrome PID 4896.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00170",
+     "T019-00171",
+     "T019-00172",
+     "T019-00173"
+    ]
+   },
+   {
+    "claim": "The sequence of archiving a shared Clients directory, opening an unapproved file-transfer service, and sending approximately 51 MB outbound strongly supports an exfiltration finding. The evidence does not establish whether the user was authorized or whether the archive contained sensitive client data.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T019-00117",
+     "T019-00119",
+     "T019-00150",
+     "T019-00170",
+     "T019-00171"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The upload is observed as an encrypted CONNECT tunnel; the available proxy and connection records establish destination and byte counts but do not reveal the uploaded payload.",
+   "The stated winsec and Sysmon collection outage is for WS-LPARK-01, not the alerted host WS-MLOPEZ-01; the provided coverage status reports collection as OK for other hosts."
+  ],
+  "claims_not_established": [
+   "The contents, size, and hash of c.zip, including whether it contained client-identifying, clinical, or other sensitive data.",
+   "Whether Maria Lopez was authorized to package or upload the directory, or whether the activity was performed by someone else using her session.",
+   "The recipient, account, retention, or subsequent access to the uploaded material."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine c.zip and the source directory; record archive contents, size, and hash.",
+   "Obtain endpoint/browser history and any available file-upload artifacts to confirm the selected file and upload completion.",
+   "Request sendbox-files.io account, upload, and access records if available; correlate them with the 13:48 UTC transfer.",
+   "Confirm with Maria Lopez and relevant data owners whether this transfer was authorized."
+  ],
+  "unrelated_findings": [
+   "A dotnet-sdk-installer.exe ran quietly from Maria Lopez's Temp directory; validate whether this installation was authorized in a separate ticket. This evidence does not establish that it caused the alerted transfer. [T019-00181, T019-00182, T019-00185, T019-00186]",
+   "Zoom.exe started from Maria Lopez's Roaming profile. Review separately if policy requires; it is not linked by the available records to the alerted transfer. [T019-00248, T019-00250]"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.0
+}

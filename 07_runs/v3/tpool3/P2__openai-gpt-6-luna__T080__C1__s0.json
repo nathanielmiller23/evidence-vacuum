@@ -1,0 +1,78 @@
+{
+ "scenario_id": "T080",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.86,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:44:39, FILE-PIN-01 launched the approved Vaultline agent as svc-bkp with a Nightly job targeting ingest.vaultline-backup.com.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T080-00218\", \"T080-00219\"]\n    },\n    {\n      \"claim\": \"The proxy and Zeek records show about 640 MB sent from FILE-PIN-01 to ingest.vaultline-backup.com through the proxy, shortly after the agent launch. The destination and transfer size match the organization's stated offsite-backup service and expected upload size, supporting a benign explanation for the alerted transfer.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T080-00222\", \"T080-00223\", \"T080-00228\"]\n    },\n    {\n      \"claim\": \"Shortly before the transfer, the domain controller recorded a Kerberos service-ticket request for svc-bkp to FILE-PIN-01$ from public IP 23.129.64.210; FILE-PIN-01 then recorded a svc-bkp service logon by services.exe. The available records do not explain the public source address, leaving an identity-use concern that prevents confidently closing the alerted activity as benign.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T080-00214\", \"T080-00215\", \"T080-00218\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and Zeek records establish the destination and byte volume, but do not provide a backup-side object manifest or establish what data was uploaded (T080-00222, T080-00224, T080-00228).\",\n    \"The records show the Vaultline executable path, command line, and account, but do not establish the executable's integrity or whether the run was initiated by the expected scheduled job (T080-00218, T080-00219).\",\n    \"The svc-bkp ticket request from a public IP is recorded, but the available records do not identify the source system or explain why that address was used (T080-00214, T080-00215).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the public-IP svc-bkp ticket request was legitimate or resulted from unauthorized credential use.\",\n    \"Whether the uploaded data was the expected backup content.\",\n    \"Whether the Vaultline agent and its execution were authentic and authorized, beyond the recorded path, command line, and account.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Validate 23.129.64.210 against authentication-source and network records, and determine why it requested a svc-bkp ticket for FILE-PIN-01$.\",\n    \"Obtain Vaultline job logs and destination-side records for this run, including the uploaded objects, job identity, and any expected schedule or job approval.\",\n    \"Verify the Vaultline agent's signature and hash against the organization's approved deployment, and check whether the process was launched by the expected service or scheduler.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-ESTONE-01 recorded an explicit-credentials event targeting svc-bkp and FILE-PIN-01 at 13:54. The records do not show whether this resulted in a successful authentication; investigate separately rather than treating it as proof about the earlier transfer (T080-00347).\",\n    \"WS-ARUIZ-01 attempted a connection to FILE-PIN-01 on PostgreSQL port 5432; the connection ended with RSTR. The inventory provided does not list this service (T080-00356, T080-00357).\",\n    \"FILE-PIN-01 made a proxy request to dl.duosecurity.com with the user agent Duo Device Health. The supplied approved-service inventory does not list Duo; investigate separately (T080-00488, T080-00489).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 83109,
+    "output": 3038
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.86,
+  "supporting_observations": [
+   {
+    "claim": "At 13:44:39, FILE-PIN-01 launched the approved Vaultline agent as svc-bkp with a Nightly job targeting ingest.vaultline-backup.com.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T080-00218",
+     "T080-00219"
+    ]
+   },
+   {
+    "claim": "The proxy and Zeek records show about 640 MB sent from FILE-PIN-01 to ingest.vaultline-backup.com through the proxy, shortly after the agent launch. The destination and transfer size match the organization's stated offsite-backup service and expected upload size, supporting a benign explanation for the alerted transfer.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T080-00222",
+     "T080-00223",
+     "T080-00228"
+    ]
+   },
+   {
+    "claim": "Shortly before the transfer, the domain controller recorded a Kerberos service-ticket request for svc-bkp to FILE-PIN-01$ from public IP 23.129.64.210; FILE-PIN-01 then recorded a svc-bkp service logon by services.exe. The available records do not explain the public source address, leaving an identity-use concern that prevents confidently closing the alerted activity as benign.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T080-00214",
+     "T080-00215",
+     "T080-00218"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and Zeek records establish the destination and byte volume, but do not provide a backup-side object manifest or establish what data was uploaded (T080-00222, T080-00224, T080-00228).",
+   "The records show the Vaultline executable path, command line, and account, but do not establish the executable's integrity or whether the run was initiated by the expected scheduled job (T080-00218, T080-00219).",
+   "The svc-bkp ticket request from a public IP is recorded, but the available records do not identify the source system or explain why that address was used (T080-00214, T080-00215)."
+  ],
+  "claims_not_established": [
+   "Whether the public-IP svc-bkp ticket request was legitimate or resulted from unauthorized credential use.",
+   "Whether the uploaded data was the expected backup content.",
+   "Whether the Vaultline agent and its execution were authentic and authorized, beyond the recorded path, command line, and account."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Validate 23.129.64.210 against authentication-source and network records, and determine why it requested a svc-bkp ticket for FILE-PIN-01$.",
+   "Obtain Vaultline job logs and destination-side records for this run, including the uploaded objects, job identity, and any expected schedule or job approval.",
+   "Verify the Vaultline agent's signature and hash against the organization's approved deployment, and check whether the process was launched by the expected service or scheduler."
+  ],
+  "unrelated_findings": [
+   "WS-ESTONE-01 recorded an explicit-credentials event targeting svc-bkp and FILE-PIN-01 at 13:54. The records do not show whether this resulted in a successful authentication; investigate separately rather than treating it as proof about the earlier transfer (T080-00347).",
+   "WS-ARUIZ-01 attempted a connection to FILE-PIN-01 on PostgreSQL port 5432; the connection ended with RSTR. The inventory provided does not list this service (T080-00356, T080-00357).",
+   "FILE-PIN-01 made a proxy request to dl.duosecurity.com with the user agent Duo Device Health. The supplied approved-service inventory does not list Duo; investigate separately (T080-00488, T080-00489)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 8,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 30.4
+}

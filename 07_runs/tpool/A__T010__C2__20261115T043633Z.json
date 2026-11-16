@@ -1,0 +1,92 @@
+{
+ "run_id": "A__T010__C2__20261115T043633Z",
+ "config": "A",
+ "scenario_id": "T010",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 528,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 208835,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The supplied records do not directly show the alert's alleged large outbound transfer around 13:46 UTC. Nearby entries show FILE-HD-01 communicating with the internal proxy at 13:45 and 13:47, with recorded connection byte counts in the kilobyte range, not hundreds of megabytes.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T010-00325\", \"T010-00331\", \"T010-00362\"]\n    },\n    {\n      \"claim\": \"At 13:39:43, PROXY-HD-01 initiated an SMB connection to FILE-HD-01 on port 445. This is unexpected for a host described as an explicit web proxy, but the connection metadata alone does not establish its purpose or maliciousness.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T010-00248\", \"T010-00251\"]\n    },\n    {\n      \"claim\": \"At 14:05:34, FILE-HD-01 initiated a connection to WS-OHADDAD-01 on TCP port 135. This is opposite the stated IT practice that remote administration originates from WS-OHADDAD-01, and merits investigation; the records do not show what activity followed or why the connection occurred.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T010-00527\", \"T010-00528\", \"T010-00529\", \"T010-00530\"]\n    },\n    {\n      \"claim\": \"Kerberos activity near the alert identifies FILE-HD-01$ as the target account; these entries do not establish that svc-claimsync ran or that the scheduled password rotation caused the reported transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T010-00343\", \"T010-00349\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not include a direct flow or proxy transaction identifying the alleged hundreds-of-megabytes transfer, its destination, or its byte count; nearby proxy connections are shown only as internal connections to PROXY-HD-01 (T010-00325, T010-00331, T010-00362).\",\n    \"The provided evidence does not attribute the proxy connections or alleged transfer to a process such as cvagent.exe, cmupdate.exe, or another executable.\",\n    \"The records show connection metadata but not the content or business purpose of the SMB and RPC connections (T010-00251, T010-00530).\"\n  ],\n  \"claims_not_established\": [\n    \"That the reported large transfer actually occurred in the supplied telemetry, or its destination, contents, and initiating process.\",\n    \"That the transfer used the approved CobaltVault backup service or was an unauthorized exfiltration.\",\n    \"That the SMB or RPC connections were malicious rather than authorized or otherwise benign.\",\n    \"That FILE-HD-01 was compromised, or that the observed activity was performed by a particular user or service account.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Firewall, NetFlow, and proxy transaction records for FILE-HD-01 covering the alert interval, including destination, byte counts, URL or hostname, and connection outcome.\",\n    \"FILE-HD-01 process execution and network-to-process telemetry around 13:46 UTC, including activity by cvagent.exe, cmupdate.exe, and ClaimSync.\",\n    \"CobaltVault agent job and upload logs, and confirmation of the scheduled svc-claimsync password rotation and manual job update.\",\n    \"SMB server/client auditing and RPC/DCOM logs for the PROXY-HD-01-to-FILE-HD-01 connection and FILE-HD-01-to-WS-OHADDAD-01 connection.\",\n    \"Relevant FILE-HD-01 and WS-OHADDAD-01 authentication, interactive-session, and endpoint detection records to establish who or what initiated the activity.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 77705,
+    "output": 2547,
+    "reasoning": 1662
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "The supplied records do not directly show the alert's alleged large outbound transfer around 13:46 UTC. Nearby entries show FILE-HD-01 communicating with the internal proxy at 13:45 and 13:47, with recorded connection byte counts in the kilobyte range, not hundreds of megabytes.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T010-00325",
+     "T010-00331",
+     "T010-00362"
+    ]
+   },
+   {
+    "claim": "At 13:39:43, PROXY-HD-01 initiated an SMB connection to FILE-HD-01 on port 445. This is unexpected for a host described as an explicit web proxy, but the connection metadata alone does not establish its purpose or maliciousness.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T010-00248",
+     "T010-00251"
+    ]
+   },
+   {
+    "claim": "At 14:05:34, FILE-HD-01 initiated a connection to WS-OHADDAD-01 on TCP port 135. This is opposite the stated IT practice that remote administration originates from WS-OHADDAD-01, and merits investigation; the records do not show what activity followed or why the connection occurred.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T010-00527",
+     "T010-00528",
+     "T010-00529",
+     "T010-00530"
+    ]
+   },
+   {
+    "claim": "Kerberos activity near the alert identifies FILE-HD-01$ as the target account; these entries do not establish that svc-claimsync ran or that the scheduled password rotation caused the reported transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T010-00343",
+     "T010-00349"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not include a direct flow or proxy transaction identifying the alleged hundreds-of-megabytes transfer, its destination, or its byte count; nearby proxy connections are shown only as internal connections to PROXY-HD-01 (T010-00325, T010-00331, T010-00362).",
+   "The provided evidence does not attribute the proxy connections or alleged transfer to a process such as cvagent.exe, cmupdate.exe, or another executable.",
+   "The records show connection metadata but not the content or business purpose of the SMB and RPC connections (T010-00251, T010-00530)."
+  ],
+  "claims_not_established": [
+   "That the reported large transfer actually occurred in the supplied telemetry, or its destination, contents, and initiating process.",
+   "That the transfer used the approved CobaltVault backup service or was an unauthorized exfiltration.",
+   "That the SMB or RPC connections were malicious rather than authorized or otherwise benign.",
+   "That FILE-HD-01 was compromised, or that the observed activity was performed by a particular user or service account."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Firewall, NetFlow, and proxy transaction records for FILE-HD-01 covering the alert interval, including destination, byte counts, URL or hostname, and connection outcome.",
+   "FILE-HD-01 process execution and network-to-process telemetry around 13:46 UTC, including activity by cvagent.exe, cmupdate.exe, and ClaimSync.",
+   "CobaltVault agent job and upload logs, and confirmation of the scheduled svc-claimsync password rotation and manual job update.",
+   "SMB server/client auditing and RPC/DCOM logs for the PROXY-HD-01-to-FILE-HD-01 connection and FILE-HD-01-to-WS-OHADDAD-01 connection.",
+   "Relevant FILE-HD-01 and WS-OHADDAD-01 authentication, interactive-session, and endpoint detection records to establish who or what initiated the activity."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 27.1
+}

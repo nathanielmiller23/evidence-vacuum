@@ -1,0 +1,82 @@
+{
+ "scenario_id": "T014",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 1,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.95,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:39:57, WS-MLOPEZ-01 recorded a network logon for omar.haddad from WS-OHADDAD-01; the PowerShell process shortly afterward used the same Omar logon ID.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T014-00148\", \"T014-00177\", \"T014-00178\"]\n    },\n    {\n      \"claim\": \"At 13:41:49, PowerShell ran the command shown as the organization's known workstation patching method: executing \\\\\\\\FILE-HD-01\\\\IT\\\\Deploy-Patches.ps1. The inventory says Omar performs patching this way and workstation patching was scheduled during business hours.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T014-00177\", \"T014-00178\"]\n    },\n    {\n      \"claim\": \"PowerShell launched wusa.exe to install a Windows update package quietly, and the proxy recorded a Windows Update Agent connection downloading about 38.8 MB. This is consistent with the patching activity, though it does not independently verify the script's contents.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T014-00179\", \"T014-00182\", \"T014-00184\"]\n    },\n    {\n      \"claim\": \"The PowerShell process ended at 13:42:39. Its timing is near the reported brief window, although the available records do not directly establish whether a window was visible to Maria.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T014-00177\", \"T014-00187\", \"T014-00188\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied coverage status reports winsec, Sysmon, proxy, Zeek connection, and DNS collection as available for WS-MLOPEZ-01 during the review window; the listed collection outage is on WS-LPARK-01, not the alerted host.\",\n    \"The records show the PowerShell command line and its child process, but do not provide the contents, hash, or signature of Deploy-Patches.ps1 or the installed update package.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether Maria saw a visible PowerShell window; process creation records alone do not establish window visibility.\",\n    \"Whether Deploy-Patches.ps1 or the update package contents were authentic and unmodified.\",\n    \"Whether the user-reported timing refers to the PowerShell launch at 13:41:49 or another event.\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [],\n  \"unrelated_findings\": [\n    \"Separate review: Kerberos activity from WS-MLOPEZ-01 requested a ticket for ben.carter and was followed by a network logon for ben.carter on WS-BCARTER-01; shortly afterward, DC-HD-01 recorded a network logon for maria.lopez originating from WS-BCARTER-01. The records do not explain this cross-account, cross-workstation activity. (T014-00089, T014-00090, T014-00092, T014-00112)\",\n    \"Separate review: proxy records show connections with GoogleDriveFS and DropboxUpdate user agents, while the inventory says Google Drive and Dropbox/file-sharing services are not approved. These records do not establish file transfer or a connection to the alerted PowerShell activity. (T014-00218, T014-00219, T014-00285, T014-00286)\",\n    \"Separate review: FILE-HD-01 recorded an SMB network logon as ANONYMOUS LOGON from WS-MLOPEZ-01 at 13:43:16. The records do not establish what resource was accessed or whether the activity succeeded beyond the logon. (T014-00213, T014-00217)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 61183,
+    "output": 2297
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.95,
+  "supporting_observations": [
+   {
+    "claim": "At 13:39:57, WS-MLOPEZ-01 recorded a network logon for omar.haddad from WS-OHADDAD-01; the PowerShell process shortly afterward used the same Omar logon ID.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T014-00148",
+     "T014-00177",
+     "T014-00178"
+    ]
+   },
+   {
+    "claim": "At 13:41:49, PowerShell ran the command shown as the organization's known workstation patching method: executing \\\\FILE-HD-01\\IT\\Deploy-Patches.ps1. The inventory says Omar performs patching this way and workstation patching was scheduled during business hours.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T014-00177",
+     "T014-00178"
+    ]
+   },
+   {
+    "claim": "PowerShell launched wusa.exe to install a Windows update package quietly, and the proxy recorded a Windows Update Agent connection downloading about 38.8 MB. This is consistent with the patching activity, though it does not independently verify the script's contents.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T014-00179",
+     "T014-00182",
+     "T014-00184"
+    ]
+   },
+   {
+    "claim": "The PowerShell process ended at 13:42:39. Its timing is near the reported brief window, although the available records do not directly establish whether a window was visible to Maria.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T014-00177",
+     "T014-00187",
+     "T014-00188"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied coverage status reports winsec, Sysmon, proxy, Zeek connection, and DNS collection as available for WS-MLOPEZ-01 during the review window; the listed collection outage is on WS-LPARK-01, not the alerted host.",
+   "The records show the PowerShell command line and its child process, but do not provide the contents, hash, or signature of Deploy-Patches.ps1 or the installed update package."
+  ],
+  "claims_not_established": [
+   "Whether Maria saw a visible PowerShell window; process creation records alone do not establish window visibility.",
+   "Whether Deploy-Patches.ps1 or the update package contents were authentic and unmodified.",
+   "Whether the user-reported timing refers to the PowerShell launch at 13:41:49 or another event."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [],
+  "unrelated_findings": [
+   "Separate review: Kerberos activity from WS-MLOPEZ-01 requested a ticket for ben.carter and was followed by a network logon for ben.carter on WS-BCARTER-01; shortly afterward, DC-HD-01 recorded a network logon for maria.lopez originating from WS-BCARTER-01. The records do not explain this cross-account, cross-workstation activity. (T014-00089, T014-00090, T014-00092, T014-00112)",
+   "Separate review: proxy records show connections with GoogleDriveFS and DropboxUpdate user agents, while the inventory says Google Drive and Dropbox/file-sharing services are not approved. These records do not establish file transfer or a connection to the alerted PowerShell activity. (T014-00218, T014-00219, T014-00285, T014-00286)",
+   "Separate review: FILE-HD-01 recorded an SMB network logon as ANONYMOUS LOGON from WS-MLOPEZ-01 at 13:43:16. The records do not establish what resource was accessed or whether the activity succeeded beyond the logon. (T014-00213, T014-00217)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 28.5
+}

@@ -1,0 +1,102 @@
+{
+ "scenario_id": "T105",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.84,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted periodic HTTPS activity is attributable in the endpoint and proxy records to routewiseupd.exe running from kim.nguyen's AppData\\\\Local directory, rather than the inventory-listed approved installation path under Program Files.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T105-00119\",\n        \"T105-00122\",\n        \"T105-00124\",\n        \"T105-00125\"\n      ]\n    },\n    {\n      \"claim\": \"That process made repeated proxy CONNECT requests to update.routewise.co:443 at roughly five-minute intervals. The inventory lists update.routewise.com as the approved RouteWise update host, making the observed hostname a material mismatch.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T105-00122\",\n        \"T105-00175\",\n        \"T105-00197\",\n        \"T105-00209\",\n        \"T105-00233\",\n        \"T105-00245\",\n        \"T105-00260\"\n      ]\n    },\n    {\n      \"claim\": \"Endpoint network events associate the repeated connections with the same routewiseupd.exe process (PID 5024); the later requests received proxy authentication-required and deny responses, and the process then exited.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T105-00178\",\n        \"T105-00200\",\n        \"T105-00210\",\n        \"T105-00236\",\n        \"T105-00248\",\n        \"T105-00260\",\n        \"T105-00263\",\n        \"T105-00264\",\n        \"T105-00265\"\n      ]\n    },\n    {\n      \"claim\": \"The non-inventory executable location combined with repeated connections to a hostname differing from the approved update host supports treating the alerted activity as suspicious and escalating it, though it does not by itself establish the contents or intent of the traffic.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T105-00119\",\n        \"T105-00122\",\n        \"T105-00125\",\n        \"T105-00200\",\n        \"T105-00236\",\n        \"T105-00263\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records show HTTPS CONNECT tunnels and byte counts, not the encrypted application payload or the remote server's TLS certificate.\",\n    \"The supplied records do not include the updater executable's hash, signature, download source, or file contents.\",\n    \"The supplied records show activity from 13:37 through 14:06 UTC but do not establish the full alerted interval from 13:30 through 14:10 UTC.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish that update.routewise.co is controlled by an attacker or that it is malicious infrastructure.\",\n    \"The evidence does not establish what data, if any, was sent through the HTTPS tunnels or whether a payload was downloaded or executed.\",\n    \"The evidence does not establish how the AppData copy of routewiseupd.exe was installed or whether it is signed or otherwise legitimate.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze the routewiseupd.exe file, including its hash, digital signature, creation time, and provenance.\",\n    \"Review DNS, proxy, and TLS inspection or certificate telemetry for update.routewise.co, including destination resolution and any related requests.\",\n    \"Check endpoint installation, persistence, and download history for the AppData RouteWise executable and compare it with the approved Program Files installation.\",\n    \"Obtain proxy policy and authentication details for the 407 and 403 responses and determine whether any related connections succeeded outside the supplied window.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate ticket: kim.nguyen ran hidden PowerShell to compress C:\\\\Logs\\\\*.log into C:\\\\Backups\\\\audit-export.zip; the supplied evidence does not show that the archive was uploaded. (T105-00113, T105-00114)\",\n    \"Separate ticket: kim.nguyen launched Firefox to open drive.google.com, an unapproved file-sharing service; the records show a connection but do not establish that files were uploaded. (T105-00126, T105-00132)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 50854,
+    "output": 2686
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.84,
+  "supporting_observations": [
+   {
+    "claim": "The alerted periodic HTTPS activity is attributable in the endpoint and proxy records to routewiseupd.exe running from kim.nguyen's AppData\\Local directory, rather than the inventory-listed approved installation path under Program Files.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T105-00119",
+     "T105-00122",
+     "T105-00124",
+     "T105-00125"
+    ]
+   },
+   {
+    "claim": "That process made repeated proxy CONNECT requests to update.routewise.co:443 at roughly five-minute intervals. The inventory lists update.routewise.com as the approved RouteWise update host, making the observed hostname a material mismatch.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T105-00122",
+     "T105-00175",
+     "T105-00197",
+     "T105-00209",
+     "T105-00233",
+     "T105-00245",
+     "T105-00260"
+    ]
+   },
+   {
+    "claim": "Endpoint network events associate the repeated connections with the same routewiseupd.exe process (PID 5024); the later requests received proxy authentication-required and deny responses, and the process then exited.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T105-00178",
+     "T105-00200",
+     "T105-00210",
+     "T105-00236",
+     "T105-00248",
+     "T105-00260",
+     "T105-00263",
+     "T105-00264",
+     "T105-00265"
+    ]
+   },
+   {
+    "claim": "The non-inventory executable location combined with repeated connections to a hostname differing from the approved update host supports treating the alerted activity as suspicious and escalating it, though it does not by itself establish the contents or intent of the traffic.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T105-00119",
+     "T105-00122",
+     "T105-00125",
+     "T105-00200",
+     "T105-00236",
+     "T105-00263"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records show HTTPS CONNECT tunnels and byte counts, not the encrypted application payload or the remote server's TLS certificate.",
+   "The supplied records do not include the updater executable's hash, signature, download source, or file contents.",
+   "The supplied records show activity from 13:37 through 14:06 UTC but do not establish the full alerted interval from 13:30 through 14:10 UTC."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish that update.routewise.co is controlled by an attacker or that it is malicious infrastructure.",
+   "The evidence does not establish what data, if any, was sent through the HTTPS tunnels or whether a payload was downloaded or executed.",
+   "The evidence does not establish how the AppData copy of routewiseupd.exe was installed or whether it is signed or otherwise legitimate."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze the routewiseupd.exe file, including its hash, digital signature, creation time, and provenance.",
+   "Review DNS, proxy, and TLS inspection or certificate telemetry for update.routewise.co, including destination resolution and any related requests.",
+   "Check endpoint installation, persistence, and download history for the AppData RouteWise executable and compare it with the approved Program Files installation.",
+   "Obtain proxy policy and authentication details for the 407 and 403 responses and determine whether any related connections succeeded outside the supplied window."
+  ],
+  "unrelated_findings": [
+   "Separate ticket: kim.nguyen ran hidden PowerShell to compress C:\\Logs\\*.log into C:\\Backups\\audit-export.zip; the supplied evidence does not show that the archive was uploaded. (T105-00113, T105-00114)",
+   "Separate ticket: kim.nguyen launched Firefox to open drive.google.com, an unapproved file-sharing service; the records show a connection but do not establish that files were uploaded. (T105-00126, T105-00132)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 26,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 40.9
+}

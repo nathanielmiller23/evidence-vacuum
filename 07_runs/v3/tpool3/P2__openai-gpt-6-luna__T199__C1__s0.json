@@ -1,0 +1,80 @@
+{
+ "scenario_id": "T199",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:43 UTC, mia.santos launched PowerShell from Explorer to compress \\\\\\\\FILE-BLU-01\\\\Shared\\\\Clients into C:\\\\Users\\\\mia.santos\\\\AppData\\\\Local\\\\Temp\\\\c.zip; Sysmon recorded creation of that ZIP shortly afterward.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T199-00200\",\n        \"T199-00201\",\n        \"T199-00202\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:49 UTC, a proxy tunnel from WS-MSANTOS-01 to bigsend-drop.net recorded 51,000,000 client-to-server bytes and only 8,800 server-to-client bytes; Zeek independently recorded about 51 MB of client-originated traffic on the corresponding proxy connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T199-00238\",\n        \"T199-00239\"\n      ]\n    },\n    {\n      \"claim\": \"The large transfer was made by Firefox running as mia.santos and connecting to the proxy; this is consistent with uploading the recently created archive to an unapproved file-sharing destination.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T199-00200\",\n        \"T199-00202\",\n        \"T199-00238\",\n        \"T199-00240\",\n        \"T199-00241\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy record identifies the destination and byte counts but does not expose the upload URL, request body, filename, or transferred content.\",\n    \"The available records show the archive was created before the transfer, but do not directly establish that c.zip was the specific file uploaded.\",\n    \"The supplied evidence does not include FILE-BLU-01 file-access records or a copy/hash of the archive for content verification.\"\n  ],\n  \"claims_not_established\": [\n    \"The exact contents of c.zip and whether it contained sensitive client information.\",\n    \"Whether mia.santos had authorization to collect or transfer the client files.\",\n    \"The exact object uploaded to bigsend-drop.net or whether the transfer completed successfully at the application layer.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and inspect c.zip, including its hash, contents, and creation/access metadata.\",\n    \"Obtain detailed proxy/TLS or destination-side records, if available, to identify the upload path, filename, and completion status.\",\n    \"Review FILE-BLU-01 share-access and file-audit logs for the files accessed during archive creation.\",\n    \"Confirm with mia.santos and the relevant data owner whether the archive and external transfer were authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"GlobalProtect PanGPS.exe ran on WS-MSANTOS-01; given the inventory states there is no VPN, verify separately whether this client is expected. This does not determine the disposition of the alerted transfer. (T199-00028, T199-00029)\",\n    \"Firefox browsed the AWS console during the review window; assess separately whether this access is approved. It is not the recorded bulk transfer to bigsend-drop.net. (T199-00276, T199-00277, T199-00278)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 58284,
+    "output": 1485
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:43 UTC, mia.santos launched PowerShell from Explorer to compress \\\\FILE-BLU-01\\Shared\\Clients into C:\\Users\\mia.santos\\AppData\\Local\\Temp\\c.zip; Sysmon recorded creation of that ZIP shortly afterward.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T199-00200",
+     "T199-00201",
+     "T199-00202"
+    ]
+   },
+   {
+    "claim": "At 13:49 UTC, a proxy tunnel from WS-MSANTOS-01 to bigsend-drop.net recorded 51,000,000 client-to-server bytes and only 8,800 server-to-client bytes; Zeek independently recorded about 51 MB of client-originated traffic on the corresponding proxy connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T199-00238",
+     "T199-00239"
+    ]
+   },
+   {
+    "claim": "The large transfer was made by Firefox running as mia.santos and connecting to the proxy; this is consistent with uploading the recently created archive to an unapproved file-sharing destination.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T199-00200",
+     "T199-00202",
+     "T199-00238",
+     "T199-00240",
+     "T199-00241"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy record identifies the destination and byte counts but does not expose the upload URL, request body, filename, or transferred content.",
+   "The available records show the archive was created before the transfer, but do not directly establish that c.zip was the specific file uploaded.",
+   "The supplied evidence does not include FILE-BLU-01 file-access records or a copy/hash of the archive for content verification."
+  ],
+  "claims_not_established": [
+   "The exact contents of c.zip and whether it contained sensitive client information.",
+   "Whether mia.santos had authorization to collect or transfer the client files.",
+   "The exact object uploaded to bigsend-drop.net or whether the transfer completed successfully at the application layer."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and inspect c.zip, including its hash, contents, and creation/access metadata.",
+   "Obtain detailed proxy/TLS or destination-side records, if available, to identify the upload path, filename, and completion status.",
+   "Review FILE-BLU-01 share-access and file-audit logs for the files accessed during archive creation.",
+   "Confirm with mia.santos and the relevant data owner whether the archive and external transfer were authorized."
+  ],
+  "unrelated_findings": [
+   "GlobalProtect PanGPS.exe ran on WS-MSANTOS-01; given the inventory states there is no VPN, verify separately whether this client is expected. This does not determine the disposition of the alerted transfer. (T199-00028, T199-00029)",
+   "Firefox browsed the AWS console during the review window; assess separately whether this access is approved. It is not the recorded bulk transfer to bigsend-drop.net. (T199-00276, T199-00277, T199-00278)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 15.0
+}

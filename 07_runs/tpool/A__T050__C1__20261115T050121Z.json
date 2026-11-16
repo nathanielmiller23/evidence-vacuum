@@ -1,0 +1,85 @@
+{
+ "run_id": "A__T050__C1__20261115T050121Z",
+ "config": "A",
+ "scenario_id": "T050",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 496,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 197442,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.93,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The large transfer is consistent with the approved StratoSafe backup: stsync.exe ran as svc-archive with the Nightly job and StratoSafe target, and the proxy recorded about 640 MB sent to ingest.stratosafe-backup.com with very little received.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T050-00237\",\n        \"T050-00238\",\n        \"T050-00244\",\n        \"T050-00245\",\n        \"T050-00247\"\n      ]\n    },\n    {\n      \"claim\": \"Shortly before the backup process started, the domain controller recorded a Kerberos service-ticket event for svc-archive from public IP 45.79.19.196. The available records do not explain this source or connect it to the backup process.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T050-00223\",\n        \"T050-00237\"\n      ]\n    },\n    {\n      \"claim\": \"Nora Blake initiated an RDP connection from WS-NBLAKE-01 to FILE-NWD-01 and successfully logged on. This is inconsistent with the stated practice that remote administration is done only from WS-SOKAFOR-01, but the records shown establish only session setup and ordinary user-shell startup.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T050-00441\",\n        \"T050-00444\",\n        \"T050-00448\",\n        \"T050-00459\",\n        \"T050-00460\",\n        \"T050-00462\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and Zeek records quantify the large transfer to the approved destination but do not establish the transferred files or their contents (T050-00244, T050-00245).\",\n    \"The records do not establish whether the external Kerberos request and the local StratoSafe backup are related (T050-00223, T050-00237).\",\n    \"The RDP records show successful session establishment and startup processes, but do not show Nora's subsequent actions or purpose (T050-00459, T050-00460, T050-00462).\"\n  ],\n  \"claims_not_established\": [\n    \"That the 640 MB transfer contained unauthorized or sensitive data, or was intended to exfiltrate data.\",\n    \"That the Kerberos request from 45.79.19.196 was authorized, malicious, or associated with the backup.\",\n    \"That Nora's RDP session was malicious rather than an unauthorized or otherwise unexplained support action.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Correlate the 45.79.19.196 Kerberos event with DC network/firewall logs, the full authentication record, and any matching source-host or account activity.\",\n    \"Review StratoSafe job and upload manifests, including the files selected, job schedule, and backup-service authentication logs.\",\n    \"Obtain FILE-NWD-01 session and file-access telemetry for Nora's RDP session, plus any relevant help-desk ticket or authorization record.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 72779,
+    "output": 2335,
+    "reasoning": 1597
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.93,
+  "supporting_observations": [
+   {
+    "claim": "The large transfer is consistent with the approved StratoSafe backup: stsync.exe ran as svc-archive with the Nightly job and StratoSafe target, and the proxy recorded about 640 MB sent to ingest.stratosafe-backup.com with very little received.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T050-00237",
+     "T050-00238",
+     "T050-00244",
+     "T050-00245",
+     "T050-00247"
+    ]
+   },
+   {
+    "claim": "Shortly before the backup process started, the domain controller recorded a Kerberos service-ticket event for svc-archive from public IP 45.79.19.196. The available records do not explain this source or connect it to the backup process.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T050-00223",
+     "T050-00237"
+    ]
+   },
+   {
+    "claim": "Nora Blake initiated an RDP connection from WS-NBLAKE-01 to FILE-NWD-01 and successfully logged on. This is inconsistent with the stated practice that remote administration is done only from WS-SOKAFOR-01, but the records shown establish only session setup and ordinary user-shell startup.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T050-00441",
+     "T050-00444",
+     "T050-00448",
+     "T050-00459",
+     "T050-00460",
+     "T050-00462"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and Zeek records quantify the large transfer to the approved destination but do not establish the transferred files or their contents (T050-00244, T050-00245).",
+   "The records do not establish whether the external Kerberos request and the local StratoSafe backup are related (T050-00223, T050-00237).",
+   "The RDP records show successful session establishment and startup processes, but do not show Nora's subsequent actions or purpose (T050-00459, T050-00460, T050-00462)."
+  ],
+  "claims_not_established": [
+   "That the 640 MB transfer contained unauthorized or sensitive data, or was intended to exfiltrate data.",
+   "That the Kerberos request from 45.79.19.196 was authorized, malicious, or associated with the backup.",
+   "That Nora's RDP session was malicious rather than an unauthorized or otherwise unexplained support action."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Correlate the 45.79.19.196 Kerberos event with DC network/firewall logs, the full authentication record, and any matching source-host or account activity.",
+   "Review StratoSafe job and upload manifests, including the files selected, job schedule, and backup-service authentication logs.",
+   "Obtain FILE-NWD-01 session and file-access telemetry for Nora's RDP session, plus any relevant help-desk ticket or authorization record."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 24.4
+}

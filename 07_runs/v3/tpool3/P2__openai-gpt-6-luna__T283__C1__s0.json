@@ -1,0 +1,103 @@
+{
+ "scenario_id": "T283",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Amy Cole opened a .docm file from Downloads, and WINWORD.EXE then spawned PowerShell under her account.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T283-00115\", \"T283-00119\", \"T283-00120\"]\n    },\n    {\n      \"claim\": \"The PowerShell command used no-profile, hidden-window, and encoded-command options. The encoded text decodes to a command that uses .NET WebClient to download and execute a script from raw.githubusercontent.com/orchard-it/tools/main/u.ps1.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T283-00119\", \"T283-00120\"]\n    },\n    {\n      \"claim\": \"The proxy recorded a successful GET for that exact script URL, and the associated PowerShell process connected to the proxy during the same interval.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T283-00123\", \"T283-00124\", \"T283-00125\", \"T283-00128\", \"T283-00129\"]\n    },\n    {\n      \"claim\": \"PowerShell then launched rundll32.exe to call Init in C:\\\\Users\\\\amy.cole\\\\AppData\\\\Roaming\\\\svchelper.dll; the DLL's presence and contents are not established by these records.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T283-00135\", \"T283-00136\"]\n    },\n    {\n      \"claim\": \"The PowerShell, rundll32, and WINWORD processes exited shortly afterward.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T283-00137\", \"T283-00138\", \"T283-00139\", \"T283-00140\", \"T283-00141\", \"T283-00142\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not include the contents or hashes of Statement.docm, u.ps1, or svchelper.dll.\",\n    \"No PowerShell script-block or equivalent execution-content telemetry is provided; the script's behavior after download is therefore not visible here.\",\n    \"The Defender DetectionHistory file-creation event does not provide a detection result or identify the detected object in the supplied record.\",\n    \"The evidence shows a PowerShell process configured with a hidden window, but does not establish whether it was the specific window Amy reported seeing.\"\n  ],\n  \"claims_not_established\": [\n    \"Who created or delivered Statement.docm, or whether Amy knowingly opened it.\",\n    \"The downloaded script's exact contents, the DLL's behavior, or whether the two were malicious payloads.\",\n    \"Whether the activity established persistence, stole data, or caused other lasting impact.\",\n    \"Whether the repository or script was authorized despite its organization-like name.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze Statement.docm, including its origin, metadata, macros, and hash.\",\n    \"Preserve and analyze the exact u.ps1 version served at the event time and svchelper.dll; obtain file-system metadata and hashes from WS-ACOLE-01.\",\n    \"Collect PowerShell operational/script-block logs, endpoint protection detection details, and relevant process or memory artifacts.\",\n    \"Verify whether the orchard-it GitHub repository and this script were authorized by the organization.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-ACOLE-01 launched Google Drive File Stream, a cloud-storage service not listed as approved in the supplied inventory; handle in a separate ticket. (T283-00289, T283-00290)\",\n    \"Webex.exe was launched with a URL targeting app.slack.com; Slack is not listed as an approved service in the supplied inventory. Handle separately from the alerted execution chain. (T283-00291, T283-00296)\",\n    \"A SYSTEM-run Meridian OpsAgent process used explicit credentials for svc-safe to access FILE-ORC-01. The supplied inventory describes svc-safe as a backup agent on FILE-ORC-01, not as a workstation agent; investigate separately. (T283-00404, T283-00406)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 76885,
+    "output": 2223
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "Amy Cole opened a .docm file from Downloads, and WINWORD.EXE then spawned PowerShell under her account.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T283-00115",
+     "T283-00119",
+     "T283-00120"
+    ]
+   },
+   {
+    "claim": "The PowerShell command used no-profile, hidden-window, and encoded-command options. The encoded text decodes to a command that uses .NET WebClient to download and execute a script from raw.githubusercontent.com/orchard-it/tools/main/u.ps1.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T283-00119",
+     "T283-00120"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a successful GET for that exact script URL, and the associated PowerShell process connected to the proxy during the same interval.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T283-00123",
+     "T283-00124",
+     "T283-00125",
+     "T283-00128",
+     "T283-00129"
+    ]
+   },
+   {
+    "claim": "PowerShell then launched rundll32.exe to call Init in C:\\Users\\amy.cole\\AppData\\Roaming\\svchelper.dll; the DLL's presence and contents are not established by these records.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T283-00135",
+     "T283-00136"
+    ]
+   },
+   {
+    "claim": "The PowerShell, rundll32, and WINWORD processes exited shortly afterward.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T283-00137",
+     "T283-00138",
+     "T283-00139",
+     "T283-00140",
+     "T283-00141",
+     "T283-00142"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not include the contents or hashes of Statement.docm, u.ps1, or svchelper.dll.",
+   "No PowerShell script-block or equivalent execution-content telemetry is provided; the script's behavior after download is therefore not visible here.",
+   "The Defender DetectionHistory file-creation event does not provide a detection result or identify the detected object in the supplied record.",
+   "The evidence shows a PowerShell process configured with a hidden window, but does not establish whether it was the specific window Amy reported seeing."
+  ],
+  "claims_not_established": [
+   "Who created or delivered Statement.docm, or whether Amy knowingly opened it.",
+   "The downloaded script's exact contents, the DLL's behavior, or whether the two were malicious payloads.",
+   "Whether the activity established persistence, stole data, or caused other lasting impact.",
+   "Whether the repository or script was authorized despite its organization-like name."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze Statement.docm, including its origin, metadata, macros, and hash.",
+   "Preserve and analyze the exact u.ps1 version served at the event time and svchelper.dll; obtain file-system metadata and hashes from WS-ACOLE-01.",
+   "Collect PowerShell operational/script-block logs, endpoint protection detection details, and relevant process or memory artifacts.",
+   "Verify whether the orchard-it GitHub repository and this script were authorized by the organization."
+  ],
+  "unrelated_findings": [
+   "WS-ACOLE-01 launched Google Drive File Stream, a cloud-storage service not listed as approved in the supplied inventory; handle in a separate ticket. (T283-00289, T283-00290)",
+   "Webex.exe was launched with a URL targeting app.slack.com; Slack is not listed as an approved service in the supplied inventory. Handle separately from the alerted execution chain. (T283-00291, T283-00296)",
+   "A SYSTEM-run Meridian OpsAgent process used explicit credentials for svc-safe to access FILE-ORC-01. The supplied inventory describes svc-safe as a backup agent on FILE-ORC-01, not as a workstation agent; investigate separately. (T283-00404, T283-00406)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 18,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.4
+}

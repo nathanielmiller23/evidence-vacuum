@@ -1,0 +1,90 @@
+{
+ "scenario_id": "T102",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Repeated authentication failures for svc-routes occurred at roughly one-minute intervals on FILE-COP-01. The failures identify FILE-COP-01 as the workstation, process ID 0x1718, and status 0xc000006a, indicating an incorrect password.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T102-00002\", \"T102-00003\", \"T102-00017\", \"T102-00022\", \"T102-00036\"]\n    },\n    {\n      \"claim\": \"Domain-controller records also show svc-routes pre-authentication failures from 10.52.20.20 during this period.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T102-00001\", \"T102-00008\", \"T102-00018\", \"T102-00027\", \"T102-00035\"]\n    },\n    {\n      \"claim\": \"The minute-like failure pattern from FILE-COP-01 is consistent with the supplied context that RouteSync re-authenticates every minute and that svc-routes was scheduled for password rotation at 13:30 UTC; this makes a stale job credential a plausible explanation, but does not establish that explanation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T102-00002\", \"T102-00017\", \"T102-00022\", \"T102-00036\"]\n    },\n    {\n      \"claim\": \"At 13:48, explicit-credential events show PowerShell using svc-routes credentials to target FILE-COP-01 from both DC-COP-01 and WS-KNGUYEN-01. These sources differ from the supplied remote-administration practice, but the events alone do not establish whether authentication succeeded or why the credentials were used.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T102-00037\", \"T102-00038\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not include process command lines, parent processes, or a mapping of the logged IP addresses to assets beyond the host and workstation fields shown.\",\n    \"The supplied records do not establish whether the explicit-credential attempts succeeded or whether they are causally related to the repeated failures.\",\n    \"The evidence provided does not include a password-change audit record or RouteSync configuration/update history.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the failures were caused by RouteSync continuing to use the old password after the scheduled rotation.\",\n    \"Whether either PowerShell explicit-credential event successfully authenticated to FILE-COP-01.\",\n    \"Whether the 13:48 credential use was an authorized but undocumented update attempt, an unrelated operation, or malicious activity.\",\n    \"Whether there was subsequent successful use of svc-routes or other activity outside the supplied records.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Retrieve the svc-routes password-change audit event and RouteSync job configuration or update history around 13:30\u201313:50 UTC.\",\n    \"Collect process command lines, parent-process details, and endpoint telemetry for PowerShell on DC-COP-01 and WS-KNGUYEN-01 at 13:48 UTC.\",\n    \"Correlate the explicit-credential events with successful and failed logons on FILE-COP-01 and domain-controller authentication records.\",\n    \"Verify whether the 13:48 activity was authorized, given the supplied practice that remote administration is performed from WS-PBECKER-01.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 6507,
+    "output": 2156
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "Repeated authentication failures for svc-routes occurred at roughly one-minute intervals on FILE-COP-01. The failures identify FILE-COP-01 as the workstation, process ID 0x1718, and status 0xc000006a, indicating an incorrect password.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T102-00002",
+     "T102-00003",
+     "T102-00017",
+     "T102-00022",
+     "T102-00036"
+    ]
+   },
+   {
+    "claim": "Domain-controller records also show svc-routes pre-authentication failures from 10.52.20.20 during this period.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T102-00001",
+     "T102-00008",
+     "T102-00018",
+     "T102-00027",
+     "T102-00035"
+    ]
+   },
+   {
+    "claim": "The minute-like failure pattern from FILE-COP-01 is consistent with the supplied context that RouteSync re-authenticates every minute and that svc-routes was scheduled for password rotation at 13:30 UTC; this makes a stale job credential a plausible explanation, but does not establish that explanation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T102-00002",
+     "T102-00017",
+     "T102-00022",
+     "T102-00036"
+    ]
+   },
+   {
+    "claim": "At 13:48, explicit-credential events show PowerShell using svc-routes credentials to target FILE-COP-01 from both DC-COP-01 and WS-KNGUYEN-01. These sources differ from the supplied remote-administration practice, but the events alone do not establish whether authentication succeeded or why the credentials were used.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T102-00037",
+     "T102-00038"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not include process command lines, parent processes, or a mapping of the logged IP addresses to assets beyond the host and workstation fields shown.",
+   "The supplied records do not establish whether the explicit-credential attempts succeeded or whether they are causally related to the repeated failures.",
+   "The evidence provided does not include a password-change audit record or RouteSync configuration/update history."
+  ],
+  "claims_not_established": [
+   "Whether the failures were caused by RouteSync continuing to use the old password after the scheduled rotation.",
+   "Whether either PowerShell explicit-credential event successfully authenticated to FILE-COP-01.",
+   "Whether the 13:48 credential use was an authorized but undocumented update attempt, an unrelated operation, or malicious activity.",
+   "Whether there was subsequent successful use of svc-routes or other activity outside the supplied records."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Retrieve the svc-routes password-change audit event and RouteSync job configuration or update history around 13:30\u201313:50 UTC.",
+   "Collect process command lines, parent-process details, and endpoint telemetry for PowerShell on DC-COP-01 and WS-KNGUYEN-01 at 13:48 UTC.",
+   "Correlate the explicit-credential events with successful and failed logons on FILE-COP-01 and domain-controller authentication records.",
+   "Verify whether the 13:48 activity was authorized, given the supplied practice that remote administration is performed from WS-PBECKER-01."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 16,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.6
+}

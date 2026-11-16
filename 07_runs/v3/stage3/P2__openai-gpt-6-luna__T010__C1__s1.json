@@ -1,0 +1,94 @@
+{
+ "scenario_id": "T010",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 1,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45:23, FILE-HD-01 launched the CobaltVault agent from its inventoried path as svc-bkp with the command line specifying the Nightly job and ingest.cobaltvault.net target.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T010-00320\", \"T010-00321\"]\n    },\n    {\n      \"claim\": \"The agent's apparent proxy activity to ingest.cobaltvault.net was brief and recorded small tunnel byte counts; the proxy logged a GET with status 200, then a later CONNECT attempt with status 407. The agent exited by 13:45:59.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T010-00322\", \"T010-00323\", \"T010-00329\", \"T010-00337\"]\n    },\n    {\n      \"claim\": \"The available records around 13:46 show FILE-HD-01 communicating with the domain controller over LDAP and Kerberos, but do not document a hundreds-of-MB external transfer at that time.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T010-00338\", \"T010-00341\", \"T010-00342\", \"T010-00346\", \"T010-00347\", \"T010-00351\"]\n    },\n    {\n      \"claim\": \"The approved backup agent and destination offer a plausible benign explanation for activity near the alert, but the short, low-byte proxy records do not establish that the alerted large transfer was this backup job or that a large upload completed.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T010-00320\", \"T010-00322\", \"T010-00323\", \"T010-00329\", \"T010-00337\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The provided proxy records show a brief exchange and small tunnel byte counts, but do not provide evidence of the payload contents or a completed large upload.\",\n    \"The supplied records do not include the network alert's flow details or another record that directly identifies the process responsible for the reported hundreds-of-MB transfer.\",\n    \"Sysmon records the CobaltVault agent connecting to the proxy, not a direct connection from that process to the external destination (T010-00324, T010-00326).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether a hundreds-of-MB transfer actually occurred during the alert window, and its precise start and end times.\",\n    \"Whether the reported transfer was to ingest.cobaltvault.net, another destination, or associated with the CobaltVault process.\",\n    \"Whether the backup upload completed, what data it contained, or whether the destination received any large payload.\",\n    \"Whether the CobaltVault execution and associated proxy requests were authorized beyond their apparent alignment with the inventoried agent and target.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Obtain the alert's underlying flow records, including precise timestamps, byte counts, destination, and any process attribution.\",\n    \"Review complete proxy logs for the alert interval, including request methods, transfer sizes, tunnel details, and any records following the 407 response.\",\n    \"Check CobaltVault job and agent logs for the Nightly run, upload status, bytes transferred, and files included.\",\n    \"Correlate endpoint network telemetry and file-access or backup audit records on FILE-HD-01 with the alert's exact time and destination.\"\n  ],\n  \"unrelated_findings\": [\n    \"FILE-HD-01 made proxy CONNECT requests identifying GlobalProtect and Zscaler clients; these services are not listed as approved. Treat this as a separate investigation, not evidence deciding the alerted transfer (T010-00123, T010-00234, T010-00271, T010-00277).\",\n    \"FILE-HD-01 initiated a connection to WS-OHADDAD-01 on port 135. This is unusual given the stated remote-administration practice, but the records alone do not establish that remote administration occurred; investigate separately (T010-00528, T010-00529, T010-00530).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 103803,
+    "output": 2762
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45:23, FILE-HD-01 launched the CobaltVault agent from its inventoried path as svc-bkp with the command line specifying the Nightly job and ingest.cobaltvault.net target.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T010-00320",
+     "T010-00321"
+    ]
+   },
+   {
+    "claim": "The agent's apparent proxy activity to ingest.cobaltvault.net was brief and recorded small tunnel byte counts; the proxy logged a GET with status 200, then a later CONNECT attempt with status 407. The agent exited by 13:45:59.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T010-00322",
+     "T010-00323",
+     "T010-00329",
+     "T010-00337"
+    ]
+   },
+   {
+    "claim": "The available records around 13:46 show FILE-HD-01 communicating with the domain controller over LDAP and Kerberos, but do not document a hundreds-of-MB external transfer at that time.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T010-00338",
+     "T010-00341",
+     "T010-00342",
+     "T010-00346",
+     "T010-00347",
+     "T010-00351"
+    ]
+   },
+   {
+    "claim": "The approved backup agent and destination offer a plausible benign explanation for activity near the alert, but the short, low-byte proxy records do not establish that the alerted large transfer was this backup job or that a large upload completed.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T010-00320",
+     "T010-00322",
+     "T010-00323",
+     "T010-00329",
+     "T010-00337"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The provided proxy records show a brief exchange and small tunnel byte counts, but do not provide evidence of the payload contents or a completed large upload.",
+   "The supplied records do not include the network alert's flow details or another record that directly identifies the process responsible for the reported hundreds-of-MB transfer.",
+   "Sysmon records the CobaltVault agent connecting to the proxy, not a direct connection from that process to the external destination (T010-00324, T010-00326)."
+  ],
+  "claims_not_established": [
+   "Whether a hundreds-of-MB transfer actually occurred during the alert window, and its precise start and end times.",
+   "Whether the reported transfer was to ingest.cobaltvault.net, another destination, or associated with the CobaltVault process.",
+   "Whether the backup upload completed, what data it contained, or whether the destination received any large payload.",
+   "Whether the CobaltVault execution and associated proxy requests were authorized beyond their apparent alignment with the inventoried agent and target."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Obtain the alert's underlying flow records, including precise timestamps, byte counts, destination, and any process attribution.",
+   "Review complete proxy logs for the alert interval, including request methods, transfer sizes, tunnel details, and any records following the 407 response.",
+   "Check CobaltVault job and agent logs for the Nightly run, upload status, bytes transferred, and files included.",
+   "Correlate endpoint network telemetry and file-access or backup audit records on FILE-HD-01 with the alert's exact time and destination."
+  ],
+  "unrelated_findings": [
+   "FILE-HD-01 made proxy CONNECT requests identifying GlobalProtect and Zscaler clients; these services are not listed as approved. Treat this as a separate investigation, not evidence deciding the alerted transfer (T010-00123, T010-00234, T010-00271, T010-00277).",
+   "FILE-HD-01 initiated a connection to WS-OHADDAD-01 on port 135. This is unusual given the stated remote-administration practice, but the records alone do not establish that remote administration occurred; investigate separately (T010-00528, T010-00529, T010-00530)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 17,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 29.0
+}

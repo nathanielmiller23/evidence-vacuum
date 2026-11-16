@@ -1,0 +1,73 @@
+{
+ "scenario_id": "T130",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.96,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The large outbound transfer appears in the records at 13:50:19 UTC, rather than at approximately 13:46 UTC: the proxy records a CONNECT to ingest.ironvault-cloud.com with 640,000,000 client bytes, and Zeek records 640,000,212 origin bytes.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T130-00259\", \"T130-00260\"]\n    },\n    {\n      \"claim\": \"Immediately before the transfer, Ironvault's agent.exe ran on FILE-COP-01 as COPPERLINE\\\\svc-backup with a Nightly job targeting ingest.ironvault-cloud.com; the network event is attributed to that process.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T130-00257\", \"T130-00258\", \"T130-00261\", \"T130-00262\"]\n    },\n    {\n      \"claim\": \"The destination, agent, service account, and transfer size match the supplied inventory description of approved Ironvault offsite backup, which uploads several hundred MB.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T130-00257\", \"T130-00258\", \"T130-00259\", \"T130-00260\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The transfer is recorded as a proxy CONNECT tunnel; the available records establish the destination and byte count but do not expose the uploaded content. [T130-00259, T130-00260]\",\n    \"Collection-status metadata reports that winsec and Sysmon data for WS-SALI-01 were not collected from 13:30 to 14:00 UTC. This does not directly identify the FILE-COP-01 transfer.\"\n  ],\n  \"claims_not_established\": [\n    \"The records do not establish which files or data were uploaded in the Ironvault transfer. [T130-00259, T130-00260]\",\n    \"The records do not independently establish whether the Nightly backup was scheduled to run at 13:50 UTC; they do show the approved agent and target in the observed run. [T130-00257, T130-00258]\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [],\n  \"unrelated_findings\": [\n    \"Separate ticket: an unlisted Veeam Backup service started on FILE-COP-01, and that process later attempted to use svc-backup credentials to the proxy. This is outside the alerted Ironvault transfer. [T130-00402, T130-00416]\",\n    \"Separate ticket: FILE-COP-01 made proxy requests whose user agents identify GlobalProtect, Zscaler Client Connector, and python-requests to www.bing.com. These are not approved in the supplied inventory; the proxy records alone do not establish that a VPN session occurred or identify the process responsible for every request. [T130-00423, T130-00425, T130-00426]\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 78621,
+    "output": 2194
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.96,
+  "supporting_observations": [
+   {
+    "claim": "The large outbound transfer appears in the records at 13:50:19 UTC, rather than at approximately 13:46 UTC: the proxy records a CONNECT to ingest.ironvault-cloud.com with 640,000,000 client bytes, and Zeek records 640,000,212 origin bytes.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T130-00259",
+     "T130-00260"
+    ]
+   },
+   {
+    "claim": "Immediately before the transfer, Ironvault's agent.exe ran on FILE-COP-01 as COPPERLINE\\svc-backup with a Nightly job targeting ingest.ironvault-cloud.com; the network event is attributed to that process.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T130-00257",
+     "T130-00258",
+     "T130-00261",
+     "T130-00262"
+    ]
+   },
+   {
+    "claim": "The destination, agent, service account, and transfer size match the supplied inventory description of approved Ironvault offsite backup, which uploads several hundred MB.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T130-00257",
+     "T130-00258",
+     "T130-00259",
+     "T130-00260"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The transfer is recorded as a proxy CONNECT tunnel; the available records establish the destination and byte count but do not expose the uploaded content. [T130-00259, T130-00260]",
+   "Collection-status metadata reports that winsec and Sysmon data for WS-SALI-01 were not collected from 13:30 to 14:00 UTC. This does not directly identify the FILE-COP-01 transfer."
+  ],
+  "claims_not_established": [
+   "The records do not establish which files or data were uploaded in the Ironvault transfer. [T130-00259, T130-00260]",
+   "The records do not independently establish whether the Nightly backup was scheduled to run at 13:50 UTC; they do show the approved agent and target in the observed run. [T130-00257, T130-00258]"
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [],
+  "unrelated_findings": [
+   "Separate ticket: an unlisted Veeam Backup service started on FILE-COP-01, and that process later attempted to use svc-backup credentials to the proxy. This is outside the alerted Ironvault transfer. [T130-00402, T130-00416]",
+   "Separate ticket: FILE-COP-01 made proxy requests whose user agents identify GlobalProtect, Zscaler Client Connector, and python-requests to www.bing.com. These are not approved in the supplied inventory; the proxy records alone do not establish that a VPN session occurred or identify the process responsible for every request. [T130-00423, T130-00425, T130-00426]"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.2
+}

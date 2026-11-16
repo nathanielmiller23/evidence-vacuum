@@ -1,0 +1,92 @@
+{
+ "scenario_id": "T072",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Repeated svc-billing authentication failures occurred on FILE-PIN-01 from 13:31 through 13:46 UTC. The 4625 records show LogonType 3 and SubStatus 0xc000006a, and the corresponding DC records show bad-password status 0xc000006a.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T072-00001\",\n        \"T072-00002\",\n        \"T072-00021\",\n        \"T072-00022\",\n        \"T072-00036\"\n      ]\n    },\n    {\n      \"claim\": \"The failures recur at roughly one-minute intervals and identify FILE-PIN-01 as the workstation, with source address 10.51.20.20; this pattern is consistent with the inventory-described BillingSync job re-authenticating with a stale password after the scheduled rotation, but does not prove that explanation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T072-00001\",\n        \"T072-00004\",\n        \"T072-00008\",\n        \"T072-00010\",\n        \"T072-00014\",\n        \"T072-00017\",\n        \"T072-00019\",\n        \"T072-00021\",\n        \"T072-00024\",\n        \"T072-00026\",\n        \"T072-00029\",\n        \"T072-00031\",\n        \"T072-00033\",\n        \"T072-00036\"\n      ]\n    },\n    {\n      \"claim\": \"At 14:08 UTC, WS-ESTONE-01 recorded explicit use of svc-billing credentials targeting FILE-PIN-01 by taskhostw.exe running as SYSTEM. This is a different source host from the repeated failures and is not explained by the supplied evidence.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T072-00037\"\n      ]\n    },\n    {\n      \"claim\": \"The supplied records do not show whether the 14:08 explicit-credential use succeeded; the record establishes credential use was attempted, not a successful logon or malicious intent.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T072-00037\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied evidence contains authentication events only; it does not include BillingSync job or password-rotation logs, process execution details beyond the recorded process name and PID, or a corresponding success/failure outcome for the 14:08 explicit-credential event.\",\n    \"The evidence ends at 14:08 UTC, so it does not establish what happened during the remainder of the requested review window.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the svc-billing password rotation completed successfully at 13:30 UTC or when the BillingSync job was updated.\",\n    \"Whether the 14:08 credential use from WS-ESTONE-01 was authorized, what initiated taskhostw.exe, or whether it resulted in a successful logon.\",\n    \"Whether the repeated failures were solely caused by the scheduled job retaining an old password, or whether another actor or process contributed.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Verify the password-rotation and BillingSync update timestamps, job configuration, and run history on FILE-PIN-01.\",\n    \"Collect FILE-PIN-01 and DC-PIN-01 authentication records after 14:08 UTC, including any successful svc-billing logons and their source addresses.\",\n    \"Investigate WS-ESTONE-01 task and process history around 14:08 UTC, including taskhostw.exe parent/task details and the origin of the explicit credentials; confirm with the responsible operator whether this use was authorized.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 6341,
+    "output": 1675
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "Repeated svc-billing authentication failures occurred on FILE-PIN-01 from 13:31 through 13:46 UTC. The 4625 records show LogonType 3 and SubStatus 0xc000006a, and the corresponding DC records show bad-password status 0xc000006a.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T072-00001",
+     "T072-00002",
+     "T072-00021",
+     "T072-00022",
+     "T072-00036"
+    ]
+   },
+   {
+    "claim": "The failures recur at roughly one-minute intervals and identify FILE-PIN-01 as the workstation, with source address 10.51.20.20; this pattern is consistent with the inventory-described BillingSync job re-authenticating with a stale password after the scheduled rotation, but does not prove that explanation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T072-00001",
+     "T072-00004",
+     "T072-00008",
+     "T072-00010",
+     "T072-00014",
+     "T072-00017",
+     "T072-00019",
+     "T072-00021",
+     "T072-00024",
+     "T072-00026",
+     "T072-00029",
+     "T072-00031",
+     "T072-00033",
+     "T072-00036"
+    ]
+   },
+   {
+    "claim": "At 14:08 UTC, WS-ESTONE-01 recorded explicit use of svc-billing credentials targeting FILE-PIN-01 by taskhostw.exe running as SYSTEM. This is a different source host from the repeated failures and is not explained by the supplied evidence.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T072-00037"
+    ]
+   },
+   {
+    "claim": "The supplied records do not show whether the 14:08 explicit-credential use succeeded; the record establishes credential use was attempted, not a successful logon or malicious intent.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T072-00037"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied evidence contains authentication events only; it does not include BillingSync job or password-rotation logs, process execution details beyond the recorded process name and PID, or a corresponding success/failure outcome for the 14:08 explicit-credential event.",
+   "The evidence ends at 14:08 UTC, so it does not establish what happened during the remainder of the requested review window."
+  ],
+  "claims_not_established": [
+   "Whether the svc-billing password rotation completed successfully at 13:30 UTC or when the BillingSync job was updated.",
+   "Whether the 14:08 credential use from WS-ESTONE-01 was authorized, what initiated taskhostw.exe, or whether it resulted in a successful logon.",
+   "Whether the repeated failures were solely caused by the scheduled job retaining an old password, or whether another actor or process contributed."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Verify the password-rotation and BillingSync update timestamps, job configuration, and run history on FILE-PIN-01.",
+   "Collect FILE-PIN-01 and DC-PIN-01 authentication records after 14:08 UTC, including any successful svc-billing logons and their source addresses.",
+   "Investigate WS-ESTONE-01 task and process history around 14:08 UTC, including taskhostw.exe parent/task details and the origin of the explicit credentials; confirm with the responsible operator whether this use was authorized."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 21,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 16.5
+}

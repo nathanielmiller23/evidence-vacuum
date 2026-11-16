@@ -1,0 +1,77 @@
+{
+ "scenario_id": "T211",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.84,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded two failed NTLM network logons for eli.brooks from 203.0.113.133; both report a bad-password substatus.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T211-00006\", \"T211-00013\"]\n    },\n    {\n      \"claim\": \"About one minute after the second failure, the domain controller recorded a successful NTLM network logon for eli.brooks from the same source address.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T211-00013\", \"T211-00014\"]\n    },\n    {\n      \"claim\": \"The failure-then-success sequence from the same unusual source is consistent with an unauthorized attempt that eventually obtained valid credentials; the available evidence supports escalation as malicious activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T211-00006\", \"T211-00013\", \"T211-00014\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records identify the source as 203.0.113.133, an address in a documentation-only range; the evidence does not establish whether this is the original address or a sanitized value.\",\n    \"The authentication records show LSASS as the process, but do not identify the initiating user, device, or application.\",\n    \"Only two failures and one subsequent success from this source are present in the supplied window; the records do not show the full authentication history.\"\n  ],\n  \"claims_not_established\": [\n    \"The identity or intent of the actor behind the source address.\",\n    \"Whether the successful logon was authorized or whether Eli's credentials were compromised.\",\n    \"What actions, if any, followed the successful logon.\",\n    \"Whether the source address reflects a real routable origin or a sanitized value.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Validate whether 203.0.113.133 is sanitized and, if so, obtain the original source address and its device attribution.\",\n    \"Review surrounding domain-controller authentication events for eli.brooks and the same source, including events outside the supplied window.\",\n    \"Correlate the successful logon with network, endpoint, and server activity to identify any resulting session or access.\",\n    \"Confirm with Eli whether the authentication was expected and review account-protection or credential-reset history.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate ticket: Dropbox.exe launched on WS-EBROOKS-01. Dropbox is not among the approved services in the supplied inventory; these records establish the launch and a valid Dropbox signature, but do not establish syncing or data transfer. (T211-00001, T211-00002)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 10078,
+    "output": 2405
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.84,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded two failed NTLM network logons for eli.brooks from 203.0.113.133; both report a bad-password substatus.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T211-00006",
+     "T211-00013"
+    ]
+   },
+   {
+    "claim": "About one minute after the second failure, the domain controller recorded a successful NTLM network logon for eli.brooks from the same source address.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T211-00013",
+     "T211-00014"
+    ]
+   },
+   {
+    "claim": "The failure-then-success sequence from the same unusual source is consistent with an unauthorized attempt that eventually obtained valid credentials; the available evidence supports escalation as malicious activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T211-00006",
+     "T211-00013",
+     "T211-00014"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records identify the source as 203.0.113.133, an address in a documentation-only range; the evidence does not establish whether this is the original address or a sanitized value.",
+   "The authentication records show LSASS as the process, but do not identify the initiating user, device, or application.",
+   "Only two failures and one subsequent success from this source are present in the supplied window; the records do not show the full authentication history."
+  ],
+  "claims_not_established": [
+   "The identity or intent of the actor behind the source address.",
+   "Whether the successful logon was authorized or whether Eli's credentials were compromised.",
+   "What actions, if any, followed the successful logon.",
+   "Whether the source address reflects a real routable origin or a sanitized value."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Validate whether 203.0.113.133 is sanitized and, if so, obtain the original source address and its device attribution.",
+   "Review surrounding domain-controller authentication events for eli.brooks and the same source, including events outside the supplied window.",
+   "Correlate the successful logon with network, endpoint, and server activity to identify any resulting session or access.",
+   "Confirm with Eli whether the authentication was expected and review account-protection or credential-reset history."
+  ],
+  "unrelated_findings": [
+   "Separate ticket: Dropbox.exe launched on WS-EBROOKS-01. Dropbox is not among the approved services in the supplied inventory; these records establish the launch and a valid Dropbox signature, but do not establish syncing or data transfer. (T211-00001, T211-00002)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 7,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 24.2
+}

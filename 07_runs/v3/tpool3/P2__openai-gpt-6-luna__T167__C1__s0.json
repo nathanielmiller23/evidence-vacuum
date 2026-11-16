@@ -1,0 +1,85 @@
+{
+ "scenario_id": "T167",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded creation of the alerted account helpdesk2 by MAPLEHILL\\\\ali.hassan at 13:47:31 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T167-00124\"]\n    },\n    {\n      \"claim\": \"Two seconds later, the domain controller recorded helpdesk2 being added to the Administrators group by the same named subject and logon ID.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T167-00124\", \"T167-00125\"]\n    },\n    {\n      \"claim\": \"The account name and administrator membership conflict with the stated practice that help-desk temporary accounts use temp.<name>, are added only to Externals, and never receive administrator rights. This strongly supports a malicious finding for the alerted account activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T167-00124\", \"T167-00125\"]\n    },\n    {\n      \"claim\": \"Shortly before the account creation, ali.hassan logged on to WS-NKIM-01 via RDP from 198.51.100.201 and received special privileges. The inventory says remote administration is only done from WS-AHASSAN-01; this is a significant contextual inconsistency, though the records do not link that session to the account-creation event.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T167-00095\", \"T167-00096\", \"T167-00097\", \"T167-00098\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The account-creation and group-addition records identify ali.hassan as the subject but do not establish which person or process used those credentials.\",\n    \"The available records do not identify the source host or network address for the account creation, or link its logon ID to the RDP session on WS-NKIM-01.\",\n    \"The evidence does not include change approval records or an explanation for the account's creation.\"\n  ],\n  \"claims_not_established\": [\n    \"It is not established whether the named ali.hassan personally performed the account changes or whether someone else used that account.\",\n    \"It is not established whether the account creation had any authorization not represented in the supplied change calendar and practices.\",\n    \"The suspicious scheduled task on WS-NKIM-01 is not proven to be connected to helpdesk2 or to the account-creation session.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate the account-creation logon ID with domain-controller authentication, PowerShell, directory-services, and endpoint records to identify the originating host and process.\",\n    \"Verify with ali.hassan and the change/identity-management records whether helpdesk2 was authorized, who requested it, and why it was added to Administrators.\",\n    \"Preserve and investigate the WS-NKIM-01 RDP session and scheduled-task contents and execution history, including whether the task ran and what its encoded command retrieved.\"\n  ],\n  \"unrelated_findings\": [\n    \"Google Drive File Stream ran under noah.kim on WS-NKIM-01; Google Drive is not among the listed approved services. This is a separate policy-review candidate and does not decide the account alert. Records: T167-00038, T167-00039, T167-00040.\",\n    \"noah.kim launched msi_update.exe from the user Temp directory. Its purpose and provenance are not established; investigate separately, without treating it as evidence for the account-creation finding. Records: T167-00137, T167-00138, T167-00145, T167-00146.\",\n    \"A scheduled task named Microsoft\\\\Windows\\\\HealthCheck was registered on WS-NKIM-01 under ali.hassan and contains a hidden PowerShell command that downloads and invokes a script from 198.51.100.201. Its relationship to the alerted account creation and whether it executed are not established; investigate separately. Record: T167-00126.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 32971,
+    "output": 1935
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded creation of the alerted account helpdesk2 by MAPLEHILL\\ali.hassan at 13:47:31 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T167-00124"
+    ]
+   },
+   {
+    "claim": "Two seconds later, the domain controller recorded helpdesk2 being added to the Administrators group by the same named subject and logon ID.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T167-00124",
+     "T167-00125"
+    ]
+   },
+   {
+    "claim": "The account name and administrator membership conflict with the stated practice that help-desk temporary accounts use temp.<name>, are added only to Externals, and never receive administrator rights. This strongly supports a malicious finding for the alerted account activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T167-00124",
+     "T167-00125"
+    ]
+   },
+   {
+    "claim": "Shortly before the account creation, ali.hassan logged on to WS-NKIM-01 via RDP from 198.51.100.201 and received special privileges. The inventory says remote administration is only done from WS-AHASSAN-01; this is a significant contextual inconsistency, though the records do not link that session to the account-creation event.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T167-00095",
+     "T167-00096",
+     "T167-00097",
+     "T167-00098"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The account-creation and group-addition records identify ali.hassan as the subject but do not establish which person or process used those credentials.",
+   "The available records do not identify the source host or network address for the account creation, or link its logon ID to the RDP session on WS-NKIM-01.",
+   "The evidence does not include change approval records or an explanation for the account's creation."
+  ],
+  "claims_not_established": [
+   "It is not established whether the named ali.hassan personally performed the account changes or whether someone else used that account.",
+   "It is not established whether the account creation had any authorization not represented in the supplied change calendar and practices.",
+   "The suspicious scheduled task on WS-NKIM-01 is not proven to be connected to helpdesk2 or to the account-creation session."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate the account-creation logon ID with domain-controller authentication, PowerShell, directory-services, and endpoint records to identify the originating host and process.",
+   "Verify with ali.hassan and the change/identity-management records whether helpdesk2 was authorized, who requested it, and why it was added to Administrators.",
+   "Preserve and investigate the WS-NKIM-01 RDP session and scheduled-task contents and execution history, including whether the task ran and what its encoded command retrieved."
+  ],
+  "unrelated_findings": [
+   "Google Drive File Stream ran under noah.kim on WS-NKIM-01; Google Drive is not among the listed approved services. This is a separate policy-review candidate and does not decide the account alert. Records: T167-00038, T167-00039, T167-00040.",
+   "noah.kim launched msi_update.exe from the user Temp directory. Its purpose and provenance are not established; investigate separately, without treating it as evidence for the account-creation finding. Records: T167-00137, T167-00138, T167-00145, T167-00146.",
+   "A scheduled task named Microsoft\\Windows\\HealthCheck was registered on WS-NKIM-01 under ali.hassan and contains a hidden PowerShell command that downloads and invokes a script from 198.51.100.201. Its relationship to the alerted account creation and whether it executed are not established; investigate separately. Record: T167-00126."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 9,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.6
+}

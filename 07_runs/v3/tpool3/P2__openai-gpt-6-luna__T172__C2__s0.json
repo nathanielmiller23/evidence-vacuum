@@ -1,0 +1,105 @@
+{
+ "scenario_id": "T172",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.92,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted failures are for svc-docsync and are logged as network logons from FILE-MAP-01; the 4625 records report bad-password status 0xc000006a.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T172-00002\", \"T172-00004\", \"T172-00017\", \"T172-00019\", \"T172-00035\"]\n    },\n    {\n      \"claim\": \"Failures recur at approximately one-minute intervals from 13:33:47 through at least 13:48:48, consistent with the supplied inventory description that the DocSync job runs and re-authenticates every minute.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T172-00002\", \"T172-00004\", \"T172-00006\", \"T172-00009\", \"T172-00011\", \"T172-00013\", \"T172-00015\", \"T172-00017\", \"T172-00019\", \"T172-00021\", \"T172-00023\", \"T172-00025\", \"T172-00027\", \"T172-00030\", \"T172-00032\", \"T172-00035\"]\n    },\n    {\n      \"claim\": \"The failures begin shortly after the supplied change calendar's 13:30 svc-docsync password rotation. A scheduled rotation followed by an unupdated job credential is a plausible explanation for the repeated bad-password failures.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T172-00002\", \"T172-00004\", \"T172-00006\", \"T172-00009\"]\n    },\n    {\n      \"claim\": \"Domain-controller records also show authentication failures for svc-docsync during this sequence, including bad-password status 0xc000006a in 4776 events and pre-authentication failure status 0x18 in 4771 events.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T172-00003\", \"T172-00007\", \"T172-00008\", \"T172-00010\", \"T172-00018\", \"T172-00020\", \"T172-00026\", \"T172-00029\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records stop at 13:48:48 UTC, so they do not cover the remainder of the requested 13:20\u201314:20 UTC window.\",\n    \"The supplied records do not show whether the DocSync job was updated after the rotation or whether authentication subsequently succeeded.\"\n  ],\n  \"claims_not_established\": [\n    \"The records do not establish whether the repeated failures stopped after the DocSync credential was updated.\",\n    \"The records do not establish who performed the scheduled rotation or whether the job's stored credential was updated successfully.\",\n    \"The failure records alone do not establish an attacker's involvement or intent.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Collect authentication records for svc-docsync through 14:20 UTC and check for subsequent successful or failed logons.\",\n    \"Verify the password-rotation and DocSync job-update audit trail, including whether the job's stored credential was changed.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate follow-up: at 13:21, WS-AHASSAN-01 logged an explicit-credentials event targeting svc-docsync from process C:\\\\Program Files\\\\Commvault\\\\ContentStore\\\\Base\\\\GxCVD.exe. This event is distinct from the later recurring failure sequence; the record does not establish whether authentication succeeded or why that process used the account. (T172-00001)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 6230,
+    "output": 2283
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.92,
+  "supporting_observations": [
+   {
+    "claim": "The alerted failures are for svc-docsync and are logged as network logons from FILE-MAP-01; the 4625 records report bad-password status 0xc000006a.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T172-00002",
+     "T172-00004",
+     "T172-00017",
+     "T172-00019",
+     "T172-00035"
+    ]
+   },
+   {
+    "claim": "Failures recur at approximately one-minute intervals from 13:33:47 through at least 13:48:48, consistent with the supplied inventory description that the DocSync job runs and re-authenticates every minute.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T172-00002",
+     "T172-00004",
+     "T172-00006",
+     "T172-00009",
+     "T172-00011",
+     "T172-00013",
+     "T172-00015",
+     "T172-00017",
+     "T172-00019",
+     "T172-00021",
+     "T172-00023",
+     "T172-00025",
+     "T172-00027",
+     "T172-00030",
+     "T172-00032",
+     "T172-00035"
+    ]
+   },
+   {
+    "claim": "The failures begin shortly after the supplied change calendar's 13:30 svc-docsync password rotation. A scheduled rotation followed by an unupdated job credential is a plausible explanation for the repeated bad-password failures.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T172-00002",
+     "T172-00004",
+     "T172-00006",
+     "T172-00009"
+    ]
+   },
+   {
+    "claim": "Domain-controller records also show authentication failures for svc-docsync during this sequence, including bad-password status 0xc000006a in 4776 events and pre-authentication failure status 0x18 in 4771 events.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T172-00003",
+     "T172-00007",
+     "T172-00008",
+     "T172-00010",
+     "T172-00018",
+     "T172-00020",
+     "T172-00026",
+     "T172-00029"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records stop at 13:48:48 UTC, so they do not cover the remainder of the requested 13:20\u201314:20 UTC window.",
+   "The supplied records do not show whether the DocSync job was updated after the rotation or whether authentication subsequently succeeded."
+  ],
+  "claims_not_established": [
+   "The records do not establish whether the repeated failures stopped after the DocSync credential was updated.",
+   "The records do not establish who performed the scheduled rotation or whether the job's stored credential was updated successfully.",
+   "The failure records alone do not establish an attacker's involvement or intent."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Collect authentication records for svc-docsync through 14:20 UTC and check for subsequent successful or failed logons.",
+   "Verify the password-rotation and DocSync job-update audit trail, including whether the job's stored credential was changed."
+  ],
+  "unrelated_findings": [
+   "Separate follow-up: at 13:21, WS-AHASSAN-01 logged an explicit-credentials event targeting svc-docsync from process C:\\Program Files\\Commvault\\ContentStore\\Base\\GxCVD.exe. This event is distinct from the later recurring failure sequence; the record does not establish whether authentication succeeded or why that process used the account. (T172-00001)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 33,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 28.2
+}

@@ -1,0 +1,100 @@
+{
+ "scenario_id": "T252",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "error": "APIConnectionError: Connection error."
+  },
+  {
+   "error": "APIConnectionError: Connection error."
+  },
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.84,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The svc-ledger failures recur at roughly one-minute intervals and report FILE-SUN-01 as the workstation and source host, consistent with the inventory description of LedgerSync re-authenticating each run.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T252-00001\", \"T252-00003\", \"T252-00005\", \"T252-00007\", \"T252-00011\", \"T252-00015\", \"T252-00019\", \"T252-00027\", \"T252-00033\"]\n    },\n    {\n      \"claim\": \"The failures indicate invalid credentials: the 4625 records report SubStatus 0xc000006a, and domain-controller records report the same status for svc-ledger.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T252-00001\", \"T252-00002\", \"T252-00015\", \"T252-00020\", \"T252-00033\", \"T252-00034\"]\n    },\n    {\n      \"claim\": \"The supplied change calendar schedules svc-ledger password rotation at 13:30 UTC, and the supplied service inventory says the job re-authenticates every minute; this provides a plausible benign explanation for the regularly recurring bad-password failures after the scheduled rotation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T252-00001\", \"T252-00003\", \"T252-00005\", \"T252-00011\", \"T252-00015\", \"T252-00019\"]\n    },\n    {\n      \"claim\": \"At 13:48, an explicit-credential event on WS-IDOYLE-01 targeted svc-ledger on FILE-SUN-01; this is consistent with activity from the designated remote-administration workstation, but does not establish who initiated it or whether it was successful.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T252-00032\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records end at 13:49:01 UTC, so they do not cover the remainder of the requested 13:20\u201314:20 UTC window.\",\n    \"The records show authentication failures but do not include an audit record confirming the password rotation or the LedgerSync configuration update.\",\n    \"The 4648 event identifies SYSTEM and taskhostw.exe, not the human actor or the purpose of the explicit-credential attempt.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the scheduled password rotation actually occurred at 13:30 UTC.\",\n    \"Whether the LedgerSync job was updated with the rotated password, or whether the 13:48 explicit-credential event was part of that update.\",\n    \"Whether any successful svc-ledger authentication occurred after the supplied records end.\",\n    \"Whether the failures continued through 14:20 UTC.\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [\n    \"If operational validation is required, check the password-change audit and LedgerSync job configuration/update logs around 13:30\u201313:50 UTC.\",\n    \"Review authentication records through 14:20 UTC to confirm whether the failures stopped after the job was updated.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 6121,
+    "output": 2086
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.84,
+  "supporting_observations": [
+   {
+    "claim": "The svc-ledger failures recur at roughly one-minute intervals and report FILE-SUN-01 as the workstation and source host, consistent with the inventory description of LedgerSync re-authenticating each run.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T252-00001",
+     "T252-00003",
+     "T252-00005",
+     "T252-00007",
+     "T252-00011",
+     "T252-00015",
+     "T252-00019",
+     "T252-00027",
+     "T252-00033"
+    ]
+   },
+   {
+    "claim": "The failures indicate invalid credentials: the 4625 records report SubStatus 0xc000006a, and domain-controller records report the same status for svc-ledger.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T252-00001",
+     "T252-00002",
+     "T252-00015",
+     "T252-00020",
+     "T252-00033",
+     "T252-00034"
+    ]
+   },
+   {
+    "claim": "The supplied change calendar schedules svc-ledger password rotation at 13:30 UTC, and the supplied service inventory says the job re-authenticates every minute; this provides a plausible benign explanation for the regularly recurring bad-password failures after the scheduled rotation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T252-00001",
+     "T252-00003",
+     "T252-00005",
+     "T252-00011",
+     "T252-00015",
+     "T252-00019"
+    ]
+   },
+   {
+    "claim": "At 13:48, an explicit-credential event on WS-IDOYLE-01 targeted svc-ledger on FILE-SUN-01; this is consistent with activity from the designated remote-administration workstation, but does not establish who initiated it or whether it was successful.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T252-00032"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records end at 13:49:01 UTC, so they do not cover the remainder of the requested 13:20\u201314:20 UTC window.",
+   "The records show authentication failures but do not include an audit record confirming the password rotation or the LedgerSync configuration update.",
+   "The 4648 event identifies SYSTEM and taskhostw.exe, not the human actor or the purpose of the explicit-credential attempt."
+  ],
+  "claims_not_established": [
+   "Whether the scheduled password rotation actually occurred at 13:30 UTC.",
+   "Whether the LedgerSync job was updated with the rotated password, or whether the 13:48 explicit-credential event was part of that update.",
+   "Whether any successful svc-ledger authentication occurred after the supplied records end.",
+   "Whether the failures continued through 14:20 UTC."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [
+   "If operational validation is required, check the password-change audit and LedgerSync job configuration/update logs around 13:30\u201313:50 UTC.",
+   "Review authentication records through 14:20 UTC to confirm whether the failures stopped after the job was updated."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 22,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 51.5
+}

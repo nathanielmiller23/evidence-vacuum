@@ -1,0 +1,96 @@
+{
+ "scenario_id": "S27",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6.1-sol",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.9,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:42:53 UTC, DC-RB-01 recorded cole.price being added to Remote Desktop Users, with dev.sharma as the subject account and subject logon ID 0x7a76dca.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S27-00048\"]\n    },\n    {\n      \"claim\": \"The group-change logon ID matches a network logon to DC-RB-01 as dev.sharma from 10.60.10.22 at 13:40:15 UTC. This identifies the recorded account and source address, not the human operator.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S27-00047\", \"S27-00048\"]\n    },\n    {\n      \"claim\": \"The addition conflicts with the supplied restriction of Remote Desktop Users membership to IT: cole.price is identified as a vet tech. The scheduled Billing-Share change for hana.ito does not explain this different member and group. This makes the alerted change suspicious but does not establish malicious intent.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S27-00048\"]\n    },\n    {\n      \"claim\": \"The alerted change originated through a session sourced from 10.60.10.22, whereas observed outbound traffic from WS-DSHARMA-01 used 10.60.10.23. The supplied records do not identify the host owning 10.60.10.22.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S27-00047\", \"S27-00048\", \"S27-00052\"]\n    },\n    {\n      \"claim\": \"At 13:43:55 UTC, cole.price's UserAssist registry entry on WS-CPRICE-01 was updated for a ROT13-encoded path that decodes to C:\\\\Windows\\\\System32\\\\mstsc.exe. This is consistent with RDP client use shortly after the addition, but does not identify a destination or demonstrate a successful remote session.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S27-00060\"]\n    },\n    {\n      \"claim\": \"The explicitly recorded successful RDP session to FILE-RB-01 was dev.sharma connecting from WS-DSHARMA-01 at 10.60.10.23, not cole.price. That session does not establish use of cole.price's new membership.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S27-00049\", \"S27-00052\", \"S27-00053\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The alerted membership event identifies the subject account and logon session but contains no initiating process, command, ticket reference, or human-operator attribution (S27-00047, S27-00048).\",\n    \"The UserAssist event contains binary data without decoded execution details; it is not a destination-side authentication record and cannot establish successful RDP access (S27-00060).\",\n    \"The available address comparison distinguishes 10.60.10.22 from the observed WS-DSHARMA-01 address, but supplies no authoritative hostname mapping for 10.60.10.22 (S27-00047, S27-00052).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the addition was malicious, an administrative mistake, or an approved exception to the supplied policy is not established by the membership event (S27-00048).\",\n    \"Whether dev.sharma personally performed the change or the account was misused is not established by the matching authentication and membership records (S27-00047, S27-00048).\",\n    \"Whether cole.price successfully accessed any remote system using the new membership is not established; the nearby UserAssist artifact supplies no destination or authentication outcome (S27-00060).\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Obtain the change ticket and independent confirmation from dev.sharma for the exact cole.price-to-Remote Desktop Users addition recorded in S27-00048; verify whether it was an error or explicitly authorized exception.\",\n    \"Resolve 10.60.10.22 at 13:40 UTC using DHCP, IPAM, or endpoint records, then collect initiating-process and authentication evidence for the DC session in S27-00047.\",\n    \"Collect RDP client execution details from WS-CPRICE-01 and destination-side authentication/session logs to determine the destination and outcome associated with the artifact in S27-00060.\",\n    \"Verify current membership and obtain subsequent membership-change records to determine whether the addition in S27-00048 persisted or was corrected.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 15315,
+    "output": 1166
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.9,
+  "supporting_observations": [
+   {
+    "claim": "At 13:42:53 UTC, DC-RB-01 recorded cole.price being added to Remote Desktop Users, with dev.sharma as the subject account and subject logon ID 0x7a76dca.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S27-00048"
+    ]
+   },
+   {
+    "claim": "The group-change logon ID matches a network logon to DC-RB-01 as dev.sharma from 10.60.10.22 at 13:40:15 UTC. This identifies the recorded account and source address, not the human operator.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S27-00047",
+     "S27-00048"
+    ]
+   },
+   {
+    "claim": "The addition conflicts with the supplied restriction of Remote Desktop Users membership to IT: cole.price is identified as a vet tech. The scheduled Billing-Share change for hana.ito does not explain this different member and group. This makes the alerted change suspicious but does not establish malicious intent.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S27-00048"
+    ]
+   },
+   {
+    "claim": "The alerted change originated through a session sourced from 10.60.10.22, whereas observed outbound traffic from WS-DSHARMA-01 used 10.60.10.23. The supplied records do not identify the host owning 10.60.10.22.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S27-00047",
+     "S27-00048",
+     "S27-00052"
+    ]
+   },
+   {
+    "claim": "At 13:43:55 UTC, cole.price's UserAssist registry entry on WS-CPRICE-01 was updated for a ROT13-encoded path that decodes to C:\\Windows\\System32\\mstsc.exe. This is consistent with RDP client use shortly after the addition, but does not identify a destination or demonstrate a successful remote session.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S27-00060"
+    ]
+   },
+   {
+    "claim": "The explicitly recorded successful RDP session to FILE-RB-01 was dev.sharma connecting from WS-DSHARMA-01 at 10.60.10.23, not cole.price. That session does not establish use of cole.price's new membership.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S27-00049",
+     "S27-00052",
+     "S27-00053"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The alerted membership event identifies the subject account and logon session but contains no initiating process, command, ticket reference, or human-operator attribution (S27-00047, S27-00048).",
+   "The UserAssist event contains binary data without decoded execution details; it is not a destination-side authentication record and cannot establish successful RDP access (S27-00060).",
+   "The available address comparison distinguishes 10.60.10.22 from the observed WS-DSHARMA-01 address, but supplies no authoritative hostname mapping for 10.60.10.22 (S27-00047, S27-00052)."
+  ],
+  "claims_not_established": [
+   "Whether the addition was malicious, an administrative mistake, or an approved exception to the supplied policy is not established by the membership event (S27-00048).",
+   "Whether dev.sharma personally performed the change or the account was misused is not established by the matching authentication and membership records (S27-00047, S27-00048).",
+   "Whether cole.price successfully accessed any remote system using the new membership is not established; the nearby UserAssist artifact supplies no destination or authentication outcome (S27-00060)."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Obtain the change ticket and independent confirmation from dev.sharma for the exact cole.price-to-Remote Desktop Users addition recorded in S27-00048; verify whether it was an error or explicitly authorized exception.",
+   "Resolve 10.60.10.22 at 13:40 UTC using DHCP, IPAM, or endpoint records, then collect initiating-process and authentication evidence for the DC session in S27-00047.",
+   "Collect RDP client execution details from WS-CPRICE-01 and destination-side authentication/session logs to determine the destination and outcome associated with the artifact in S27-00060.",
+   "Verify current membership and obtain subsequent membership-change records to determine whether the addition in S27-00048 persisted or was corrected."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.0
+}

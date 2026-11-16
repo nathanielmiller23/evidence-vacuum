@@ -1,0 +1,187 @@
+version: '1.0'
+name: ev-T098
+description: Evidence Vacuum TRAINING scenario T098 (pinecrest, helpdesk_temp, vd).
+environment:
+  description: Pinecrest Family Clinic
+  domain: pinecrest.local
+  timezone:
+    default: UTC
+  proxy:
+    mode: explicit
+    listener_port: 8080
+  users:
+  - username: ana.ruiz
+    full_name: Ana Ruiz
+    email: ana.ruiz@pinecrestclinic.org
+    persona: accountant
+    primary_system: WS-ARUIZ-01
+    groups:
+    - staff
+    enabled: true
+    browsing_intensity: normal
+  - username: tom.weber
+    full_name: Tom Weber
+    email: tom.weber@pinecrestclinic.org
+    persona: analyst
+    primary_system: WS-TWEBER-01
+    groups:
+    - staff
+    enabled: true
+    browsing_intensity: light
+  - username: raj.patel
+    full_name: Raj Patel
+    email: raj.patel@pinecrestclinic.org
+    persona: sysadmin
+    primary_system: WS-RPATEL-01
+    groups:
+    - it-admins
+    - domain-admins
+    enabled: true
+    browsing_intensity: light
+  - username: emma.stone
+    full_name: Emma Stone
+    email: emma.stone@pinecrestclinic.org
+    persona: help_desk
+    primary_system: WS-ESTONE-01
+    groups:
+    - staff
+    enabled: true
+    browsing_intensity: light
+  service_accounts:
+  - svc-bkp
+  - svc-billing
+  systems:
+  - hostname: WS-ARUIZ-01
+    ip: 10.51.10.21
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: ana.ruiz
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-TWEBER-01
+    ip: 10.51.10.22
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: tom.weber
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-RPATEL-01
+    ip: 10.51.10.23
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: raj.patel
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-ESTONE-01
+    ip: 10.51.10.24
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: emma.stone
+    services:
+    - dns-client
+    - termservice
+  - hostname: DC-PIN-01
+    ip: 10.51.20.10
+    os: Windows Server 2022
+    type: domain_controller
+    services:
+    - kerberos
+    - ldap
+    - dns
+    roles:
+    - domain_controller
+    - dns_server
+  - hostname: FILE-PIN-01
+    ip: 10.51.20.20
+    os: Windows Server 2022
+    type: server
+    services:
+    - smb
+    - dns-client
+    roles:
+    - file_server
+  - hostname: PROXY-PIN-01
+    ip: 10.51.20.30
+    os: Ubuntu 22.04 LTS
+    type: server
+    services:
+    - squid
+    - dns-client
+    roles:
+    - forward_proxy
+  network:
+    public_cidrs:
+    - 198.51.100.16/28
+    segments:
+    - name: workstations
+      cidr: 10.51.10.0/24
+      exposure: internal
+      systems:
+      - WS-ARUIZ-01
+      - WS-TWEBER-01
+      - WS-RPATEL-01
+      - WS-ESTONE-01
+    - name: servers
+      cidr: 10.51.20.0/24
+      exposure: internal
+      systems:
+      - DC-PIN-01
+      - FILE-PIN-01
+      - PROXY-PIN-01
+    sensors:
+    - type: network
+      name: core-span
+      hostname: ZEEK-CORE
+      monitoring_segments:
+      - workstations
+      - servers
+      direction: bidirectional
+      placement: span
+      log_formats:
+      - zeek
+time_window:
+  start: '2026-09-08T13:00:00Z'
+  duration: 2h
+  warmup: 1h
+generation_seed: 8098
+baseline_activity:
+  description: Quiet afternoon
+  intensity: low
+  variation: low
+  suspicious_noise: low
+observation_profile: complete
+storyline:
+- id: logon
+  time: +43m
+  actor: emma.stone
+  system: DC-PIN-01
+  activity: Help desk console session to DC
+  events:
+  - type: logon
+    logon_type: 3
+    source_ip: 10.51.10.24
+- id: create
+  time: +47m
+  actor: emma.stone
+  system: DC-PIN-01
+  activity: Creates temporary account in contractor group
+  events:
+  - type: account_created
+    target_username: tmp.rwong
+  - type: group_member_added
+    group_name: Temp-Staff
+    member_name: tmp.rwong
+    scope: global
+output:
+  logs:
+  - format: windows_event_security
+  - format: windows_event_sysmon
+  - format: zeek_conn
+  - format: zeek_dns
+  - format: zeek_ssl
+  - format: proxy_access
+  destination: out/T098
+  compression: false

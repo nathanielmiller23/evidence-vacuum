@@ -1,0 +1,94 @@
+{
+ "scenario_id": "T287",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain account sysops was created at 13:42:42 by sean.byrne.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T287-00148\"]\n    },\n    {\n      \"claim\": \"About one second later, sysops was added to the Administrators group. This conflicts with the stated practice that temporary help-desk accounts use guest.<name> naming and receive only Volunteers membership.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T287-00149\"]\n    },\n    {\n      \"claim\": \"At 13:39, sean.byrne logged on to WS-RDIAZ-01 using an RDP logon from 198.51.100.77. The inventory says remote administration is only done from WS-SBYRNE-01 and there is no VPN.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T287-00136\", \"T287-00137\", \"T287-00138\"]\n    },\n    {\n      \"claim\": \"At 13:42:49, a scheduled task named HealthCheck was registered on WS-RDIAZ-01 under sean.byrne's session. Its action runs hidden PowerShell with an encoded command that decodes to an instruction to retrieve and invoke a script from http://198.51.100.77/a.ps1; this is consistent with the RDP source address.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T287-00150\", \"T287-00136\", \"T287-00138\"]\n    },\n    {\n      \"claim\": \"The privileged sysops account creation and the nearby unauthorized-looking remote logon and hidden-script task support treating the alerted account activity as malicious, although the records do not directly tie the account-creation logon ID to the workstation session.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T287-00148\", \"T287-00149\", \"T287-00138\", \"T287-00150\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The account-creation event and the WS-RDIAZ-01 interactive logon show different logon IDs; the available records do not establish that they are the same session or directly identify the network origin of the account-creation action.\",\n    \"The task-registration record shows its configured command, but does not establish that the task ran, that the script was retrieved, or what the script contained.\",\n    \"The available evidence does not show whether sysops was subsequently used or whether an authorized exception existed.\"\n  ],\n  \"claims_not_established\": [\n    \"That sean.byrne personally performed these actions, rather than someone using the account or session.\",\n    \"That the scheduled task executed successfully or that any downloaded script caused additional activity.\",\n    \"That sysops was used after creation or what access it obtained beyond its recorded Administrators-group membership.\",\n    \"Whether a documented, authorized exception or change approval exists for creating this account and granting it administrator membership.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Validate the account creation and group-membership change against change approvals; obtain the complete domain-controller logon and directory-audit context for the account-creation subject.\",\n    \"Collect WS-RDIAZ-01 task execution, PowerShell, process, and network telemetry to determine whether HealthCheck ran and whether the script URL was contacted.\",\n    \"Confirm the remote logon and account actions with sean.byrne through an independent channel, and investigate the source and legitimacy of the RDP connection.\",\n    \"Review sysops sign-ins, group membership changes, and access to domain or workstation resources after creation.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-RDIAZ-01 launched Palo Alto Networks GlobalProtect PanGPS, although the inventory states there is no VPN. The records do not establish a connection between this process and the alerted account activity; assess separately. (T287-00058, T287-00059)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 41208,
+    "output": 2197
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "The domain account sysops was created at 13:42:42 by sean.byrne.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T287-00148"
+    ]
+   },
+   {
+    "claim": "About one second later, sysops was added to the Administrators group. This conflicts with the stated practice that temporary help-desk accounts use guest.<name> naming and receive only Volunteers membership.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T287-00149"
+    ]
+   },
+   {
+    "claim": "At 13:39, sean.byrne logged on to WS-RDIAZ-01 using an RDP logon from 198.51.100.77. The inventory says remote administration is only done from WS-SBYRNE-01 and there is no VPN.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T287-00136",
+     "T287-00137",
+     "T287-00138"
+    ]
+   },
+   {
+    "claim": "At 13:42:49, a scheduled task named HealthCheck was registered on WS-RDIAZ-01 under sean.byrne's session. Its action runs hidden PowerShell with an encoded command that decodes to an instruction to retrieve and invoke a script from http://198.51.100.77/a.ps1; this is consistent with the RDP source address.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T287-00150",
+     "T287-00136",
+     "T287-00138"
+    ]
+   },
+   {
+    "claim": "The privileged sysops account creation and the nearby unauthorized-looking remote logon and hidden-script task support treating the alerted account activity as malicious, although the records do not directly tie the account-creation logon ID to the workstation session.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T287-00148",
+     "T287-00149",
+     "T287-00138",
+     "T287-00150"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The account-creation event and the WS-RDIAZ-01 interactive logon show different logon IDs; the available records do not establish that they are the same session or directly identify the network origin of the account-creation action.",
+   "The task-registration record shows its configured command, but does not establish that the task ran, that the script was retrieved, or what the script contained.",
+   "The available evidence does not show whether sysops was subsequently used or whether an authorized exception existed."
+  ],
+  "claims_not_established": [
+   "That sean.byrne personally performed these actions, rather than someone using the account or session.",
+   "That the scheduled task executed successfully or that any downloaded script caused additional activity.",
+   "That sysops was used after creation or what access it obtained beyond its recorded Administrators-group membership.",
+   "Whether a documented, authorized exception or change approval exists for creating this account and granting it administrator membership."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Validate the account creation and group-membership change against change approvals; obtain the complete domain-controller logon and directory-audit context for the account-creation subject.",
+   "Collect WS-RDIAZ-01 task execution, PowerShell, process, and network telemetry to determine whether HealthCheck ran and whether the script URL was contacted.",
+   "Confirm the remote logon and account actions with sean.byrne through an independent channel, and investigate the source and legitimacy of the RDP connection.",
+   "Review sysops sign-ins, group membership changes, and access to domain or workstation resources after creation."
+  ],
+  "unrelated_findings": [
+   "WS-RDIAZ-01 launched Palo Alto Networks GlobalProtect PanGPS, although the inventory states there is no VPN. The records do not establish a connection between this process and the alerted account activity; assess separately. (T287-00058, T287-00059)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 22.2
+}

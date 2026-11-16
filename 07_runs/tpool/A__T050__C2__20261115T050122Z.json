@@ -1,0 +1,81 @@
+{
+ "run_id": "A__T050__C2__20261115T050122Z",
+ "config": "A",
+ "scenario_id": "T050",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 496,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 197442,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.87,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded a Kerberos service-ticket request for svc-archive to FILE-NWD-01$ from 45.79.19.196, a public IP address. The supplied environment says there is no VPN and remote administration is only performed from WS-SOKAFOR-01, making this source inconsistent with the stated access model.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T050-00223\"\n      ]\n    },\n    {\n      \"claim\": \"Shortly afterward, svc-archive logged on as a service on FILE-NWD-01 and launched the StratoSafe backup executable as a child of services.exe.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T050-00224\",\n        \"T050-00237\",\n        \"T050-00238\"\n      ]\n    },\n    {\n      \"claim\": \"The large transfer is consistent with the approved backup: stsync.exe was invoked with the Nightly job and the approved ingest.stratosafe-backup.com target, and the proxy recorded 640,000,000 client-to-server tunnel bytes to that target.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T050-00237\",\n        \"T050-00244\",\n        \"T050-00245\",\n        \"T050-00247\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records the destination and byte counts, but these records do not establish what data was transferred or whether it was altered; the large-transfer details are in T050-00244 and T050-00245.\",\n    \"The records show a public source IP for the svc-archive ticket request but do not identify the device or person behind that address; see T050-00223.\",\n    \"The available records do not show the surrounding network path or any corroborating authentication event from the external source; the relevant ticket request is T050-00223.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish who controlled 45.79.19.196 or whether the svc-archive credential was compromised.\",\n    \"The evidence does not establish that the 640,000,000 bytes contained unauthorized or sensitive data.\",\n    \"The evidence does not establish that the StratoSafe executable or its scheduled job was tampered with.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Investigate 45.79.19.196 using firewall, network perimeter, and domain-controller records around 13:45 UTC; determine how it could request a service ticket given the stated no-VPN access model.\",\n    \"Review svc-archive credential use, service configuration, and scheduled-task or backup-agent history, including whether the ticket request and backup run were expected.\",\n    \"Obtain backup-job and StratoSafe records identifying the transferred dataset, job authorization, and destination-side receipt.\",\n    \"Validate the stsync.exe binary, signature, hash, and configuration against the approved installation.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 72779,
+    "output": 1974,
+    "reasoning": 1277
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.87,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded a Kerberos service-ticket request for svc-archive to FILE-NWD-01$ from 45.79.19.196, a public IP address. The supplied environment says there is no VPN and remote administration is only performed from WS-SOKAFOR-01, making this source inconsistent with the stated access model.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T050-00223"
+    ]
+   },
+   {
+    "claim": "Shortly afterward, svc-archive logged on as a service on FILE-NWD-01 and launched the StratoSafe backup executable as a child of services.exe.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T050-00224",
+     "T050-00237",
+     "T050-00238"
+    ]
+   },
+   {
+    "claim": "The large transfer is consistent with the approved backup: stsync.exe was invoked with the Nightly job and the approved ingest.stratosafe-backup.com target, and the proxy recorded 640,000,000 client-to-server tunnel bytes to that target.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T050-00237",
+     "T050-00244",
+     "T050-00245",
+     "T050-00247"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records the destination and byte counts, but these records do not establish what data was transferred or whether it was altered; the large-transfer details are in T050-00244 and T050-00245.",
+   "The records show a public source IP for the svc-archive ticket request but do not identify the device or person behind that address; see T050-00223.",
+   "The available records do not show the surrounding network path or any corroborating authentication event from the external source; the relevant ticket request is T050-00223."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish who controlled 45.79.19.196 or whether the svc-archive credential was compromised.",
+   "The evidence does not establish that the 640,000,000 bytes contained unauthorized or sensitive data.",
+   "The evidence does not establish that the StratoSafe executable or its scheduled job was tampered with."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Investigate 45.79.19.196 using firewall, network perimeter, and domain-controller records around 13:45 UTC; determine how it could request a service ticket given the stated no-VPN access model.",
+   "Review svc-archive credential use, service configuration, and scheduled-task or backup-agent history, including whether the ticket request and backup run were expected.",
+   "Obtain backup-job and StratoSafe records identifying the transferred dataset, job authorization, and destination-side receipt.",
+   "Validate the stsync.exe binary, signature, hash, and configuration against the approved installation."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 8,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.7
+}

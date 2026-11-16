@@ -1,0 +1,190 @@
+version: '1.0'
+name: ev-T120
+description: Evidence Vacuum TRAINING scenario T120 (copperline, backup_upload, vb).
+environment:
+  description: Copperline Logistics
+  domain: copperline.local
+  timezone:
+    default: UTC
+  proxy:
+    mode: explicit
+    listener_port: 8080
+  users:
+  - username: dan.reyes
+    full_name: Dan Reyes
+    email: dan.reyes@copperline-log.com
+    persona: project_manager
+    primary_system: WS-DREYES-01
+    groups:
+    - staff
+    enabled: true
+    browsing_intensity: normal
+  - username: kim.nguyen
+    full_name: Kim Nguyen
+    email: kim.nguyen@copperline-log.com
+    persona: analyst
+    primary_system: WS-KNGUYEN-01
+    groups:
+    - staff
+    enabled: true
+    browsing_intensity: light
+  - username: paul.becker
+    full_name: Paul Becker
+    email: paul.becker@copperline-log.com
+    persona: sysadmin
+    primary_system: WS-PBECKER-01
+    groups:
+    - it-admins
+    - domain-admins
+    enabled: true
+    browsing_intensity: light
+  - username: sara.ali
+    full_name: Sara Ali
+    email: sara.ali@copperline-log.com
+    persona: help_desk
+    primary_system: WS-SALI-01
+    groups:
+    - staff
+    enabled: true
+    browsing_intensity: light
+  service_accounts:
+  - svc-backup
+  - svc-routes
+  systems:
+  - hostname: WS-DREYES-01
+    ip: 10.52.10.21
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: dan.reyes
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-KNGUYEN-01
+    ip: 10.52.10.22
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: kim.nguyen
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-PBECKER-01
+    ip: 10.52.10.23
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: paul.becker
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-SALI-01
+    ip: 10.52.10.24
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: sara.ali
+    services:
+    - dns-client
+    - termservice
+  - hostname: DC-COP-01
+    ip: 10.52.20.10
+    os: Windows Server 2022
+    type: domain_controller
+    services:
+    - kerberos
+    - ldap
+    - dns
+    roles:
+    - domain_controller
+    - dns_server
+  - hostname: FILE-COP-01
+    ip: 10.52.20.20
+    os: Windows Server 2022
+    type: server
+    services:
+    - smb
+    - dns-client
+    roles:
+    - file_server
+  - hostname: PROXY-COP-01
+    ip: 10.52.20.30
+    os: Ubuntu 22.04 LTS
+    type: server
+    services:
+    - squid
+    - dns-client
+    roles:
+    - forward_proxy
+  network:
+    public_cidrs:
+    - 198.51.100.48/28
+    segments:
+    - name: workstations
+      cidr: 10.52.10.0/24
+      exposure: internal
+      systems:
+      - WS-DREYES-01
+      - WS-KNGUYEN-01
+      - WS-PBECKER-01
+      - WS-SALI-01
+    - name: servers
+      cidr: 10.52.20.0/24
+      exposure: internal
+      systems:
+      - DC-COP-01
+      - FILE-COP-01
+      - PROXY-COP-01
+    sensors:
+    - type: network
+      name: core-span
+      hostname: ZEEK-CORE
+      monitoring_segments:
+      - workstations
+      - servers
+      direction: bidirectional
+      placement: span
+      log_formats:
+      - zeek
+time_window:
+  start: '2026-09-15T13:00:00Z'
+  duration: 2h
+  warmup: 1h
+generation_seed: 8120
+baseline_activity:
+  description: Quiet afternoon
+  intensity: low
+  variation: low
+  suspicious_noise: low
+observation_profile: complete
+storyline:
+- id: svc
+  time: +49m
+  actor: svc-backup
+  system: FILE-COP-01
+  activity: Task Scheduler starts the backup job
+  events:
+  - type: logon
+    logon_type: 5
+- id: bk
+  time: +50m
+  actor: svc-backup
+  system: FILE-COP-01
+  activity: Backup agent uploads to approved vendor
+  events:
+  - type: process
+    process_name: C:\Program Files\Ironvault\agent.exe
+    command_line: '"C:\Program Files\Ironvault\agent.exe" --job Nightly --target https://ingest.ironvault-cloud.com'
+  - type: connection
+    dst_ip: 203.0.113.141
+    dst_port: 443
+    hostname: ingest.ironvault-cloud.com
+    service: ssl
+    orig_bytes: 640000000
+    resp_bytes: 39000
+output:
+  logs:
+  - format: windows_event_security
+  - format: windows_event_sysmon
+  - format: zeek_conn
+  - format: zeek_dns
+  - format: zeek_ssl
+  - format: proxy_access
+  destination: out/T120
+  compression: false

@@ -1,0 +1,81 @@
+{
+ "scenario_id": "T040",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.9,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"FILE-NWD-01 sent 640,000,221 bytes to the internal proxy PROXY-NWD-01 (10.40.20.30) on port 8080 beginning at 13:45:28 UTC, shortly before the alert time. This establishes a large transfer to the proxy, but not its external destination or contents.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T040-00204\"\n      ]\n    },\n    {\n      \"claim\": \"A separate, smaller connection from FILE-NWD-01 to the same proxy occurred at about the same time.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T040-00202\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:43:51 UTC, a Kerberos service-ticket event for svc-archive accessing FILE-NWD-01 recorded source IP 139.162.174.124. This external source is unusual in the stated no-VPN environment, but the available record does not link this authentication to the large transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T040-00193\"\n      ]\n    },\n    {\n      \"claim\": \"The transfer volume is compatible with the inventory description of legitimate offsite backup uploads, but the records do not identify the process, account, or destination associated with this transfer.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T040-00204\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"FILE-NWD-01 winsec and Sysmon collection was unavailable from 13:30 to 14:10 UTC, including the time of the transfer, so process and user attribution for the transfer cannot be verified.\",\n    \"PROXY-NWD-01 proxy-log collection was unavailable from 13:30 to 14:10 UTC, so the external destination, requested resource, and proxy-level identity for the large transfer are unavailable.\",\n    \"The available network record reports bytes and the internal proxy endpoint, but does not establish the transfer's contents or purpose.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the large transfer was made by the approved StratoSafe backup agent or another process.\",\n    \"Whether the transfer went to the approved backup service or an unapproved external destination.\",\n    \"Whether the svc-archive ticket event from 139.162.174.124 was legitimate, unauthorized, or connected to the alerted transfer.\",\n    \"Whether data was exfiltrated or the transfer was otherwise malicious.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover or obtain endpoint process, network, and authentication telemetry for FILE-NWD-01 covering 13:30\u201314:10 UTC, especially process-to-connection attribution for the 13:45:28 transfer.\",\n    \"Obtain PROXY-NWD-01 logs for the transfer, including destination host, URL or request metadata, authenticated identity, and byte counts.\",\n    \"Investigate the svc-archive authentication event from 139.162.174.124, including authentication-source context and whether it was associated with the file server transfer.\",\n    \"Verify StratoSafe upload job history and destination-side records for the corresponding time and transfer volume.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-NBLAKE-01 ran mstsc.exe as nora.blake to connect to FILE-NWD-01. This is outside the stated practice that remote administration is performed only by sam.okafor from WS-SOKAFOR-01; investigate separately. The available records do not link this RDP session to the alerted transfer.\",\n    \"Supporting records for the separate RDP finding: T040-00098, T040-00103, T040-00108.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 52378,
+    "output": 2185
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.9,
+  "supporting_observations": [
+   {
+    "claim": "FILE-NWD-01 sent 640,000,221 bytes to the internal proxy PROXY-NWD-01 (10.40.20.30) on port 8080 beginning at 13:45:28 UTC, shortly before the alert time. This establishes a large transfer to the proxy, but not its external destination or contents.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T040-00204"
+    ]
+   },
+   {
+    "claim": "A separate, smaller connection from FILE-NWD-01 to the same proxy occurred at about the same time.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T040-00202"
+    ]
+   },
+   {
+    "claim": "At 13:43:51 UTC, a Kerberos service-ticket event for svc-archive accessing FILE-NWD-01 recorded source IP 139.162.174.124. This external source is unusual in the stated no-VPN environment, but the available record does not link this authentication to the large transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T040-00193"
+    ]
+   },
+   {
+    "claim": "The transfer volume is compatible with the inventory description of legitimate offsite backup uploads, but the records do not identify the process, account, or destination associated with this transfer.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T040-00204"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "FILE-NWD-01 winsec and Sysmon collection was unavailable from 13:30 to 14:10 UTC, including the time of the transfer, so process and user attribution for the transfer cannot be verified.",
+   "PROXY-NWD-01 proxy-log collection was unavailable from 13:30 to 14:10 UTC, so the external destination, requested resource, and proxy-level identity for the large transfer are unavailable.",
+   "The available network record reports bytes and the internal proxy endpoint, but does not establish the transfer's contents or purpose."
+  ],
+  "claims_not_established": [
+   "Whether the large transfer was made by the approved StratoSafe backup agent or another process.",
+   "Whether the transfer went to the approved backup service or an unapproved external destination.",
+   "Whether the svc-archive ticket event from 139.162.174.124 was legitimate, unauthorized, or connected to the alerted transfer.",
+   "Whether data was exfiltrated or the transfer was otherwise malicious."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover or obtain endpoint process, network, and authentication telemetry for FILE-NWD-01 covering 13:30\u201314:10 UTC, especially process-to-connection attribution for the 13:45:28 transfer.",
+   "Obtain PROXY-NWD-01 logs for the transfer, including destination host, URL or request metadata, authenticated identity, and byte counts.",
+   "Investigate the svc-archive authentication event from 139.162.174.124, including authentication-source context and whether it was associated with the file server transfer.",
+   "Verify StratoSafe upload job history and destination-side records for the corresponding time and transfer volume."
+  ],
+  "unrelated_findings": [
+   "WS-NBLAKE-01 ran mstsc.exe as nora.blake to connect to FILE-NWD-01. This is outside the stated practice that remote administration is performed only by sam.okafor from WS-SOKAFOR-01; investigate separately. The available records do not link this RDP session to the alerted transfer.",
+   "Supporting records for the separate RDP finding: T040-00098, T040-00103, T040-00108."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 4,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.8
+}

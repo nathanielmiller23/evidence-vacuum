@@ -1,0 +1,97 @@
+{
+ "run_id": "A__T050__C3__20261115T050147Z",
+ "config": "A",
+ "scenario_id": "T050",
+ "condition": "C3",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 496,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 198462,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.86,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The large outbound transfer is strongly consistent with the approved backup activity: stsync.exe ran as svc-archive with the Nightly job targeting ingest.stratosafe-backup.com, and the proxy recorded about 640 MB client-to-server through the proxy to that host.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T050-00237\", \"T050-00238\", \"T050-00244\", \"T050-00245\", \"T050-00247\"]\n    },\n    {\n      \"claim\": \"A domain-controller record shows a service-ticket request for svc-archive from 45.79.19.196 shortly before svc-archive logged on to FILE-NWD-01. The evidence does not establish who controlled that address or whether this request was related to the backup run.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T050-00223\", \"T050-00224\"]\n    },\n    {\n      \"claim\": \"At 14:18, nora.blake launched Remote Desktop from WS-NBLAKE-01 to FILE-NWD-01 and successfully established an interactive logon. This does not align with the stated practice that remote administration is performed only from WS-SOKAFOR-01, but the records shown do not establish malicious actions in the session.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T050-00441\", \"T050-00444\", \"T050-00448\", \"T050-00459\", \"T050-00460\", \"T050-00463\"]\n    },\n    {\n      \"claim\": \"The available records show the backup transfer and the later RDP session, but do not show what data was transferred or any harmful action by the RDP user.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T050-00244\", \"T050-00245\", \"T050-00459\", \"T050-00462\", \"T050-00463\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied coverage status reports that winsec and Sysmon collection for WS-NBLAKE-01 was unavailable from 13:30 to 14:10 UTC. Activity on that workstation during this interval cannot be assessed from those sensors.\",\n    \"The proxy and Zeek records identify the destination and transfer volume, but the provided records do not expose the transferred file contents.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the svc-archive ticket request from 45.79.19.196 was legitimate, malicious, or related to the subsequent backup process.\",\n    \"Whether the StratoSafe upload contained only expected backup data.\",\n    \"Whether nora.blake's RDP session was authorized, and what actions or files were involved in that session.\",\n    \"Whether activity during the WS-NBLAKE-01 collection outage explains or relates to the later RDP session.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Correlate the 45.79.19.196 ticket request with DC, firewall, and network records; establish the source and whether it was expected.\",\n    \"Review StratoSafe job and upload logs, including the data set and job status for the 13:46 run.\",\n    \"Review FILE-NWD-01 RDP session activity, including file access, process execution, and authorization records for nora.blake.\",\n    \"Recover or obtain alternate telemetry for WS-NBLAKE-01 during the stated winsec and Sysmon collection outage.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 73141,
+    "output": 2954,
+    "reasoning": 2127
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.86,
+  "supporting_observations": [
+   {
+    "claim": "The large outbound transfer is strongly consistent with the approved backup activity: stsync.exe ran as svc-archive with the Nightly job targeting ingest.stratosafe-backup.com, and the proxy recorded about 640 MB client-to-server through the proxy to that host.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T050-00237",
+     "T050-00238",
+     "T050-00244",
+     "T050-00245",
+     "T050-00247"
+    ]
+   },
+   {
+    "claim": "A domain-controller record shows a service-ticket request for svc-archive from 45.79.19.196 shortly before svc-archive logged on to FILE-NWD-01. The evidence does not establish who controlled that address or whether this request was related to the backup run.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T050-00223",
+     "T050-00224"
+    ]
+   },
+   {
+    "claim": "At 14:18, nora.blake launched Remote Desktop from WS-NBLAKE-01 to FILE-NWD-01 and successfully established an interactive logon. This does not align with the stated practice that remote administration is performed only from WS-SOKAFOR-01, but the records shown do not establish malicious actions in the session.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T050-00441",
+     "T050-00444",
+     "T050-00448",
+     "T050-00459",
+     "T050-00460",
+     "T050-00463"
+    ]
+   },
+   {
+    "claim": "The available records show the backup transfer and the later RDP session, but do not show what data was transferred or any harmful action by the RDP user.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T050-00244",
+     "T050-00245",
+     "T050-00459",
+     "T050-00462",
+     "T050-00463"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied coverage status reports that winsec and Sysmon collection for WS-NBLAKE-01 was unavailable from 13:30 to 14:10 UTC. Activity on that workstation during this interval cannot be assessed from those sensors.",
+   "The proxy and Zeek records identify the destination and transfer volume, but the provided records do not expose the transferred file contents."
+  ],
+  "claims_not_established": [
+   "Whether the svc-archive ticket request from 45.79.19.196 was legitimate, malicious, or related to the subsequent backup process.",
+   "Whether the StratoSafe upload contained only expected backup data.",
+   "Whether nora.blake's RDP session was authorized, and what actions or files were involved in that session.",
+   "Whether activity during the WS-NBLAKE-01 collection outage explains or relates to the later RDP session."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Correlate the 45.79.19.196 ticket request with DC, firewall, and network records; establish the source and whether it was expected.",
+   "Review StratoSafe job and upload logs, including the data set and job status for the 13:46 run.",
+   "Review FILE-NWD-01 RDP session activity, including file access, process execution, and authorization records for nora.blake.",
+   "Recover or obtain alternate telemetry for WS-NBLAKE-01 during the stated winsec and Sysmon collection outage."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 18,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 31.9
+}

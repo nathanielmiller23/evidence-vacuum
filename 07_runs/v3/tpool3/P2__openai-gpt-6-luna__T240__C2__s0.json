@@ -1,0 +1,71 @@
+{
+ "scenario_id": "T240",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.93,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45:31 UTC, a connection from FILE-SUN-01's address (10.55.20.20) to the explicit proxy (10.55.20.30:8080) recorded 640,000,366 bytes sent and 39,199 bytes received, consistent with a large upload to the proxy.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T240-00266\"]\n    },\n    {\n      \"claim\": \"The transfer size is compatible with the inventory description of the approved Arcvault backup agent, which uploads several hundred MB, but this record does not identify Arcvault as the destination or process.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T240-00266\"]\n    },\n    {\n      \"claim\": \"The available transfer record identifies the internal proxy as the peer, not the external destination, so it does not establish where the bytes went beyond the proxy.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T240-00266\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The large-transfer record contains connection endpoints and byte counts but no destination hostname, URL, proxy action, or authenticated user.\",\n    \"The supplied records do not attribute the large transfer to a process, executable, service account, or specific backup job.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the transfer went to the approved Arcvault service or to an unapproved destination.\",\n    \"Whether the Arcvault agent or another process generated the transfer.\",\n    \"Whether the transferred data was authorized backup data or sensitive data being exfiltrated.\",\n    \"Whether the nearby svc-store authentication event is related to the transfer.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Proxy access or tunnel logs for the 13:45:31 UTC connection, including destination host, request details, and egress byte counts.\",\n    \"FILE-SUN-01 process/network telemetry and Arcvault agent logs for the transfer window, including job status and upload destination.\",\n    \"Backup service records or other confirmation that this transfer matches a scheduled or expected Arcvault upload.\"\n  ],\n  \"unrelated_findings\": [\n    \"A Kerberos service-ticket event identifies svc-store accessing FILE-SUN-01 from public IP 45.79.19.196 shortly before the transfer. The supplied evidence does not link that event to the alerted transfer; investigate separately. (T240-00221)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 57711,
+    "output": 1610
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.93,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45:31 UTC, a connection from FILE-SUN-01's address (10.55.20.20) to the explicit proxy (10.55.20.30:8080) recorded 640,000,366 bytes sent and 39,199 bytes received, consistent with a large upload to the proxy.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T240-00266"
+    ]
+   },
+   {
+    "claim": "The transfer size is compatible with the inventory description of the approved Arcvault backup agent, which uploads several hundred MB, but this record does not identify Arcvault as the destination or process.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T240-00266"
+    ]
+   },
+   {
+    "claim": "The available transfer record identifies the internal proxy as the peer, not the external destination, so it does not establish where the bytes went beyond the proxy.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T240-00266"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The large-transfer record contains connection endpoints and byte counts but no destination hostname, URL, proxy action, or authenticated user.",
+   "The supplied records do not attribute the large transfer to a process, executable, service account, or specific backup job."
+  ],
+  "claims_not_established": [
+   "Whether the transfer went to the approved Arcvault service or to an unapproved destination.",
+   "Whether the Arcvault agent or another process generated the transfer.",
+   "Whether the transferred data was authorized backup data or sensitive data being exfiltrated.",
+   "Whether the nearby svc-store authentication event is related to the transfer."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Proxy access or tunnel logs for the 13:45:31 UTC connection, including destination host, request details, and egress byte counts.",
+   "FILE-SUN-01 process/network telemetry and Arcvault agent logs for the transfer window, including job status and upload destination.",
+   "Backup service records or other confirmation that this transfer matches a scheduled or expected Arcvault upload."
+  ],
+  "unrelated_findings": [
+   "A Kerberos service-ticket event identifies svc-store accessing FILE-SUN-01 from public IP 45.79.19.196 shortly before the transfer. The supplied evidence does not link that event to the alerted transfer; investigate separately. (T240-00221)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 3,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.6
+}

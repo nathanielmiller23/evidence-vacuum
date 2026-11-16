@@ -1,0 +1,80 @@
+{
+ "scenario_id": "T183",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.84,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:43:19 UTC, a proxy record shows mia.santos's workstation requesting and receiving HTTP 200 for https://raw.githubusercontent.com/bluefin-it/tools/main/u.ps1; the recorded user agent is \\\"-\\\".\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T183-00118\", \"T183-00119\"]\n    },\n    {\n      \"claim\": \"About one minute later, WS-MSANTOS-01 made an SMB connection to DC-BLU-01. The connection transferred data in both directions, and the domain controller recorded a network logon for the workstation computer account.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T183-00145\", \"T183-00147\", \"T183-00148\"]\n    },\n    {\n      \"claim\": \"The script request and subsequent SMB connection are concerning in the context of the reported PowerShell window, but these records do not establish that the script was executed or that the SMB activity was malicious.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T183-00119\", \"T183-00147\", \"T183-00148\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not include PowerShell or process-creation telemetry showing whether u.ps1 was downloaded to disk, opened, or executed.\",\n    \"The proxy record identifies the requested script URL and HTTP status but does not provide the script contents or a file hash.\",\n    \"The SMB connection records do not identify the share, files, or actions involved.\",\n    \"The evidence is a set of supplied log records, not a complete host timeline; absence of a PowerShell process record here does not establish that none occurred.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether u.ps1 was executed on WS-MSANTOS-01.\",\n    \"Whether the script contents were benign, malicious, or authorized.\",\n    \"Whether the SMB connection to DC-BLU-01 accessed or modified any files or services.\",\n    \"Whether the reported PowerShell window corresponds to the GitHub request or the later SMB connection.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Collect endpoint process-creation, PowerShell operational/script-block, and command-line telemetry from WS-MSANTOS-01 around 13:35\u201313:50 UTC, including the process tree and user context.\",\n    \"Recover the response body or an archived copy of u.ps1 and determine its hash and contents.\",\n    \"Review endpoint file and browser/download history for evidence of the script being saved or executed.\",\n    \"Collect SMB server/share auditing and relevant file or service logs from DC-BLU-01 for the connection beginning around 13:44:19 UTC.\"\n  ],\n  \"unrelated_findings\": [\n    \"The proxy logged a Dropbox connection attempt from WS-MSANTOS-01 at 13:24:52 UTC that ended with status 503 and a gateway-error action; this does not establish successful access. Review separately as an unapproved-service/policy matter. (T183-00029)\",\n    \"The proxy later logged a Dropbox connection attempt from WS-MSANTOS-01 at 13:46:31 UTC with status 403 and a deny action; this does not establish successful access. Review separately as an unapproved-service/policy matter. (T183-00266)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 40138,
+    "output": 1794
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.84,
+  "supporting_observations": [
+   {
+    "claim": "At 13:43:19 UTC, a proxy record shows mia.santos's workstation requesting and receiving HTTP 200 for https://raw.githubusercontent.com/bluefin-it/tools/main/u.ps1; the recorded user agent is \"-\".",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T183-00118",
+     "T183-00119"
+    ]
+   },
+   {
+    "claim": "About one minute later, WS-MSANTOS-01 made an SMB connection to DC-BLU-01. The connection transferred data in both directions, and the domain controller recorded a network logon for the workstation computer account.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T183-00145",
+     "T183-00147",
+     "T183-00148"
+    ]
+   },
+   {
+    "claim": "The script request and subsequent SMB connection are concerning in the context of the reported PowerShell window, but these records do not establish that the script was executed or that the SMB activity was malicious.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T183-00119",
+     "T183-00147",
+     "T183-00148"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not include PowerShell or process-creation telemetry showing whether u.ps1 was downloaded to disk, opened, or executed.",
+   "The proxy record identifies the requested script URL and HTTP status but does not provide the script contents or a file hash.",
+   "The SMB connection records do not identify the share, files, or actions involved.",
+   "The evidence is a set of supplied log records, not a complete host timeline; absence of a PowerShell process record here does not establish that none occurred."
+  ],
+  "claims_not_established": [
+   "Whether u.ps1 was executed on WS-MSANTOS-01.",
+   "Whether the script contents were benign, malicious, or authorized.",
+   "Whether the SMB connection to DC-BLU-01 accessed or modified any files or services.",
+   "Whether the reported PowerShell window corresponds to the GitHub request or the later SMB connection."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Collect endpoint process-creation, PowerShell operational/script-block, and command-line telemetry from WS-MSANTOS-01 around 13:35\u201313:50 UTC, including the process tree and user context.",
+   "Recover the response body or an archived copy of u.ps1 and determine its hash and contents.",
+   "Review endpoint file and browser/download history for evidence of the script being saved or executed.",
+   "Collect SMB server/share auditing and relevant file or service logs from DC-BLU-01 for the connection beginning around 13:44:19 UTC."
+  ],
+  "unrelated_findings": [
+   "The proxy logged a Dropbox connection attempt from WS-MSANTOS-01 at 13:24:52 UTC that ended with status 503 and a gateway-error action; this does not establish successful access. Review separately as an unapproved-service/policy matter. (T183-00029)",
+   "The proxy later logged a Dropbox connection attempt from WS-MSANTOS-01 at 13:46:31 UTC with status 403 and a deny action; this does not establish successful access. Review separately as an unapproved-service/policy matter. (T183-00266)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 8,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 19.0
+}

@@ -1,0 +1,80 @@
+{
+ "scenario_id": "T289",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:46:42 UTC, WS-ACOLE-01, attributed by the proxy to amy.cole, connected to megadrop-files.com; the tunnel recorded 51,000,000 client-to-server bytes and only 8,800 server-to-client bytes. The connection was made by Chrome through the proxy.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T289-00239\",\n        \"T289-00240\",\n        \"T289-00241\",\n        \"T289-00242\"\n      ]\n    },\n    {\n      \"claim\": \"About six minutes earlier, amy.cole ran PowerShell to compress \\\\\\\\FILE-ORC-01\\\\Shared\\\\Clients into C:\\\\Users\\\\amy.cole\\\\AppData\\\\Local\\\\Temp\\\\c.zip; a subsequent event records creation of that archive.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T289-00219\",\n        \"T289-00220\",\n        \"T289-00221\"\n      ]\n    },\n    {\n      \"claim\": \"The close timing between creating an archive of client files and sending roughly 51 MB to an unapproved file-transfer domain strongly supports suspected data exfiltration. The available records do not prove that c.zip was the exact data uploaded.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T289-00219\",\n        \"T289-00221\",\n        \"T289-00239\",\n        \"T289-00240\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy record shows a CONNECT tunnel to megadrop-files.com and byte counts, but does not show the specific URL, HTTP method, uploaded filename, or transfer contents (T289-00239).\",\n    \"The records show creation of c.zip and the outbound transfer, but do not directly link that file to the transfer or establish its contents (T289-00219, T289-00221, T289-00239).\",\n    \"The available records do not show whether amy.cole had authorization or a legitimate business reason for either the archive or transfer.\"\n  ],\n  \"claims_not_established\": [\n    \"That c.zip, or any specific file from the shared directory, was the data sent to megadrop-files.com.\",\n    \"What information was contained in the outbound data, whether it was sensitive, or who received it.\",\n    \"Whether amy.cole initiated the transfer knowingly or was acting under another user's control.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Collect endpoint file-access and browser evidence to determine whether c.zip or other files were read and uploaded, including file hashes, timestamps, and browser upload history.\",\n    \"Obtain proxy or network inspection details for the megadrop-files.com tunnel, including destination IP, TLS or HTTP metadata if available, and any upload or object identifiers.\",\n    \"Review FILE-ORC-01 access logs and the contents and classification of the files in Shared\\\\Clients.\",\n    \"Confirm with amy.cole and the relevant data owner whether the archive and external transfer were authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate review: amy.cole used PowerShell to launch sqlcmd and issue a query selecting user records from DB-SRV-01; the provided inventory does not list that host. This is not established as connected to the alerted transfer and does not determine this assessment (T289-00179, T289-00185, T289-00187, T289-00188).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 60930,
+    "output": 2016
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "At 13:46:42 UTC, WS-ACOLE-01, attributed by the proxy to amy.cole, connected to megadrop-files.com; the tunnel recorded 51,000,000 client-to-server bytes and only 8,800 server-to-client bytes. The connection was made by Chrome through the proxy.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T289-00239",
+     "T289-00240",
+     "T289-00241",
+     "T289-00242"
+    ]
+   },
+   {
+    "claim": "About six minutes earlier, amy.cole ran PowerShell to compress \\\\FILE-ORC-01\\Shared\\Clients into C:\\Users\\amy.cole\\AppData\\Local\\Temp\\c.zip; a subsequent event records creation of that archive.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T289-00219",
+     "T289-00220",
+     "T289-00221"
+    ]
+   },
+   {
+    "claim": "The close timing between creating an archive of client files and sending roughly 51 MB to an unapproved file-transfer domain strongly supports suspected data exfiltration. The available records do not prove that c.zip was the exact data uploaded.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T289-00219",
+     "T289-00221",
+     "T289-00239",
+     "T289-00240"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy record shows a CONNECT tunnel to megadrop-files.com and byte counts, but does not show the specific URL, HTTP method, uploaded filename, or transfer contents (T289-00239).",
+   "The records show creation of c.zip and the outbound transfer, but do not directly link that file to the transfer or establish its contents (T289-00219, T289-00221, T289-00239).",
+   "The available records do not show whether amy.cole had authorization or a legitimate business reason for either the archive or transfer."
+  ],
+  "claims_not_established": [
+   "That c.zip, or any specific file from the shared directory, was the data sent to megadrop-files.com.",
+   "What information was contained in the outbound data, whether it was sensitive, or who received it.",
+   "Whether amy.cole initiated the transfer knowingly or was acting under another user's control."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Collect endpoint file-access and browser evidence to determine whether c.zip or other files were read and uploaded, including file hashes, timestamps, and browser upload history.",
+   "Obtain proxy or network inspection details for the megadrop-files.com tunnel, including destination IP, TLS or HTTP metadata if available, and any upload or object identifiers.",
+   "Review FILE-ORC-01 access logs and the contents and classification of the files in Shared\\Clients.",
+   "Confirm with amy.cole and the relevant data owner whether the archive and external transfer were authorized."
+  ],
+  "unrelated_findings": [
+   "Separate review: amy.cole used PowerShell to launch sqlcmd and issue a query selecting user records from DB-SRV-01; the provided inventory does not list that host. This is not established as connected to the alerted transfer and does not determine this assessment (T289-00179, T289-00185, T289-00187, T289-00188)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.0
+}

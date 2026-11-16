@@ -1,0 +1,77 @@
+{
+ "scenario_id": "T019",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 4,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Maria Lopez ran PowerShell to compress \\\\\\\\FILE-HD-01\\\\Shared\\\\Clients into C:\\\\Users\\\\maria.lopez\\\\AppData\\\\Local\\\\Temp\\\\c.zip; a file at that path was then created.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T019-00117\",\n        \"T019-00119\"\n      ]\n    },\n    {\n      \"claim\": \"The same user opened sendbox-files.io in Chrome, and that browser process later transferred about 51 MB of client-to-server data through the proxy to that destination.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T019-00150\",\n        \"T019-00170\",\n        \"T019-00171\",\n        \"T019-00172\",\n        \"T019-00173\"\n      ]\n    },\n    {\n      \"claim\": \"The sequence of archiving a client-share directory and soon afterward sending a large volume of data to sendbox-files.io, a service not listed as approved in the supplied environment context, strongly supports suspected data exfiltration.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T019-00117\",\n        \"T019-00119\",\n        \"T019-00150\",\n        \"T019-00170\",\n        \"T019-00171\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and Zeek records establish the destination and transfer volume, but the CONNECT tunnel records do not expose the uploaded content. (T019-00170, T019-00171)\"\n  ],\n  \"claims_not_established\": [\n    \"The available records do not establish that the 51 MB transfer consisted specifically of c.zip or that the archive was the only data sent.\",\n    \"The evidence does not establish whether Maria Lopez had authorization to access or transfer the client data.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Obtain the c.zip file, if retained, and determine its contents, size, and creation/access history.\",\n    \"Review endpoint and proxy details that could associate the browser upload with a specific file or upload action.\",\n    \"Confirm with the data owner and Maria Lopez whether this client-data transfer was authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"Maria Lopez launched dotnet-sdk-installer.exe from her Temp directory with a quiet-install argument. Investigate separately; this does not determine the disposition of the alerted transfer. (T019-00181, T019-00182)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 49118,
+    "output": 1366
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "Maria Lopez ran PowerShell to compress \\\\FILE-HD-01\\Shared\\Clients into C:\\Users\\maria.lopez\\AppData\\Local\\Temp\\c.zip; a file at that path was then created.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00117",
+     "T019-00119"
+    ]
+   },
+   {
+    "claim": "The same user opened sendbox-files.io in Chrome, and that browser process later transferred about 51 MB of client-to-server data through the proxy to that destination.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T019-00150",
+     "T019-00170",
+     "T019-00171",
+     "T019-00172",
+     "T019-00173"
+    ]
+   },
+   {
+    "claim": "The sequence of archiving a client-share directory and soon afterward sending a large volume of data to sendbox-files.io, a service not listed as approved in the supplied environment context, strongly supports suspected data exfiltration.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T019-00117",
+     "T019-00119",
+     "T019-00150",
+     "T019-00170",
+     "T019-00171"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and Zeek records establish the destination and transfer volume, but the CONNECT tunnel records do not expose the uploaded content. (T019-00170, T019-00171)"
+  ],
+  "claims_not_established": [
+   "The available records do not establish that the 51 MB transfer consisted specifically of c.zip or that the archive was the only data sent.",
+   "The evidence does not establish whether Maria Lopez had authorization to access or transfer the client data."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Obtain the c.zip file, if retained, and determine its contents, size, and creation/access history.",
+   "Review endpoint and proxy details that could associate the browser upload with a specific file or upload action.",
+   "Confirm with the data owner and Maria Lopez whether this client-data transfer was authorized."
+  ],
+  "unrelated_findings": [
+   "Maria Lopez launched dotnet-sdk-installer.exe from her Temp directory with a quiet-install argument. Investigate separately; this does not determine the disposition of the alerted transfer. (T019-00181, T019-00182)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 15.1
+}

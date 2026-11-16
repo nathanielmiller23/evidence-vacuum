@@ -1,0 +1,86 @@
+{
+ "scenario_id": "T251",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.86,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Two domain logons for max.fischer failed with bad-password status (SubStatus 0xc000006a) from 192.0.2.199, followed about 76 seconds later by a successful NTLM network logon for the same account from that same IP.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T251-00001\",\n        \"T251-00002\",\n        \"T251-00003\"\n      ]\n    },\n    {\n      \"claim\": \"The successful event is LogonType 3, so it records a network logon, not by itself an interactive desktop session; the records do not identify the source IP as a managed endpoint.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T251-00003\"\n      ]\n    },\n    {\n      \"claim\": \"Max.fischer later had a local interactive logon on WS-MFISCHER-01, followed by a standard user desktop startup. This is consistent with local use of the account but does not establish who or what made the earlier network logon.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T251-00004\",\n        \"T251-00005\",\n        \"T251-00007\"\n      ]\n    },\n    {\n      \"claim\": \"The failed attempts followed by a network-logon success from the same unresolved source warrant investigation, but the available records do not establish whether the success was unauthorized.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T251-00001\",\n        \"T251-00002\",\n        \"T251-00003\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied authentication records show the source IP but do not attribute it to a device or person.\",\n    \"The successful event is a network logon; the supplied records do not show the resource accessed, the activity performed through that logon, or whether it was associated with the later local session.\",\n    \"The evidence provided does not include corroborating network, endpoint, or domain-account-change records for the source or session.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether 192.0.2.199 represents an internal, authorized, or unauthorized source.\",\n    \"Whether the successful network logon was made by max.fischer or by someone using the account's credentials.\",\n    \"Whether the failed attempts and subsequent success were part of a password-guessing or other malicious activity.\",\n    \"Whether the successful network logon accessed any resource or caused changes.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Identify the device or network associated with 192.0.2.199 at the event time, including relevant DHCP, NAT, firewall, and network records.\",\n    \"Retrieve domain-controller and destination-host records around 13:43\u201313:47 UTC to identify the target service/resource and any session activity associated with the successful logon.\",\n    \"Check account and authentication history for max.fischer around the alert window, including other source addresses, lockout status, and any credential or account changes.\"\n  ],\n  \"unrelated_findings\": [\n    \"The Cisco AnyConnect VPN UI was launched in max.fischer's local session. This is outside the alerted authentication sequence; the record shows a UI launch, not a VPN connection. Review separately given the inventory context that no VPN is used. (T251-00013, T251-00014)\",\n    \"A command prompt launched WMIC to query disk size, model, and status in max.fischer's local session. This is separate from the alerted domain logons; the records do not establish malicious intent. (T251-00011, T251-00012, T251-00031, T251-00032)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 5388,
+    "output": 2094
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.86,
+  "supporting_observations": [
+   {
+    "claim": "Two domain logons for max.fischer failed with bad-password status (SubStatus 0xc000006a) from 192.0.2.199, followed about 76 seconds later by a successful NTLM network logon for the same account from that same IP.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T251-00001",
+     "T251-00002",
+     "T251-00003"
+    ]
+   },
+   {
+    "claim": "The successful event is LogonType 3, so it records a network logon, not by itself an interactive desktop session; the records do not identify the source IP as a managed endpoint.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T251-00003"
+    ]
+   },
+   {
+    "claim": "Max.fischer later had a local interactive logon on WS-MFISCHER-01, followed by a standard user desktop startup. This is consistent with local use of the account but does not establish who or what made the earlier network logon.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T251-00004",
+     "T251-00005",
+     "T251-00007"
+    ]
+   },
+   {
+    "claim": "The failed attempts followed by a network-logon success from the same unresolved source warrant investigation, but the available records do not establish whether the success was unauthorized.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T251-00001",
+     "T251-00002",
+     "T251-00003"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied authentication records show the source IP but do not attribute it to a device or person.",
+   "The successful event is a network logon; the supplied records do not show the resource accessed, the activity performed through that logon, or whether it was associated with the later local session.",
+   "The evidence provided does not include corroborating network, endpoint, or domain-account-change records for the source or session."
+  ],
+  "claims_not_established": [
+   "Whether 192.0.2.199 represents an internal, authorized, or unauthorized source.",
+   "Whether the successful network logon was made by max.fischer or by someone using the account's credentials.",
+   "Whether the failed attempts and subsequent success were part of a password-guessing or other malicious activity.",
+   "Whether the successful network logon accessed any resource or caused changes."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Identify the device or network associated with 192.0.2.199 at the event time, including relevant DHCP, NAT, firewall, and network records.",
+   "Retrieve domain-controller and destination-host records around 13:43\u201313:47 UTC to identify the target service/resource and any session activity associated with the successful logon.",
+   "Check account and authentication history for max.fischer around the alert window, including other source addresses, lockout status, and any credential or account changes."
+  ],
+  "unrelated_findings": [
+   "The Cisco AnyConnect VPN UI was launched in max.fischer's local session. This is outside the alerted authentication sequence; the record shows a UI launch, not a VPN connection. Review separately given the inventory context that no VPN is used. (T251-00013, T251-00014)",
+   "A command prompt launched WMIC to query disk size, model, and status in max.fischer's local session. This is separate from the alerted domain logons; the records do not establish malicious intent. (T251-00011, T251-00012, T251-00031, T251-00032)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 22.7
+}

@@ -1,0 +1,75 @@
+{
+ "scenario_id": "T150",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:50:30 UTC, FILE-MAP-01 sent 640,000,529 bytes to the internal proxy at 10.53.20.30:8080, with only 39,245 bytes in the reverse direction. This is consistent with a large upload, but the record identifies the proxy\u2014not the ultimate external destination.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T150-00372\"]\n    },\n    {\n      \"claim\": \"The organization\u2019s inventory says the approved Safeharbor backup agent on FILE-MAP-01 uploads several hundred MB, so the observed transfer\u2019s host and scale are compatible with an authorized backup. The available record does not identify Safeharbor or attribute the transfer to that agent.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T150-00372\"]\n    },\n    {\n      \"claim\": \"Greta Lund\u2019s workstation initiated an RDP session to FILE-MAP-01 at 13:45:27 UTC, and the recorded session lasted about 56 minutes, overlapping the large transfer. The records do not establish that Greta caused or participated in the transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T150-00286\", \"T150-00287\", \"T150-00293\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The bulk-transfer record provides byte counts and the internal proxy address, but no ultimate destination, URL, proxy transaction details, or process attribution. [T150-00372]\",\n    \"The supplied records do not show FILE-MAP-01 process activity that attributes the transfer to the approved backup agent or another process.\",\n    \"The telemetry places the large transfer at 13:50:30 UTC; it does not establish that this is the same event as the alert described as occurring around 13:46 UTC. [T150-00372]\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the 640,000,529-byte transfer reached the approved Safeharbor backup service or an unapproved destination.\",\n    \"Which process, account, or job initiated the transfer.\",\n    \"Whether Greta Lund\u2019s RDP session was related to the transfer.\",\n    \"Whether the scheduled svc-docsync password rotation or manual job update affected the transfer.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Retrieve the matching PROXY-MAP-01 transaction for the large flow, including the external destination, URL or CONNECT target, request identity, and timestamps.\",\n    \"Collect FILE-MAP-01 process, service, and job execution telemetry around 13:45\u201313:51 UTC to identify the process responsible and determine whether the Safeharbor agent ran.\",\n    \"Review the FILE-MAP-01 RDP logon and session activity for Greta Lund, including commands and file or service changes during the overlapping session.\",\n    \"Verify the svc-docsync password rotation and manual job update records, and compare the transfer with expected Safeharbor backup job history.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:49:20 UTC, the domain controller recorded a Kerberos service-ticket event for svc-vault from public IP 139.162.174.124. The supplied evidence does not link this event to the large transfer; investigate separately. [T150-00329]\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 62780,
+    "output": 2305
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "At 13:50:30 UTC, FILE-MAP-01 sent 640,000,529 bytes to the internal proxy at 10.53.20.30:8080, with only 39,245 bytes in the reverse direction. This is consistent with a large upload, but the record identifies the proxy\u2014not the ultimate external destination.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T150-00372"
+    ]
+   },
+   {
+    "claim": "The organization\u2019s inventory says the approved Safeharbor backup agent on FILE-MAP-01 uploads several hundred MB, so the observed transfer\u2019s host and scale are compatible with an authorized backup. The available record does not identify Safeharbor or attribute the transfer to that agent.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T150-00372"
+    ]
+   },
+   {
+    "claim": "Greta Lund\u2019s workstation initiated an RDP session to FILE-MAP-01 at 13:45:27 UTC, and the recorded session lasted about 56 minutes, overlapping the large transfer. The records do not establish that Greta caused or participated in the transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T150-00286",
+     "T150-00287",
+     "T150-00293"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The bulk-transfer record provides byte counts and the internal proxy address, but no ultimate destination, URL, proxy transaction details, or process attribution. [T150-00372]",
+   "The supplied records do not show FILE-MAP-01 process activity that attributes the transfer to the approved backup agent or another process.",
+   "The telemetry places the large transfer at 13:50:30 UTC; it does not establish that this is the same event as the alert described as occurring around 13:46 UTC. [T150-00372]"
+  ],
+  "claims_not_established": [
+   "Whether the 640,000,529-byte transfer reached the approved Safeharbor backup service or an unapproved destination.",
+   "Which process, account, or job initiated the transfer.",
+   "Whether Greta Lund\u2019s RDP session was related to the transfer.",
+   "Whether the scheduled svc-docsync password rotation or manual job update affected the transfer."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Retrieve the matching PROXY-MAP-01 transaction for the large flow, including the external destination, URL or CONNECT target, request identity, and timestamps.",
+   "Collect FILE-MAP-01 process, service, and job execution telemetry around 13:45\u201313:51 UTC to identify the process responsible and determine whether the Safeharbor agent ran.",
+   "Review the FILE-MAP-01 RDP logon and session activity for Greta Lund, including commands and file or service changes during the overlapping session.",
+   "Verify the svc-docsync password rotation and manual job update records, and compare the transfer with expected Safeharbor backup job history."
+  ],
+  "unrelated_findings": [
+   "At 13:49:20 UTC, the domain controller recorded a Kerberos service-ticket event for svc-vault from public IP 139.162.174.124. The supplied evidence does not link this event to the large transfer; investigate separately. [T150-00329]"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 5,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.3
+}

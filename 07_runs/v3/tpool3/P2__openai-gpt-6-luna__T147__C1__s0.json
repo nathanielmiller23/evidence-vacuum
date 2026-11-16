@@ -1,0 +1,95 @@
+{
+ "scenario_id": "T147",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"DC-MAP-01 recorded creation of the account helpdesk2 by ali.hassan at 13:46:43 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T147-00140\"]\n    },\n    {\n      \"claim\": \"One second after creation, helpdesk2 was added to the Administrators group by ali.hassan.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T147-00144\"]\n    },\n    {\n      \"claim\": \"Shortly afterward, a scheduled task was registered on WS-NKIM-01 under ali.hassan. It launches PowerShell with a hidden window and an encoded command; decoding the command yields an instruction to download and execute a script from http://198.51.100.201/a.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T147-00145\"]\n    },\n    {\n      \"claim\": \"WS-NKIM-01 received an RDP connection from 198.51.100.201 and recorded an interactive ali.hassan logon. The domain controller also recorded ali.hassan authentication from WS-NKIM-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T147-00124\", \"T147-00125\", \"T147-00126\", \"T147-00128\"]\n    },\n    {\n      \"claim\": \"The account\u2019s name, administrator-group membership, and proximity to the remote ali.hassan logon and suspicious task are inconsistent with the stated temporary-account practice and strongly support malicious account creation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T147-00128\", \"T147-00140\", \"T147-00144\", \"T147-00145\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show scheduled-task registration and its command, but do not show whether the task ran or whether the downloaded script executed.\",\n    \"The logs do not establish who controlled the source address 198.51.100.201.\",\n    \"The account-change events and the workstation logon use different host-local logon IDs; the records do not directly establish that the account changes were made from that specific RDP session.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether helpdesk2 was subsequently used to log in or access systems.\",\n    \"Whether the script was retrieved, what it contained, or whether it executed successfully.\",\n    \"Whether ali.hassan\u2019s credentials or the source system were compromised, or whether the activity was performed by ali.hassan.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Collect DC-MAP-01 account and group-change audit context, including the source workstation or address for the events and any subsequent helpdesk2 authentication.\",\n    \"Collect WS-NKIM-01 task execution history, PowerShell operational/script-block logs, process telemetry, and relevant network records for the script URL.\",\n    \"Verify the legitimacy of the RDP connection and ali.hassan\u2019s activity with the administrator; investigate the source address and the workstation\u2019s security state.\",\n    \"Preserve and review the new account\u2019s configuration, credentials, group membership, and subsequent activity.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-NKIM-01 accessed Google Docs and Google Drive, and launched Google Drive File Stream, which are not among the listed approved services. These are separate from the alerted account activity. (T147-00242, T147-00243, T147-00295, T147-00299)\",\n    \"WS-NKIM-01 accessed Tableau Public and Atlassian login services, neither of which is listed as approved. Treat as a separate review. (T147-00068, T147-00069, T147-00274, T147-00275)\",\n    \"WS-NKIM-01 launched Zoom, another service not listed as approved. Treat as a separate review. (T147-00146, T147-00149, T147-00150)\",\n    \"WS-NKIM-01 launched Cisco AnyConnect and Palo Alto GlobalProtect client processes despite the inventory stating there is no VPN. The records show launches, not a successful VPN connection; review separately. (T147-00109, T147-00202)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 57103,
+    "output": 2508
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "DC-MAP-01 recorded creation of the account helpdesk2 by ali.hassan at 13:46:43 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T147-00140"
+    ]
+   },
+   {
+    "claim": "One second after creation, helpdesk2 was added to the Administrators group by ali.hassan.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T147-00144"
+    ]
+   },
+   {
+    "claim": "Shortly afterward, a scheduled task was registered on WS-NKIM-01 under ali.hassan. It launches PowerShell with a hidden window and an encoded command; decoding the command yields an instruction to download and execute a script from http://198.51.100.201/a.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T147-00145"
+    ]
+   },
+   {
+    "claim": "WS-NKIM-01 received an RDP connection from 198.51.100.201 and recorded an interactive ali.hassan logon. The domain controller also recorded ali.hassan authentication from WS-NKIM-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T147-00124",
+     "T147-00125",
+     "T147-00126",
+     "T147-00128"
+    ]
+   },
+   {
+    "claim": "The account\u2019s name, administrator-group membership, and proximity to the remote ali.hassan logon and suspicious task are inconsistent with the stated temporary-account practice and strongly support malicious account creation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T147-00128",
+     "T147-00140",
+     "T147-00144",
+     "T147-00145"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show scheduled-task registration and its command, but do not show whether the task ran or whether the downloaded script executed.",
+   "The logs do not establish who controlled the source address 198.51.100.201.",
+   "The account-change events and the workstation logon use different host-local logon IDs; the records do not directly establish that the account changes were made from that specific RDP session."
+  ],
+  "claims_not_established": [
+   "Whether helpdesk2 was subsequently used to log in or access systems.",
+   "Whether the script was retrieved, what it contained, or whether it executed successfully.",
+   "Whether ali.hassan\u2019s credentials or the source system were compromised, or whether the activity was performed by ali.hassan."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Collect DC-MAP-01 account and group-change audit context, including the source workstation or address for the events and any subsequent helpdesk2 authentication.",
+   "Collect WS-NKIM-01 task execution history, PowerShell operational/script-block logs, process telemetry, and relevant network records for the script URL.",
+   "Verify the legitimacy of the RDP connection and ali.hassan\u2019s activity with the administrator; investigate the source address and the workstation\u2019s security state.",
+   "Preserve and review the new account\u2019s configuration, credentials, group membership, and subsequent activity."
+  ],
+  "unrelated_findings": [
+   "WS-NKIM-01 accessed Google Docs and Google Drive, and launched Google Drive File Stream, which are not among the listed approved services. These are separate from the alerted account activity. (T147-00242, T147-00243, T147-00295, T147-00299)",
+   "WS-NKIM-01 accessed Tableau Public and Atlassian login services, neither of which is listed as approved. Treat as a separate review. (T147-00068, T147-00069, T147-00274, T147-00275)",
+   "WS-NKIM-01 launched Zoom, another service not listed as approved. Treat as a separate review. (T147-00146, T147-00149, T147-00150)",
+   "WS-NKIM-01 launched Cisco AnyConnect and Palo Alto GlobalProtect client processes despite the inventory stating there is no VPN. The records show launches, not a successful VPN connection; review separately. (T147-00109, T147-00202)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 28.9
+}

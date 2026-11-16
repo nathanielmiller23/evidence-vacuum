@@ -1,0 +1,92 @@
+{
+ "scenario_id": "T047",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 2,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:43:55 UTC, the domain controller recorded creation of the alerted account sysmaint by sam.okafor.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T047-00081\"\n      ]\n    },\n    {\n      \"claim\": \"About one second later, sysmaint was added to the NWD Administrators group by sam.okafor.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T047-00082\"\n      ]\n    },\n    {\n      \"claim\": \"Before these account changes, sam.okafor logged on to WS-LMARTINS-01 over RDP from recorded source address 203.0.113.250. The inventory says remote administration is only done from WS-SOKAFOR-01 and there is no VPN, making this inconsistent with the stated practice.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T047-00060\",\n        \"T047-00063\",\n        \"T047-00064\",\n        \"T047-00065\",\n        \"T047-00066\"\n      ]\n    },\n    {\n      \"claim\": \"A task created on WS-LMARTINS-01 under sam.okafor at 13:43:57 was configured to run hidden, encoded PowerShell that decodes to an expression fetching and invoking a script from http://203.0.113.250/a.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T047-00083\"\n      ]\n    },\n    {\n      \"claim\": \"The near-consecutive creation and administrator-group addition of sysmaint, together with the anomalous remote administrative access and the task configured to fetch and execute a script, supports a malicious-activity finding for the alerted activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T047-00081\",\n        \"T047-00082\",\n        \"T047-00063\",\n        \"T047-00065\",\n        \"T047-00083\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The task-creation record shows the configured command, but the supplied evidence does not show whether the task ran or whether the remote script was downloaded or executed.\",\n    \"The supplied records do not establish who controlled the recorded source address or whether sam.okafor's credentials or session were compromised.\",\n    \"The DC account-change logon ID and workstation RDP logon ID are recorded in different host contexts; the provided evidence does not directly correlate those IDs.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether sysmaint was successfully used after creation, or what its credentials and resulting access were.\",\n    \"Whether the scheduled task executed and what the remote script contained or did.\",\n    \"Whether sam.okafor personally initiated the recorded RDP session and account changes.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and review the full task definition, task execution history, and endpoint process, network, and file telemetry around the task's trigger time.\",\n    \"Review domain-controller audit and directory state for sysmaint's attributes, password and group changes, subsequent logons, and activity by the account.\",\n    \"Validate the RDP source address and session against firewall, network, and authentication records; confirm with sam.okafor whether the activity was authorized.\",\n    \"Investigate the referenced URL and any retrieved payload, and assess WS-LMARTINS-01 and relevant credentials for compromise.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 27903,
+    "output": 1978
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:43:55 UTC, the domain controller recorded creation of the alerted account sysmaint by sam.okafor.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00081"
+    ]
+   },
+   {
+    "claim": "About one second later, sysmaint was added to the NWD Administrators group by sam.okafor.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00082"
+    ]
+   },
+   {
+    "claim": "Before these account changes, sam.okafor logged on to WS-LMARTINS-01 over RDP from recorded source address 203.0.113.250. The inventory says remote administration is only done from WS-SOKAFOR-01 and there is no VPN, making this inconsistent with the stated practice.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T047-00060",
+     "T047-00063",
+     "T047-00064",
+     "T047-00065",
+     "T047-00066"
+    ]
+   },
+   {
+    "claim": "A task created on WS-LMARTINS-01 under sam.okafor at 13:43:57 was configured to run hidden, encoded PowerShell that decodes to an expression fetching and invoking a script from http://203.0.113.250/a.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00083"
+    ]
+   },
+   {
+    "claim": "The near-consecutive creation and administrator-group addition of sysmaint, together with the anomalous remote administrative access and the task configured to fetch and execute a script, supports a malicious-activity finding for the alerted activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T047-00081",
+     "T047-00082",
+     "T047-00063",
+     "T047-00065",
+     "T047-00083"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The task-creation record shows the configured command, but the supplied evidence does not show whether the task ran or whether the remote script was downloaded or executed.",
+   "The supplied records do not establish who controlled the recorded source address or whether sam.okafor's credentials or session were compromised.",
+   "The DC account-change logon ID and workstation RDP logon ID are recorded in different host contexts; the provided evidence does not directly correlate those IDs."
+  ],
+  "claims_not_established": [
+   "Whether sysmaint was successfully used after creation, or what its credentials and resulting access were.",
+   "Whether the scheduled task executed and what the remote script contained or did.",
+   "Whether sam.okafor personally initiated the recorded RDP session and account changes."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and review the full task definition, task execution history, and endpoint process, network, and file telemetry around the task's trigger time.",
+   "Review domain-controller audit and directory state for sysmaint's attributes, password and group changes, subsequent logons, and activity by the account.",
+   "Validate the RDP source address and session against firewall, network, and authentication records; confirm with sam.okafor whether the activity was authorized.",
+   "Investigate the referenced URL and any retrieved payload, and assess WS-LMARTINS-01 and relevant credentials for compromise."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.4
+}

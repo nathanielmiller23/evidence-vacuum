@@ -1,0 +1,83 @@
+{
+ "scenario_id": "T130",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.97,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The observed large outbound transfer occurred at 13:50:19 UTC, rather than exactly at the alert's stated approximate time of 13:46. The proxy recorded a 640,000,000-byte client-to-server transfer to ingest.ironvault-cloud.com.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T130-00259\",\n        \"T130-00260\"\n      ]\n    },\n    {\n      \"claim\": \"At the time of the transfer, FILE-COP-01 ran C:\\\\Program Files\\\\Ironvault\\\\agent.exe as COPPERLINE\\\\svc-backup with the Nightly job targeting ingest.ironvault-cloud.com. The recorded path, account, destination, and several-hundred-MB transfer are consistent with the organization's stated approved offsite backup activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T130-00257\",\n        \"T130-00258\",\n        \"T130-00259\",\n        \"T130-00261\",\n        \"T130-00262\"\n      ]\n    },\n    {\n      \"claim\": \"The proxy also recorded a successful GET to the same approved backup endpoint during this activity.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T130-00264\",\n        \"T130-00265\"\n      ]\n    },\n    {\n      \"claim\": \"The records nearest 13:46 show internal LDAP and Kerberos activity between FILE-COP-01 and DC-COP-01; they do not show the large outbound transfer at that time.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T130-00201\",\n        \"T130-00205\",\n        \"T130-00209\",\n        \"T130-00212\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and connection records provide transfer byte counts and destination, but do not expose the contents of the encrypted upload or establish which files were included. The relevant tunnel and connection records are T130-00259 and T130-00260.\",\n    \"The supplied records place the large transfer at 13:50:19 UTC, about four minutes after the alert's approximate 13:46 time; they do not establish whether this is the exact flow that triggered the alert. Relevant records: T130-00201, T130-00259, T130-00260.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish the contents or sensitivity of the data uploaded.\",\n    \"The evidence does not establish why the alert timestamp is around 13:46 when the logged 640,000,000-byte transfer is at 13:50:19 UTC.\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [],\n  \"unrelated_findings\": [\n    \"Separate triage recommended: FILE-COP-01 made proxy requests for updates.paloaltonetworks.com and www.bing.com; the Bing request used a python-requests user agent. These requests are outside the identified Ironvault transfer. Records: T130-00425, T130-00426.\",\n    \"Separate triage recommended: a Veeam Backup Service process appeared on FILE-COP-01, and that process explicitly used svc-backup credentials for PROXY-COP-01. This is distinct from the Ironvault upload; the supplied inventory identifies Ironvault as the approved backup agent. Records: T130-00402, T130-00416.\",\n    \"Separate review recommended: failed logons targeted the disabled accounts svc_deploy and svc_mgmt on FILE-COP-01. These events are not evidence about the alerted transfer. Records: T130-00163, T130-00510.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 78263,
+    "output": 2342
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.97,
+  "supporting_observations": [
+   {
+    "claim": "The observed large outbound transfer occurred at 13:50:19 UTC, rather than exactly at the alert's stated approximate time of 13:46. The proxy recorded a 640,000,000-byte client-to-server transfer to ingest.ironvault-cloud.com.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T130-00259",
+     "T130-00260"
+    ]
+   },
+   {
+    "claim": "At the time of the transfer, FILE-COP-01 ran C:\\Program Files\\Ironvault\\agent.exe as COPPERLINE\\svc-backup with the Nightly job targeting ingest.ironvault-cloud.com. The recorded path, account, destination, and several-hundred-MB transfer are consistent with the organization's stated approved offsite backup activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T130-00257",
+     "T130-00258",
+     "T130-00259",
+     "T130-00261",
+     "T130-00262"
+    ]
+   },
+   {
+    "claim": "The proxy also recorded a successful GET to the same approved backup endpoint during this activity.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T130-00264",
+     "T130-00265"
+    ]
+   },
+   {
+    "claim": "The records nearest 13:46 show internal LDAP and Kerberos activity between FILE-COP-01 and DC-COP-01; they do not show the large outbound transfer at that time.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T130-00201",
+     "T130-00205",
+     "T130-00209",
+     "T130-00212"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and connection records provide transfer byte counts and destination, but do not expose the contents of the encrypted upload or establish which files were included. The relevant tunnel and connection records are T130-00259 and T130-00260.",
+   "The supplied records place the large transfer at 13:50:19 UTC, about four minutes after the alert's approximate 13:46 time; they do not establish whether this is the exact flow that triggered the alert. Relevant records: T130-00201, T130-00259, T130-00260."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish the contents or sensitivity of the data uploaded.",
+   "The evidence does not establish why the alert timestamp is around 13:46 when the logged 640,000,000-byte transfer is at 13:50:19 UTC."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [],
+  "unrelated_findings": [
+   "Separate triage recommended: FILE-COP-01 made proxy requests for updates.paloaltonetworks.com and www.bing.com; the Bing request used a python-requests user agent. These requests are outside the identified Ironvault transfer. Records: T130-00425, T130-00426.",
+   "Separate triage recommended: a Veeam Backup Service process appeared on FILE-COP-01, and that process explicitly used svc-backup credentials for PROXY-COP-01. This is distinct from the Ironvault upload; the supplied inventory identifies Ironvault as the approved backup agent. Records: T130-00402, T130-00416.",
+   "Separate review recommended: failed logons targeted the disabled accounts svc_deploy and svc_mgmt on FILE-COP-01. These events are not evidence about the alerted transfer. Records: T130-00163, T130-00510."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.3
+}

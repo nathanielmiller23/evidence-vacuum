@@ -1,0 +1,89 @@
+{
+ "scenario_id": "T095",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The activity attributed to the alert is a series of proxy CONNECT requests to update.medledger.co at roughly five-minute intervals: 13:41:49, 13:46:52, 13:51:47, 13:55:57, 14:01:20, 14:06:23, and 14:11:26 UTC. One request was denied; the others shown were allowed tunnels.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T095-00121\", \"T095-00141\", \"T095-00167\", \"T095-00202\", \"T095-00208\", \"T095-00212\", \"T095-00244\"]\n    },\n    {\n      \"claim\": \"The approved MediLedger updater is inventoried at C:\\\\Program Files\\\\MediLedger\\\\medledgerupd.exe and is expected to check update.medledger.com. Instead, the periodic requests are to update.medledger.co, and the network connection is attributed to medledgerupd.exe running from Tom Weber's AppData\\\\Local path.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T095-00118\", \"T095-00121\", \"T095-00122\", \"T095-00124\", \"T095-00167\", \"T095-00208\", \"T095-00212\", \"T095-00244\"]\n    },\n    {\n      \"claim\": \"The initial process event shows the AppData updater launched as tom.weber from Explorer at medium integrity; its proxy request records a Firefox user agent. This does not match the inventoried installation path and is a further inconsistency in the alerted activity.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T095-00118\", \"T095-00119\", \"T095-00121\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records describe CONNECT tunnels and byte counts, not the HTTPS request contents or transferred files; the TLS payload is not visible in these records (for example, T095-00121, T095-00167, T095-00208).\",\n    \"The supplied records do not include the updater binary's hash, signature verification, file provenance, or a malware analysis result.\",\n    \"The supplied records do not establish the ownership or reputation of update.medledger.co, or show the resolved public IP, certificate details, or destination infrastructure.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not prove that update.medledger.co is controlled by an attacker or that the updater binary is malware.\",\n    \"The evidence does not show what content, if any, was exchanged through the HTTPS tunnels or whether data was exfiltrated.\",\n    \"The evidence does not establish whether the AppData executable was installed or placed there legitimately, or whether it is signed by the MediLedger vendor.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and preserve the AppData updater binary; record its hash, signature, creation/modification metadata, and provenance, then analyze it.\",\n    \"Obtain DNS, proxy, TLS certificate, and destination-IP evidence for update.medledger.co; compare it with the vendor's verified update.medledger.com endpoint.\",\n    \"Review endpoint protection detections and file/process activity associated with PID 3308 and the updater's network sessions, including any downloaded or written files.\",\n    \"Confirm with the MediLedger vendor or internal software owner whether update.medledger.co and this AppData installation are legitimate.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-TWEBER-01 connected to FILE-PIN-01 over SMB and FILE-PIN-01 recorded an ANONYMOUS LOGON using NTLM; review separately, as this is not the periodic proxy activity deciding this alert (T095-00239, T095-00242, T095-00243).\",\n    \"A UserAssist registry path on WS-TWEBER-01 references Slack.lnk; Slack is not listed among approved services, so review separately without treating it as evidence for this alert (T095-00145).\",\n    \"WS-ESTONE-01 and WS-ARUIZ-01 each established TLS connections to WS-TWEBER-01 on port 443. Given the stated remote-administration practice, review these sessions separately; the records alone do not establish their purpose (T095-00050, T095-00051, T095-00052, T095-00077, T095-00078, T095-00079, T095-00082, T095-00083, T095-00084).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 45342,
+    "output": 2615
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "The activity attributed to the alert is a series of proxy CONNECT requests to update.medledger.co at roughly five-minute intervals: 13:41:49, 13:46:52, 13:51:47, 13:55:57, 14:01:20, 14:06:23, and 14:11:26 UTC. One request was denied; the others shown were allowed tunnels.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T095-00121",
+     "T095-00141",
+     "T095-00167",
+     "T095-00202",
+     "T095-00208",
+     "T095-00212",
+     "T095-00244"
+    ]
+   },
+   {
+    "claim": "The approved MediLedger updater is inventoried at C:\\Program Files\\MediLedger\\medledgerupd.exe and is expected to check update.medledger.com. Instead, the periodic requests are to update.medledger.co, and the network connection is attributed to medledgerupd.exe running from Tom Weber's AppData\\Local path.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T095-00118",
+     "T095-00121",
+     "T095-00122",
+     "T095-00124",
+     "T095-00167",
+     "T095-00208",
+     "T095-00212",
+     "T095-00244"
+    ]
+   },
+   {
+    "claim": "The initial process event shows the AppData updater launched as tom.weber from Explorer at medium integrity; its proxy request records a Firefox user agent. This does not match the inventoried installation path and is a further inconsistency in the alerted activity.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T095-00118",
+     "T095-00119",
+     "T095-00121"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records describe CONNECT tunnels and byte counts, not the HTTPS request contents or transferred files; the TLS payload is not visible in these records (for example, T095-00121, T095-00167, T095-00208).",
+   "The supplied records do not include the updater binary's hash, signature verification, file provenance, or a malware analysis result.",
+   "The supplied records do not establish the ownership or reputation of update.medledger.co, or show the resolved public IP, certificate details, or destination infrastructure."
+  ],
+  "claims_not_established": [
+   "The evidence does not prove that update.medledger.co is controlled by an attacker or that the updater binary is malware.",
+   "The evidence does not show what content, if any, was exchanged through the HTTPS tunnels or whether data was exfiltrated.",
+   "The evidence does not establish whether the AppData executable was installed or placed there legitimately, or whether it is signed by the MediLedger vendor."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and preserve the AppData updater binary; record its hash, signature, creation/modification metadata, and provenance, then analyze it.",
+   "Obtain DNS, proxy, TLS certificate, and destination-IP evidence for update.medledger.co; compare it with the vendor's verified update.medledger.com endpoint.",
+   "Review endpoint protection detections and file/process activity associated with PID 3308 and the updater's network sessions, including any downloaded or written files.",
+   "Confirm with the MediLedger vendor or internal software owner whether update.medledger.co and this AppData installation are legitimate."
+  ],
+  "unrelated_findings": [
+   "WS-TWEBER-01 connected to FILE-PIN-01 over SMB and FILE-PIN-01 recorded an ANONYMOUS LOGON using NTLM; review separately, as this is not the periodic proxy activity deciding this alert (T095-00239, T095-00242, T095-00243).",
+   "A UserAssist registry path on WS-TWEBER-01 references Slack.lnk; Slack is not listed among approved services, so review separately without treating it as evidence for this alert (T095-00145).",
+   "WS-ESTONE-01 and WS-ARUIZ-01 each established TLS connections to WS-TWEBER-01 on port 443. Given the stated remote-administration practice, review these sessions separately; the records alone do not establish their purpose (T095-00050, T095-00051, T095-00052, T095-00077, T095-00078, T095-00079, T095-00082, T095-00083, T095-00084)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 18,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 25.4
+}

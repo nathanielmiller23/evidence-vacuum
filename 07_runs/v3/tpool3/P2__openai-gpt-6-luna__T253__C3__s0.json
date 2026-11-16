@@ -1,0 +1,108 @@
+{
+ "scenario_id": "T253",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "error": "APIConnectionError: Connection error."
+  },
+  {
+   "error": "APIConnectionError: Connection error."
+  },
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:42:45 UTC, zoe.adams launched WINWORD.EXE on Statement.docm from her Downloads folder; about one second later, Word spawned PowerShell with no-profile and hidden-window options and an encoded command.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T253-00114\", \"T253-00115\", \"T253-00118\", \"T253-00119\"]\n    },\n    {\n      \"claim\": \"The encoded PowerShell command specifies downloading and executing a script from raw.githubusercontent.com/sunridge-it/tools/main/u.ps1 using IEX and a .NET WebClient.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T253-00118\", \"T253-00119\"]\n    },\n    {\n      \"claim\": \"The PowerShell process initiated two connections through the explicit proxy shortly after launch; the connection records show responses of 18,893 and 52,165 bytes.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T253-00122\", \"T253-00123\", \"T253-00126\", \"T253-00127\", \"T253-00124\", \"T253-00128\"]\n    },\n    {\n      \"claim\": \"PowerShell then launched rundll32.exe to invoke C:\\\\Users\\\\zoe.adams\\\\AppData\\\\Roaming\\\\svchelper.dll,Init; the rundll32 process exited about nine seconds later.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T253-00129\", \"T253-00130\", \"T253-00133\", \"T253-00134\"]\n    },\n    {\n      \"claim\": \"The document-to-hidden-PowerShell-to-proxy-download-to-user-profile DLL execution chain is strongly suspicious and supports a malicious-activity finding, even though the payload contents are not available here.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T253-00114\", \"T253-00118\", \"T253-00123\", \"T253-00127\", \"T253-00129\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy sensor records for PROXY-SUN-01 were not collected from 13:25 to 14:20 UTC because of a log-collection outage; this includes the alerted activity period.\",\n    \"The available Zeek connection records show connection endpoints, timing, and byte counts, but not the HTTP request URI, response body, or downloaded file contents.\",\n    \"The evidence does not include the contents or hashes of Statement.docm, u.ps1, or svchelper.dll.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish the source or delivery method of Statement.docm, or whether zoe.adams knowingly opened it.\",\n    \"The actual contents and behavior of the downloaded script and DLL, and whether the DLL performed additional actions, are not established.\",\n    \"The available connection records do not by themselves establish that either proxy connection fetched the specified URL or identify the exact content returned.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and analyze Statement.docm, including its macro code, origin metadata, and hash.\",\n    \"Acquire the PowerShell script and svchelper.dll, if recoverable, and analyze their contents, hashes, and execution behavior.\",\n    \"Recover proxy logs or other HTTP inspection records for the two PowerShell connections to identify requested URLs and returned content.\",\n    \"Collect endpoint forensic data for WS-ZADAMS-01 around 13:42 UTC, including relevant file-creation, persistence, and security-product detection records.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox updater processes ran on WS-ZADAMS-01 during the review window. Dropbox is not among the approved software or services listed in the environment context; track this separately and do not use it to determine this alert. (T253-00030, T253-00031)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 44904,
+    "output": 2051
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "At 13:42:45 UTC, zoe.adams launched WINWORD.EXE on Statement.docm from her Downloads folder; about one second later, Word spawned PowerShell with no-profile and hidden-window options and an encoded command.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T253-00114",
+     "T253-00115",
+     "T253-00118",
+     "T253-00119"
+    ]
+   },
+   {
+    "claim": "The encoded PowerShell command specifies downloading and executing a script from raw.githubusercontent.com/sunridge-it/tools/main/u.ps1 using IEX and a .NET WebClient.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T253-00118",
+     "T253-00119"
+    ]
+   },
+   {
+    "claim": "The PowerShell process initiated two connections through the explicit proxy shortly after launch; the connection records show responses of 18,893 and 52,165 bytes.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T253-00122",
+     "T253-00123",
+     "T253-00126",
+     "T253-00127",
+     "T253-00124",
+     "T253-00128"
+    ]
+   },
+   {
+    "claim": "PowerShell then launched rundll32.exe to invoke C:\\Users\\zoe.adams\\AppData\\Roaming\\svchelper.dll,Init; the rundll32 process exited about nine seconds later.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T253-00129",
+     "T253-00130",
+     "T253-00133",
+     "T253-00134"
+    ]
+   },
+   {
+    "claim": "The document-to-hidden-PowerShell-to-proxy-download-to-user-profile DLL execution chain is strongly suspicious and supports a malicious-activity finding, even though the payload contents are not available here.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T253-00114",
+     "T253-00118",
+     "T253-00123",
+     "T253-00127",
+     "T253-00129"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy sensor records for PROXY-SUN-01 were not collected from 13:25 to 14:20 UTC because of a log-collection outage; this includes the alerted activity period.",
+   "The available Zeek connection records show connection endpoints, timing, and byte counts, but not the HTTP request URI, response body, or downloaded file contents.",
+   "The evidence does not include the contents or hashes of Statement.docm, u.ps1, or svchelper.dll."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish the source or delivery method of Statement.docm, or whether zoe.adams knowingly opened it.",
+   "The actual contents and behavior of the downloaded script and DLL, and whether the DLL performed additional actions, are not established.",
+   "The available connection records do not by themselves establish that either proxy connection fetched the specified URL or identify the exact content returned."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and analyze Statement.docm, including its macro code, origin metadata, and hash.",
+   "Acquire the PowerShell script and svchelper.dll, if recoverable, and analyze their contents, hashes, and execution behavior.",
+   "Recover proxy logs or other HTTP inspection records for the two PowerShell connections to identify requested URLs and returned content.",
+   "Collect endpoint forensic data for WS-ZADAMS-01 around 13:42 UTC, including relevant file-creation, persistence, and security-product detection records."
+  ],
+  "unrelated_findings": [
+   "Dropbox updater processes ran on WS-ZADAMS-01 during the review window. Dropbox is not among the approved software or services listed in the environment context; track this separately and do not use it to determine this alert. (T253-00030, T253-00031)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 21,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 47.9
+}

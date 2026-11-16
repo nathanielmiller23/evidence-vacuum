@@ -1,0 +1,86 @@
+{
+ "scenario_id": "T219",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:44:31 UTC, mia.santos ran PowerShell to compress \\\\\\\\FILE-BLU-01\\\\Shared\\\\Clients into C:\\\\Users\\\\mia.santos\\\\AppData\\\\Local\\\\Temp\\\\c.zip; a file-creation event confirms c.zip was created shortly afterward.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T219-00127\",\n        \"T219-00129\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:50:42 UTC, the proxy recorded a 51,000,000-byte client-to-server transfer from WS-MSANTOS-01 to bigsend-drop.net, an unapproved file-sharing service; the associated process was Firefox running as mia.santos.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T219-00182\",\n        \"T219-00184\",\n        \"T219-00185\"\n      ]\n    },\n    {\n      \"claim\": \"The close timing between creating an archive of the Clients share and sending tens of megabytes to an unapproved file-drop service strongly supports an attempted or completed data exfiltration.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T219-00127\",\n        \"T219-00129\",\n        \"T219-00182\",\n        \"T219-00184\"\n      ]\n    },\n    {\n      \"claim\": \"The recorded large transfer occurred at 13:50:42 UTC, rather than at the alert's approximate 13:46 UTC time.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T219-00182\",\n        \"T219-00184\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records a CONNECT tunnel and byte counts, not the HTTPS upload contents or the specific file sent.\",\n    \"The available records show c.zip was created, but do not establish its contents or prove that c.zip was the payload transferred.\",\n    \"The logs do not establish who selected or authorized the upload, or what the remote service ultimately stored.\"\n  ],\n  \"claims_not_established\": [\n    \"That the 51,000,000-byte transfer contained c.zip or any particular client data.\",\n    \"That the external recipient successfully retained or accessed the transferred data.\",\n    \"Whether mia.santos knowingly performed the activity or whether the account or session was compromised.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve WS-MSANTOS-01 and collect browser history, upload/form activity, and relevant Firefox profile artifacts around 13:44\u201313:51 UTC.\",\n    \"Recover and examine c.zip and determine what files were read from \\\\\\\\FILE-BLU-01\\\\Shared\\\\Clients.\",\n    \"Obtain proxy/TLS inspection or destination-side records, if available, to identify the uploaded object and confirm receipt.\",\n    \"Interview mia.santos and correlate endpoint, identity, and file-server audit records for access to the Clients share.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox.exe and GoogleDriveFS.exe launched on WS-MSANTOS-01; these are unapproved file-sharing/cloud-storage clients in this environment and should be reviewed under a separate ticket. Their launch records do not establish that either service carried the alerted transfer. (T219-00073, T219-00082)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 47958,
+    "output": 1565
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "At 13:44:31 UTC, mia.santos ran PowerShell to compress \\\\FILE-BLU-01\\Shared\\Clients into C:\\Users\\mia.santos\\AppData\\Local\\Temp\\c.zip; a file-creation event confirms c.zip was created shortly afterward.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T219-00127",
+     "T219-00129"
+    ]
+   },
+   {
+    "claim": "At 13:50:42 UTC, the proxy recorded a 51,000,000-byte client-to-server transfer from WS-MSANTOS-01 to bigsend-drop.net, an unapproved file-sharing service; the associated process was Firefox running as mia.santos.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T219-00182",
+     "T219-00184",
+     "T219-00185"
+    ]
+   },
+   {
+    "claim": "The close timing between creating an archive of the Clients share and sending tens of megabytes to an unapproved file-drop service strongly supports an attempted or completed data exfiltration.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T219-00127",
+     "T219-00129",
+     "T219-00182",
+     "T219-00184"
+    ]
+   },
+   {
+    "claim": "The recorded large transfer occurred at 13:50:42 UTC, rather than at the alert's approximate 13:46 UTC time.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T219-00182",
+     "T219-00184"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records a CONNECT tunnel and byte counts, not the HTTPS upload contents or the specific file sent.",
+   "The available records show c.zip was created, but do not establish its contents or prove that c.zip was the payload transferred.",
+   "The logs do not establish who selected or authorized the upload, or what the remote service ultimately stored."
+  ],
+  "claims_not_established": [
+   "That the 51,000,000-byte transfer contained c.zip or any particular client data.",
+   "That the external recipient successfully retained or accessed the transferred data.",
+   "Whether mia.santos knowingly performed the activity or whether the account or session was compromised."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve WS-MSANTOS-01 and collect browser history, upload/form activity, and relevant Firefox profile artifacts around 13:44\u201313:51 UTC.",
+   "Recover and examine c.zip and determine what files were read from \\\\FILE-BLU-01\\Shared\\Clients.",
+   "Obtain proxy/TLS inspection or destination-side records, if available, to identify the uploaded object and confirm receipt.",
+   "Interview mia.santos and correlate endpoint, identity, and file-server audit records for access to the Clients share."
+  ],
+  "unrelated_findings": [
+   "Dropbox.exe and GoogleDriveFS.exe launched on WS-MSANTOS-01; these are unapproved file-sharing/cloud-storage clients in this environment and should be reviewed under a separate ticket. Their launch records do not establish that either service carried the alerted transfer. (T219-00073, T219-00082)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 18.0
+}

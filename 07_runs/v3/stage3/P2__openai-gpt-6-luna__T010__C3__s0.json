@@ -1,0 +1,84 @@
+{
+ "scenario_id": "T010",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The supplied Zeek records near the alert time show FILE-HD-01 making small HTTP connections to the explicit proxy: 1,851 and 616 origin bytes shortly before 13:46, and 2,668 origin bytes shortly after. These records do not identify a hundreds-of-MB transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T010-00325\",\n        \"T010-00331\",\n        \"T010-00362\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:46, supplied records show FILE-HD-01 communicating with the domain controller over LDAP and Kerberos; they do not identify an external destination or the process responsible for the alerted transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T010-00338\",\n        \"T010-00341\",\n        \"T010-00342\",\n        \"T010-00343\",\n        \"T010-00347\",\n        \"T010-00349\",\n        \"T010-00351\"\n      ]\n    },\n    {\n      \"claim\": \"The stated approved CobaltVault agent is capable of uploading several hundred MB, but the available records do not link the alerted activity to that agent or to CobaltVault.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T010-00325\",\n        \"T010-00331\",\n        \"T010-00362\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Collection-status metadata reports a winsec and Sysmon collection outage on FILE-HD-01 from 13:30 to 14:10 UTC, covering the alert time.\",\n    \"Collection-status metadata reports a proxy-logging outage on PROXY-HD-01 from 13:30 to 14:10 UTC, limiting visibility into proxied destinations and requests.\",\n    \"Zeek connection, DNS, and SSL sensors are reported as available, but the supplied records do not establish the alerted transfer's destination, process, or transferred content.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether a transfer of hundreds of MB actually occurred at the reported time, and its exact start, duration, and byte count.\",\n    \"Whether the transfer went directly to an external host or through the proxy, and what its destination was.\",\n    \"Which process or account initiated the transfer, and whether it was the approved CobaltVault agent.\",\n    \"What data, if any, was transferred, and whether the activity was authorized.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Obtain the original network-monitoring alert details and flow-level records, including exact timestamps, byte counts, destination, and whether the traffic traversed PROXY-HD-01.\",\n    \"Recover or obtain proxy access logs for 13:30\u201314:10 UTC, including requested hostnames, URLs, methods, and upload sizes.\",\n    \"Collect FILE-HD-01 process and application telemetry for the alert interval, including CobaltVault agent logs, execution records, and relevant service or scheduled-task history.\",\n    \"Correlate the destination and transfer details against CobaltVault service records and authorized backup-job history.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:39, PROXY-HD-01 initiated an SMB connection to FILE-HD-01. This is outside the alerted transfer evidence and should be reviewed separately if not expected. (T010-00251)\",\n    \"At 14:05, FILE-HD-01 initiated an RPC connection to WS-OHADDAD-01 on port 135. The stated practice is for remote administration to originate from WS-OHADDAD-01; review this directionality separately. (T010-00528, T010-00529, T010-00530)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 78284,
+    "output": 2886
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "The supplied Zeek records near the alert time show FILE-HD-01 making small HTTP connections to the explicit proxy: 1,851 and 616 origin bytes shortly before 13:46, and 2,668 origin bytes shortly after. These records do not identify a hundreds-of-MB transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T010-00325",
+     "T010-00331",
+     "T010-00362"
+    ]
+   },
+   {
+    "claim": "At 13:46, supplied records show FILE-HD-01 communicating with the domain controller over LDAP and Kerberos; they do not identify an external destination or the process responsible for the alerted transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T010-00338",
+     "T010-00341",
+     "T010-00342",
+     "T010-00343",
+     "T010-00347",
+     "T010-00349",
+     "T010-00351"
+    ]
+   },
+   {
+    "claim": "The stated approved CobaltVault agent is capable of uploading several hundred MB, but the available records do not link the alerted activity to that agent or to CobaltVault.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T010-00325",
+     "T010-00331",
+     "T010-00362"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Collection-status metadata reports a winsec and Sysmon collection outage on FILE-HD-01 from 13:30 to 14:10 UTC, covering the alert time.",
+   "Collection-status metadata reports a proxy-logging outage on PROXY-HD-01 from 13:30 to 14:10 UTC, limiting visibility into proxied destinations and requests.",
+   "Zeek connection, DNS, and SSL sensors are reported as available, but the supplied records do not establish the alerted transfer's destination, process, or transferred content."
+  ],
+  "claims_not_established": [
+   "Whether a transfer of hundreds of MB actually occurred at the reported time, and its exact start, duration, and byte count.",
+   "Whether the transfer went directly to an external host or through the proxy, and what its destination was.",
+   "Which process or account initiated the transfer, and whether it was the approved CobaltVault agent.",
+   "What data, if any, was transferred, and whether the activity was authorized."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Obtain the original network-monitoring alert details and flow-level records, including exact timestamps, byte counts, destination, and whether the traffic traversed PROXY-HD-01.",
+   "Recover or obtain proxy access logs for 13:30\u201314:10 UTC, including requested hostnames, URLs, methods, and upload sizes.",
+   "Collect FILE-HD-01 process and application telemetry for the alert interval, including CobaltVault agent logs, execution records, and relevant service or scheduled-task history.",
+   "Correlate the destination and transfer details against CobaltVault service records and authorized backup-job history."
+  ],
+  "unrelated_findings": [
+   "At 13:39, PROXY-HD-01 initiated an SMB connection to FILE-HD-01. This is outside the alerted transfer evidence and should be reviewed separately if not expected. (T010-00251)",
+   "At 14:05, FILE-HD-01 initiated an RPC connection to WS-OHADDAD-01 on port 135. The stated practice is for remote administration to originate from WS-OHADDAD-01; review this directionality separately. (T010-00528, T010-00529, T010-00530)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 27.5
+}

@@ -1,0 +1,101 @@
+{
+ "scenario_id": "T203",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:44:59 UTC, Word opened C:\\\\Users\\\\mia.santos\\\\Downloads\\\\Statement.docm; at 13:45:01 UTC, Word launched PowerShell as its child process.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T203-00204\", \"T203-00205\", \"T203-00208\", \"T203-00209\"]\n    },\n    {\n      \"claim\": \"The PowerShell command used -nop, -w hidden, and -enc. Decoding the recorded command yields a download-and-execute expression that requests a script from raw.githubusercontent.com/bluefin-it/tools/main/u.ps1.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T203-00208\", \"T203-00209\"]\n    },\n    {\n      \"claim\": \"At 13:45:02 UTC, the proxy recorded a successful GET for that u.ps1 URL, and network records associate the proxy connection with the PowerShell process.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T203-00212\", \"T203-00213\", \"T203-00214\", \"T203-00217\"]\n    },\n    {\n      \"claim\": \"At 13:45:04 UTC, PowerShell launched rundll32 with C:\\\\Users\\\\mia.santos\\\\AppData\\\\Roaming\\\\svchelper.dll,Init; both processes exited shortly afterward.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T203-00219\", \"T203-00222\", \"T203-00223\", \"T203-00224\", \"T203-00225\", \"T203-00226\"]\n    },\n    {\n      \"claim\": \"The observed hidden, encoded PowerShell download sequence followed by execution of a DLL from the user's roaming profile is strongly indicative of malicious activity, even though the available records do not establish the downloaded script's contents.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T203-00208\", \"T203-00212\", \"T203-00219\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show the command line and proxy GET, but do not include the downloaded script contents.\",\n    \"The evidence does not include PowerShell script-block or AMSI content, or a record confirming the DLL's contents or signature.\",\n    \"The observed execution is at 13:45 UTC, several minutes after the reported approximate time of 13:40 UTC; the records provided do not establish what Mia saw at the exact reported time.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the document or downloaded script was intentionally authorized or how the document reached the workstation.\",\n    \"What actions the downloaded script or svchelper.dll performed, whether they established persistence, or whether data was accessed or exfiltrated.\",\n    \"Whether the user knowingly opened the document or initiated the observed activity.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze Statement.docm, including its origin, macros, and relevant document metadata.\",\n    \"Recover and analyze the exact u.ps1 response and svchelper.dll; collect hashes, signatures, and file-system timestamps.\",\n    \"Review endpoint security and PowerShell logs, including AMSI or script-block records if available, and investigate persistence and subsequent activity on WS-MSANTOS-01.\",\n    \"Check for related activity on other hosts and any evidence of access to or transfer of sensitive data.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 14:11:34 UTC, Chrome on WS-MSANTOS-01 connected to www.dropbox.com; Dropbox is not listed among approved services. Investigate separately; this connection does not determine the alerted PowerShell activity. (T203-00315, T203-00316, T203-00317, T203-00318)\",\n    \"Kerberos records show authentication for ken.ito originating from WS-MSANTOS-01's IP at 13:32 and 13:36, with corresponding logons on WS-KITO-01. The inventory says remote administration is only done from WS-KITO-01; investigate this separately, without treating it as evidence for the alerted PowerShell execution. (T203-00070, T203-00071, T203-00073, T203-00139, T203-00140, T203-00142)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 68205,
+    "output": 2412
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:44:59 UTC, Word opened C:\\Users\\mia.santos\\Downloads\\Statement.docm; at 13:45:01 UTC, Word launched PowerShell as its child process.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T203-00204",
+     "T203-00205",
+     "T203-00208",
+     "T203-00209"
+    ]
+   },
+   {
+    "claim": "The PowerShell command used -nop, -w hidden, and -enc. Decoding the recorded command yields a download-and-execute expression that requests a script from raw.githubusercontent.com/bluefin-it/tools/main/u.ps1.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T203-00208",
+     "T203-00209"
+    ]
+   },
+   {
+    "claim": "At 13:45:02 UTC, the proxy recorded a successful GET for that u.ps1 URL, and network records associate the proxy connection with the PowerShell process.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T203-00212",
+     "T203-00213",
+     "T203-00214",
+     "T203-00217"
+    ]
+   },
+   {
+    "claim": "At 13:45:04 UTC, PowerShell launched rundll32 with C:\\Users\\mia.santos\\AppData\\Roaming\\svchelper.dll,Init; both processes exited shortly afterward.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T203-00219",
+     "T203-00222",
+     "T203-00223",
+     "T203-00224",
+     "T203-00225",
+     "T203-00226"
+    ]
+   },
+   {
+    "claim": "The observed hidden, encoded PowerShell download sequence followed by execution of a DLL from the user's roaming profile is strongly indicative of malicious activity, even though the available records do not establish the downloaded script's contents.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T203-00208",
+     "T203-00212",
+     "T203-00219"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show the command line and proxy GET, but do not include the downloaded script contents.",
+   "The evidence does not include PowerShell script-block or AMSI content, or a record confirming the DLL's contents or signature.",
+   "The observed execution is at 13:45 UTC, several minutes after the reported approximate time of 13:40 UTC; the records provided do not establish what Mia saw at the exact reported time."
+  ],
+  "claims_not_established": [
+   "Whether the document or downloaded script was intentionally authorized or how the document reached the workstation.",
+   "What actions the downloaded script or svchelper.dll performed, whether they established persistence, or whether data was accessed or exfiltrated.",
+   "Whether the user knowingly opened the document or initiated the observed activity."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze Statement.docm, including its origin, macros, and relevant document metadata.",
+   "Recover and analyze the exact u.ps1 response and svchelper.dll; collect hashes, signatures, and file-system timestamps.",
+   "Review endpoint security and PowerShell logs, including AMSI or script-block records if available, and investigate persistence and subsequent activity on WS-MSANTOS-01.",
+   "Check for related activity on other hosts and any evidence of access to or transfer of sensitive data."
+  ],
+  "unrelated_findings": [
+   "At 14:11:34 UTC, Chrome on WS-MSANTOS-01 connected to www.dropbox.com; Dropbox is not listed among approved services. Investigate separately; this connection does not determine the alerted PowerShell activity. (T203-00315, T203-00316, T203-00317, T203-00318)",
+   "Kerberos records show authentication for ken.ito originating from WS-MSANTOS-01's IP at 13:32 and 13:36, with corresponding logons on WS-KITO-01. The inventory says remote administration is only done from WS-KITO-01; investigate this separately, without treating it as evidence for the alerted PowerShell execution. (T203-00070, T203-00071, T203-00073, T203-00139, T203-00140, T203-00142)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 19,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 25.1
+}

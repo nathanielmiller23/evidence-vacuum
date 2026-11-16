@@ -1,0 +1,91 @@
+{
+ "run_id": "A__T009__C1__20261115T043544Z",
+ "config": "A",
+ "scenario_id": "T009",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 373,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 155263,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:40 UTC, Maria Lopez ran PowerShell to compress \\\\\\\\FILE-HD-01\\\\Shared\\\\Clients into C:\\\\Users\\\\maria.lopez\\\\AppData\\\\Local\\\\Temp\\\\c.zip; Sysmon then recorded creation of that archive.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T009-00160\", \"T009-00161\", \"T009-00162\"]\n    },\n    {\n      \"claim\": \"At 13:45:59 UTC, the proxy recorded a CONNECT tunnel from WS-MLOPEZ-01 to sendbox-files.io with 51,000,000 client-to-server bytes; Zeek recorded approximately the same outbound volume for that connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T009-00192\", \"T009-00193\"]\n    },\n    {\n      \"claim\": \"The corresponding workstation network event identifies Firefox running as maria.lopez and connecting to the explicit proxy on the same source port as the transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T009-00194\", \"T009-00195\"]\n    },\n    {\n      \"claim\": \"The archive creation followed by a roughly 51 MB outbound tunnel to a file-transfer domain not listed among the organization's approved services strongly supports deliberate data exfiltration rather than an approved backup or routine application update.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T009-00160\", \"T009-00162\", \"T009-00192\", \"T009-00193\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The transfer is logged as a CONNECT tunnel; these records do not show the upload URL, uploaded filename, or application-layer contents (T009-00192, T009-00193).\",\n    \"The records establish archive creation and outbound volume but do not establish the archive's size, contents, or exact relationship to the tunneled bytes (T009-00160, T009-00162, T009-00192).\",\n    \"The available evidence does not show whether the remote service accepted or retained the data.\"\n  ],\n  \"claims_not_established\": [\n    \"The exact files included in c.zip and whether they contained client-sensitive information.\",\n    \"Whether Maria Lopez had authorization or a legitimate business reason to transfer these files.\",\n    \"Who controls sendbox-files.io, who received the data, and whether the remote service retained it.\",\n    \"Whether the 51,000,000 client-to-server tunnel bytes consisted entirely of the created archive.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine c.zip, including its size, hash, contents, and relevant filesystem timestamps.\",\n    \"Collect FILE-HD-01 SMB or file-access auditing for the Shared\\\\Clients path to identify files read during archive creation.\",\n    \"Obtain proxy TLS inspection, upload request, DNS, and destination-IP/provider records for sendbox-files.io to determine the uploaded object and recipient.\",\n    \"Confirm with Maria Lopez and relevant business owners whether the transfer was authorized, and preserve any supporting business records.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 57375,
+    "output": 1567,
+    "reasoning": 845
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "At 13:40 UTC, Maria Lopez ran PowerShell to compress \\\\FILE-HD-01\\Shared\\Clients into C:\\Users\\maria.lopez\\AppData\\Local\\Temp\\c.zip; Sysmon then recorded creation of that archive.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T009-00160",
+     "T009-00161",
+     "T009-00162"
+    ]
+   },
+   {
+    "claim": "At 13:45:59 UTC, the proxy recorded a CONNECT tunnel from WS-MLOPEZ-01 to sendbox-files.io with 51,000,000 client-to-server bytes; Zeek recorded approximately the same outbound volume for that connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T009-00192",
+     "T009-00193"
+    ]
+   },
+   {
+    "claim": "The corresponding workstation network event identifies Firefox running as maria.lopez and connecting to the explicit proxy on the same source port as the transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T009-00194",
+     "T009-00195"
+    ]
+   },
+   {
+    "claim": "The archive creation followed by a roughly 51 MB outbound tunnel to a file-transfer domain not listed among the organization's approved services strongly supports deliberate data exfiltration rather than an approved backup or routine application update.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T009-00160",
+     "T009-00162",
+     "T009-00192",
+     "T009-00193"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The transfer is logged as a CONNECT tunnel; these records do not show the upload URL, uploaded filename, or application-layer contents (T009-00192, T009-00193).",
+   "The records establish archive creation and outbound volume but do not establish the archive's size, contents, or exact relationship to the tunneled bytes (T009-00160, T009-00162, T009-00192).",
+   "The available evidence does not show whether the remote service accepted or retained the data."
+  ],
+  "claims_not_established": [
+   "The exact files included in c.zip and whether they contained client-sensitive information.",
+   "Whether Maria Lopez had authorization or a legitimate business reason to transfer these files.",
+   "Who controls sendbox-files.io, who received the data, and whether the remote service retained it.",
+   "Whether the 51,000,000 client-to-server tunnel bytes consisted entirely of the created archive."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine c.zip, including its size, hash, contents, and relevant filesystem timestamps.",
+   "Collect FILE-HD-01 SMB or file-access auditing for the Shared\\Clients path to identify files read during archive creation.",
+   "Obtain proxy TLS inspection, upload request, DNS, and destination-IP/provider records for sendbox-files.io to determine the uploaded object and recipient.",
+   "Confirm with Maria Lopez and relevant business owners whether the transfer was authorized, and preserve any supporting business records."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 16.2
+}

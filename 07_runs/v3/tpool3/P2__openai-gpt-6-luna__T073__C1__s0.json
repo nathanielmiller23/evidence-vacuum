@@ -1,0 +1,100 @@
+{
+ "scenario_id": "T073",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"WINWORD.EXE opened Statement.docm from Ana Ruiz's Downloads folder, and that document directly spawned PowerShell under Ana's account.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T073-00165\", \"T073-00169\", \"T073-00170\"]\n    },\n    {\n      \"claim\": \"The PowerShell command was hidden, used an encoded command, and decoded to an expression that downloads and executes a script from raw.githubusercontent.com.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T073-00169\", \"T073-00170\"]\n    },\n    {\n      \"claim\": \"The PowerShell process connected through the proxy to raw.githubusercontent.com, where the requested path was /pinecrest-it/tools/main/u.ps1 and the GET returned status 200.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T073-00171\", \"T073-00172\", \"T073-00174\", \"T073-00175\"]\n    },\n    {\n      \"claim\": \"PowerShell created a temporary file and then launched rundll32 with a DLL in Ana's Roaming profile; the DLL's Init export was specified.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T073-00176\", \"T073-00181\", \"T073-00182\"]\n    },\n    {\n      \"claim\": \"The document, concealed download-and-execute PowerShell, and subsequent rundll32 invocation of a user-profile DLL form a suspicious execution chain consistent with malicious activity and explain the reported brief PowerShell window.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T073-00165\", \"T073-00169\", \"T073-00172\", \"T073-00181\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show the requested script URL and a successful proxy GET, but do not include the downloaded script's contents.\",\n    \"The records do not provide the contents, hash, signature, or verdict for svchelper.dll; the observed invocation alone does not establish what its Init export did.\",\n    \"The temporary file creation is recorded, but the available records do not establish its contents or whether it was the downloaded script.\",\n    \"The evidence does not identify who opened the document or establish whether the activity was knowingly initiated by Ana.\"\n  ],\n  \"claims_not_established\": [\n    \"The behavior or impact of the downloaded script and DLL, including whether they established persistence, stole data, or contacted additional infrastructure.\",\n    \"Whether the document or script was intentionally placed on the workstation by Ana or another party.\",\n    \"Whether any data was accessed or exfiltrated as a result of this execution.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and analyze Statement.docm, u.ps1, svchelper.dll, and the created temporary file; collect hashes, signatures, and relevant timestamps.\",\n    \"Recover the proxy response or other content-capture evidence for the GitHub download and compare it with the file recovered from the workstation.\",\n    \"Collect endpoint detection, quarantine, and full process/file/registry telemetry around the execution to determine payload behavior, persistence, and scope.\",\n    \"Interview Ana Ruiz and establish how Statement.docm arrived on the workstation and whether she opened it.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox updater and client activity was observed on WS-ARUIZ-01. Dropbox is not among the organization's approved file-sharing or cloud-storage services; investigate separately. Records: T073-00111, T073-00112, T073-00259, T073-00261.\",\n    \"Cisco AnyConnect UI and agent processes were observed on WS-ARUIZ-01. The inventory states there is no VPN; these records show client processes, not that a VPN connection was established. Investigate separately. Records: T073-00041, T073-00237, T073-00238.\",\n    \"A Kerberos request for raj.patel originated from WS-ARUIZ-01, followed by a network logon to WS-RPATEL-01 from that workstation. This is inconsistent with the stated remote-administration practice and merits a separate review; it does not establish a connection to the later document-triggered activity. Records: T073-00103, T073-00105, T073-00107.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 59310,
+    "output": 1839
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "WINWORD.EXE opened Statement.docm from Ana Ruiz's Downloads folder, and that document directly spawned PowerShell under Ana's account.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T073-00165",
+     "T073-00169",
+     "T073-00170"
+    ]
+   },
+   {
+    "claim": "The PowerShell command was hidden, used an encoded command, and decoded to an expression that downloads and executes a script from raw.githubusercontent.com.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T073-00169",
+     "T073-00170"
+    ]
+   },
+   {
+    "claim": "The PowerShell process connected through the proxy to raw.githubusercontent.com, where the requested path was /pinecrest-it/tools/main/u.ps1 and the GET returned status 200.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T073-00171",
+     "T073-00172",
+     "T073-00174",
+     "T073-00175"
+    ]
+   },
+   {
+    "claim": "PowerShell created a temporary file and then launched rundll32 with a DLL in Ana's Roaming profile; the DLL's Init export was specified.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T073-00176",
+     "T073-00181",
+     "T073-00182"
+    ]
+   },
+   {
+    "claim": "The document, concealed download-and-execute PowerShell, and subsequent rundll32 invocation of a user-profile DLL form a suspicious execution chain consistent with malicious activity and explain the reported brief PowerShell window.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T073-00165",
+     "T073-00169",
+     "T073-00172",
+     "T073-00181"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show the requested script URL and a successful proxy GET, but do not include the downloaded script's contents.",
+   "The records do not provide the contents, hash, signature, or verdict for svchelper.dll; the observed invocation alone does not establish what its Init export did.",
+   "The temporary file creation is recorded, but the available records do not establish its contents or whether it was the downloaded script.",
+   "The evidence does not identify who opened the document or establish whether the activity was knowingly initiated by Ana."
+  ],
+  "claims_not_established": [
+   "The behavior or impact of the downloaded script and DLL, including whether they established persistence, stole data, or contacted additional infrastructure.",
+   "Whether the document or script was intentionally placed on the workstation by Ana or another party.",
+   "Whether any data was accessed or exfiltrated as a result of this execution."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and analyze Statement.docm, u.ps1, svchelper.dll, and the created temporary file; collect hashes, signatures, and relevant timestamps.",
+   "Recover the proxy response or other content-capture evidence for the GitHub download and compare it with the file recovered from the workstation.",
+   "Collect endpoint detection, quarantine, and full process/file/registry telemetry around the execution to determine payload behavior, persistence, and scope.",
+   "Interview Ana Ruiz and establish how Statement.docm arrived on the workstation and whether she opened it."
+  ],
+  "unrelated_findings": [
+   "Dropbox updater and client activity was observed on WS-ARUIZ-01. Dropbox is not among the organization's approved file-sharing or cloud-storage services; investigate separately. Records: T073-00111, T073-00112, T073-00259, T073-00261.",
+   "Cisco AnyConnect UI and agent processes were observed on WS-ARUIZ-01. The inventory states there is no VPN; these records show client processes, not that a VPN connection was established. Investigate separately. Records: T073-00041, T073-00237, T073-00238.",
+   "A Kerberos request for raj.patel originated from WS-ARUIZ-01, followed by a network logon to WS-RPATEL-01 from that workstation. This is inconsistent with the stated remote-administration practice and merits a separate review; it does not establish a connection to the later document-triggered activity. Records: T073-00103, T073-00105, T073-00107."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 16,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 19.2
+}

@@ -1,0 +1,104 @@
+{
+ "scenario_id": "T253",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "error": "APIConnectionError: Connection error."
+  },
+  {
+   "error": "APIConnectionError: Connection error."
+  },
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"On WS-ZADAMS-01, zoe.adams opened C:\\\\Users\\\\zoe.adams\\\\Downloads\\\\Statement.docm in Microsoft Word; Word then spawned PowerShell under her account.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T253-00114\", \"T253-00118\", \"T253-00119\"]\n    },\n    {\n      \"claim\": \"The PowerShell command used -nop, -w hidden, and -enc. The encoded command decodes to an expression that uses Net.WebClient.DownloadString to request https://raw.githubusercontent.com/sunridge-it/tools/main/u.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T253-00118\", \"T253-00119\"]\n    },\n    {\n      \"claim\": \"PowerShell made connections through the proxy at 10.55.20.30:8080 shortly after launch; the recorded connections transferred response data.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T253-00122\", \"T253-00123\", \"T253-00124\", \"T253-00126\", \"T253-00127\", \"T253-00128\"]\n    },\n    {\n      \"claim\": \"PowerShell then launched rundll32.exe to execute C:\\\\Users\\\\zoe.adams\\\\AppData\\\\Roaming\\\\svchelper.dll,Init. This Office-to-hidden-PowerShell-to-downloaded-script-and-DLL execution sequence supports a malicious-activity finding.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T253-00118\", \"T253-00129\", \"T253-00130\"]\n    },\n    {\n      \"claim\": \"The logged PowerShell process ended at 13:43:36 UTC; its recorded start was 13:42:46 UTC, later than the ticket's approximate 13:40 report.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T253-00118\", \"T253-00135\", \"T253-00136\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available records show the PowerShell command line and proxy connection metadata, but do not include the downloaded script or DLL contents, file hashes, or full proxy request/response details (T253-00118, T253-00123, T253-00127, T253-00129).\",\n    \"The records show process creation and termination, but do not establish what the script or DLL did after execution or whether it caused lasting effects (T253-00129, T253-00130, T253-00133, T253-00136).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the requested script or DLL contents were malicious, what actions they performed, or whether execution achieved its intended effect.\",\n    \"How Statement.docm arrived on the workstation, who authored or sent it, or whether zoe.adams knowingly opened it.\",\n    \"Whether the activity created persistence, accessed sensitive data, or affected other systems.\",\n    \"Whether the GitHub URL or its contents were authorized by the organization.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire Statement.docm and the downloaded script and svchelper.dll; record hashes and analyze their contents.\",\n    \"Collect full proxy transaction logs for the requests associated with the PowerShell connections at 13:42:48 and 13:42:55 UTC, including URLs, headers, and response bodies if available.\",\n    \"Review endpoint security detections, file-creation and persistence telemetry, and relevant forensic artifacts on WS-ZADAMS-01.\",\n    \"Establish the document's source and whether the GitHub repository and script were authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox updater processes ran on WS-ZADAMS-01. Dropbox is not among the organization's approved file-sharing or cloud-storage services, so review this separately; the available records do not show that Dropbox was part of the alerted PowerShell activity (T253-00030, T253-00031, T253-00032, T253-00033, T253-00198, T253-00199, T253-00200, T253-00201).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 44641,
+    "output": 2017
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "On WS-ZADAMS-01, zoe.adams opened C:\\Users\\zoe.adams\\Downloads\\Statement.docm in Microsoft Word; Word then spawned PowerShell under her account.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T253-00114",
+     "T253-00118",
+     "T253-00119"
+    ]
+   },
+   {
+    "claim": "The PowerShell command used -nop, -w hidden, and -enc. The encoded command decodes to an expression that uses Net.WebClient.DownloadString to request https://raw.githubusercontent.com/sunridge-it/tools/main/u.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T253-00118",
+     "T253-00119"
+    ]
+   },
+   {
+    "claim": "PowerShell made connections through the proxy at 10.55.20.30:8080 shortly after launch; the recorded connections transferred response data.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T253-00122",
+     "T253-00123",
+     "T253-00124",
+     "T253-00126",
+     "T253-00127",
+     "T253-00128"
+    ]
+   },
+   {
+    "claim": "PowerShell then launched rundll32.exe to execute C:\\Users\\zoe.adams\\AppData\\Roaming\\svchelper.dll,Init. This Office-to-hidden-PowerShell-to-downloaded-script-and-DLL execution sequence supports a malicious-activity finding.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T253-00118",
+     "T253-00129",
+     "T253-00130"
+    ]
+   },
+   {
+    "claim": "The logged PowerShell process ended at 13:43:36 UTC; its recorded start was 13:42:46 UTC, later than the ticket's approximate 13:40 report.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T253-00118",
+     "T253-00135",
+     "T253-00136"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available records show the PowerShell command line and proxy connection metadata, but do not include the downloaded script or DLL contents, file hashes, or full proxy request/response details (T253-00118, T253-00123, T253-00127, T253-00129).",
+   "The records show process creation and termination, but do not establish what the script or DLL did after execution or whether it caused lasting effects (T253-00129, T253-00130, T253-00133, T253-00136)."
+  ],
+  "claims_not_established": [
+   "Whether the requested script or DLL contents were malicious, what actions they performed, or whether execution achieved its intended effect.",
+   "How Statement.docm arrived on the workstation, who authored or sent it, or whether zoe.adams knowingly opened it.",
+   "Whether the activity created persistence, accessed sensitive data, or affected other systems.",
+   "Whether the GitHub URL or its contents were authorized by the organization."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire Statement.docm and the downloaded script and svchelper.dll; record hashes and analyze their contents.",
+   "Collect full proxy transaction logs for the requests associated with the PowerShell connections at 13:42:48 and 13:42:55 UTC, including URLs, headers, and response bodies if available.",
+   "Review endpoint security detections, file-creation and persistence telemetry, and relevant forensic artifacts on WS-ZADAMS-01.",
+   "Establish the document's source and whether the GitHub repository and script were authorized."
+  ],
+  "unrelated_findings": [
+   "Dropbox updater processes ran on WS-ZADAMS-01. Dropbox is not among the organization's approved file-sharing or cloud-storage services, so review this separately; the available records do not show that Dropbox was part of the alerted PowerShell activity (T253-00030, T253-00031, T253-00032, T253-00033, T253-00198, T253-00199, T253-00200, T253-00201)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 17,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 48.5
+}

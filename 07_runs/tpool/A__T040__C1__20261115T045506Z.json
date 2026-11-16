@@ -1,0 +1,106 @@
+{
+ "run_id": "A__T040__C1__20261115T045506Z",
+ "config": "A",
+ "scenario_id": "T040",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 478,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 190604,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.87,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The large transfer is consistent with the approved backup activity: FILE-NWD-01 ran the inventoried StratoSafe executable as svc-archive against ingest.stratosafe-backup.com, and proxy/Zeek records show about 640 MB sent to that destination.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T040-00197\", \"T040-00199\", \"T040-00204\", \"T040-00206\", \"T040-00207\"]\n    },\n    {\n      \"claim\": \"A Kerberos service-ticket event for svc-archive targeting FILE-NWD-01$ records a source IP of 139.162.174.124, an external address inconsistent with the stated absence of VPN and remote-administration practice.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T040-00193\"]\n    },\n    {\n      \"claim\": \"nora.blake, identified as help desk rather than an administrator, established an RDP session to FILE-NWD-01; the successful type-10 logon came from WS-NBLAKE-01, contrary to the stated practice that remote administration is only from WS-SOKAFOR-01.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T040-00098\", \"T040-00103\", \"T040-00113\"]\n    },\n    {\n      \"claim\": \"A SYSTEM PowerShell process explicitly used svc-archive credentials against DC-NWD-01, and shortly afterward DC-NWD-01 recorded a successful network logon for sam.okafor from FILE-NWD-01 using NTLM. This credential use and cross-host authentication are suspicious in context.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T040-00274\", \"T040-00277\", \"T040-00278\", \"T040-00279\"]\n    },\n    {\n      \"claim\": \"The evidence supports a malicious-activity finding for the surrounding access and credential-use activity, but does not establish that the observed backup transfer itself was unauthorized.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T040-00193\", \"T040-00197\", \"T040-00199\", \"T040-00204\", \"T040-00277\", \"T040-00279\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The bulk transfer is recorded as an HTTPS CONNECT tunnel; the proxy logs a peek/tunnel and an inspected GET, but the provided records do not expose the transferred payload contents. Records: T040-00199, T040-00200, T040-00201, T040-00204.\",\n    \"The provided records do not attribute the external-IP Kerberos ticket event to a specific process or establish what client used that address. Record: T040-00193.\",\n    \"The supplied evidence does not include the contents of the PowerShell script, backup job manifest, or files included in the transfer.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the 640 MB consisted solely of expected backup data or included unauthorized data.\",\n    \"Whether the external-IP ticket event was attacker activity, and whether it is causally related to the local svc-archive backup process.\",\n    \"Why the SYSTEM PowerShell process used svc-archive credentials, and whether the subsequent sam.okafor network logon was authorized.\",\n    \"Whether nora.blake's RDP session involved malicious actions or was an unauthorized but benign policy violation.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"StratoSafe job logs and manifests, including source files, destination object names, and confirmation that the transfer was expected.\",\n    \"Proxy and TLS inspection details, plus endpoint network/process telemetry, to correlate the external ticket event and transfer with originating processes or sessions.\",\n    \"Domain-controller authentication details and network/device attribution for the 139.162.174.124 ticket event.\",\n    \"The contents and execution history of C:\\\\Scripts\\\\certificate-health.ps1, and relevant credential-use or secret-access audit records.\",\n    \"RDP session activity for nora.blake on FILE-NWD-01, including commands, file access, and session authorization.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 70547,
+    "output": 2592,
+    "reasoning": 1637
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.87,
+  "supporting_observations": [
+   {
+    "claim": "The large transfer is consistent with the approved backup activity: FILE-NWD-01 ran the inventoried StratoSafe executable as svc-archive against ingest.stratosafe-backup.com, and proxy/Zeek records show about 640 MB sent to that destination.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T040-00197",
+     "T040-00199",
+     "T040-00204",
+     "T040-00206",
+     "T040-00207"
+    ]
+   },
+   {
+    "claim": "A Kerberos service-ticket event for svc-archive targeting FILE-NWD-01$ records a source IP of 139.162.174.124, an external address inconsistent with the stated absence of VPN and remote-administration practice.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T040-00193"
+    ]
+   },
+   {
+    "claim": "nora.blake, identified as help desk rather than an administrator, established an RDP session to FILE-NWD-01; the successful type-10 logon came from WS-NBLAKE-01, contrary to the stated practice that remote administration is only from WS-SOKAFOR-01.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T040-00098",
+     "T040-00103",
+     "T040-00113"
+    ]
+   },
+   {
+    "claim": "A SYSTEM PowerShell process explicitly used svc-archive credentials against DC-NWD-01, and shortly afterward DC-NWD-01 recorded a successful network logon for sam.okafor from FILE-NWD-01 using NTLM. This credential use and cross-host authentication are suspicious in context.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T040-00274",
+     "T040-00277",
+     "T040-00278",
+     "T040-00279"
+    ]
+   },
+   {
+    "claim": "The evidence supports a malicious-activity finding for the surrounding access and credential-use activity, but does not establish that the observed backup transfer itself was unauthorized.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T040-00193",
+     "T040-00197",
+     "T040-00199",
+     "T040-00204",
+     "T040-00277",
+     "T040-00279"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The bulk transfer is recorded as an HTTPS CONNECT tunnel; the proxy logs a peek/tunnel and an inspected GET, but the provided records do not expose the transferred payload contents. Records: T040-00199, T040-00200, T040-00201, T040-00204.",
+   "The provided records do not attribute the external-IP Kerberos ticket event to a specific process or establish what client used that address. Record: T040-00193.",
+   "The supplied evidence does not include the contents of the PowerShell script, backup job manifest, or files included in the transfer."
+  ],
+  "claims_not_established": [
+   "Whether the 640 MB consisted solely of expected backup data or included unauthorized data.",
+   "Whether the external-IP ticket event was attacker activity, and whether it is causally related to the local svc-archive backup process.",
+   "Why the SYSTEM PowerShell process used svc-archive credentials, and whether the subsequent sam.okafor network logon was authorized.",
+   "Whether nora.blake's RDP session involved malicious actions or was an unauthorized but benign policy violation."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "StratoSafe job logs and manifests, including source files, destination object names, and confirmation that the transfer was expected.",
+   "Proxy and TLS inspection details, plus endpoint network/process telemetry, to correlate the external ticket event and transfer with originating processes or sessions.",
+   "Domain-controller authentication details and network/device attribution for the 139.162.174.124 ticket event.",
+   "The contents and execution history of C:\\Scripts\\certificate-health.ps1, and relevant credential-use or secret-access audit records.",
+   "RDP session activity for nora.blake on FILE-NWD-01, including commands, file access, and session authorization."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 19,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 25.3
+}

@@ -1,0 +1,96 @@
+{
+ "scenario_id": "T043",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 1,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:41:50 UTC, ivy.chen launched WINWORD.EXE with C:\\\\Users\\\\ivy.chen\\\\Downloads\\\\Statement.docm from Explorer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T043-00124\", \"T043-00125\"]\n    },\n    {\n      \"claim\": \"Two seconds later, Word spawned PowerShell with no-profile, hidden-window, and encoded-command options. The encoded command decodes to an Invoke-Expression call that downloads a script using WebClient from https://raw.githubusercontent.com/nwd-it/tools/main/u.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T043-00128\", \"T043-00129\"]\n    },\n    {\n      \"claim\": \"The proxy recorded a successful HTTP GET (status 200) for that u.ps1 URL, and the PowerShell process connected through the configured proxy.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T043-00132\", \"T043-00133\", \"T043-00135\", \"T043-00138\"]\n    },\n    {\n      \"claim\": \"PowerShell then spawned rundll32.exe with a command line referencing C:\\\\Users\\\\ivy.chen\\\\AppData\\\\Roaming\\\\svchelper.dll,Init.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T043-00139\", \"T043-00140\"]\n    },\n    {\n      \"claim\": \"The sequence of a macro-enabled document opening, hidden encoded PowerShell downloading a script, and PowerShell launching rundll32 against a DLL in the user's Roaming profile strongly supports malicious execution as the alerted activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T043-00124\", \"T043-00128\", \"T043-00132\", \"T043-00139\", \"T043-00140\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available records show the downloaded script request and status but do not include the script response content, so its exact contents and behavior are not established (T043-00132).\",\n    \"The process records show rundll32 referencing svchelper.dll, but do not establish the DLL's contents, provenance, or whether its entry point completed successfully (T043-00139, T043-00140).\",\n    \"The available records do not establish whether the document's macro was enabled by the user or how the document was obtained (T043-00124, T043-00128).\"\n  ],\n  \"claims_not_established\": [\n    \"The identity or intent of whoever supplied or authored Statement.docm.\",\n    \"The exact actions performed by u.ps1 or svchelper.dll, including whether they established persistence, accessed data, or communicated with additional destinations.\",\n    \"Whether the activity affected other hosts or accounts beyond the observed activity on WS-ICHEN-01.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze Statement.docm, including its macro contents and file metadata.\",\n    \"Retrieve the exact u.ps1 content served at the recorded time and preserve the proxy response if available.\",\n    \"Acquire svchelper.dll, calculate its hash, and analyze its contents and metadata.\",\n    \"Review endpoint protection and forensic telemetry for follow-on activity, persistence, credential access, and other network connections on WS-ICHEN-01.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate review: records show sam.okafor Kerberos ticket activity originating from 10.40.10.21, followed by a network logon to WS-SOKAFOR-01 identifying WS-ICHEN-01 as the workstation. The relationship to the alerted document/PowerShell sequence is not established; this observation is not used to decide the alert (T043-00080, T043-00082, T043-00084).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 41791,
+    "output": 2418
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:41:50 UTC, ivy.chen launched WINWORD.EXE with C:\\Users\\ivy.chen\\Downloads\\Statement.docm from Explorer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T043-00124",
+     "T043-00125"
+    ]
+   },
+   {
+    "claim": "Two seconds later, Word spawned PowerShell with no-profile, hidden-window, and encoded-command options. The encoded command decodes to an Invoke-Expression call that downloads a script using WebClient from https://raw.githubusercontent.com/nwd-it/tools/main/u.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T043-00128",
+     "T043-00129"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a successful HTTP GET (status 200) for that u.ps1 URL, and the PowerShell process connected through the configured proxy.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T043-00132",
+     "T043-00133",
+     "T043-00135",
+     "T043-00138"
+    ]
+   },
+   {
+    "claim": "PowerShell then spawned rundll32.exe with a command line referencing C:\\Users\\ivy.chen\\AppData\\Roaming\\svchelper.dll,Init.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T043-00139",
+     "T043-00140"
+    ]
+   },
+   {
+    "claim": "The sequence of a macro-enabled document opening, hidden encoded PowerShell downloading a script, and PowerShell launching rundll32 against a DLL in the user's Roaming profile strongly supports malicious execution as the alerted activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T043-00124",
+     "T043-00128",
+     "T043-00132",
+     "T043-00139",
+     "T043-00140"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available records show the downloaded script request and status but do not include the script response content, so its exact contents and behavior are not established (T043-00132).",
+   "The process records show rundll32 referencing svchelper.dll, but do not establish the DLL's contents, provenance, or whether its entry point completed successfully (T043-00139, T043-00140).",
+   "The available records do not establish whether the document's macro was enabled by the user or how the document was obtained (T043-00124, T043-00128)."
+  ],
+  "claims_not_established": [
+   "The identity or intent of whoever supplied or authored Statement.docm.",
+   "The exact actions performed by u.ps1 or svchelper.dll, including whether they established persistence, accessed data, or communicated with additional destinations.",
+   "Whether the activity affected other hosts or accounts beyond the observed activity on WS-ICHEN-01."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze Statement.docm, including its macro contents and file metadata.",
+   "Retrieve the exact u.ps1 content served at the recorded time and preserve the proxy response if available.",
+   "Acquire svchelper.dll, calculate its hash, and analyze its contents and metadata.",
+   "Review endpoint protection and forensic telemetry for follow-on activity, persistence, credential access, and other network connections on WS-ICHEN-01."
+  ],
+  "unrelated_findings": [
+   "Separate review: records show sam.okafor Kerberos ticket activity originating from 10.40.10.21, followed by a network logon to WS-SOKAFOR-01 identifying WS-ICHEN-01 as the workstation. The relationship to the alerted document/PowerShell sequence is not established; this observation is not used to decide the alert (T043-00080, T043-00082, T043-00084)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.3
+}

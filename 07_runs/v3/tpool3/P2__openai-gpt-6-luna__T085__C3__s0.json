@@ -1,0 +1,103 @@
+{
+ "scenario_id": "T085",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.92,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"WS-TWEBER-01 made repeated HTTPS CONNECT requests through PROXY-PIN-01 to update.medledger.co at roughly five-minute intervals from 13:36 to 14:06 UTC; one request received a proxy 503 response.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T085-00136\",\n        \"T085-00190\",\n        \"T085-00212\",\n        \"T085-00259\",\n        \"T085-00313\",\n        \"T085-00331\",\n        \"T085-00338\"\n      ]\n    },\n    {\n      \"claim\": \"Sysmon network events attribute these recurring proxy connections to medledgerupd.exe running from Tom Weber's AppData\\\\Local\\\\MediLedger directory, rather than the inventory-listed C:\\\\Program Files\\\\MediLedger path.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T085-00133\",\n        \"T085-00134\",\n        \"T085-00138\",\n        \"T085-00139\",\n        \"T085-00192\",\n        \"T085-00193\",\n        \"T085-00214\",\n        \"T085-00215\",\n        \"T085-00315\",\n        \"T085-00316\",\n        \"T085-00333\",\n        \"T085-00334\",\n        \"T085-00340\",\n        \"T085-00341\"\n      ]\n    },\n    {\n      \"claim\": \"The observed updater domain is update.medledger.co, whereas the supplied inventory identifies update.medledger.com as the approved MediLedger update destination. Together with the different executable location and recurring connections, this supports a malicious lookalike/beaconing interpretation of the alerted activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T085-00136\",\n        \"T085-00139\",\n        \"T085-00212\",\n        \"T085-00215\",\n        \"T085-00313\",\n        \"T085-00316\",\n        \"T085-00331\",\n        \"T085-00334\",\n        \"T085-00338\",\n        \"T085-00341\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied sensor status reports that WS-ESTONE-01 winsec and Sysmon telemetry was not collected from 13:30 to 14:00 UTC. Zeek still records TLS sessions from that host to WS-TWEBER-01 during that period, but the initiating process on WS-ESTONE-01 cannot be established from the available host telemetry (T085-00175, T085-00177, T085-00187, T085-00189).\",\n    \"The proxy records CONNECT tunnels and their metadata; they do not establish the contents of the encrypted sessions.\"\n  ],\n  \"claims_not_established\": [\n    \"The identity or control of the party operating update.medledger.co, or whether the domain is legitimately associated with any MediLedger software.\",\n    \"The updater binary's signature, hash, provenance, installation method, or file contents.\",\n    \"Whether any data was collected or exfiltrated through the recurring connections.\",\n    \"Whether the updater activity was initiated by Tom Weber or by another party/process acting in his user context.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and analyze the medledgerupd.exe binary and its installation artifacts; obtain its hash, signature, and provenance.\",\n    \"Investigate ownership, DNS history, and reputation of update.medledger.co and compare it with the approved update.medledger.com service.\",\n    \"Obtain proxy, endpoint, and network detail sufficient to determine the encrypted sessions' destinations and contents, and check for related activity on other hosts.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate ticket: WS-TWEBER-01 initiated SSH to PROXY-PIN-01 on port 22, an unlisted service for the workstation and inconsistent with the stated remote-administration practice (T085-00050, T085-00051, T085-00052).\",\n    \"Separate ticket: Tom Weber ran sqlcmd with a command to back up a reporting database to D:\\\\Backups\\\\webapp_prod.bak and attempted a connection to 10.0.2.50:1433; the recorded connection is S0 with no bytes, so successful access or backup is not established (T085-00083, T085-00085, T085-00086).\",\n    \"Separate ticket: raj.patel credentials were authenticated in network logons associated with WS-TWEBER-01, despite the stated practice that remote administration is only from WS-RPATEL-01; these records do not establish that an administrative action occurred (T085-00081, T085-00082, T085-00267, T085-00268).\",\n    \"Separate ticket: Google Drive File Stream ran on WS-TWEBER-01 even though the inventory says no other file-sharing or cloud-storage services are approved (T085-00282, T085-00283, T085-00284).\",\n    \"Separate ticket: Meridian OpsAgent ran on WS-TWEBER-01 and generated an explicit-credentials event targeting svc-billing; this activity is outside the alerted recurring HTTPS connections (T085-00386, T085-00387, T085-00388).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 64583,
+    "output": 3042
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.92,
+  "supporting_observations": [
+   {
+    "claim": "WS-TWEBER-01 made repeated HTTPS CONNECT requests through PROXY-PIN-01 to update.medledger.co at roughly five-minute intervals from 13:36 to 14:06 UTC; one request received a proxy 503 response.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T085-00136",
+     "T085-00190",
+     "T085-00212",
+     "T085-00259",
+     "T085-00313",
+     "T085-00331",
+     "T085-00338"
+    ]
+   },
+   {
+    "claim": "Sysmon network events attribute these recurring proxy connections to medledgerupd.exe running from Tom Weber's AppData\\Local\\MediLedger directory, rather than the inventory-listed C:\\Program Files\\MediLedger path.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T085-00133",
+     "T085-00134",
+     "T085-00138",
+     "T085-00139",
+     "T085-00192",
+     "T085-00193",
+     "T085-00214",
+     "T085-00215",
+     "T085-00315",
+     "T085-00316",
+     "T085-00333",
+     "T085-00334",
+     "T085-00340",
+     "T085-00341"
+    ]
+   },
+   {
+    "claim": "The observed updater domain is update.medledger.co, whereas the supplied inventory identifies update.medledger.com as the approved MediLedger update destination. Together with the different executable location and recurring connections, this supports a malicious lookalike/beaconing interpretation of the alerted activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T085-00136",
+     "T085-00139",
+     "T085-00212",
+     "T085-00215",
+     "T085-00313",
+     "T085-00316",
+     "T085-00331",
+     "T085-00334",
+     "T085-00338",
+     "T085-00341"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied sensor status reports that WS-ESTONE-01 winsec and Sysmon telemetry was not collected from 13:30 to 14:00 UTC. Zeek still records TLS sessions from that host to WS-TWEBER-01 during that period, but the initiating process on WS-ESTONE-01 cannot be established from the available host telemetry (T085-00175, T085-00177, T085-00187, T085-00189).",
+   "The proxy records CONNECT tunnels and their metadata; they do not establish the contents of the encrypted sessions."
+  ],
+  "claims_not_established": [
+   "The identity or control of the party operating update.medledger.co, or whether the domain is legitimately associated with any MediLedger software.",
+   "The updater binary's signature, hash, provenance, installation method, or file contents.",
+   "Whether any data was collected or exfiltrated through the recurring connections.",
+   "Whether the updater activity was initiated by Tom Weber or by another party/process acting in his user context."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and analyze the medledgerupd.exe binary and its installation artifacts; obtain its hash, signature, and provenance.",
+   "Investigate ownership, DNS history, and reputation of update.medledger.co and compare it with the approved update.medledger.com service.",
+   "Obtain proxy, endpoint, and network detail sufficient to determine the encrypted sessions' destinations and contents, and check for related activity on other hosts."
+  ],
+  "unrelated_findings": [
+   "Separate ticket: WS-TWEBER-01 initiated SSH to PROXY-PIN-01 on port 22, an unlisted service for the workstation and inconsistent with the stated remote-administration practice (T085-00050, T085-00051, T085-00052).",
+   "Separate ticket: Tom Weber ran sqlcmd with a command to back up a reporting database to D:\\Backups\\webapp_prod.bak and attempted a connection to 10.0.2.50:1433; the recorded connection is S0 with no bytes, so successful access or backup is not established (T085-00083, T085-00085, T085-00086).",
+   "Separate ticket: raj.patel credentials were authenticated in network logons associated with WS-TWEBER-01, despite the stated practice that remote administration is only from WS-RPATEL-01; these records do not establish that an administrative action occurred (T085-00081, T085-00082, T085-00267, T085-00268).",
+   "Separate ticket: Google Drive File Stream ran on WS-TWEBER-01 even though the inventory says no other file-sharing or cloud-storage services are approved (T085-00282, T085-00283, T085-00284).",
+   "Separate ticket: Meridian OpsAgent ran on WS-TWEBER-01 and generated an explicit-credentials event targeting svc-billing; this activity is outside the alerted recurring HTTPS connections (T085-00386, T085-00387, T085-00388)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 31,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 29.7
+}

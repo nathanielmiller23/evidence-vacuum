@@ -1,0 +1,86 @@
+{
+ "scenario_id": "T037",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 2,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.95,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:41:49 UTC, the domain controller recorded creation of the account sysmaint, attributed to NWD\\\\sam.okafor.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T037-00109\"]\n    },\n    {\n      \"claim\": \"Two seconds later, the domain controller recorded sysmaint being added to the Administrators group by NWD\\\\sam.okafor, giving the new account administrative membership.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T037-00110\"]\n    },\n    {\n      \"claim\": \"The account name and administrator membership are inconsistent with the stated help-desk temporary-account practice, which uses ext.<name> accounts and never grants them administrator rights; the inventory identifies sam.okafor as the only IT administrator.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T037-00109\", \"T037-00110\"]\n    },\n    {\n      \"claim\": \"A remote-interactive logon for sam.okafor was recorded on WS-LMARTINS-01 from 203.0.113.250 shortly before the account change. The inventory says remote administration is only done from WS-SOKAFOR-01 and that there is no VPN, making this an inconsistent context for the activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T037-00073\", \"T037-00074\", \"T037-00075\", \"T037-00076\", \"T037-00109\", \"T037-00110\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The account-creation and group-change records identify sam.okafor and logon ID 0x11d4adcd, but the provided evidence does not map that logon ID to a source host or session.\",\n    \"The observed remote-interactive session on WS-LMARTINS-01 has logon ID 0x3fdf003, which differs from the logon ID on the domain-controller account-change records; the evidence does not establish that the account changes came from that session.\",\n    \"The evidence does not include a change approval or other confirmation of authorization for creating sysmaint or granting it administrator membership.\"\n  ],\n  \"claims_not_established\": [\n    \"That the observed WS-LMARTINS-01 remote-interactive session performed the sysmaint account changes.\",\n    \"Who controlled the session or whether sam.okafor's credentials were compromised.\",\n    \"Whether sysmaint was used after creation, or what access or actions it may have performed.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate domain-controller logon ID 0x11d4adcd with its originating host, authentication events, and session.\",\n    \"Check change-management records and obtain confirmation from sam.okafor regarding the account creation and administrator-group addition.\",\n    \"Review subsequent authentication and activity for sysmaint, and preserve relevant domain-controller and workstation logs.\",\n    \"If authorization cannot be promptly verified, assess disabling sysmaint and removing its administrator membership while preserving evidence.\"\n  ],\n  \"unrelated_findings\": [\n    \"A scheduled task named HealthCheck was created on WS-LMARTINS-01 under sam.okafor's observed workstation logon. Its hidden PowerShell command uses an encoded argument that appears to retrieve a script from http://203.0.113.250/a.ps1. Investigate separately; it is not used as proof that the alerted account changes came from that session. (T037-00111)\",\n    \"Dropbox is installed and running on WS-LMARTINS-01, although the inventory does not list it among approved services or software. Investigate separately. (T037-00048, T037-00049, T037-00050)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 29868,
+    "output": 2400
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.95,
+  "supporting_observations": [
+   {
+    "claim": "At 13:41:49 UTC, the domain controller recorded creation of the account sysmaint, attributed to NWD\\sam.okafor.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00109"
+    ]
+   },
+   {
+    "claim": "Two seconds later, the domain controller recorded sysmaint being added to the Administrators group by NWD\\sam.okafor, giving the new account administrative membership.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00110"
+    ]
+   },
+   {
+    "claim": "The account name and administrator membership are inconsistent with the stated help-desk temporary-account practice, which uses ext.<name> accounts and never grants them administrator rights; the inventory identifies sam.okafor as the only IT administrator.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T037-00109",
+     "T037-00110"
+    ]
+   },
+   {
+    "claim": "A remote-interactive logon for sam.okafor was recorded on WS-LMARTINS-01 from 203.0.113.250 shortly before the account change. The inventory says remote administration is only done from WS-SOKAFOR-01 and that there is no VPN, making this an inconsistent context for the activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T037-00073",
+     "T037-00074",
+     "T037-00075",
+     "T037-00076",
+     "T037-00109",
+     "T037-00110"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The account-creation and group-change records identify sam.okafor and logon ID 0x11d4adcd, but the provided evidence does not map that logon ID to a source host or session.",
+   "The observed remote-interactive session on WS-LMARTINS-01 has logon ID 0x3fdf003, which differs from the logon ID on the domain-controller account-change records; the evidence does not establish that the account changes came from that session.",
+   "The evidence does not include a change approval or other confirmation of authorization for creating sysmaint or granting it administrator membership."
+  ],
+  "claims_not_established": [
+   "That the observed WS-LMARTINS-01 remote-interactive session performed the sysmaint account changes.",
+   "Who controlled the session or whether sam.okafor's credentials were compromised.",
+   "Whether sysmaint was used after creation, or what access or actions it may have performed."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate domain-controller logon ID 0x11d4adcd with its originating host, authentication events, and session.",
+   "Check change-management records and obtain confirmation from sam.okafor regarding the account creation and administrator-group addition.",
+   "Review subsequent authentication and activity for sysmaint, and preserve relevant domain-controller and workstation logs.",
+   "If authorization cannot be promptly verified, assess disabling sysmaint and removing its administrator membership while preserving evidence."
+  ],
+  "unrelated_findings": [
+   "A scheduled task named HealthCheck was created on WS-LMARTINS-01 under sam.okafor's observed workstation logon. Its hidden PowerShell command uses an encoded argument that appears to retrieve a script from http://203.0.113.250/a.ps1. Investigate separately; it is not used as proof that the alerted account changes came from that session. (T037-00111)",
+   "Dropbox is installed and running on WS-LMARTINS-01, although the inventory does not list it among approved services or software. Investigate separately. (T037-00048, T037-00049, T037-00050)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 24.6
+}

@@ -1,0 +1,96 @@
+{
+ "scenario_id": "T076",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"WS-TWEBER-01 (10.51.10.22) made repeated connections to 10.51.20.30:8080 during the review window. Recorded examples span 13:36:11 through 14:06:01 UTC and include flows at 13:37:20, 13:41:02, 13:45:43, 13:47:23, 13:50:50, 13:55:43, and 14:00:51 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T076-00228\",\n        \"T076-00232\",\n        \"T076-00275\",\n        \"T076-00316\",\n        \"T076-00347\",\n        \"T076-00388\",\n        \"T076-00402\",\n        \"T076-00421\",\n        \"T076-00435\"\n      ]\n    },\n    {\n      \"claim\": \"The recorded intervals are not uniformly five minutes: for example, connections at 13:36:11 and 13:37:20 are about a minute apart, while later examples include gaps of roughly four to six minutes. The supplied records therefore show repeated proxy traffic, but do not by themselves establish a consistent five-minute cadence across the whole alerted period.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T076-00228\",\n        \"T076-00232\",\n        \"T076-00275\",\n        \"T076-00316\",\n        \"T076-00347\",\n        \"T076-00388\",\n        \"T076-00402\",\n        \"T076-00421\",\n        \"T076-00435\"\n      ]\n    },\n    {\n      \"claim\": \"These records identify the destination as 10.51.20.30 on port 8080 and label the connections as HTTP; they do not show the external HTTPS destination or identify the process on WS-TWEBER-01 responsible for the connections.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T076-00228\",\n        \"T076-00232\",\n        \"T076-00275\",\n        \"T076-00316\",\n        \"T076-00347\",\n        \"T076-00388\",\n        \"T076-00402\",\n        \"T076-00421\",\n        \"T076-00435\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records contain connection summaries to 10.51.20.30:8080, but no proxy request or CONNECT details that would establish the requested hostname, URL, or whether each flow carried HTTPS.\",\n    \"The supplied proxy-connection records do not include endpoint process attribution, executable path, command line, or software identity for the traffic from 10.51.10.22.\",\n    \"The available connection records are examples rather than a complete process-level account of the alerted activity; they cannot establish whether unlisted intervals had additional connections.\"\n  ],\n  \"claims_not_established\": [\n    \"The records do not establish that the proxy connections were made by the approved MediLedger updater or were destined for update.medledger.com (T076-00228, T076-00232, T076-00275, T076-00316, T076-00347, T076-00388, T076-00402, T076-00421, T076-00435).\",\n    \"The records do not establish that the connections were malicious, benign, or related to the scheduled svc-billing password rotation; they provide no destination or process attribution for the proxy traffic (T076-00228, T076-00232, T076-00275, T076-00316, T076-00347, T076-00388, T076-00402, T076-00421, T076-00435).\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"PROXY-PIN-01 access logs for the listed times, including CONNECT target or requested hostname, response status, and client identity.\",\n    \"Endpoint process and network telemetry on WS-TWEBER-01 correlated to the proxy connections, including executable path, command line, signer, and file hash.\",\n    \"TLS or proxy inspection metadata sufficient to verify the remote hostname and certificate, if available.\",\n    \"MediLedger updater execution and update-check logs for WS-TWEBER-01 during the review period.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate from the alerted outbound proxy activity, WS-ARUIZ-01 and WS-ESTONE-01 made TLS connections to WS-TWEBER-01 on port 443, with the TLS server name reported as WS-TWEBER-01.pinecrest.local. The purpose and service are not established by these records; track separately if not expected (T076-00045, T076-00046, T076-00047, T076-00082, T076-00083, T076-00084, T076-00263, T076-00264, T076-00265).\",\n    \"WS-TWEBER-01 resolved afemode.pinecrest.local to 10.51.20.183 and then made a TCP connection attempt to that address on port 1433 that received no connection response. It later resolved DB-SRV-01.pinecrest.local to 10.51.20.103 and also attempted port 1433 without a completed connection. These are separate internal database-related observations, not evidence identifying the alerted proxy traffic (T076-00124, T076-00135, T076-00159, T076-00163).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 47386,
+    "output": 3308
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "WS-TWEBER-01 (10.51.10.22) made repeated connections to 10.51.20.30:8080 during the review window. Recorded examples span 13:36:11 through 14:06:01 UTC and include flows at 13:37:20, 13:41:02, 13:45:43, 13:47:23, 13:50:50, 13:55:43, and 14:00:51 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T076-00228",
+     "T076-00232",
+     "T076-00275",
+     "T076-00316",
+     "T076-00347",
+     "T076-00388",
+     "T076-00402",
+     "T076-00421",
+     "T076-00435"
+    ]
+   },
+   {
+    "claim": "The recorded intervals are not uniformly five minutes: for example, connections at 13:36:11 and 13:37:20 are about a minute apart, while later examples include gaps of roughly four to six minutes. The supplied records therefore show repeated proxy traffic, but do not by themselves establish a consistent five-minute cadence across the whole alerted period.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T076-00228",
+     "T076-00232",
+     "T076-00275",
+     "T076-00316",
+     "T076-00347",
+     "T076-00388",
+     "T076-00402",
+     "T076-00421",
+     "T076-00435"
+    ]
+   },
+   {
+    "claim": "These records identify the destination as 10.51.20.30 on port 8080 and label the connections as HTTP; they do not show the external HTTPS destination or identify the process on WS-TWEBER-01 responsible for the connections.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T076-00228",
+     "T076-00232",
+     "T076-00275",
+     "T076-00316",
+     "T076-00347",
+     "T076-00388",
+     "T076-00402",
+     "T076-00421",
+     "T076-00435"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records contain connection summaries to 10.51.20.30:8080, but no proxy request or CONNECT details that would establish the requested hostname, URL, or whether each flow carried HTTPS.",
+   "The supplied proxy-connection records do not include endpoint process attribution, executable path, command line, or software identity for the traffic from 10.51.10.22.",
+   "The available connection records are examples rather than a complete process-level account of the alerted activity; they cannot establish whether unlisted intervals had additional connections."
+  ],
+  "claims_not_established": [
+   "The records do not establish that the proxy connections were made by the approved MediLedger updater or were destined for update.medledger.com (T076-00228, T076-00232, T076-00275, T076-00316, T076-00347, T076-00388, T076-00402, T076-00421, T076-00435).",
+   "The records do not establish that the connections were malicious, benign, or related to the scheduled svc-billing password rotation; they provide no destination or process attribution for the proxy traffic (T076-00228, T076-00232, T076-00275, T076-00316, T076-00347, T076-00388, T076-00402, T076-00421, T076-00435)."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "PROXY-PIN-01 access logs for the listed times, including CONNECT target or requested hostname, response status, and client identity.",
+   "Endpoint process and network telemetry on WS-TWEBER-01 correlated to the proxy connections, including executable path, command line, signer, and file hash.",
+   "TLS or proxy inspection metadata sufficient to verify the remote hostname and certificate, if available.",
+   "MediLedger updater execution and update-check logs for WS-TWEBER-01 during the review period."
+  ],
+  "unrelated_findings": [
+   "Separate from the alerted outbound proxy activity, WS-ARUIZ-01 and WS-ESTONE-01 made TLS connections to WS-TWEBER-01 on port 443, with the TLS server name reported as WS-TWEBER-01.pinecrest.local. The purpose and service are not established by these records; track separately if not expected (T076-00045, T076-00046, T076-00047, T076-00082, T076-00083, T076-00084, T076-00263, T076-00264, T076-00265).",
+   "WS-TWEBER-01 resolved afemode.pinecrest.local to 10.51.20.183 and then made a TCP connection attempt to that address on port 1433 that received no connection response. It later resolved DB-SRV-01.pinecrest.local to 10.51.20.103 and also attempted port 1433 without a completed connection. These are separate internal database-related observations, not evidence identifying the alerted proxy traffic (T076-00124, T076-00135, T076-00159, T076-00163)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 27,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 33.4
+}

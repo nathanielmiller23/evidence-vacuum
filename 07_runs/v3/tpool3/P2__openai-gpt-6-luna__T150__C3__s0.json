@@ -1,0 +1,83 @@
+{
+ "scenario_id": "T150",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"FILE-MAP-01 sent approximately 640 MB of client data to PROXY-MAP-01 on port 8080; the connection record is timestamped 13:50:30 UTC and lasted about 29.7 seconds.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T150-00372\"\n      ]\n    },\n    {\n      \"claim\": \"The available connection record identifies the proxy as the immediate destination, but does not identify the ultimate destination or the application that generated the transfer.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T150-00372\"\n      ]\n    },\n    {\n      \"claim\": \"Greta Lund initiated an RDP connection from WS-GLUND-01 to FILE-MAP-01 shortly before the large transfer; the recorded RDP connection began at 13:45:27 UTC and has a duration of about 56 minutes. This is inconsistent with the stated practice that remote administration is performed only from WS-AHASSAN-01, but does not establish that Greta caused the transfer.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T150-00286\",\n        \"T150-00287\",\n        \"T150-00293\",\n        \"T150-00297\"\n      ]\n    },\n    {\n      \"claim\": \"A domain-controller event at 13:49:20 UTC records a service-ticket request for svc-vault from IP address 139.162.174.124. The evidence does not establish whether this authentication is connected to the large transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T150-00329\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"FILE-MAP-01 winsec and Sysmon logs were not collected from 13:30 to 14:20 UTC, so there is no endpoint process or local authentication telemetry for the transfer window.\",\n    \"PROXY-MAP-01 proxy logs were not collected from 13:30 to 14:20 UTC, so the proxy request's ultimate destination, URL, user, and action are unavailable.\",\n    \"Zeek connection telemetry is available and records the large transfer, but the supplied record alone does not attribute it to a process or identify its final destination.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the transfer was the approved Safeharbor backup, another authorized transfer, or exfiltration.\",\n    \"Whether the transfer was sent to safeharbor-backup.net or to an unapproved destination.\",\n    \"Which process, account, or person initiated the transfer.\",\n    \"Whether Greta Lund's RDP session or the svc-vault authentication was causally related to the transfer.\",\n    \"Whether sensitive or legally privileged files were included.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Recover proxy logs or equivalent records for the transfer to determine the CONNECT or request destination, user, and response details.\",\n    \"Recover FILE-MAP-01 endpoint telemetry for 13:30-14:20 UTC, including process, service, task, file-access, and authentication records.\",\n    \"Review Safeharbor agent and backup-job logs for the transfer time, including destination, job result, and uploaded data volume.\",\n    \"Investigate the Greta Lund RDP session, including the authenticated session identity and actions performed on FILE-MAP-01.\",\n    \"Validate the svc-vault authentication from 139.162.174.124 against service-account design and network records, and determine whether it correlates with the transfer.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 63228,
+    "output": 2523
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "FILE-MAP-01 sent approximately 640 MB of client data to PROXY-MAP-01 on port 8080; the connection record is timestamped 13:50:30 UTC and lasted about 29.7 seconds.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T150-00372"
+    ]
+   },
+   {
+    "claim": "The available connection record identifies the proxy as the immediate destination, but does not identify the ultimate destination or the application that generated the transfer.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T150-00372"
+    ]
+   },
+   {
+    "claim": "Greta Lund initiated an RDP connection from WS-GLUND-01 to FILE-MAP-01 shortly before the large transfer; the recorded RDP connection began at 13:45:27 UTC and has a duration of about 56 minutes. This is inconsistent with the stated practice that remote administration is performed only from WS-AHASSAN-01, but does not establish that Greta caused the transfer.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T150-00286",
+     "T150-00287",
+     "T150-00293",
+     "T150-00297"
+    ]
+   },
+   {
+    "claim": "A domain-controller event at 13:49:20 UTC records a service-ticket request for svc-vault from IP address 139.162.174.124. The evidence does not establish whether this authentication is connected to the large transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T150-00329"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "FILE-MAP-01 winsec and Sysmon logs were not collected from 13:30 to 14:20 UTC, so there is no endpoint process or local authentication telemetry for the transfer window.",
+   "PROXY-MAP-01 proxy logs were not collected from 13:30 to 14:20 UTC, so the proxy request's ultimate destination, URL, user, and action are unavailable.",
+   "Zeek connection telemetry is available and records the large transfer, but the supplied record alone does not attribute it to a process or identify its final destination."
+  ],
+  "claims_not_established": [
+   "Whether the transfer was the approved Safeharbor backup, another authorized transfer, or exfiltration.",
+   "Whether the transfer was sent to safeharbor-backup.net or to an unapproved destination.",
+   "Which process, account, or person initiated the transfer.",
+   "Whether Greta Lund's RDP session or the svc-vault authentication was causally related to the transfer.",
+   "Whether sensitive or legally privileged files were included."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Recover proxy logs or equivalent records for the transfer to determine the CONNECT or request destination, user, and response details.",
+   "Recover FILE-MAP-01 endpoint telemetry for 13:30-14:20 UTC, including process, service, task, file-access, and authentication records.",
+   "Review Safeharbor agent and backup-job logs for the transfer time, including destination, job result, and uploaded data volume.",
+   "Investigate the Greta Lund RDP session, including the authenticated session identity and actions performed on FILE-MAP-01.",
+   "Validate the svc-vault authentication from 139.162.174.124 against service-account design and network records, and determine whether it correlates with the transfer."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 7,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 31.6
+}

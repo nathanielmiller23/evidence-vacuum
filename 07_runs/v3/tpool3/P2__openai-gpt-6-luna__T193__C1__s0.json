@@ -1,0 +1,93 @@
+{
+ "scenario_id": "T193",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:43:00 UTC, mia.santos opened C:\\\\Users\\\\mia.santos\\\\Downloads\\\\Statement.docm in WINWORD.EXE.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T193-00353\", \"T193-00354\"]\n    },\n    {\n      \"claim\": \"Three seconds later, WINWORD.EXE spawned PowerShell as mia.santos with -nop, -w hidden, and an encoded command. The encoded command decodes to an expression that downloads and executes a script from raw.githubusercontent.com/bluefin-it/tools/main/u.ps1.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T193-00357\", \"T193-00358\"]\n    },\n    {\n      \"claim\": \"The proxy recorded a successful GET for that u.ps1 URL; the corresponding connection transferred about 52 KB from the proxy to the workstation.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T193-00361\", \"T193-00367\"]\n    },\n    {\n      \"claim\": \"PowerShell then spawned rundll32.exe with the command line referencing C:\\\\Users\\\\mia.santos\\\\AppData\\\\Roaming\\\\svchelper.dll,Init. The telemetry establishes the invocation, but not that the DLL loaded successfully or what it did.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T193-00368\", \"T193-00369\"]\n    },\n    {\n      \"claim\": \"PowerShell and rundll32.exe terminated shortly afterward, at approximately 13:43:24 and 13:43:28 UTC, respectively.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T193-00372\", \"T193-00373\", \"T193-00374\", \"T193-00375\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The process and proxy records show the encoded command, URL request, and rundll32 invocation, but do not provide the downloaded script contents or prove what code ran from the referenced DLL (T193-00357, T193-00361, T193-00368).\",\n    \"The available records establish process execution, not whether a PowerShell window was visibly displayed to the user; the command line specifies a hidden window (T193-00357, T193-00358).\"\n  ],\n  \"claims_not_established\": [\n    \"The contents and full effects of u.ps1, including whether it created or loaded svchelper.dll, are not established by these records (T193-00361, T193-00368).\",\n    \"The source, delivery method, and user interaction associated with Statement.docm are not established; the records show it was opened from Downloads and then spawned the suspicious process chain (T193-00353, T193-00357).\",\n    \"The evidence does not establish whether data was accessed, persisted, or exfiltrated during or after this execution.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze Statement.docm, u.ps1, and svchelper.dll from the workstation; record hashes, provenance, and relevant file-system metadata.\",\n    \"Review PowerShell, Office, and endpoint-security telemetry for script content, DLL load results, persistence, and subsequent activity.\",\n    \"Review proxy and GitHub repository evidence to establish the downloaded content and repository provenance.\",\n    \"Check whether mia.santos or other users opened the same document or executed the same script, and assess the workstation for related indicators.\"\n  ],\n  \"unrelated_findings\": [\n    \"DropboxUpdate.exe ran as SYSTEM at 14:05; Dropbox is not among the approved file-sharing or cloud-storage services in the supplied inventory. This is separate from the alerted execution chain (T193-00491, T193-00492, T193-00493, T193-00494).\",\n    \"Cisco AnyConnect's VPN UI launched at 13:49 despite the supplied inventory stating there is no VPN. These records show the UI launch, not a VPN connection; investigate separately (T193-00412, T193-00413, T193-00414).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 111793,
+    "output": 2165
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:43:00 UTC, mia.santos opened C:\\Users\\mia.santos\\Downloads\\Statement.docm in WINWORD.EXE.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T193-00353",
+     "T193-00354"
+    ]
+   },
+   {
+    "claim": "Three seconds later, WINWORD.EXE spawned PowerShell as mia.santos with -nop, -w hidden, and an encoded command. The encoded command decodes to an expression that downloads and executes a script from raw.githubusercontent.com/bluefin-it/tools/main/u.ps1.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T193-00357",
+     "T193-00358"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a successful GET for that u.ps1 URL; the corresponding connection transferred about 52 KB from the proxy to the workstation.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T193-00361",
+     "T193-00367"
+    ]
+   },
+   {
+    "claim": "PowerShell then spawned rundll32.exe with the command line referencing C:\\Users\\mia.santos\\AppData\\Roaming\\svchelper.dll,Init. The telemetry establishes the invocation, but not that the DLL loaded successfully or what it did.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T193-00368",
+     "T193-00369"
+    ]
+   },
+   {
+    "claim": "PowerShell and rundll32.exe terminated shortly afterward, at approximately 13:43:24 and 13:43:28 UTC, respectively.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T193-00372",
+     "T193-00373",
+     "T193-00374",
+     "T193-00375"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The process and proxy records show the encoded command, URL request, and rundll32 invocation, but do not provide the downloaded script contents or prove what code ran from the referenced DLL (T193-00357, T193-00361, T193-00368).",
+   "The available records establish process execution, not whether a PowerShell window was visibly displayed to the user; the command line specifies a hidden window (T193-00357, T193-00358)."
+  ],
+  "claims_not_established": [
+   "The contents and full effects of u.ps1, including whether it created or loaded svchelper.dll, are not established by these records (T193-00361, T193-00368).",
+   "The source, delivery method, and user interaction associated with Statement.docm are not established; the records show it was opened from Downloads and then spawned the suspicious process chain (T193-00353, T193-00357).",
+   "The evidence does not establish whether data was accessed, persisted, or exfiltrated during or after this execution."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze Statement.docm, u.ps1, and svchelper.dll from the workstation; record hashes, provenance, and relevant file-system metadata.",
+   "Review PowerShell, Office, and endpoint-security telemetry for script content, DLL load results, persistence, and subsequent activity.",
+   "Review proxy and GitHub repository evidence to establish the downloaded content and repository provenance.",
+   "Check whether mia.santos or other users opened the same document or executed the same script, and assess the workstation for related indicators."
+  ],
+  "unrelated_findings": [
+   "DropboxUpdate.exe ran as SYSTEM at 14:05; Dropbox is not among the approved file-sharing or cloud-storage services in the supplied inventory. This is separate from the alerted execution chain (T193-00491, T193-00492, T193-00493, T193-00494).",
+   "Cisco AnyConnect's VPN UI launched at 13:49 despite the supplied inventory stating there is no VPN. These records show the UI launch, not a VPN connection; investigate separately (T193-00412, T193-00413, T193-00414)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 12,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 25.4
+}

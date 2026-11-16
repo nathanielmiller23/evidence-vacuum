@@ -1,0 +1,104 @@
+{
+ "run_id": "A__T059__C2__20261115T050722Z",
+ "config": "A",
+ "scenario_id": "T059",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 270,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 110926,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:50:49 UTC, WS-ICHEN-01 sent 51,000,389 bytes to the explicit proxy at 10.40.20.30:8080 in a connection lasting about 2.1 seconds; the record shows only 8,922 bytes in the reverse direction.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T059-00174\"\n      ]\n    },\n    {\n      \"claim\": \"This is a substantial outbound transfer and is suspicious enough to investigate, but the connection record does not identify the external destination, request, or content.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T059-00174\"\n      ]\n    },\n    {\n      \"claim\": \"DropboxUpdate.exe ran as SYSTEM from 13:20:31 to 13:21:41, but these records do not show it running at the time of the large transfer or making a network connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T059-00011\",\n        \"T059-00013\",\n        \"T059-00014\"\n      ]\n    },\n    {\n      \"claim\": \"At 14:10\u201314:11 UTC, Chrome activity is explicitly associated with Outlook and Microsoft 365 pages, including calendar and compose views. This is later than the large transfer and does not establish its destination or purpose.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T059-00282\",\n        \"T059-00283\",\n        \"T059-00320\",\n        \"T059-00321\",\n        \"T059-00331\",\n        \"T059-00334\",\n        \"T059-00340\"\n      ]\n    },\n    {\n      \"claim\": \"At 14:01 UTC, DC-NWD-01 recorded Kerberos authentication for ivy.chen to WS-NBLAKE-01, followed by a network logon for ivy.chen on that host. The records do not establish whether this access was authorized or related to the transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T059-00248\",\n        \"T059-00249\",\n        \"T059-00250\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The large-transfer record identifies the workstation and proxy connection, but not the proxy tunnel's external destination, HTTP method, URL, or response context (T059-00174).\",\n    \"The supplied evidence does not correlate the 13:50:49 connection to a process or user action on WS-ICHEN-01 (T059-00174).\",\n    \"No payload, file-access, browser-upload, or cloud-service synchronization evidence is provided for the transfer.\",\n    \"The Outlook proxy records are from about 20 minutes after the large transfer and cannot identify what was sent earlier (T059-00282, T059-00321, T059-00331, T059-00340).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the transfer was data exfiltration, an authorized business upload, or another kind of traffic.\",\n    \"Whether the transfer went to Dropbox, OneDrive, another approved service, or an unapproved destination.\",\n    \"What data, if any, was transmitted, and whether sensitive information was involved.\",\n    \"Which process initiated the transfer and whether ivy.chen knowingly initiated it.\",\n    \"Whether the 14:01 authentication to WS-NBLAKE-01 was authorized or connected to the transfer.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"PROXY-NWD-01 transaction and tunnel logs for the 13:50:49 connection, including destination host, URL, method, authenticated user, and any available content or classification metadata.\",\n    \"Endpoint process, network, browser, and file-access telemetry on WS-ICHEN-01 covering the transfer time, including process-to-connection attribution and relevant command lines.\",\n    \"DNS, firewall, and upstream network records that can identify the ultimate destination and characterize the transfer.\",\n    \"Cloud-service audit records and account activity around 13:50 UTC to determine whether a file was uploaded and to which service.\",\n    \"Authentication and endpoint records for the 14:01 ivy.chen logon to WS-NBLAKE-01 to confirm its legitimacy and check for any relationship to the earlier transfer.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 41390,
+    "output": 2448,
+    "reasoning": 1446
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "At 13:50:49 UTC, WS-ICHEN-01 sent 51,000,389 bytes to the explicit proxy at 10.40.20.30:8080 in a connection lasting about 2.1 seconds; the record shows only 8,922 bytes in the reverse direction.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00174"
+    ]
+   },
+   {
+    "claim": "This is a substantial outbound transfer and is suspicious enough to investigate, but the connection record does not identify the external destination, request, or content.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T059-00174"
+    ]
+   },
+   {
+    "claim": "DropboxUpdate.exe ran as SYSTEM from 13:20:31 to 13:21:41, but these records do not show it running at the time of the large transfer or making a network connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00011",
+     "T059-00013",
+     "T059-00014"
+    ]
+   },
+   {
+    "claim": "At 14:10\u201314:11 UTC, Chrome activity is explicitly associated with Outlook and Microsoft 365 pages, including calendar and compose views. This is later than the large transfer and does not establish its destination or purpose.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00282",
+     "T059-00283",
+     "T059-00320",
+     "T059-00321",
+     "T059-00331",
+     "T059-00334",
+     "T059-00340"
+    ]
+   },
+   {
+    "claim": "At 14:01 UTC, DC-NWD-01 recorded Kerberos authentication for ivy.chen to WS-NBLAKE-01, followed by a network logon for ivy.chen on that host. The records do not establish whether this access was authorized or related to the transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00248",
+     "T059-00249",
+     "T059-00250"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The large-transfer record identifies the workstation and proxy connection, but not the proxy tunnel's external destination, HTTP method, URL, or response context (T059-00174).",
+   "The supplied evidence does not correlate the 13:50:49 connection to a process or user action on WS-ICHEN-01 (T059-00174).",
+   "No payload, file-access, browser-upload, or cloud-service synchronization evidence is provided for the transfer.",
+   "The Outlook proxy records are from about 20 minutes after the large transfer and cannot identify what was sent earlier (T059-00282, T059-00321, T059-00331, T059-00340)."
+  ],
+  "claims_not_established": [
+   "Whether the transfer was data exfiltration, an authorized business upload, or another kind of traffic.",
+   "Whether the transfer went to Dropbox, OneDrive, another approved service, or an unapproved destination.",
+   "What data, if any, was transmitted, and whether sensitive information was involved.",
+   "Which process initiated the transfer and whether ivy.chen knowingly initiated it.",
+   "Whether the 14:01 authentication to WS-NBLAKE-01 was authorized or connected to the transfer."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "PROXY-NWD-01 transaction and tunnel logs for the 13:50:49 connection, including destination host, URL, method, authenticated user, and any available content or classification metadata.",
+   "Endpoint process, network, browser, and file-access telemetry on WS-ICHEN-01 covering the transfer time, including process-to-connection attribution and relevant command lines.",
+   "DNS, firewall, and upstream network records that can identify the ultimate destination and characterize the transfer.",
+   "Cloud-service audit records and account activity around 13:50 UTC to determine whether a file was uploaded and to which service.",
+   "Authentication and endpoint records for the 14:01 ivy.chen logon to WS-NBLAKE-01 to confirm its legitimacy and check for any relationship to the earlier transfer."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.6
+}

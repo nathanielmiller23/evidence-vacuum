@@ -1,0 +1,95 @@
+{
+ "run_id": "A__T028__C2__20261115T044744Z",
+ "config": "A",
+ "scenario_id": "T028",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 50,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 23570,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Lucy Park launched Remote Desktop to FILE-HD-01 from WS-LPARK-01, and FILE-HD-01 recorded a remote-interactive logon for her account from that workstation.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T028-00001\", \"T028-00006\", \"T028-00007\"]\n    },\n    {\n      \"claim\": \"The recorded RDP session began at 13:21 UTC, and the mstsc.exe process on WS-LPARK-01 ended at 14:12 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T028-00007\", \"T028-00041\", \"T028-00042\"]\n    },\n    {\n      \"claim\": \"The organization states that remote administration is performed only from WS-OHADDAD-01; Lucy's RDP connection to FILE-HD-01 from WS-LPARK-01 does not match that stated practice, though the logs do not establish that this session was an administrative action.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T028-00001\", \"T028-00006\", \"T028-00007\"]\n    },\n    {\n      \"claim\": \"A UserAssist registry value on WS-LPARK-01 contains an encoded path that decodes to PowerShell; this does not by itself establish that PowerShell executed or what it did.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T028-00038\"]\n    },\n    {\n      \"claim\": \"The provided records do not show creation of tmp.rwong, its creator, or its group membership.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": []\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records contain no domain account-creation event or group-membership change event for tmp.rwong.\",\n    \"The supplied records do not include process or command-line activity from the FILE-HD-01 RDP session that could show what Lucy did there.\",\n    \"The UserAssist record is not proof of PowerShell execution, and no corresponding process-creation record is supplied.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether tmp.rwong was actually created during the review window, and who created it.\",\n    \"Whether tmp.rwong was added only to Temp-Staff or was granted other group membership or privileges.\",\n    \"Whether Lucy's RDP session was authorized or related to the account alert.\",\n    \"Whether the PowerShell path recorded in UserAssist corresponds to execution connected with the account creation.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Domain-controller security logs for account creation and group-membership changes during the review window, including creator identity and target account details.\",\n    \"Directory state or audit history for tmp.rwong, including enabled status, group memberships, privileges, and creation timestamp.\",\n    \"FILE-HD-01 process-creation and command-line telemetry, plus relevant account-management auditing, for Lucy's RDP session.\",\n    \"Change ticket or help-desk record confirming whether Lucy was authorized to create this temporary account and whether the name and timing match the request.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 8450,
+    "output": 1616,
+    "reasoning": 884
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "Lucy Park launched Remote Desktop to FILE-HD-01 from WS-LPARK-01, and FILE-HD-01 recorded a remote-interactive logon for her account from that workstation.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T028-00001",
+     "T028-00006",
+     "T028-00007"
+    ]
+   },
+   {
+    "claim": "The recorded RDP session began at 13:21 UTC, and the mstsc.exe process on WS-LPARK-01 ended at 14:12 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T028-00007",
+     "T028-00041",
+     "T028-00042"
+    ]
+   },
+   {
+    "claim": "The organization states that remote administration is performed only from WS-OHADDAD-01; Lucy's RDP connection to FILE-HD-01 from WS-LPARK-01 does not match that stated practice, though the logs do not establish that this session was an administrative action.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T028-00001",
+     "T028-00006",
+     "T028-00007"
+    ]
+   },
+   {
+    "claim": "A UserAssist registry value on WS-LPARK-01 contains an encoded path that decodes to PowerShell; this does not by itself establish that PowerShell executed or what it did.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T028-00038"
+    ]
+   },
+   {
+    "claim": "The provided records do not show creation of tmp.rwong, its creator, or its group membership.",
+    "claim_type": "observed_fact",
+    "record_ids": []
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records contain no domain account-creation event or group-membership change event for tmp.rwong.",
+   "The supplied records do not include process or command-line activity from the FILE-HD-01 RDP session that could show what Lucy did there.",
+   "The UserAssist record is not proof of PowerShell execution, and no corresponding process-creation record is supplied."
+  ],
+  "claims_not_established": [
+   "Whether tmp.rwong was actually created during the review window, and who created it.",
+   "Whether tmp.rwong was added only to Temp-Staff or was granted other group membership or privileges.",
+   "Whether Lucy's RDP session was authorized or related to the account alert.",
+   "Whether the PowerShell path recorded in UserAssist corresponds to execution connected with the account creation."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Domain-controller security logs for account creation and group-membership changes during the review window, including creator identity and target account details.",
+   "Directory state or audit history for tmp.rwong, including enabled status, group memberships, privileges, and creation timestamp.",
+   "FILE-HD-01 process-creation and command-line telemetry, plus relevant account-management auditing, for Lucy's RDP session.",
+   "Change ticket or help-desk record confirming whether Lucy was authorized to create this temporary account and whether the name and timing match the request."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 16.5
+}

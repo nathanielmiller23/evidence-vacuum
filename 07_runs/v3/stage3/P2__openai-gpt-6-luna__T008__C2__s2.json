@@ -1,0 +1,80 @@
+{
+ "scenario_id": "T008",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 2,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Lucy Park launched Remote Desktop toward DC-HD-01 at 13:32 UTC, and her workstation initiated a connection to the domain controller's RDP port. These records do not establish that the RDP login succeeded.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T008-00017\", \"T008-00018\", \"T008-00019\"]\n    },\n    {\n      \"claim\": \"At 13:36 UTC, Lucy Park's workstation initiated RDP to FILE-HD-01, and FILE-HD-01 recorded a successful interactive remote logon for her account.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T008-00027\", \"T008-00030\", \"T008-00031\"]\n    },\n    {\n      \"claim\": \"The RDP activity from Lucy Park's workstation shortly before the alert is relevant and warrants checking against the reported account creation. The available records do not show whether Lucy created tmp.rwong.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T008-00017\", \"T008-00019\", \"T008-00031\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records contain no domain-controller account-creation event, such as a record identifying who created tmp.rwong, when it was created, or its group memberships.\",\n    \"The records show an outbound RDP connection to DC-HD-01 but contain no corresponding domain-controller logon or session evidence.\",\n    \"The FILE-HD-01 records establish Lucy Park's remote logon, but do not show what she did during that session.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether tmp.rwong was actually created at the reported time and which account performed the creation.\",\n    \"Whether tmp.rwong was added only to Temp-Staff or received other group memberships or privileges.\",\n    \"Whether Lucy Park successfully accessed DC-HD-01 or performed account-management actions there.\",\n    \"Whether the account creation was authorized despite the observed remote-access path.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Retrieve DC-HD-01 security and directory-service audit logs for the window, especially account creation, group membership changes, and successful or failed logons; correlate the creator and timestamps with tmp.rwong.\",\n    \"Check tmp.rwong's current and historical group memberships, enabled state, password settings, and subsequent authentication and access activity.\",\n    \"Obtain RDP/session and process telemetry from DC-HD-01 and FILE-HD-01 for Lucy Park's sessions, plus any relevant help-desk ticket or approval.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox.exe launched from Lucy Park's profile with the /systemstartup argument; Dropbox is not listed as approved. Handle separately; this does not establish a connection to the account alert. (T008-00055, T008-00056, T008-00057)\",\n    \"Lucy Park's workstation accessed Slack in a browser; Slack is not listed as approved. Handle separately; this does not establish a connection to the account alert. (T008-00040, T008-00041, T008-00047, T008-00048)\",\n    \"GlobalProtect PanGPA.exe ran on Lucy Park's workstation, although the inventory says the organization has no VPN. The supplied records do not show a VPN connection. Handle separately. (T008-00072, T008-00073, T008-00074)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 16221,
+    "output": 2259
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "Lucy Park launched Remote Desktop toward DC-HD-01 at 13:32 UTC, and her workstation initiated a connection to the domain controller's RDP port. These records do not establish that the RDP login succeeded.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T008-00017",
+     "T008-00018",
+     "T008-00019"
+    ]
+   },
+   {
+    "claim": "At 13:36 UTC, Lucy Park's workstation initiated RDP to FILE-HD-01, and FILE-HD-01 recorded a successful interactive remote logon for her account.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T008-00027",
+     "T008-00030",
+     "T008-00031"
+    ]
+   },
+   {
+    "claim": "The RDP activity from Lucy Park's workstation shortly before the alert is relevant and warrants checking against the reported account creation. The available records do not show whether Lucy created tmp.rwong.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T008-00017",
+     "T008-00019",
+     "T008-00031"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records contain no domain-controller account-creation event, such as a record identifying who created tmp.rwong, when it was created, or its group memberships.",
+   "The records show an outbound RDP connection to DC-HD-01 but contain no corresponding domain-controller logon or session evidence.",
+   "The FILE-HD-01 records establish Lucy Park's remote logon, but do not show what she did during that session."
+  ],
+  "claims_not_established": [
+   "Whether tmp.rwong was actually created at the reported time and which account performed the creation.",
+   "Whether tmp.rwong was added only to Temp-Staff or received other group memberships or privileges.",
+   "Whether Lucy Park successfully accessed DC-HD-01 or performed account-management actions there.",
+   "Whether the account creation was authorized despite the observed remote-access path."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Retrieve DC-HD-01 security and directory-service audit logs for the window, especially account creation, group membership changes, and successful or failed logons; correlate the creator and timestamps with tmp.rwong.",
+   "Check tmp.rwong's current and historical group memberships, enabled state, password settings, and subsequent authentication and access activity.",
+   "Obtain RDP/session and process telemetry from DC-HD-01 and FILE-HD-01 for Lucy Park's sessions, plus any relevant help-desk ticket or approval."
+  ],
+  "unrelated_findings": [
+   "Dropbox.exe launched from Lucy Park's profile with the /systemstartup argument; Dropbox is not listed as approved. Handle separately; this does not establish a connection to the account alert. (T008-00055, T008-00056, T008-00057)",
+   "Lucy Park's workstation accessed Slack in a browser; Slack is not listed as approved. Handle separately; this does not establish a connection to the account alert. (T008-00040, T008-00041, T008-00047, T008-00048)",
+   "GlobalProtect PanGPA.exe ran on Lucy Park's workstation, although the inventory says the organization has no VPN. The supplied records do not show a VPN connection. Handle separately. (T008-00072, T008-00073, T008-00074)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 9,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 22.4
+}

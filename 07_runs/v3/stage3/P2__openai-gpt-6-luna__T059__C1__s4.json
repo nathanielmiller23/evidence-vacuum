@@ -1,0 +1,94 @@
+{
+ "scenario_id": "T059",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 4,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.9,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45:20, ivy.chen ran PowerShell from an interactive Explorer session to compress \\\\\\\\FILE-NWD-01\\\\Shared\\\\Clients into C:\\\\Users\\\\ivy.chen\\\\AppData\\\\Local\\\\Temp\\\\c.zip; Sysmon recorded the archive file being created at 13:45:24.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T059-00102\",\n        \"T059-00103\",\n        \"T059-00104\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:50:49\u201313:50:50, WS-ICHEN-01 sent about 51 million client-side bytes through the proxy to quickshare-drop.net, using Chrome under ivy.chen\u2019s account.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T059-00174\",\n        \"T059-00175\",\n        \"T059-00176\",\n        \"T059-00177\"\n      ]\n    },\n    {\n      \"claim\": \"The client-data archive was created shortly before the large outbound transfer, and the destination is a file-sharing service not listed among approved services. This strongly supports suspected exfiltration of client data, although the available records do not prove the archive was the exact payload.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T059-00102\",\n        \"T059-00104\",\n        \"T059-00174\",\n        \"T059-00175\"\n      ]\n    },\n    {\n      \"claim\": \"The alert describes activity around 13:46 UTC, while the recorded approximately 51 MB outbound transfer occurred around 13:50:50 UTC; the provided records do not show a comparable large outbound transfer at 13:46.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T059-00113\",\n        \"T059-00114\",\n        \"T059-00116\",\n        \"T059-00174\",\n        \"T059-00175\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records the CONNECT destination and tunnel byte counts, but the provided evidence does not expose the uploaded request body or identify the transferred file.\",\n    \"The alert time (\u201caround 13:46 UTC\u201d) does not exactly match the timestamp of the observed approximately 51 MB outbound connection (13:50:49\u201313:50:50 UTC).\",\n    \"The records do not establish the user\u2019s intent or whether the transfer was authorized by an exception not included in the supplied context.\"\n  ],\n  \"claims_not_established\": [\n    \"That C:\\\\Users\\\\ivy.chen\\\\AppData\\\\Local\\\\Temp\\\\c.zip was the exact file or data sent to quickshare-drop.net.\",\n    \"The content of the outbound payload, whether it included confidential or personal information, or who received it.\",\n    \"Whether ivy.chen initiated or knowingly authorized the transfer.\",\n    \"Whether the 13:50:50 transfer is the exact network event referenced by the alert\u2019s approximate 13:46 time.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Proxy or endpoint upload telemetry that identifies the request method, URL/path, payload size, and\u2014if available\u2014file name or hash for the quickshare-drop.net transfer.\",\n    \"Endpoint evidence tying c.zip or another source file to the Chrome upload, such as browser upload history, file-access telemetry, or forensic artifacts.\",\n    \"The alert\u2019s underlying network record and alert-generation details to reconcile its reported time with the observed 13:50:50 transfer.\",\n    \"Business-owner or user confirmation of whether the client-data transfer was authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox Update.exe ran as SYSTEM on WS-ICHEN-01. Dropbox is not listed among approved software/services, but these records do not show it performing the alerted transfer; handle separately. (T059-00011, T059-00012, T059-00013, T059-00014)\",\n    \"ivy.chen\u2019s browser accessed Google account sign-in pages and AWS console pages, services not listed among approved services. These records show web access, not that either service carried the alerted transfer; handle separately. (T059-00139, T059-00140, T059-00149, T059-00152, T059-00212, T059-00213, T059-00222)\",\n    \"DC-NWD-01 recorded a network logon for ivy.chen to WS-NBLAKE-01 at 14:01 UTC. This is outside the outbound transfer itself and its purpose is not established by the supplied records; review separately. (T059-00248, T059-00249, T059-00250)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 60299,
+    "output": 2499
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.9,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45:20, ivy.chen ran PowerShell from an interactive Explorer session to compress \\\\FILE-NWD-01\\Shared\\Clients into C:\\Users\\ivy.chen\\AppData\\Local\\Temp\\c.zip; Sysmon recorded the archive file being created at 13:45:24.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00102",
+     "T059-00103",
+     "T059-00104"
+    ]
+   },
+   {
+    "claim": "At 13:50:49\u201313:50:50, WS-ICHEN-01 sent about 51 million client-side bytes through the proxy to quickshare-drop.net, using Chrome under ivy.chen\u2019s account.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00174",
+     "T059-00175",
+     "T059-00176",
+     "T059-00177"
+    ]
+   },
+   {
+    "claim": "The client-data archive was created shortly before the large outbound transfer, and the destination is a file-sharing service not listed among approved services. This strongly supports suspected exfiltration of client data, although the available records do not prove the archive was the exact payload.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T059-00102",
+     "T059-00104",
+     "T059-00174",
+     "T059-00175"
+    ]
+   },
+   {
+    "claim": "The alert describes activity around 13:46 UTC, while the recorded approximately 51 MB outbound transfer occurred around 13:50:50 UTC; the provided records do not show a comparable large outbound transfer at 13:46.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T059-00113",
+     "T059-00114",
+     "T059-00116",
+     "T059-00174",
+     "T059-00175"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records the CONNECT destination and tunnel byte counts, but the provided evidence does not expose the uploaded request body or identify the transferred file.",
+   "The alert time (\u201caround 13:46 UTC\u201d) does not exactly match the timestamp of the observed approximately 51 MB outbound connection (13:50:49\u201313:50:50 UTC).",
+   "The records do not establish the user\u2019s intent or whether the transfer was authorized by an exception not included in the supplied context."
+  ],
+  "claims_not_established": [
+   "That C:\\Users\\ivy.chen\\AppData\\Local\\Temp\\c.zip was the exact file or data sent to quickshare-drop.net.",
+   "The content of the outbound payload, whether it included confidential or personal information, or who received it.",
+   "Whether ivy.chen initiated or knowingly authorized the transfer.",
+   "Whether the 13:50:50 transfer is the exact network event referenced by the alert\u2019s approximate 13:46 time."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Proxy or endpoint upload telemetry that identifies the request method, URL/path, payload size, and\u2014if available\u2014file name or hash for the quickshare-drop.net transfer.",
+   "Endpoint evidence tying c.zip or another source file to the Chrome upload, such as browser upload history, file-access telemetry, or forensic artifacts.",
+   "The alert\u2019s underlying network record and alert-generation details to reconcile its reported time with the observed 13:50:50 transfer.",
+   "Business-owner or user confirmation of whether the client-data transfer was authorized."
+  ],
+  "unrelated_findings": [
+   "Dropbox Update.exe ran as SYSTEM on WS-ICHEN-01. Dropbox is not listed among approved software/services, but these records do not show it performing the alerted transfer; handle separately. (T059-00011, T059-00012, T059-00013, T059-00014)",
+   "ivy.chen\u2019s browser accessed Google account sign-in pages and AWS console pages, services not listed among approved services. These records show web access, not that either service carried the alerted transfer; handle separately. (T059-00139, T059-00140, T059-00149, T059-00152, T059-00212, T059-00213, T059-00222)",
+   "DC-NWD-01 recorded a network logon for ivy.chen to WS-NBLAKE-01 at 14:01 UTC. This is outside the outbound transfer itself and its purpose is not established by the supplied records; review separately. (T059-00248, T059-00249, T059-00250)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 16,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 24.3
+}

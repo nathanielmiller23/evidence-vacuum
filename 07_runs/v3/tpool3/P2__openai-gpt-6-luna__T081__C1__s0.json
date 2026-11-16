@@ -1,0 +1,75 @@
+{
+ "scenario_id": "T081",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.84,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded two failed network logons for tom.weber from source IP 203.0.113.17, using NTLM, at 13:40:58 and 13:42:24 UTC; both failures report an incorrect-password substatus.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T081-00023\", \"T081-00026\"]\n    },\n    {\n      \"claim\": \"At 13:43:48 UTC, the domain controller recorded a successful network logon for tom.weber using Kerberos from the same source IP, 203.0.113.17.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T081-00027\"]\n    },\n    {\n      \"claim\": \"The failed attempts followed by a successful authentication from the same source are suspicious, particularly because the environment states there is no VPN and remote administration is only performed from WS-RPATEL-01. The evidence supports treating the alerted authentication activity as malicious, though it does not establish who controlled the source.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T081-00023\", \"T081-00026\", \"T081-00027\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show authentication events and a source IP, but do not identify the person or device controlling that source.\",\n    \"The successful event is a network logon (LogonType 3); these records alone do not establish an interactive session, subsequent access, or persistence.\",\n    \"No firewall, network-edge, or endpoint telemetry for the source IP is included.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the successful authentication was authorized or initiated by tom.weber.\",\n    \"Whether the source IP maps to a particular external system, internal device, or network intermediary.\",\n    \"Whether the account was used to access resources beyond the recorded authentication.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate the source IP and ports with firewall, NAT, and network-edge logs around 13:40\u201313:44 UTC.\",\n    \"Review domain-controller authentication and account-change records for tom.weber around the event, including any subsequent logons or privilege changes.\",\n    \"Validate the activity with tom.weber and determine whether any approved system or intermediary could account for the source IP.\"\n  ],\n  \"unrelated_findings\": [\n    \"Google Drive File Stream launched under tom.weber; Google Drive is not among the approved services listed in the environment context. Handle in a separate ticket; it does not determine this authentication alert. Records: T081-00029, T081-00030.\",\n    \"Dropbox ran under tom.weber and was later observed terminating; Dropbox is not among the approved services listed in the environment context. Handle in a separate ticket; it does not determine this authentication alert. Record: T081-00085.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 14139,
+    "output": 1895
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.84,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded two failed network logons for tom.weber from source IP 203.0.113.17, using NTLM, at 13:40:58 and 13:42:24 UTC; both failures report an incorrect-password substatus.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T081-00023",
+     "T081-00026"
+    ]
+   },
+   {
+    "claim": "At 13:43:48 UTC, the domain controller recorded a successful network logon for tom.weber using Kerberos from the same source IP, 203.0.113.17.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T081-00027"
+    ]
+   },
+   {
+    "claim": "The failed attempts followed by a successful authentication from the same source are suspicious, particularly because the environment states there is no VPN and remote administration is only performed from WS-RPATEL-01. The evidence supports treating the alerted authentication activity as malicious, though it does not establish who controlled the source.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T081-00023",
+     "T081-00026",
+     "T081-00027"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show authentication events and a source IP, but do not identify the person or device controlling that source.",
+   "The successful event is a network logon (LogonType 3); these records alone do not establish an interactive session, subsequent access, or persistence.",
+   "No firewall, network-edge, or endpoint telemetry for the source IP is included."
+  ],
+  "claims_not_established": [
+   "Whether the successful authentication was authorized or initiated by tom.weber.",
+   "Whether the source IP maps to a particular external system, internal device, or network intermediary.",
+   "Whether the account was used to access resources beyond the recorded authentication."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate the source IP and ports with firewall, NAT, and network-edge logs around 13:40\u201313:44 UTC.",
+   "Review domain-controller authentication and account-change records for tom.weber around the event, including any subsequent logons or privilege changes.",
+   "Validate the activity with tom.weber and determine whether any approved system or intermediary could account for the source IP."
+  ],
+  "unrelated_findings": [
+   "Google Drive File Stream launched under tom.weber; Google Drive is not among the approved services listed in the environment context. Handle in a separate ticket; it does not determine this authentication alert. Records: T081-00029, T081-00030.",
+   "Dropbox ran under tom.weber and was later observed terminating; Dropbox is not among the approved services listed in the environment context. Handle in a separate ticket; it does not determine this authentication alert. Record: T081-00085."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 6,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.0
+}

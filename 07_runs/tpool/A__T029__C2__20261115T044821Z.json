@@ -1,0 +1,84 @@
+{
+ "run_id": "A__T029__C2__20261115T044821Z",
+ "config": "A",
+ "scenario_id": "T029",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 232,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 96890,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:51:18 UTC, WS-MLOPEZ-01 sent 50,000,468 bytes to the internal proxy at 10.30.20.30:8080 over about 15 seconds; the record shows only 8,930 bytes in the reverse direction. This establishes a large client-to-proxy transfer, but not its external destination or contents.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T029-00174\"\n      ]\n    },\n    {\n      \"claim\": \"At 14:17 UTC, the proxy recorded a successful CONNECT to drive.google.com attributed to maria.lopez, with 1,230 client-to-server tunnel bytes and a duration of about four seconds. Google Drive is not among the approved services listed in the supplied environment context, but this small later connection is not shown to be related to the earlier large transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T029-00253\"\n      ]\n    },\n    {\n      \"claim\": \"A UserAssist registry value written at 13:22 contains a ROT13-encoded path that decodes to the PowerShell executable path. This is suggestive of PowerShell being used, but the record does not establish the command, purpose, or connection to the later transfer.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T029-00007\"\n      ]\n    },\n    {\n      \"claim\": \"The evidence supports concern about possible unauthorized data transfer, but does not establish malicious activity: the large-transfer record identifies the proxy as the destination and does not identify the process, user, external destination, or payload.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T029-00174\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The large-transfer record is a Zeek connection summary to the proxy; the supplied evidence does not include a corresponding proxy transaction record identifying the requested URL, method, upstream destination, or content.\",\n    \"No supplied endpoint process or file-access event is tied to the 13:51 transfer.\",\n    \"The later Google Drive CONNECT record is separate in time and has low client-to-server tunnel volume; the supplied records do not connect it to the 13:51 transfer.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the 50,000,468 client-to-proxy bytes were uploaded onward to an external service, and if so which one (T029-00174).\",\n    \"What data, if any, was transferred, whether it was sensitive, or whether the transfer was authorized (T029-00174).\",\n    \"Which process initiated the large transfer and whether it was associated with the observed PowerShell path or the later Google Drive connection (T029-00007, T029-00174, T029-00253).\",\n    \"Whether maria.lopez initiated or authorized the large transfer; the large-transfer record does not identify a user (T029-00174).\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Retrieve proxy logs for the 13:51:18 connection, including transaction/request details, authenticated identity, external destination, upload method, byte counts, and any TLS inspection metadata.\",\n    \"Collect endpoint process, command-line, browser, and file-access telemetry around 13:51 UTC to identify the transfer process and possible source files.\",\n    \"Review PowerShell operational/script-block logs and relevant file and browser history to determine what the UserAssist PowerShell entry represents and whether it relates to the transfer.\",\n    \"Verify the activity with maria.lopez and check whether any approved business workflow explains the transfer.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 35905,
+    "output": 2143,
+    "reasoning": 1301
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "At 13:51:18 UTC, WS-MLOPEZ-01 sent 50,000,468 bytes to the internal proxy at 10.30.20.30:8080 over about 15 seconds; the record shows only 8,930 bytes in the reverse direction. This establishes a large client-to-proxy transfer, but not its external destination or contents.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T029-00174"
+    ]
+   },
+   {
+    "claim": "At 14:17 UTC, the proxy recorded a successful CONNECT to drive.google.com attributed to maria.lopez, with 1,230 client-to-server tunnel bytes and a duration of about four seconds. Google Drive is not among the approved services listed in the supplied environment context, but this small later connection is not shown to be related to the earlier large transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T029-00253"
+    ]
+   },
+   {
+    "claim": "A UserAssist registry value written at 13:22 contains a ROT13-encoded path that decodes to the PowerShell executable path. This is suggestive of PowerShell being used, but the record does not establish the command, purpose, or connection to the later transfer.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T029-00007"
+    ]
+   },
+   {
+    "claim": "The evidence supports concern about possible unauthorized data transfer, but does not establish malicious activity: the large-transfer record identifies the proxy as the destination and does not identify the process, user, external destination, or payload.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T029-00174"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The large-transfer record is a Zeek connection summary to the proxy; the supplied evidence does not include a corresponding proxy transaction record identifying the requested URL, method, upstream destination, or content.",
+   "No supplied endpoint process or file-access event is tied to the 13:51 transfer.",
+   "The later Google Drive CONNECT record is separate in time and has low client-to-server tunnel volume; the supplied records do not connect it to the 13:51 transfer."
+  ],
+  "claims_not_established": [
+   "Whether the 50,000,468 client-to-proxy bytes were uploaded onward to an external service, and if so which one (T029-00174).",
+   "What data, if any, was transferred, whether it was sensitive, or whether the transfer was authorized (T029-00174).",
+   "Which process initiated the large transfer and whether it was associated with the observed PowerShell path or the later Google Drive connection (T029-00007, T029-00174, T029-00253).",
+   "Whether maria.lopez initiated or authorized the large transfer; the large-transfer record does not identify a user (T029-00174)."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Retrieve proxy logs for the 13:51:18 connection, including transaction/request details, authenticated identity, external destination, upload method, byte counts, and any TLS inspection metadata.",
+   "Collect endpoint process, command-line, browser, and file-access telemetry around 13:51 UTC to identify the transfer process and possible source files.",
+   "Review PowerShell operational/script-block logs and relevant file and browser history to determine what the UserAssist PowerShell entry represents and whether it relates to the transfer.",
+   "Verify the activity with maria.lopez and check whether any approved business workflow explains the transfer."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 4,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 22.0
+}

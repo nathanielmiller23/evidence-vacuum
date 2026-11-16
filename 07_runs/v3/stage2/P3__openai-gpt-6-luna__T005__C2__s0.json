@@ -1,0 +1,92 @@
+{
+ "scenario_id": "T005",
+ "condition": "C2",
+ "variant": "P3",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"WS-BCARTER-01 has repeated network flows to the internal proxy at 10.30.20.30:8080 during the alerted period, including 13:30:03, 13:36:22, 13:41:10, 13:46:34, 13:51:47, 13:55:57, 14:01:14, and 14:06:22 UTC. The intervals are broadly consistent with the reported periodicity.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T005-00098\",\n        \"T005-00126\",\n        \"T005-00148\",\n        \"T005-00166\",\n        \"T005-00184\",\n        \"T005-00196\",\n        \"T005-00205\",\n        \"T005-00212\"\n      ]\n    },\n    {\n      \"claim\": \"These records identify connections to the internal proxy, but do not identify the external HTTPS destinations or the process that initiated the periodic flows.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T005-00098\",\n        \"T005-00126\",\n        \"T005-00148\",\n        \"T005-00166\",\n        \"T005-00184\",\n        \"T005-00196\",\n        \"T005-00205\",\n        \"T005-00212\"\n      ]\n    },\n    {\n      \"claim\": \"The periodic flows cannot be attributed from the available records to the approved ChartMate updater or another specific legitimate explanation; nor do the records establish that the traffic is malicious.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T005-00098\",\n        \"T005-00126\",\n        \"T005-00148\",\n        \"T005-00166\",\n        \"T005-00184\",\n        \"T005-00196\",\n        \"T005-00205\",\n        \"T005-00212\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The periodic flow records show traffic to the explicit proxy on port 8080, not the external destination or URL; they do not by themselves establish that the proxied traffic was HTTPS.\",\n    \"The available periodic-flow records lack corresponding proxy CONNECT or request details and endpoint process attribution for those specific flows.\",\n    \"The evidence shown reaches 14:06:22 UTC for the repeated flows; it does not identify a corresponding periodic flow at approximately 14:10 UTC.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the external destinations were update.chartmate-imaging.com or another host.\",\n    \"Whether cmupdate.exe or another legitimate application generated the periodic flows.\",\n    \"Whether the flows carried command-and-control traffic, data exfiltration, or benign update/check-in traffic.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Obtain full proxy CONNECT/TLS and request logs for the listed flow times, including destination hostnames, SNI, URLs where available, and correlation identifiers.\",\n    \"Obtain endpoint process-to-network telemetry for WS-BCARTER-01 covering the alert window, including process image, command line, and signature for the process responsible for each flow.\",\n    \"Verify whether ChartMate is installed and whether its updater ran at the matching times; correlate its process and destination activity with the proxy records.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:37:15 UTC, WS-BCARTER-01 made an SMB connection to DC-HD-01, followed by a network logon for the WS-BCARTER-01$ machine account. This is separate from the alerted periodic proxy flows and may merit review against expected workstation-to-domain-controller SMB activity. Records: T005-00141, T005-00145.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 45264,
+    "output": 2504
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "WS-BCARTER-01 has repeated network flows to the internal proxy at 10.30.20.30:8080 during the alerted period, including 13:30:03, 13:36:22, 13:41:10, 13:46:34, 13:51:47, 13:55:57, 14:01:14, and 14:06:22 UTC. The intervals are broadly consistent with the reported periodicity.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T005-00098",
+     "T005-00126",
+     "T005-00148",
+     "T005-00166",
+     "T005-00184",
+     "T005-00196",
+     "T005-00205",
+     "T005-00212"
+    ]
+   },
+   {
+    "claim": "These records identify connections to the internal proxy, but do not identify the external HTTPS destinations or the process that initiated the periodic flows.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T005-00098",
+     "T005-00126",
+     "T005-00148",
+     "T005-00166",
+     "T005-00184",
+     "T005-00196",
+     "T005-00205",
+     "T005-00212"
+    ]
+   },
+   {
+    "claim": "The periodic flows cannot be attributed from the available records to the approved ChartMate updater or another specific legitimate explanation; nor do the records establish that the traffic is malicious.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T005-00098",
+     "T005-00126",
+     "T005-00148",
+     "T005-00166",
+     "T005-00184",
+     "T005-00196",
+     "T005-00205",
+     "T005-00212"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The periodic flow records show traffic to the explicit proxy on port 8080, not the external destination or URL; they do not by themselves establish that the proxied traffic was HTTPS.",
+   "The available periodic-flow records lack corresponding proxy CONNECT or request details and endpoint process attribution for those specific flows.",
+   "The evidence shown reaches 14:06:22 UTC for the repeated flows; it does not identify a corresponding periodic flow at approximately 14:10 UTC."
+  ],
+  "claims_not_established": [
+   "Whether the external destinations were update.chartmate-imaging.com or another host.",
+   "Whether cmupdate.exe or another legitimate application generated the periodic flows.",
+   "Whether the flows carried command-and-control traffic, data exfiltration, or benign update/check-in traffic."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Obtain full proxy CONNECT/TLS and request logs for the listed flow times, including destination hostnames, SNI, URLs where available, and correlation identifiers.",
+   "Obtain endpoint process-to-network telemetry for WS-BCARTER-01 covering the alert window, including process image, command line, and signature for the process responsible for each flow.",
+   "Verify whether ChartMate is installed and whether its updater ran at the matching times; correlate its process and destination activity with the proxy records."
+  ],
+  "unrelated_findings": [
+   "At 13:37:15 UTC, WS-BCARTER-01 made an SMB connection to DC-HD-01, followed by a network logon for the WS-BCARTER-01$ machine account. This is separate from the alerted periodic proxy flows and may merit review against expected workstation-to-domain-controller SMB activity. Records: T005-00141, T005-00145."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 24,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 26.5
+}

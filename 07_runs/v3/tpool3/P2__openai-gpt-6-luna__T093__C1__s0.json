@@ -1,0 +1,96 @@
+{
+ "scenario_id": "T093",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.95,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:45:06 UTC, ana.ruiz opened Statement.docm from her Downloads folder in Word. About one second later, Word launched PowerShell with -nop, -w hidden, and an encoded command. This is strongly suspicious document-to-PowerShell execution.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T093-00163\",\n        \"T093-00167\",\n        \"T093-00168\"\n      ]\n    },\n    {\n      \"claim\": \"The encoded PowerShell command decodes to an expression that downloads and executes a script from raw.githubusercontent.com/pinecrest-it/tools/main/u.ps1. Proxy records show a successful request for that URL, and process/network records associate the activity with PowerShell PID 5280.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T093-00167\",\n        \"T093-00169\",\n        \"T093-00170\",\n        \"T093-00172\",\n        \"T093-00174\",\n        \"T093-00177\"\n      ]\n    },\n    {\n      \"claim\": \"PowerShell then launched rundll32.exe to call Init in C:\\\\Users\\\\ana.ruiz\\\\AppData\\\\Roaming\\\\svchelper.dll. The rundll32 process and PowerShell both exited shortly afterward.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T093-00179\",\n        \"T093-00181\",\n        \"T093-00183\",\n        \"T093-00184\",\n        \"T093-00185\",\n        \"T093-00186\"\n      ]\n    },\n    {\n      \"claim\": \"The recorded PowerShell chain began at 13:45 UTC, approximately five minutes after the reported 13:40 time. It is within the requested review window and may correspond to the reported brief PowerShell appearance, but the exact match is not established.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T093-00167\",\n        \"T093-00168\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show the URL requested and a successful proxy response, but do not provide the downloaded script contents or establish what it did.\",\n    \"The records show rundll32 invoking svchelper.dll, but do not provide the DLL contents, signature, or file hash.\",\n    \"The logged PowerShell process uses the hidden-window option; the evidence does not establish what the user saw or whether this was the specific window reported.\",\n    \"The logged chain starts at 13:45 UTC, not exactly 13:40 UTC.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether Statement.docm or its contents were malicious, or how the document reached the workstation.\",\n    \"Whether the downloaded script or DLL established persistence, communicated further, or caused additional impact.\",\n    \"Whether any data was accessed or exfiltrated as a result of this execution.\",\n    \"Whether the user\u2019s report refers to this 13:45 execution or to a separate event.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze Statement.docm, the downloaded u.ps1 content, and svchelper.dll; preserve hashes and timestamps.\",\n    \"Collect endpoint protection and file telemetry, including process/script contents, PowerShell logs, file creation events, and persistence-related changes around the execution.\",\n    \"Review proxy or network capture details for the response from raw.githubusercontent.com and any subsequent connections attributable to the execution.\",\n    \"Confirm the user-reported time and circumstances with ana.ruiz and compare them with endpoint process and UI telemetry.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:34 UTC, the Ana workstation IP obtained Kerberos tickets for raj.patel and WS-RPATEL-01, followed by a successful network logon as raj.patel to WS-RPATEL-01. This merits a separate review given the inventory\u2019s stated remote-administration practice; it is not needed to support the finding above. Records: T093-00121, T093-00123, T093-00126.\",\n    \"At 13:59 UTC, the Ana workstation IP obtained tickets for tom.weber and WS-TWEBER-01, followed by a successful network logon as tom.weber to WS-TWEBER-01. Review separately; this does not determine the assessment of the alerted execution. Records: T093-00265, T093-00266, T093-00269.\",\n    \"DropboxUpdate traffic to desktop.dropbox.com was observed from WS-ARUIZ-01, although Dropbox is not among the approved services in the supplied inventory. The records show updater-labeled proxy tunnels, not proof of file synchronization. Records: T093-00018, T093-00022.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 61975,
+    "output": 2907
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.95,
+  "supporting_observations": [
+   {
+    "claim": "At 13:45:06 UTC, ana.ruiz opened Statement.docm from her Downloads folder in Word. About one second later, Word launched PowerShell with -nop, -w hidden, and an encoded command. This is strongly suspicious document-to-PowerShell execution.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T093-00163",
+     "T093-00167",
+     "T093-00168"
+    ]
+   },
+   {
+    "claim": "The encoded PowerShell command decodes to an expression that downloads and executes a script from raw.githubusercontent.com/pinecrest-it/tools/main/u.ps1. Proxy records show a successful request for that URL, and process/network records associate the activity with PowerShell PID 5280.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T093-00167",
+     "T093-00169",
+     "T093-00170",
+     "T093-00172",
+     "T093-00174",
+     "T093-00177"
+    ]
+   },
+   {
+    "claim": "PowerShell then launched rundll32.exe to call Init in C:\\Users\\ana.ruiz\\AppData\\Roaming\\svchelper.dll. The rundll32 process and PowerShell both exited shortly afterward.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T093-00179",
+     "T093-00181",
+     "T093-00183",
+     "T093-00184",
+     "T093-00185",
+     "T093-00186"
+    ]
+   },
+   {
+    "claim": "The recorded PowerShell chain began at 13:45 UTC, approximately five minutes after the reported 13:40 time. It is within the requested review window and may correspond to the reported brief PowerShell appearance, but the exact match is not established.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T093-00167",
+     "T093-00168"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show the URL requested and a successful proxy response, but do not provide the downloaded script contents or establish what it did.",
+   "The records show rundll32 invoking svchelper.dll, but do not provide the DLL contents, signature, or file hash.",
+   "The logged PowerShell process uses the hidden-window option; the evidence does not establish what the user saw or whether this was the specific window reported.",
+   "The logged chain starts at 13:45 UTC, not exactly 13:40 UTC."
+  ],
+  "claims_not_established": [
+   "Whether Statement.docm or its contents were malicious, or how the document reached the workstation.",
+   "Whether the downloaded script or DLL established persistence, communicated further, or caused additional impact.",
+   "Whether any data was accessed or exfiltrated as a result of this execution.",
+   "Whether the user\u2019s report refers to this 13:45 execution or to a separate event."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze Statement.docm, the downloaded u.ps1 content, and svchelper.dll; preserve hashes and timestamps.",
+   "Collect endpoint protection and file telemetry, including process/script contents, PowerShell logs, file creation events, and persistence-related changes around the execution.",
+   "Review proxy or network capture details for the response from raw.githubusercontent.com and any subsequent connections attributable to the execution.",
+   "Confirm the user-reported time and circumstances with ana.ruiz and compare them with endpoint process and UI telemetry."
+  ],
+  "unrelated_findings": [
+   "At 13:34 UTC, the Ana workstation IP obtained Kerberos tickets for raj.patel and WS-RPATEL-01, followed by a successful network logon as raj.patel to WS-RPATEL-01. This merits a separate review given the inventory\u2019s stated remote-administration practice; it is not needed to support the finding above. Records: T093-00121, T093-00123, T093-00126.",
+   "At 13:59 UTC, the Ana workstation IP obtained tickets for tom.weber and WS-TWEBER-01, followed by a successful network logon as tom.weber to WS-TWEBER-01. Review separately; this does not determine the assessment of the alerted execution. Records: T093-00265, T093-00266, T093-00269.",
+   "DropboxUpdate traffic to desktop.dropbox.com was observed from WS-ARUIZ-01, although Dropbox is not among the approved services in the supplied inventory. The records show updater-labeled proxy tunnels, not proof of file synchronization. Records: T093-00018, T093-00022."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 17,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 29.9
+}

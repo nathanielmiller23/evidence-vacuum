@@ -1,0 +1,88 @@
+{
+ "scenario_id": "T297",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The account sysops was created on DC-ORC-01 at 13:45:16 UTC, with sean.byrne recorded as the subject. The observed creation time is later than the alert's approximate 13:42 time.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T297-00078\"\n      ]\n    },\n    {\n      \"claim\": \"About one second after creation, sysops was added to the group named Administrators by sean.byrne. This conflicts with the stated practice that temporary accounts are named guest.<name>, added only to Volunteers, and never given administrator rights.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T297-00078\",\n        \"T297-00079\"\n      ]\n    },\n    {\n      \"claim\": \"Shortly before the account changes, sean.byrne logged on interactively to WS-RDIAZ-01 from 198.51.100.77. The preceding network and logon records show an inbound connection to port 3389 and a type 10 logon. This is inconsistent with the inventory stating remote administration is only performed from WS-SBYRNE-01 and there is no VPN.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T297-00051\",\n        \"T297-00052\",\n        \"T297-00053\"\n      ]\n    },\n    {\n      \"claim\": \"A scheduled task was registered on WS-RDIAZ-01 under sean.byrne's interactive logon session. Its action runs hidden PowerShell with an encoded command that decodes to a download-and-execute expression for http://198.51.100.77/a.ps1. This is suspicious surrounding activity, but the task's logon ID differs from the subject logon ID on the sysops account-change events, so a direct linkage is not established.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T297-00053\",\n        \"T297-00054\",\n        \"T297-00080\",\n        \"T297-00078\",\n        \"T297-00079\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The account creation and group-membership records identify sean.byrne and logon ID 0x9eaf594, but the supplied records do not map that logon ID to a source host or IP.\",\n    \"The observed interactive logon for sean.byrne on WS-RDIAZ-01 uses logon ID 0xbcc70dc, different from the account-change events' 0x9eaf594; the records do not establish whether these sessions are related.\",\n    \"The supplied evidence does not show whether sysops was subsequently used to log on, what credentials were assigned, or whether the account remains enabled.\",\n    \"The scheduled-task record shows its configured action, but the supplied records do not confirm that the task executed or that the referenced URL was contacted.\"\n  ],\n  \"claims_not_established\": [\n    \"Who operated the sean.byrne credentials during the account changes.\",\n    \"Whether the sysops account was created as part of the activity represented by the separate scheduled task.\",\n    \"Whether the account or its administrator-group membership was later used.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate DC-ORC-01 logon ID 0x9eaf594 with authentication and logon records to identify the originating host and session.\",\n    \"Review directory audit and replication metadata for sysops creation, subsequent attribute changes, group membership, and any later logons.\",\n    \"Investigate the sean.byrne logon and inbound connection to WS-RDIAZ-01, including the source of the connection and whether it was authorized.\",\n    \"Collect WS-RDIAZ-01 task execution history and PowerShell logs, and check proxy, DNS, and endpoint records for access to 198.51.100.77/a.ps1.\"\n  ],\n  \"unrelated_findings\": [\n    \"Unapproved Dropbox software was launched under raul.diaz on WS-RDIAZ-01; investigate separately (T297-00149, T297-00150).\",\n    \"Browser activity on WS-RDIAZ-01 accessed Slack (T297-00122, T297-00123), Google Drive/Docs (T297-00197, T297-00198), and the AWS console (T297-00155, T297-00156), services not listed as approved; investigate separately.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 44570,
+    "output": 2921
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "The account sysops was created on DC-ORC-01 at 13:45:16 UTC, with sean.byrne recorded as the subject. The observed creation time is later than the alert's approximate 13:42 time.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T297-00078"
+    ]
+   },
+   {
+    "claim": "About one second after creation, sysops was added to the group named Administrators by sean.byrne. This conflicts with the stated practice that temporary accounts are named guest.<name>, added only to Volunteers, and never given administrator rights.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T297-00078",
+     "T297-00079"
+    ]
+   },
+   {
+    "claim": "Shortly before the account changes, sean.byrne logged on interactively to WS-RDIAZ-01 from 198.51.100.77. The preceding network and logon records show an inbound connection to port 3389 and a type 10 logon. This is inconsistent with the inventory stating remote administration is only performed from WS-SBYRNE-01 and there is no VPN.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T297-00051",
+     "T297-00052",
+     "T297-00053"
+    ]
+   },
+   {
+    "claim": "A scheduled task was registered on WS-RDIAZ-01 under sean.byrne's interactive logon session. Its action runs hidden PowerShell with an encoded command that decodes to a download-and-execute expression for http://198.51.100.77/a.ps1. This is suspicious surrounding activity, but the task's logon ID differs from the subject logon ID on the sysops account-change events, so a direct linkage is not established.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T297-00053",
+     "T297-00054",
+     "T297-00080",
+     "T297-00078",
+     "T297-00079"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The account creation and group-membership records identify sean.byrne and logon ID 0x9eaf594, but the supplied records do not map that logon ID to a source host or IP.",
+   "The observed interactive logon for sean.byrne on WS-RDIAZ-01 uses logon ID 0xbcc70dc, different from the account-change events' 0x9eaf594; the records do not establish whether these sessions are related.",
+   "The supplied evidence does not show whether sysops was subsequently used to log on, what credentials were assigned, or whether the account remains enabled.",
+   "The scheduled-task record shows its configured action, but the supplied records do not confirm that the task executed or that the referenced URL was contacted."
+  ],
+  "claims_not_established": [
+   "Who operated the sean.byrne credentials during the account changes.",
+   "Whether the sysops account was created as part of the activity represented by the separate scheduled task.",
+   "Whether the account or its administrator-group membership was later used."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate DC-ORC-01 logon ID 0x9eaf594 with authentication and logon records to identify the originating host and session.",
+   "Review directory audit and replication metadata for sysops creation, subsequent attribute changes, group membership, and any later logons.",
+   "Investigate the sean.byrne logon and inbound connection to WS-RDIAZ-01, including the source of the connection and whether it was authorized.",
+   "Collect WS-RDIAZ-01 task execution history and PowerShell logs, and check proxy, DNS, and endpoint records for access to 198.51.100.77/a.ps1."
+  ],
+  "unrelated_findings": [
+   "Unapproved Dropbox software was launched under raul.diaz on WS-RDIAZ-01; investigate separately (T297-00149, T297-00150).",
+   "Browser activity on WS-RDIAZ-01 accessed Slack (T297-00122, T297-00123), Google Drive/Docs (T297-00197, T297-00198), and the AWS console (T297-00155, T297-00156), services not listed as approved; investigate separately."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 29.4
+}

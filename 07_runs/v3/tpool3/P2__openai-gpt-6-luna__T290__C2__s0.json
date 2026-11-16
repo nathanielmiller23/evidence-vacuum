@@ -1,0 +1,101 @@
+{
+ "scenario_id": "T290",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.77,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The large outbound transfer is attributed to C:\\\\Program Files\\\\Keystone\\\\agent.exe running as ORCHARD\\\\svc-safe, and the process command targets ingest.keystone-backup.net.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T290-00217\", \"T290-00218\", \"T290-00223\", \"T290-00225\", \"T290-00226\", \"T290-00227\"]\n    },\n    {\n      \"claim\": \"The proxy recorded about 640 MB sent to the approved Keystone backup endpoint; matching network telemetry attributes about 640 MB of outbound bytes to the Keystone agent.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T290-00219\", \"T290-00224\", \"T290-00225\"]\n    },\n    {\n      \"claim\": \"The agent's path, service account, destination, and transfer size are consistent with the inventory's approved offsite backup service, which uploads several hundred MB. This supports a benign backup explanation for the alert.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T290-00217\", \"T290-00219\", \"T290-00224\"]\n    },\n    {\n      \"claim\": \"Shortly before the transfer, the domain controller recorded a service ticket for svc-safe to FILE-ORC-01$ from 91.219.236.174; the local svc-safe service logon and Keystone agent launch followed.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T290-00215\", \"T290-00216\", \"T290-00217\"]\n    },\n    {\n      \"claim\": \"The external-IP ticket is unusual in the stated environment and involves the same account as the backup, but the records do not establish whether it is connected to the agent run or the transfer. That uncertainty prevents a confident benign disposition.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T290-00215\", \"T290-00216\", \"T290-00217\", \"T290-00219\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The bulk transfer is recorded as a proxy TLS tunnel; the supplied records do not show the files or data contents transferred.\",\n    \"The records do not link the external-IP ticket request to the local svc-safe service logon or prove whether the ticket was used by the Keystone agent.\",\n    \"The supplied evidence does not include backup job results, job configuration/history, or independent confirmation that this run was scheduled.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the external-IP service-ticket request was authorized or represents misuse of svc-safe.\",\n    \"Whether the transferred data consisted solely of expected backup content.\",\n    \"Whether the Keystone agent executable and its execution environment were uncompromised.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Investigate the source and authentication path for the 4769 request from 91.219.236.174, including corresponding domain-controller and network perimeter logs.\",\n    \"Correlate the svc-safe ticket and service logon with the agent's process/session, service configuration, and scheduled-job records.\",\n    \"Verify the Keystone job's expected schedule, backup manifest, and successful-run logs; review file-access or backup-agent telemetry for the data included.\"\n  ],\n  \"unrelated_findings\": [\n    \"Tess Hart, a help-desk account, established an RDP session to FILE-ORC-01 before the alerted transfer; the inventory says remote administration is only performed from WS-SBYRNE-01. Triage separately; this does not establish a connection to the transfer. (T290-00046, T290-00053)\",\n    \"FILE-ORC-01 made a proxy request to www.bing.com using a Wget user agent. This is outside the alerted transfer and should be reviewed separately. (T290-00034)\",\n    \"FILE-ORC-01 attempted a proxy connection identifying as GlobalProtect; the proxy denied it. Review separately as an unapproved remote-access indicator. (T290-00273)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 76485,
+    "output": 2606
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.77,
+  "supporting_observations": [
+   {
+    "claim": "The large outbound transfer is attributed to C:\\Program Files\\Keystone\\agent.exe running as ORCHARD\\svc-safe, and the process command targets ingest.keystone-backup.net.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T290-00217",
+     "T290-00218",
+     "T290-00223",
+     "T290-00225",
+     "T290-00226",
+     "T290-00227"
+    ]
+   },
+   {
+    "claim": "The proxy recorded about 640 MB sent to the approved Keystone backup endpoint; matching network telemetry attributes about 640 MB of outbound bytes to the Keystone agent.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T290-00219",
+     "T290-00224",
+     "T290-00225"
+    ]
+   },
+   {
+    "claim": "The agent's path, service account, destination, and transfer size are consistent with the inventory's approved offsite backup service, which uploads several hundred MB. This supports a benign backup explanation for the alert.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T290-00217",
+     "T290-00219",
+     "T290-00224"
+    ]
+   },
+   {
+    "claim": "Shortly before the transfer, the domain controller recorded a service ticket for svc-safe to FILE-ORC-01$ from 91.219.236.174; the local svc-safe service logon and Keystone agent launch followed.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T290-00215",
+     "T290-00216",
+     "T290-00217"
+    ]
+   },
+   {
+    "claim": "The external-IP ticket is unusual in the stated environment and involves the same account as the backup, but the records do not establish whether it is connected to the agent run or the transfer. That uncertainty prevents a confident benign disposition.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T290-00215",
+     "T290-00216",
+     "T290-00217",
+     "T290-00219"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The bulk transfer is recorded as a proxy TLS tunnel; the supplied records do not show the files or data contents transferred.",
+   "The records do not link the external-IP ticket request to the local svc-safe service logon or prove whether the ticket was used by the Keystone agent.",
+   "The supplied evidence does not include backup job results, job configuration/history, or independent confirmation that this run was scheduled."
+  ],
+  "claims_not_established": [
+   "Whether the external-IP service-ticket request was authorized or represents misuse of svc-safe.",
+   "Whether the transferred data consisted solely of expected backup content.",
+   "Whether the Keystone agent executable and its execution environment were uncompromised."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Investigate the source and authentication path for the 4769 request from 91.219.236.174, including corresponding domain-controller and network perimeter logs.",
+   "Correlate the svc-safe ticket and service logon with the agent's process/session, service configuration, and scheduled-job records.",
+   "Verify the Keystone job's expected schedule, backup manifest, and successful-run logs; review file-access or backup-agent telemetry for the data included."
+  ],
+  "unrelated_findings": [
+   "Tess Hart, a help-desk account, established an RDP session to FILE-ORC-01 before the alerted transfer; the inventory says remote administration is only performed from WS-SBYRNE-01. Triage separately; this does not establish a connection to the transfer. (T290-00046, T290-00053)",
+   "FILE-ORC-01 made a proxy request to www.bing.com using a Wget user agent. This is outside the alerted transfer and should be reviewed separately. (T290-00034)",
+   "FILE-ORC-01 attempted a proxy connection identifying as GlobalProtect; the proxy denied it. Review separately as an unapproved remote-access indicator. (T290-00273)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 19,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 26.0
+}

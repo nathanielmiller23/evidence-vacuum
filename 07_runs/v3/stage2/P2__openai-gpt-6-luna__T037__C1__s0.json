@@ -1,0 +1,78 @@
+{
+ "scenario_id": "T037",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain account sysmaint was created at 13:41:49 by sam.okafor and added to the Administrators group about three seconds later. The account name and privileged membership do not match the documented help-desk temporary-account practice.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T037-00109\",\n        \"T037-00110\"\n      ]\n    },\n    {\n      \"claim\": \"Shortly before the account changes, sam.okafor had an interactive remote logon to WS-LMARTINS-01 from 203.0.113.250. The inventory says remote administration is only done from WS-SOKAFOR-01 and there is no VPN.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T037-00073\",\n        \"T037-00075\",\n        \"T037-00076\"\n      ]\n    },\n    {\n      \"claim\": \"About one second after the Administrators-group change, a task was registered on WS-LMARTINS-01 under sam.okafor. Its hidden, encoded PowerShell command decodes to a command that retrieves and executes a script from 203.0.113.250; this is consistent with malicious activity, though task execution is not shown.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T037-00110\",\n        \"T037-00111\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The account creation and group-change records identify sam.okafor as the subject but do not establish who controlled that account or which workstation initiated those directory changes. (T037-00109, T037-00110)\",\n    \"The task-registration record shows its command and author but does not establish that the task ran or that the remote script was retrieved. (T037-00111)\",\n    \"The RDP logon records show the source address and account but do not identify the person or device behind that address. (T037-00073, T037-00075)\"\n  ],\n  \"claims_not_established\": [\n    \"Whether sam.okafor performed these actions or the account/session was compromised.\",\n    \"Whether sysmaint had an approved business purpose or was used to access resources after creation.\",\n    \"Whether the scheduled task executed or the referenced script was retrieved.\",\n    \"Who controlled source address 203.0.113.250.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Review DC-NWD-01 authentication and directory auditing around the account changes, including source host and session correlation for the subject logon ID in T037-00109 and T037-00110.\",\n    \"Investigate the RDP session to WS-LMARTINS-01, including source-address attribution and session activity around T037-00075.\",\n    \"Preserve and inspect the registered HealthCheck task, its execution history, PowerShell logs, and any retrieved file or network evidence related to T037-00111.\",\n    \"Verify the business authorization, current status, group memberships, and any subsequent logons for sysmaint.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox starts on WS-LMARTINS-01; Dropbox is not among the listed approved services. Investigate separately, without using it to decide this alert. (T037-00048, T037-00050, T037-00190, T037-00191)\",\n    \"Meridian OpsAgent runs on WS-LMARTINS-01 and attempts explicit authentication to PROXY-NWD-01 as svc-render. Investigate the agent and service-account use separately. (T037-00117, T037-00119)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 29868,
+    "output": 2362
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "The domain account sysmaint was created at 13:41:49 by sam.okafor and added to the Administrators group about three seconds later. The account name and privileged membership do not match the documented help-desk temporary-account practice.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00109",
+     "T037-00110"
+    ]
+   },
+   {
+    "claim": "Shortly before the account changes, sam.okafor had an interactive remote logon to WS-LMARTINS-01 from 203.0.113.250. The inventory says remote administration is only done from WS-SOKAFOR-01 and there is no VPN.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T037-00073",
+     "T037-00075",
+     "T037-00076"
+    ]
+   },
+   {
+    "claim": "About one second after the Administrators-group change, a task was registered on WS-LMARTINS-01 under sam.okafor. Its hidden, encoded PowerShell command decodes to a command that retrieves and executes a script from 203.0.113.250; this is consistent with malicious activity, though task execution is not shown.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T037-00110",
+     "T037-00111"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The account creation and group-change records identify sam.okafor as the subject but do not establish who controlled that account or which workstation initiated those directory changes. (T037-00109, T037-00110)",
+   "The task-registration record shows its command and author but does not establish that the task ran or that the remote script was retrieved. (T037-00111)",
+   "The RDP logon records show the source address and account but do not identify the person or device behind that address. (T037-00073, T037-00075)"
+  ],
+  "claims_not_established": [
+   "Whether sam.okafor performed these actions or the account/session was compromised.",
+   "Whether sysmaint had an approved business purpose or was used to access resources after creation.",
+   "Whether the scheduled task executed or the referenced script was retrieved.",
+   "Who controlled source address 203.0.113.250."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Review DC-NWD-01 authentication and directory auditing around the account changes, including source host and session correlation for the subject logon ID in T037-00109 and T037-00110.",
+   "Investigate the RDP session to WS-LMARTINS-01, including source-address attribution and session activity around T037-00075.",
+   "Preserve and inspect the registered HealthCheck task, its execution history, PowerShell logs, and any retrieved file or network evidence related to T037-00111.",
+   "Verify the business authorization, current status, group memberships, and any subsequent logons for sysmaint."
+  ],
+  "unrelated_findings": [
+   "Dropbox starts on WS-LMARTINS-01; Dropbox is not among the listed approved services. Investigate separately, without using it to decide this alert. (T037-00048, T037-00050, T037-00190, T037-00191)",
+   "Meridian OpsAgent runs on WS-LMARTINS-01 and attempts explicit authentication to PROXY-NWD-01 as svc-render. Investigate the agent and service-account use separately. (T037-00117, T037-00119)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 7,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.4
+}

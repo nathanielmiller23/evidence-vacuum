@@ -1,0 +1,82 @@
+{
+ "scenario_id": "S27",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.86,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:42:53 UTC, the domain controller recorded cole.price being added to Remote Desktop Users by dev.sharma. The supplied environment context says membership of this group is restricted to IT, while cole.price is a vet tech.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"S27-00048\"\n      ]\n    },\n    {\n      \"claim\": \"About one minute after the group change, Explorer on cole.price's workstation updated a UserAssist entry whose ROT13-encoded path decodes to C:\\\\Windows\\\\System32\\\\mstsc.exe. This is consistent with Cole launching Remote Desktop shortly after gaining membership, but does not establish a connection or its destination.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"S27-00060\"\n      ]\n    },\n    {\n      \"claim\": \"The group-change event identifies dev.sharma as the actor; a preceding domain-controller network logon for dev.sharma has the same logon ID as the group-change event.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"S27-00047\",\n        \"S27-00048\"\n      ]\n    },\n    {\n      \"claim\": \"At approximately the same time, dev.sharma initiated an RDP session to FILE-RB-01 from WS-DSHARMA-01, the designated workstation for server administration. This is consistent with the stated IT practice, but does not explain the addition of cole.price to Remote Desktop Users.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"S27-00049\",\n        \"S27-00052\",\n        \"S27-00053\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy logs for PROXY-RB-01 were not collected from 13:30 to 14:15 UTC due to an outage. This gap does not directly cover the directory group-change event, but limits review of activity involving that proxy during the window.\",\n    \"The supplied records do not show whether cole.price established an RDP connection after the group change.\"\n  ],\n  \"claims_not_established\": [\n    \"The available records do not establish the actor's motive or whether the group change was an intentional compromise rather than an unauthorized mistake.\",\n    \"No ticket or change-approval record was provided to confirm whether the group change was authorized.\",\n    \"The UserAssist entry does not establish the destination of any mstsc session or whether a remote logon succeeded.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Check the change-management and help-desk records for approval covering cole.price's addition to Remote Desktop Users.\",\n    \"Review domain-controller directory and security audit records for subsequent membership changes and related account activity.\",\n    \"Review endpoint and network telemetry for RDP connections from WS-CPRICE-01 after 13:42:53 UTC, and check destination servers for successful logons by cole.price.\",\n    \"If no valid authorization is found, remove the unauthorized membership and investigate the actor and affected systems.\"\n  ],\n  \"unrelated_findings\": [\n    \"dev.sharma launched OpenSSH to connect to PROXY-RB-01 on port 22; the supplied inventory says no remote-access tools other than approved services are approved. This is a separate finding and does not determine the group-change alert. (S27-00004, S27-00007)\",\n    \"A second OpenSSH connection from WS-DSHARMA-01 to PROXY-RB-01 occurred later in the review window. This is also separate from the alerted directory change. (S27-00066, S27-00069)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 13896,
+    "output": 3157
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.86,
+  "supporting_observations": [
+   {
+    "claim": "At 13:42:53 UTC, the domain controller recorded cole.price being added to Remote Desktop Users by dev.sharma. The supplied environment context says membership of this group is restricted to IT, while cole.price is a vet tech.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S27-00048"
+    ]
+   },
+   {
+    "claim": "About one minute after the group change, Explorer on cole.price's workstation updated a UserAssist entry whose ROT13-encoded path decodes to C:\\Windows\\System32\\mstsc.exe. This is consistent with Cole launching Remote Desktop shortly after gaining membership, but does not establish a connection or its destination.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "S27-00060"
+    ]
+   },
+   {
+    "claim": "The group-change event identifies dev.sharma as the actor; a preceding domain-controller network logon for dev.sharma has the same logon ID as the group-change event.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S27-00047",
+     "S27-00048"
+    ]
+   },
+   {
+    "claim": "At approximately the same time, dev.sharma initiated an RDP session to FILE-RB-01 from WS-DSHARMA-01, the designated workstation for server administration. This is consistent with the stated IT practice, but does not explain the addition of cole.price to Remote Desktop Users.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "S27-00049",
+     "S27-00052",
+     "S27-00053"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy logs for PROXY-RB-01 were not collected from 13:30 to 14:15 UTC due to an outage. This gap does not directly cover the directory group-change event, but limits review of activity involving that proxy during the window.",
+   "The supplied records do not show whether cole.price established an RDP connection after the group change."
+  ],
+  "claims_not_established": [
+   "The available records do not establish the actor's motive or whether the group change was an intentional compromise rather than an unauthorized mistake.",
+   "No ticket or change-approval record was provided to confirm whether the group change was authorized.",
+   "The UserAssist entry does not establish the destination of any mstsc session or whether a remote logon succeeded."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Check the change-management and help-desk records for approval covering cole.price's addition to Remote Desktop Users.",
+   "Review domain-controller directory and security audit records for subsequent membership changes and related account activity.",
+   "Review endpoint and network telemetry for RDP connections from WS-CPRICE-01 after 13:42:53 UTC, and check destination servers for successful logons by cole.price.",
+   "If no valid authorization is found, remove the unauthorized membership and investigate the actor and affected systems."
+  ],
+  "unrelated_findings": [
+   "dev.sharma launched OpenSSH to connect to PROXY-RB-01 on port 22; the supplied inventory says no remote-access tools other than approved services are approved. This is a separate finding and does not determine the group-change alert. (S27-00004, S27-00007)",
+   "A second OpenSSH connection from WS-DSHARMA-01 to PROXY-RB-01 occurred later in the review window. This is also separate from the alerted directory change. (S27-00066, S27-00069)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 7,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 33.6
+}

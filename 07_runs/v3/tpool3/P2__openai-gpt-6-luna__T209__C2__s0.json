@@ -1,0 +1,85 @@
+{
+ "scenario_id": "T209",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:44:56 UTC, mia.santos ran PowerShell to compress \\\\\\\\FILE-BLU-01\\\\Shared\\\\Clients into C:\\\\Users\\\\mia.santos\\\\AppData\\\\Local\\\\Temp\\\\c.zip; Sysmon then recorded creation of that ZIP at 13:45:00.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T209-00189\", \"T209-00191\"]\n    },\n    {\n      \"claim\": \"At 13:50:36 UTC, WS-MSANTOS-01 opened a proxy tunnel to bigsend-drop.net with 51,000,000 client-to-server bytes; Zeek independently recorded 51,000,299 originating bytes for the same connection.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T209-00202\", \"T209-00203\"]\n    },\n    {\n      \"claim\": \"The large transfer used Chrome.exe running as BLUEFIN\\\\mia.santos, and the destination is an unapproved file-transfer service under the supplied service inventory.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T209-00202\", \"T209-00204\", \"T209-00205\"]\n    },\n    {\n      \"claim\": \"The close timing between creating an archive of shared client data and sending tens of megabytes to an unapproved file-transfer destination strongly supports likely data exfiltration; the available records do not directly prove that c.zip was the uploaded content.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T209-00189\", \"T209-00191\", \"T209-00202\", \"T209-00203\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy records identify the destination and transfer byte counts, but the tunnel record does not expose the uploaded filename or content (T209-00202).\",\n    \"The available records do not directly link c.zip to the outbound connection; they show archive creation followed minutes later by a large transfer (T209-00189, T209-00191, T209-00202, T209-00203).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the 51 MB transfer contained c.zip, all or part of the Shared\\\\Clients data, or other content.\",\n    \"The specific recipient, account, or remote storage location associated with bigsend-drop.net.\",\n    \"Whether mia.santos initiated or authorized the upload, beyond the proxy user attribution and Chrome process records.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and examine c.zip, including its size, contents, hash, timestamps, and any endpoint records linking it to Chrome or the transfer.\",\n    \"Obtain proxy or TLS inspection details, if available, for the bigsend-drop.net session, including request metadata, upload object details, and destination resolution.\",\n    \"Review browser history, endpoint file-access telemetry, and FILE-BLU-01 audit records for access to Shared\\\\Clients and related data.\",\n    \"Confirm with mia.santos and the relevant business owner whether the archive and transfer were authorized.\"\n  ],\n  \"unrelated_findings\": [\n    \"At 13:26 UTC, ruth.moss launched msra.exe targeting WS-MSANTOS-01 and generated an explicit-credentials event for mia.santos from WS-RMOSS-01. This is outside the alerted transfer and conflicts with the supplied remote-administration practice; the records do not establish that a remote session succeeded. Review separately. (T209-00047, T209-00048, T209-00049)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 45587,
+    "output": 1870
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:44:56 UTC, mia.santos ran PowerShell to compress \\\\FILE-BLU-01\\Shared\\Clients into C:\\Users\\mia.santos\\AppData\\Local\\Temp\\c.zip; Sysmon then recorded creation of that ZIP at 13:45:00.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T209-00189",
+     "T209-00191"
+    ]
+   },
+   {
+    "claim": "At 13:50:36 UTC, WS-MSANTOS-01 opened a proxy tunnel to bigsend-drop.net with 51,000,000 client-to-server bytes; Zeek independently recorded 51,000,299 originating bytes for the same connection.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T209-00202",
+     "T209-00203"
+    ]
+   },
+   {
+    "claim": "The large transfer used Chrome.exe running as BLUEFIN\\mia.santos, and the destination is an unapproved file-transfer service under the supplied service inventory.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T209-00202",
+     "T209-00204",
+     "T209-00205"
+    ]
+   },
+   {
+    "claim": "The close timing between creating an archive of shared client data and sending tens of megabytes to an unapproved file-transfer destination strongly supports likely data exfiltration; the available records do not directly prove that c.zip was the uploaded content.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T209-00189",
+     "T209-00191",
+     "T209-00202",
+     "T209-00203"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy records identify the destination and transfer byte counts, but the tunnel record does not expose the uploaded filename or content (T209-00202).",
+   "The available records do not directly link c.zip to the outbound connection; they show archive creation followed minutes later by a large transfer (T209-00189, T209-00191, T209-00202, T209-00203)."
+  ],
+  "claims_not_established": [
+   "Whether the 51 MB transfer contained c.zip, all or part of the Shared\\Clients data, or other content.",
+   "The specific recipient, account, or remote storage location associated with bigsend-drop.net.",
+   "Whether mia.santos initiated or authorized the upload, beyond the proxy user attribution and Chrome process records."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and examine c.zip, including its size, contents, hash, timestamps, and any endpoint records linking it to Chrome or the transfer.",
+   "Obtain proxy or TLS inspection details, if available, for the bigsend-drop.net session, including request metadata, upload object details, and destination resolution.",
+   "Review browser history, endpoint file-access telemetry, and FILE-BLU-01 audit records for access to Shared\\Clients and related data.",
+   "Confirm with mia.santos and the relevant business owner whether the archive and transfer were authorized."
+  ],
+  "unrelated_findings": [
+   "At 13:26 UTC, ruth.moss launched msra.exe targeting WS-MSANTOS-01 and generated an explicit-credentials event for mia.santos from WS-RMOSS-01. This is outside the alerted transfer and conflicts with the supplied remote-administration practice; the records do not establish that a remote session succeeded. Review separately. (T209-00047, T209-00048, T209-00049)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 19.7
+}

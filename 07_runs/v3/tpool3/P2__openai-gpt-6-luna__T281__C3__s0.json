@@ -1,0 +1,89 @@
+{
+ "scenario_id": "T281",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.95,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded two failed network logons for raul.diaz from 198.51.100.77: one at 13:41:26 UTC and another at 13:42:44 UTC. Both report a bad password.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T281-00073\",\n        \"T281-00074\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:44:22 UTC, the domain controller recorded a successful network logon for raul.diaz from the same address, 198.51.100.77, after those failures.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T281-00073\",\n        \"T281-00074\",\n        \"T281-00075\"\n      ]\n    },\n    {\n      \"claim\": \"The failed-then-successful logon sequence from an address outside the listed internal host networks is suspicious and supports unauthorized credential use. The supplied environment context says there is no VPN and remote administration is only performed from WS-SBYRNE-01.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T281-00073\",\n        \"T281-00074\",\n        \"T281-00075\"\n      ]\n    },\n    {\n      \"claim\": \"Separate authentication activity around 13:40 includes a successful Kerberos network logon from 10.56.10.23 and a successful NTLM network logon associated with FILE-ORC-01; these are distinct from the later failures and success involving 198.51.100.77.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T281-00045\",\n        \"T281-00046\",\n        \"T281-00047\",\n        \"T281-00050\",\n        \"T281-00051\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy logs were not collected from 13:25 to 14:10 UTC because of a collection outage. This limits visibility into web activity during that interval but does not remove the recorded domain-controller authentication events.\",\n    \"Winsec and Sysmon are reported as healthy for all hosts; Zeek connection, DNS, and SSL sensors are also reported as healthy.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not identify who controlled 198.51.100.77 or establish its real-world attribution or routability.\",\n    \"The logs do not establish who entered the credentials or whether the successful logon was followed by access to data or other actions.\",\n    \"The evidence does not establish whether raul.diaz's credentials were compromised or how they may have been obtained.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate the successful logon at 13:44:22 UTC with subsequent logons, resource access, and activity for raul.diaz across domain controllers and hosts.\",\n    \"Investigate the source and ownership of 198.51.100.77 using available network, firewall, and identity-provider records.\",\n    \"Validate the activity with raul.diaz and the IT administrator; preserve relevant authentication and endpoint logs.\",\n    \"Review the account's active sessions and credentials, and apply containment measures according to incident-response procedures.\"\n  ],\n  \"unrelated_findings\": [\n    \"Webex was launched with a mail.google.com URL, which is outside the listed approved Microsoft 365/OneDrive services; investigate separately if policy requires.\",\n    \"Chrome was opened to files.slack.com and a Slack shortcut appears in the user's UserAssist data; Slack file-sharing use is outside the listed approved services. This does not establish malicious activity.\",\n    \"Proxy records show browsing or connections involving Cloudflare, jsDelivr, SignalWire, Pingdom, and Zoom. These are separate from the alerted authentication sequence and should be assessed separately against policy.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 14211,
+    "output": 2276
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.95,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded two failed network logons for raul.diaz from 198.51.100.77: one at 13:41:26 UTC and another at 13:42:44 UTC. Both report a bad password.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T281-00073",
+     "T281-00074"
+    ]
+   },
+   {
+    "claim": "At 13:44:22 UTC, the domain controller recorded a successful network logon for raul.diaz from the same address, 198.51.100.77, after those failures.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T281-00073",
+     "T281-00074",
+     "T281-00075"
+    ]
+   },
+   {
+    "claim": "The failed-then-successful logon sequence from an address outside the listed internal host networks is suspicious and supports unauthorized credential use. The supplied environment context says there is no VPN and remote administration is only performed from WS-SBYRNE-01.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T281-00073",
+     "T281-00074",
+     "T281-00075"
+    ]
+   },
+   {
+    "claim": "Separate authentication activity around 13:40 includes a successful Kerberos network logon from 10.56.10.23 and a successful NTLM network logon associated with FILE-ORC-01; these are distinct from the later failures and success involving 198.51.100.77.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T281-00045",
+     "T281-00046",
+     "T281-00047",
+     "T281-00050",
+     "T281-00051"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy logs were not collected from 13:25 to 14:10 UTC because of a collection outage. This limits visibility into web activity during that interval but does not remove the recorded domain-controller authentication events.",
+   "Winsec and Sysmon are reported as healthy for all hosts; Zeek connection, DNS, and SSL sensors are also reported as healthy."
+  ],
+  "claims_not_established": [
+   "The evidence does not identify who controlled 198.51.100.77 or establish its real-world attribution or routability.",
+   "The logs do not establish who entered the credentials or whether the successful logon was followed by access to data or other actions.",
+   "The evidence does not establish whether raul.diaz's credentials were compromised or how they may have been obtained."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate the successful logon at 13:44:22 UTC with subsequent logons, resource access, and activity for raul.diaz across domain controllers and hosts.",
+   "Investigate the source and ownership of 198.51.100.77 using available network, firewall, and identity-provider records.",
+   "Validate the activity with raul.diaz and the IT administrator; preserve relevant authentication and endpoint logs.",
+   "Review the account's active sessions and credentials, and apply containment measures according to incident-response procedures."
+  ],
+  "unrelated_findings": [
+   "Webex was launched with a mail.google.com URL, which is outside the listed approved Microsoft 365/OneDrive services; investigate separately if policy requires.",
+   "Chrome was opened to files.slack.com and a Slack shortcut appears in the user's UserAssist data; Slack file-sharing use is outside the listed approved services. This does not establish malicious activity.",
+   "Proxy records show browsing or connections involving Cloudflare, jsDelivr, SignalWire, Pingdom, and Zoom. These are separate from the alerted authentication sequence and should be assessed separately against policy."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.0
+}

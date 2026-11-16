@@ -1,0 +1,102 @@
+{
+ "run_id": "A__T060__C2__20261115T050755Z",
+ "config": "A",
+ "scenario_id": "T060",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 395,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 155707,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:50:07 UTC, FILE-NWD-01 sent 640,000,237 bytes to PROXY-NWD-01 on port 8080 over a connection lasting about 30 seconds, consistent with the reported large outbound-transfer alert.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T060-00298\"]\n    },\n    {\n      \"claim\": \"At 13:49:22 UTC, a domain-controller 4769 record for svc-archive and service FILE-NWD-01$ lists source address 139.162.174.124, an external address. The supplied environment states there is no VPN.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T060-00279\"]\n    },\n    {\n      \"claim\": \"At 14:14:37 UTC, PROXY-NWD-01 connected to FILE-NWD-01 over RDP; FILE-NWD-01 recorded a failed NTLM logon for svc_mgmt from the proxy, with the account disabled status shown in the record.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T060-00500\", \"T060-00501\", \"T060-00503\"]\n    },\n    {\n      \"claim\": \"Shortly afterward, FILE-NWD-01 connected to PROXY-NWD-01 over SSH and attempted SMB authentication to DC-NWD-01; the DC recorded a failed logon for the disabled svc_mgmt account from FILE-NWD-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T060-00504\", \"T060-00505\", \"T060-00507\", \"T060-00509\"]\n    },\n    {\n      \"claim\": \"The external-source service-ticket event, large transfer, and subsequent unapproved RDP/SSH activity form a suspicious pattern that supports a malicious-activity finding, although the records do not prove the transfer's contents or destination beyond the proxy.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T060-00279\", \"T060-00298\", \"T060-00500\", \"T060-00503\", \"T060-00504\", \"T060-00509\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The bulk connection record identifies FILE-NWD-01 and PROXY-NWD-01, but does not identify the process, requested URL, or ultimate external destination; the available proxy connection record does not establish that it corresponds to the bulk transfer. (T060-00289, T060-00298)\",\n    \"The svc-archive Kerberos record lists an external source address, but these records do not establish whether authentication succeeded or whether the source address accurately identifies the actor. (T060-00279)\",\n    \"The failed svc_mgmt logons show attempts, not successful access. (T060-00503, T060-00509)\"\n  ],\n  \"claims_not_established\": [\n    \"That the 640,000,237-byte transfer was data exfiltration, what it contained, or where it ultimately went.\",\n    \"That the approved StratoSafe backup agent, rather than another process, generated the large transfer.\",\n    \"That an attacker successfully authenticated using svc-archive or svc_mgmt.\",\n    \"That the RDP and SSH activity was controlled by an external attacker rather than another cause.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Proxy logs for the bulk connection, including CONNECT/request details, destination host, URL, and user-agent, correlated to the 13:50:07 UTC transfer.\",\n    \"FILE-NWD-01 endpoint process, service, and network-attribution telemetry for the bulk connection, including whether stsync.exe was responsible.\",\n    \"Domain-controller authentication details and related source-host telemetry for the svc-archive event from 139.162.174.124.\",\n    \"RDP, SSH, and account-management logs on FILE-NWD-01 and PROXY-NWD-01 to determine whether any session or access succeeded.\",\n    \"Relevant file-access, staging, and backup-job records to establish what data was read or transmitted.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 58617,
+    "output": 2412,
+    "reasoning": 1470
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "At 13:50:07 UTC, FILE-NWD-01 sent 640,000,237 bytes to PROXY-NWD-01 on port 8080 over a connection lasting about 30 seconds, consistent with the reported large outbound-transfer alert.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T060-00298"
+    ]
+   },
+   {
+    "claim": "At 13:49:22 UTC, a domain-controller 4769 record for svc-archive and service FILE-NWD-01$ lists source address 139.162.174.124, an external address. The supplied environment states there is no VPN.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T060-00279"
+    ]
+   },
+   {
+    "claim": "At 14:14:37 UTC, PROXY-NWD-01 connected to FILE-NWD-01 over RDP; FILE-NWD-01 recorded a failed NTLM logon for svc_mgmt from the proxy, with the account disabled status shown in the record.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T060-00500",
+     "T060-00501",
+     "T060-00503"
+    ]
+   },
+   {
+    "claim": "Shortly afterward, FILE-NWD-01 connected to PROXY-NWD-01 over SSH and attempted SMB authentication to DC-NWD-01; the DC recorded a failed logon for the disabled svc_mgmt account from FILE-NWD-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T060-00504",
+     "T060-00505",
+     "T060-00507",
+     "T060-00509"
+    ]
+   },
+   {
+    "claim": "The external-source service-ticket event, large transfer, and subsequent unapproved RDP/SSH activity form a suspicious pattern that supports a malicious-activity finding, although the records do not prove the transfer's contents or destination beyond the proxy.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T060-00279",
+     "T060-00298",
+     "T060-00500",
+     "T060-00503",
+     "T060-00504",
+     "T060-00509"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The bulk connection record identifies FILE-NWD-01 and PROXY-NWD-01, but does not identify the process, requested URL, or ultimate external destination; the available proxy connection record does not establish that it corresponds to the bulk transfer. (T060-00289, T060-00298)",
+   "The svc-archive Kerberos record lists an external source address, but these records do not establish whether authentication succeeded or whether the source address accurately identifies the actor. (T060-00279)",
+   "The failed svc_mgmt logons show attempts, not successful access. (T060-00503, T060-00509)"
+  ],
+  "claims_not_established": [
+   "That the 640,000,237-byte transfer was data exfiltration, what it contained, or where it ultimately went.",
+   "That the approved StratoSafe backup agent, rather than another process, generated the large transfer.",
+   "That an attacker successfully authenticated using svc-archive or svc_mgmt.",
+   "That the RDP and SSH activity was controlled by an external attacker rather than another cause."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Proxy logs for the bulk connection, including CONNECT/request details, destination host, URL, and user-agent, correlated to the 13:50:07 UTC transfer.",
+   "FILE-NWD-01 endpoint process, service, and network-attribution telemetry for the bulk connection, including whether stsync.exe was responsible.",
+   "Domain-controller authentication details and related source-host telemetry for the svc-archive event from 139.162.174.124.",
+   "RDP, SSH, and account-management logs on FILE-NWD-01 and PROXY-NWD-01 to determine whether any session or access succeeded.",
+   "Relevant file-access, staging, and backup-job records to establish what data was read or transmitted."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 25.2
+}

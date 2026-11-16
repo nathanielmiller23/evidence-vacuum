@@ -1,0 +1,114 @@
+{
+ "run_id": "A__T014__C2__20261115T043910Z",
+ "config": "A",
+ "scenario_id": "T014",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 397,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 164150,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.9,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:39:57, WS-MLOPEZ-01 recorded a network logon for omar.haddad from WS-OHADDAD-01. At 13:41:49, PowerShell ran as omar.haddad with the configured Deploy-Patches.ps1 path; it launched wusa to install a Windows update, and the proxy recorded a Windows Update download.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T014-00148\",\n        \"T014-00177\",\n        \"T014-00178\",\n        \"T014-00179\",\n        \"T014-00182\",\n        \"T014-00184\"\n      ]\n    },\n    {\n      \"claim\": \"The PowerShell activity is consistent with the stated IT patching practice and schedule, and plausibly explains the reported brief window. This consistency does not establish that the script or patch was authorized in this instance.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T014-00148\",\n        \"T014-00177\",\n        \"T014-00182\",\n        \"T014-00187\",\n        \"T014-00188\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:30, a Kerberos ticket for ben.carter and a service ticket for WS-BCARTER-01 were requested from WS-MLOPEZ-01; WS-BCARTER-01 then recorded a network logon for ben.carter from that workstation. The evidence shows cross-host account activity but does not establish whether it was authorized.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T014-00089\",\n        \"T014-00090\",\n        \"T014-00092\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:33, DC-HD-01 recorded a network logon for maria.lopez from WS-BCARTER-01. In combination with the earlier activity, this merits investigation, but the records alone do not establish lateral movement or misuse of credentials.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T014-00112\"\n      ]\n    },\n    {\n      \"claim\": \"At 13:43, WS-MLOPEZ-01 made an SMB connection to FILE-HD-01, which recorded an ANONYMOUS LOGON network session. The available records do not show which share or files, if any, were accessed.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T014-00213\",\n        \"T014-00214\",\n        \"T014-00217\"\n      ]\n    },\n    {\n      \"claim\": \"The proxy recorded a GoogleDriveFS connection and a DropboxUpdate connection from WS-MLOPEZ-01. These services are outside the stated approved services, but the records do not establish actual file-sharing use or data upload.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T014-00218\",\n        \"T014-00219\",\n        \"T014-00285\",\n        \"T014-00286\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show process creation and command lines, but do not include the contents, signature, or hash of Deploy-Patches.ps1 or the installed patch package (T014-00177, T014-00182).\",\n    \"The SMB records show connection and authentication events, not share names, file operations, or transferred file contents (T014-00213, T014-00217).\",\n    \"The proxy records identify Google Drive and Dropbox-related connections but do not establish whether files were uploaded or what data, if any, was transferred (T014-00218, T014-00219, T014-00285, T014-00286).\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the cross-host account activity involving ben.carter and maria.lopez was authorized or user-initiated (T014-00089, T014-00090, T014-00092, T014-00112).\",\n    \"Whether the FILE-HD-01 SMB session accessed any share or data (T014-00213, T014-00217).\",\n    \"Whether Google Drive or Dropbox was used to share or exfiltrate organizational data (T014-00218, T014-00219, T014-00285, T014-00286).\",\n    \"Whether the reported window corresponds exactly to the logged PowerShell process, and whether the script and patch were authorized and unmodified (T014-00177, T014-00182).\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Retrieve and verify the Deploy-Patches.ps1 contents, signature, hash, and change or execution approval; verify the patch package provenance.\",\n    \"Review WS-BCARTER-01 and DC-HD-01 authentication and process telemetry around 13:30\u201313:34 UTC to determine the context and authorization of the cross-host logons.\",\n    \"Obtain FILE-HD-01 share-access and object-access auditing for the 13:43 SMB session.\",\n    \"Review endpoint process lineage and file-transfer details for GoogleDriveFS and Dropbox-related activity, and confirm whether either client is authorized or installed.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 60689,
+    "output": 2895,
+    "reasoning": 1689
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.9,
+  "supporting_observations": [
+   {
+    "claim": "At 13:39:57, WS-MLOPEZ-01 recorded a network logon for omar.haddad from WS-OHADDAD-01. At 13:41:49, PowerShell ran as omar.haddad with the configured Deploy-Patches.ps1 path; it launched wusa to install a Windows update, and the proxy recorded a Windows Update download.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T014-00148",
+     "T014-00177",
+     "T014-00178",
+     "T014-00179",
+     "T014-00182",
+     "T014-00184"
+    ]
+   },
+   {
+    "claim": "The PowerShell activity is consistent with the stated IT patching practice and schedule, and plausibly explains the reported brief window. This consistency does not establish that the script or patch was authorized in this instance.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T014-00148",
+     "T014-00177",
+     "T014-00182",
+     "T014-00187",
+     "T014-00188"
+    ]
+   },
+   {
+    "claim": "At 13:30, a Kerberos ticket for ben.carter and a service ticket for WS-BCARTER-01 were requested from WS-MLOPEZ-01; WS-BCARTER-01 then recorded a network logon for ben.carter from that workstation. The evidence shows cross-host account activity but does not establish whether it was authorized.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T014-00089",
+     "T014-00090",
+     "T014-00092"
+    ]
+   },
+   {
+    "claim": "At 13:33, DC-HD-01 recorded a network logon for maria.lopez from WS-BCARTER-01. In combination with the earlier activity, this merits investigation, but the records alone do not establish lateral movement or misuse of credentials.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T014-00112"
+    ]
+   },
+   {
+    "claim": "At 13:43, WS-MLOPEZ-01 made an SMB connection to FILE-HD-01, which recorded an ANONYMOUS LOGON network session. The available records do not show which share or files, if any, were accessed.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T014-00213",
+     "T014-00214",
+     "T014-00217"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a GoogleDriveFS connection and a DropboxUpdate connection from WS-MLOPEZ-01. These services are outside the stated approved services, but the records do not establish actual file-sharing use or data upload.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T014-00218",
+     "T014-00219",
+     "T014-00285",
+     "T014-00286"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show process creation and command lines, but do not include the contents, signature, or hash of Deploy-Patches.ps1 or the installed patch package (T014-00177, T014-00182).",
+   "The SMB records show connection and authentication events, not share names, file operations, or transferred file contents (T014-00213, T014-00217).",
+   "The proxy records identify Google Drive and Dropbox-related connections but do not establish whether files were uploaded or what data, if any, was transferred (T014-00218, T014-00219, T014-00285, T014-00286)."
+  ],
+  "claims_not_established": [
+   "Whether the cross-host account activity involving ben.carter and maria.lopez was authorized or user-initiated (T014-00089, T014-00090, T014-00092, T014-00112).",
+   "Whether the FILE-HD-01 SMB session accessed any share or data (T014-00213, T014-00217).",
+   "Whether Google Drive or Dropbox was used to share or exfiltrate organizational data (T014-00218, T014-00219, T014-00285, T014-00286).",
+   "Whether the reported window corresponds exactly to the logged PowerShell process, and whether the script and patch were authorized and unmodified (T014-00177, T014-00182)."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Retrieve and verify the Deploy-Patches.ps1 contents, signature, hash, and change or execution approval; verify the patch package provenance.",
+   "Review WS-BCARTER-01 and DC-HD-01 authentication and process telemetry around 13:30\u201313:34 UTC to determine the context and authorization of the cross-host logons.",
+   "Obtain FILE-HD-01 share-access and object-access auditing for the 13:43 SMB session.",
+   "Review endpoint process lineage and file-transfer details for GoogleDriveFS and Dropbox-related activity, and confirm whether either client is authorized or installed."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 22,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 25.2
+}

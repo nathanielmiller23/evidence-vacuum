@@ -1,0 +1,97 @@
+{
+ "scenario_id": "T173",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:42:37 UTC, Julia Frost opened Statement.docm in Downloads with Microsoft Word; about two seconds later, Word launched PowerShell with no profile, a hidden window, and an encoded command.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T173-00144\", \"T173-00148\", \"T173-00149\"]\n    },\n    {\n      \"claim\": \"The encoded PowerShell command in the Word-child process decodes to an expression that downloads and executes a script from raw.githubusercontent.com/maplehill-it/tools/main/u.ps1.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T173-00148\", \"T173-00149\"]\n    },\n    {\n      \"claim\": \"That PowerShell process connected to the organization's proxy; the recorded connection returned 13,445 bytes.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T173-00153\", \"T173-00154\", \"T173-00155\", \"T173-00156\"]\n    },\n    {\n      \"claim\": \"The PowerShell process launched rundll32 to invoke Init in a DLL located in Julia Frost's roaming profile.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T173-00157\", \"T173-00159\"]\n    },\n    {\n      \"claim\": \"The observed hidden PowerShell download-and-execute behavior and subsequent DLL invocation provide strong evidence of malicious activity in the alerted chain.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T173-00148\", \"T173-00154\", \"T173-00157\", \"T173-00159\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The evidence contains process command lines and connection metadata, but not the downloaded script's contents or the proxy's full HTTP request and response.\",\n    \"The evidence shows rundll32 invoked a DLL, but does not include the DLL's contents, signature, or analysis results.\",\n    \"The logs establish the process chain but do not establish who authored or delivered the document or whether Julia Frost knowingly opened it.\"\n  ],\n  \"claims_not_established\": [\n    \"What the downloaded script or DLL did after execution, including whether it stole data, established persistence, or communicated further.\",\n    \"Whether the URL or downloaded artifacts were controlled by an attacker, or whether any associated repository or account was compromised.\",\n    \"Whether the activity was knowingly initiated by the user or resulted from an unsolicited or deceptive document.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze Statement.docm, including its macros and origin, along with the downloaded u.ps1 script and the svchelper.dll artifact.\",\n    \"Obtain proxy request logs and, if available, network content for the connections made by the PowerShell process.\",\n    \"Review endpoint security detections, file creation and persistence telemetry, and subsequent activity on WS-JFROST-01 for impact or follow-on behavior.\",\n    \"Interview Julia Frost about the document and the reported PowerShell window.\"\n  ],\n  \"unrelated_findings\": [\n    \"Dropbox was launched on WS-JFROST-01; file-sharing and cloud-storage services other than the listed approvals are not approved in the supplied environment context. Track separately; this does not decide the alerted PowerShell activity. (T173-00255, T173-00256, T173-00257)\",\n    \"Cisco Spark/Webex was launched with an app.slack.com URL; Slack is not among the listed approved services. Track separately; this does not decide the alerted PowerShell activity. (T173-00264, T173-00265, T173-00266)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 52218,
+    "output": 1968
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:42:37 UTC, Julia Frost opened Statement.docm in Downloads with Microsoft Word; about two seconds later, Word launched PowerShell with no profile, a hidden window, and an encoded command.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T173-00144",
+     "T173-00148",
+     "T173-00149"
+    ]
+   },
+   {
+    "claim": "The encoded PowerShell command in the Word-child process decodes to an expression that downloads and executes a script from raw.githubusercontent.com/maplehill-it/tools/main/u.ps1.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T173-00148",
+     "T173-00149"
+    ]
+   },
+   {
+    "claim": "That PowerShell process connected to the organization's proxy; the recorded connection returned 13,445 bytes.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T173-00153",
+     "T173-00154",
+     "T173-00155",
+     "T173-00156"
+    ]
+   },
+   {
+    "claim": "The PowerShell process launched rundll32 to invoke Init in a DLL located in Julia Frost's roaming profile.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T173-00157",
+     "T173-00159"
+    ]
+   },
+   {
+    "claim": "The observed hidden PowerShell download-and-execute behavior and subsequent DLL invocation provide strong evidence of malicious activity in the alerted chain.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T173-00148",
+     "T173-00154",
+     "T173-00157",
+     "T173-00159"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The evidence contains process command lines and connection metadata, but not the downloaded script's contents or the proxy's full HTTP request and response.",
+   "The evidence shows rundll32 invoked a DLL, but does not include the DLL's contents, signature, or analysis results.",
+   "The logs establish the process chain but do not establish who authored or delivered the document or whether Julia Frost knowingly opened it."
+  ],
+  "claims_not_established": [
+   "What the downloaded script or DLL did after execution, including whether it stole data, established persistence, or communicated further.",
+   "Whether the URL or downloaded artifacts were controlled by an attacker, or whether any associated repository or account was compromised.",
+   "Whether the activity was knowingly initiated by the user or resulted from an unsolicited or deceptive document."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze Statement.docm, including its macros and origin, along with the downloaded u.ps1 script and the svchelper.dll artifact.",
+   "Obtain proxy request logs and, if available, network content for the connections made by the PowerShell process.",
+   "Review endpoint security detections, file creation and persistence telemetry, and subsequent activity on WS-JFROST-01 for impact or follow-on behavior.",
+   "Interview Julia Frost about the document and the reported PowerShell window."
+  ],
+  "unrelated_findings": [
+   "Dropbox was launched on WS-JFROST-01; file-sharing and cloud-storage services other than the listed approvals are not approved in the supplied environment context. Track separately; this does not decide the alerted PowerShell activity. (T173-00255, T173-00256, T173-00257)",
+   "Cisco Spark/Webex was launched with an app.slack.com URL; Slack is not among the listed approved services. Track separately; this does not decide the alerted PowerShell activity. (T173-00264, T173-00265, T173-00266)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 19.3
+}

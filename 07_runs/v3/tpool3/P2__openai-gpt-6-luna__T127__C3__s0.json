@@ -1,0 +1,100 @@
+{
+ "scenario_id": "T127",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain account backupadmin was created on DC-COP-01 at 13:46:43 UTC by the account paul.becker.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T127-00255\"]\n    },\n    {\n      \"claim\": \"About two seconds later, backupadmin was added to the Administrators group by paul.becker.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T127-00256\"]\n    },\n    {\n      \"claim\": \"At 13:42:44 UTC, WS-KNGUYEN-01 accepted an RDP connection from 192.0.2.88, followed by a network logon for paul.becker.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T127-00246\", \"T127-00247\", \"T127-00248\"]\n    },\n    {\n      \"claim\": \"The same workstation recorded creation of a scheduled task under paul.becker's account. The task launches PowerShell with hidden-window and encoded-command options; the encoded content references downloading and executing a script from http://192.0.2.88/a.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T127-00257\"]\n    },\n    {\n      \"claim\": \"The external address used for the RDP connection also appears as the script host in the scheduled-task command, linking the remote logon to the suspicious account and task activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T127-00246\", \"T127-00247\", \"T127-00248\", \"T127-00255\", \"T127-00256\", \"T127-00257\"]\n    },\n    {\n      \"claim\": \"The observed remote administration is inconsistent with the inventory context, which specifies that remote administration is only done from WS-PBECKER-01; the recorded RDP target here is WS-KNGUYEN-01.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T127-00246\", \"T127-00247\", \"T127-00248\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy logs for the proxy sensor were not collected from 13:25 through 14:20 UTC due to a collection outage; this limits visibility into proxied web activity during the review window.\",\n    \"The available records show task creation, but do not establish whether the task executed or what the downloaded script did.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether paul.becker personally initiated the remote session or whether the account or credentials were used by another party.\",\n    \"Whether the scheduled task executed, whether the remote script was successfully retrieved, or what its full behavior was.\",\n    \"Whether backupadmin was subsequently used or whether other systems were affected.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Investigate the 192.0.2.88 remote connection and determine its origin and relationship to approved administration.\",\n    \"Retrieve the scheduled-task execution history and PowerShell operational or script-block logs from WS-KNGUYEN-01.\",\n    \"Check for network, endpoint, and server records of requests to http://192.0.2.88/a.ps1 and preserve any retrieved payload.\",\n    \"Review backupadmin's subsequent authentication, group membership, and activity, and contain or disable the account pending investigation.\",\n    \"Verify whether paul.becker's account or credentials were compromised and examine the workstation for signs of remote access or persistence.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 50079,
+    "output": 1382
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "The domain account backupadmin was created on DC-COP-01 at 13:46:43 UTC by the account paul.becker.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T127-00255"
+    ]
+   },
+   {
+    "claim": "About two seconds later, backupadmin was added to the Administrators group by paul.becker.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T127-00256"
+    ]
+   },
+   {
+    "claim": "At 13:42:44 UTC, WS-KNGUYEN-01 accepted an RDP connection from 192.0.2.88, followed by a network logon for paul.becker.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T127-00246",
+     "T127-00247",
+     "T127-00248"
+    ]
+   },
+   {
+    "claim": "The same workstation recorded creation of a scheduled task under paul.becker's account. The task launches PowerShell with hidden-window and encoded-command options; the encoded content references downloading and executing a script from http://192.0.2.88/a.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T127-00257"
+    ]
+   },
+   {
+    "claim": "The external address used for the RDP connection also appears as the script host in the scheduled-task command, linking the remote logon to the suspicious account and task activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T127-00246",
+     "T127-00247",
+     "T127-00248",
+     "T127-00255",
+     "T127-00256",
+     "T127-00257"
+    ]
+   },
+   {
+    "claim": "The observed remote administration is inconsistent with the inventory context, which specifies that remote administration is only done from WS-PBECKER-01; the recorded RDP target here is WS-KNGUYEN-01.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T127-00246",
+     "T127-00247",
+     "T127-00248"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy logs for the proxy sensor were not collected from 13:25 through 14:20 UTC due to a collection outage; this limits visibility into proxied web activity during the review window.",
+   "The available records show task creation, but do not establish whether the task executed or what the downloaded script did."
+  ],
+  "claims_not_established": [
+   "Whether paul.becker personally initiated the remote session or whether the account or credentials were used by another party.",
+   "Whether the scheduled task executed, whether the remote script was successfully retrieved, or what its full behavior was.",
+   "Whether backupadmin was subsequently used or whether other systems were affected."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Investigate the 192.0.2.88 remote connection and determine its origin and relationship to approved administration.",
+   "Retrieve the scheduled-task execution history and PowerShell operational or script-block logs from WS-KNGUYEN-01.",
+   "Check for network, endpoint, and server records of requests to http://192.0.2.88/a.ps1 and preserve any retrieved payload.",
+   "Review backupadmin's subsequent authentication, group membership, and activity, and contain or disable the account pending investigation.",
+   "Verify whether paul.becker's account or credentials were compromised and examine the workstation for signs of remote access or persistence."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 14.7
+}

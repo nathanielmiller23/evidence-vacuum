@@ -1,0 +1,102 @@
+{
+ "scenario_id": "T253",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "error": "APIConnectionError: Connection error."
+  },
+  {
+   "error": "APIConnectionError: Connection error."
+  },
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:42:45 UTC, zoe.adams opened C:\\\\Users\\\\zoe.adams\\\\Downloads\\\\Statement.docm in Microsoft Word; the document was launched from Explorer in her user session.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T253-00114\", \"T253-00115\"]\n    },\n    {\n      \"claim\": \"About one second later, Word spawned PowerShell with no profile, a hidden-window option, and an encoded command. The encoded command requests execution of a script downloaded from raw.githubusercontent.com/sunridge-it/tools/main/u.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T253-00118\", \"T253-00119\"]\n    },\n    {\n      \"claim\": \"The proxy recorded a successful GET for that exact u.ps1 URL, and the network connection is attributed to the same PowerShell process on WS-ZADAMS-01.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T253-00121\", \"T253-00122\", \"T253-00123\", \"T253-00124\"]\n    },\n    {\n      \"claim\": \"PowerShell then launched rundll32 to invoke C:\\\\Users\\\\zoe.adams\\\\AppData\\\\Roaming\\\\svchelper.dll,Init. This sequence, following the hidden encoded script-download command from Word, strongly supports malicious execution rather than an incidental PowerShell window.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T253-00118\", \"T253-00129\", \"T253-00130\"]\n    },\n    {\n      \"claim\": \"The observed PowerShell and rundll32 processes terminated shortly afterward.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T253-00133\", \"T253-00134\", \"T253-00135\", \"T253-00136\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available proxy records show the requested script URL, successful status, and transfer metadata, but do not provide the downloaded script contents.\",\n    \"The records show rundll32 invoking svchelper.dll, but do not establish the DLL's contents or behavior.\",\n    \"The evidence does not establish whether the GitHub repository or script was controlled or approved by the organization.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether zoe.adams knowingly opened the document or expected it to run a script.\",\n    \"The full behavior or impact of the downloaded script and DLL, including whether they established persistence, accessed data, or exfiltrated information.\",\n    \"Whether the document, script, or DLL had any legitimate organizational authorization.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Preserve and analyze Statement.docm, the downloaded u.ps1 content, and svchelper.dll; record hashes and determine provenance.\",\n    \"Collect endpoint detection, file creation, module-load, and persistence-related telemetry for WS-ZADAMS-01 around and after the execution.\",\n    \"Review the user's document source and browsing/download history, and assess whether other hosts or accounts accessed the same URL or payload.\",\n    \"Contain or investigate WS-ZADAMS-01 under the organization's incident-response procedures, while preserving evidence.\"\n  ],\n  \"unrelated_findings\": [\n    \"DropboxUpdate.exe ran as SYSTEM on WS-ZADAMS-01. Dropbox is outside the listed approved file-sharing/cloud services; the updater records alone do not establish Dropbox file-transfer activity. Review separately. (T253-00030, T253-00031, T253-00032, T253-00033)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 45777,
+    "output": 1484
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:42:45 UTC, zoe.adams opened C:\\Users\\zoe.adams\\Downloads\\Statement.docm in Microsoft Word; the document was launched from Explorer in her user session.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T253-00114",
+     "T253-00115"
+    ]
+   },
+   {
+    "claim": "About one second later, Word spawned PowerShell with no profile, a hidden-window option, and an encoded command. The encoded command requests execution of a script downloaded from raw.githubusercontent.com/sunridge-it/tools/main/u.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T253-00118",
+     "T253-00119"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a successful GET for that exact u.ps1 URL, and the network connection is attributed to the same PowerShell process on WS-ZADAMS-01.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T253-00121",
+     "T253-00122",
+     "T253-00123",
+     "T253-00124"
+    ]
+   },
+   {
+    "claim": "PowerShell then launched rundll32 to invoke C:\\Users\\zoe.adams\\AppData\\Roaming\\svchelper.dll,Init. This sequence, following the hidden encoded script-download command from Word, strongly supports malicious execution rather than an incidental PowerShell window.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T253-00118",
+     "T253-00129",
+     "T253-00130"
+    ]
+   },
+   {
+    "claim": "The observed PowerShell and rundll32 processes terminated shortly afterward.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T253-00133",
+     "T253-00134",
+     "T253-00135",
+     "T253-00136"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available proxy records show the requested script URL, successful status, and transfer metadata, but do not provide the downloaded script contents.",
+   "The records show rundll32 invoking svchelper.dll, but do not establish the DLL's contents or behavior.",
+   "The evidence does not establish whether the GitHub repository or script was controlled or approved by the organization."
+  ],
+  "claims_not_established": [
+   "Whether zoe.adams knowingly opened the document or expected it to run a script.",
+   "The full behavior or impact of the downloaded script and DLL, including whether they established persistence, accessed data, or exfiltrated information.",
+   "Whether the document, script, or DLL had any legitimate organizational authorization."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Preserve and analyze Statement.docm, the downloaded u.ps1 content, and svchelper.dll; record hashes and determine provenance.",
+   "Collect endpoint detection, file creation, module-load, and persistence-related telemetry for WS-ZADAMS-01 around and after the execution.",
+   "Review the user's document source and browsing/download history, and assess whether other hosts or accounts accessed the same URL or payload.",
+   "Contain or investigate WS-ZADAMS-01 under the organization's incident-response procedures, while preserving evidence."
+  ],
+  "unrelated_findings": [
+   "DropboxUpdate.exe ran as SYSTEM on WS-ZADAMS-01. Dropbox is outside the listed approved file-sharing/cloud services; the updater records alone do not establish Dropbox file-transfer activity. Review separately. (T253-00030, T253-00031, T253-00032, T253-00033)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 45.4
+}

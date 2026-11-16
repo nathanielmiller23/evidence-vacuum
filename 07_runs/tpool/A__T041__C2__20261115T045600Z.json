@@ -1,0 +1,109 @@
+{
+ "run_id": "A__T041__C2__20261115T045600Z",
+ "config": "A",
+ "scenario_id": "T041",
+ "condition": "C2",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 24,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 14105,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.82,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded two failed NTLM network logons for leo.martins from 203.0.113.250, with the failure substatus indicating an incorrect password.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T041-00001\", \"T041-00002\"]\n    },\n    {\n      \"claim\": \"About one minute after the second failure, the domain controller recorded a successful Kerberos network logon for leo.martins from the same address. This sequence is consistent with a password-guessing attempt followed by successful authentication, though it does not prove the same actor made both attempts.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T041-00001\", \"T041-00002\", \"T041-00003\"]\n    },\n    {\n      \"claim\": \"The successful network logon was recorded on DC-NWD-01 and identifies 203.0.113.250 as its source; the supplied environment context says the organization has no VPN.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T041-00003\"]\n    },\n    {\n      \"claim\": \"A local interactive logon for leo.martins on WS-LMARTINS-01 was followed by ordinary userinit.exe and explorer.exe startup. These events do not establish that the local session was caused by, or related to, the earlier domain-controller logon.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T041-00004\", \"T041-00005\", \"T041-00007\"]\n    },\n    {\n      \"claim\": \"A later network logon to WS-LMARTINS-01 used leo.martins credentials and named WS-SOKAFOR-01 as the workstation; the supplied context identifies that host as the IT administrator's workstation, but the records do not explain the purpose of this access.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T041-00017\", \"T041-00018\", \"T041-00019\"]\n    },\n    {\n      \"claim\": \"Dropbox.exe launched in leo.martins's session. Dropbox is not among the approved services listed in the supplied context, but these records show process launch, not file synchronization or data transfer.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T041-00020\", \"T041-00021\", \"T041-00022\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The authentication records identify the source as 203.0.113.250, but the available evidence does not establish the address's actual origin or whether it was sanitized. [T041-00001, T041-00002, T041-00003]\",\n    \"The available events do not link the successful domain-controller logon to the later local interactive session or to the subsequent network logon on WS-LMARTINS-01. [T041-00003, T041-00004, T041-00019]\",\n    \"The process records show Dropbox launching but provide no sync, file-access, or transfer evidence. [T041-00020, T041-00021, T041-00022]\"\n  ],\n  \"claims_not_established\": [\n    \"The identity of the person or system responsible for the failed and successful logons.\",\n    \"Whether the successful logon originated from an actual external system, or whether the source address was sanitized.\",\n    \"Whether leo.martins's credentials were compromised or whether the access was authorized.\",\n    \"Whether the Dropbox client synchronized or exfiltrated any data.\",\n    \"What action, if any, was performed during the successful logon to DC-NWD-01.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate DC-NWD-01 authentication and network records with firewall, perimeter, and endpoint telemetry to identify the system behind 203.0.113.250.\",\n    \"Review domain-controller and destination-host logs for actions associated with the successful network logon.\",\n    \"Verify with leo.martins and the IT administrator whether the logons and the WS-SOKAFOR-01 access were expected.\",\n    \"Review Dropbox client sync and file-access records for the user's session.\",\n    \"Check whether the source address or authentication events were transformed or sanitized during logging or evidence collection.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 4669,
+    "output": 2839,
+    "reasoning": 1848
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.82,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded two failed NTLM network logons for leo.martins from 203.0.113.250, with the failure substatus indicating an incorrect password.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T041-00001",
+     "T041-00002"
+    ]
+   },
+   {
+    "claim": "About one minute after the second failure, the domain controller recorded a successful Kerberos network logon for leo.martins from the same address. This sequence is consistent with a password-guessing attempt followed by successful authentication, though it does not prove the same actor made both attempts.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T041-00001",
+     "T041-00002",
+     "T041-00003"
+    ]
+   },
+   {
+    "claim": "The successful network logon was recorded on DC-NWD-01 and identifies 203.0.113.250 as its source; the supplied environment context says the organization has no VPN.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T041-00003"
+    ]
+   },
+   {
+    "claim": "A local interactive logon for leo.martins on WS-LMARTINS-01 was followed by ordinary userinit.exe and explorer.exe startup. These events do not establish that the local session was caused by, or related to, the earlier domain-controller logon.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T041-00004",
+     "T041-00005",
+     "T041-00007"
+    ]
+   },
+   {
+    "claim": "A later network logon to WS-LMARTINS-01 used leo.martins credentials and named WS-SOKAFOR-01 as the workstation; the supplied context identifies that host as the IT administrator's workstation, but the records do not explain the purpose of this access.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T041-00017",
+     "T041-00018",
+     "T041-00019"
+    ]
+   },
+   {
+    "claim": "Dropbox.exe launched in leo.martins's session. Dropbox is not among the approved services listed in the supplied context, but these records show process launch, not file synchronization or data transfer.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T041-00020",
+     "T041-00021",
+     "T041-00022"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The authentication records identify the source as 203.0.113.250, but the available evidence does not establish the address's actual origin or whether it was sanitized. [T041-00001, T041-00002, T041-00003]",
+   "The available events do not link the successful domain-controller logon to the later local interactive session or to the subsequent network logon on WS-LMARTINS-01. [T041-00003, T041-00004, T041-00019]",
+   "The process records show Dropbox launching but provide no sync, file-access, or transfer evidence. [T041-00020, T041-00021, T041-00022]"
+  ],
+  "claims_not_established": [
+   "The identity of the person or system responsible for the failed and successful logons.",
+   "Whether the successful logon originated from an actual external system, or whether the source address was sanitized.",
+   "Whether leo.martins's credentials were compromised or whether the access was authorized.",
+   "Whether the Dropbox client synchronized or exfiltrated any data.",
+   "What action, if any, was performed during the successful logon to DC-NWD-01."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate DC-NWD-01 authentication and network records with firewall, perimeter, and endpoint telemetry to identify the system behind 203.0.113.250.",
+   "Review domain-controller and destination-host logs for actions associated with the successful network logon.",
+   "Verify with leo.martins and the IT administrator whether the logons and the WS-SOKAFOR-01 access were expected.",
+   "Review Dropbox client sync and file-access records for the user's session.",
+   "Check whether the source address or authentication events were transformed or sanitized during logging or evidence collection."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 15,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 26.5
+}

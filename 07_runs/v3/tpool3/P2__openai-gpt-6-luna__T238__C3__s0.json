@@ -1,0 +1,84 @@
+{
+ "scenario_id": "T238",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.86,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"On the alerted workstation, lena.ward launched mstsc.exe targeting DC-SUN-01; the workstation resolved the DC and initiated a TCP connection to its RDP port. These records do not establish that an RDP session successfully authenticated.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T238-00004\",\n        \"T238-00005\",\n        \"T238-00006\",\n        \"T238-00007\"\n      ]\n    },\n    {\n      \"claim\": \"Later, lena.ward launched dsa.msc through a high-integrity mmc.exe process, which connected to DC-SUN-01 over RPC and LDAP. This is consistent with Active Directory management activity, but does not establish what action was taken.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T238-00027\",\n        \"T238-00028\",\n        \"T238-00030\",\n        \"T238-00031\"\n      ]\n    },\n    {\n      \"claim\": \"The activity is noteworthy because the inventory says remote administration is only done from WS-IDOYLE-01, whereas the observed AD-management activity originated from WS-LWARD-01. The evidence does not establish whether this activity was authorized or related to creating v.rwong.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T238-00004\",\n        \"T238-00007\",\n        \"T238-00027\",\n        \"T238-00030\",\n        \"T238-00031\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"winsec and sysmon collection for DC-SUN-01 was unavailable from 13:30 to 14:20 UTC, covering the alerted activity window; domain-controller-side evidence of authentication and account changes is therefore missing.\",\n    \"The available workstation records show connections and process launches, but do not show whether the RDP session succeeded or what changes were performed in Active Directory.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether v.rwong was actually created during the review window, and the exact creation time.\",\n    \"Who created v.rwong and whether lena.ward's observed activity caused the creation.\",\n    \"Whether v.rwong was assigned only to the Vendors group, received administrator privileges, or otherwise differed from the help-desk temporary-account practice.\",\n    \"Whether there was an approved request or change authorizing the account and the observed access to DC-SUN-01.\",\n    \"Whether any additional account, group, or directory changes occurred during the domain-controller telemetry outage.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Recover DC-SUN-01 security and directory audit logs for the window, especially account creation, group-membership changes, privilege assignment, and authentication events.\",\n    \"Inspect v.rwong's AD object metadata, creator information if available, creation time, group memberships, and current or historical privileges.\",\n    \"Check approved help-desk requests or change records for v.rwong and for lena.ward's access to DC-SUN-01.\",\n    \"Review available RDP and authentication records to determine whether lena.ward established a session to DC-SUN-01.\"\n  ],\n  \"unrelated_findings\": [\n    \"Chrome was launched to console.aws.amazon.com, and a proxy CONNECT to that host was recorded; review separately against the organization's cloud-service policy. This does not establish a connection to the account creation. (T238-00019, T238-00023, T238-00025)\",\n    \"A POST to api.pagerduty.com was recorded for lena.ward; review separately if relevant to service-usage policy. It does not establish a connection to the account creation. (T238-00024)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 4512,
+    "output": 1954
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.86,
+  "supporting_observations": [
+   {
+    "claim": "On the alerted workstation, lena.ward launched mstsc.exe targeting DC-SUN-01; the workstation resolved the DC and initiated a TCP connection to its RDP port. These records do not establish that an RDP session successfully authenticated.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T238-00004",
+     "T238-00005",
+     "T238-00006",
+     "T238-00007"
+    ]
+   },
+   {
+    "claim": "Later, lena.ward launched dsa.msc through a high-integrity mmc.exe process, which connected to DC-SUN-01 over RPC and LDAP. This is consistent with Active Directory management activity, but does not establish what action was taken.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T238-00027",
+     "T238-00028",
+     "T238-00030",
+     "T238-00031"
+    ]
+   },
+   {
+    "claim": "The activity is noteworthy because the inventory says remote administration is only done from WS-IDOYLE-01, whereas the observed AD-management activity originated from WS-LWARD-01. The evidence does not establish whether this activity was authorized or related to creating v.rwong.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T238-00004",
+     "T238-00007",
+     "T238-00027",
+     "T238-00030",
+     "T238-00031"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "winsec and sysmon collection for DC-SUN-01 was unavailable from 13:30 to 14:20 UTC, covering the alerted activity window; domain-controller-side evidence of authentication and account changes is therefore missing.",
+   "The available workstation records show connections and process launches, but do not show whether the RDP session succeeded or what changes were performed in Active Directory."
+  ],
+  "claims_not_established": [
+   "Whether v.rwong was actually created during the review window, and the exact creation time.",
+   "Who created v.rwong and whether lena.ward's observed activity caused the creation.",
+   "Whether v.rwong was assigned only to the Vendors group, received administrator privileges, or otherwise differed from the help-desk temporary-account practice.",
+   "Whether there was an approved request or change authorizing the account and the observed access to DC-SUN-01.",
+   "Whether any additional account, group, or directory changes occurred during the domain-controller telemetry outage."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Recover DC-SUN-01 security and directory audit logs for the window, especially account creation, group-membership changes, privilege assignment, and authentication events.",
+   "Inspect v.rwong's AD object metadata, creator information if available, creation time, group memberships, and current or historical privileges.",
+   "Check approved help-desk requests or change records for v.rwong and for lena.ward's access to DC-SUN-01.",
+   "Review available RDP and authentication records to determine whether lena.ward established a session to DC-SUN-01."
+  ],
+  "unrelated_findings": [
+   "Chrome was launched to console.aws.amazon.com, and a proxy CONNECT to that host was recorded; review separately against the organization's cloud-service policy. This does not establish a connection to the account creation. (T238-00019, T238-00023, T238-00025)",
+   "A POST to api.pagerduty.com was recorded for lena.ward; review separately if relevant to service-usage policy. It does not establish a connection to the account creation. (T238-00024)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.0
+}

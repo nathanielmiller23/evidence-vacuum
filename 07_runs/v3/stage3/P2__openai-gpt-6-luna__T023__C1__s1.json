@@ -1,0 +1,117 @@
+{
+ "scenario_id": "T023",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 1,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The reported time is approximate: records at about 13:40 UTC show an interactive logon for maria.lopez followed by userinit.exe and explorer.exe; the first PowerShell process in the supplied records appears at 13:44:46 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T023-00057\", \"T023-00058\", \"T023-00060\", \"T023-00085\", \"T023-00086\"]\n    },\n    {\n      \"claim\": \"At 13:44:40 UTC, WINWORD.EXE opened C:\\\\Users\\\\maria.lopez\\\\Downloads\\\\Statement.docm. About six seconds later, medium-integrity PowerShell ran with hidden-window and no-profile flags, an encoded command, and WINWORD.EXE as its parent.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T023-00081\", \"T023-00084\", \"T023-00085\", \"T023-00086\"]\n    },\n    {\n      \"claim\": \"The encoded PowerShell command decodes to an expression that uses IEX and Net.WebClient.DownloadString to retrieve and execute a script from raw.githubusercontent.com/harbor-dental-it/tools/main/u.ps1.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T023-00085\", \"T023-00086\"]\n    },\n    {\n      \"claim\": \"The proxy recorded a successful GET for that exact u.ps1 URL, and network telemetry associates PowerShell process 3348 with connections to the proxy at the same time.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T023-00089\", \"T023-00090\", \"T023-00091\", \"T023-00092\", \"T023-00093\", \"T023-00094\", \"T023-00095\"]\n    },\n    {\n      \"claim\": \"PowerShell then launched rundll32.exe with C:\\\\Users\\\\maria.lopez\\\\AppData\\\\Roaming\\\\svchelper.dll,Init; both processes exited shortly afterward.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T023-00096\", \"T023-00097\", \"T023-00101\", \"T023-00102\", \"T023-00103\", \"T023-00104\"]\n    },\n    {\n      \"claim\": \"Taken together, the hidden encoded PowerShell download-and-execute behavior followed by a rundll32 invocation of a DLL in the user's roaming profile strongly supports malicious activity on the alerted workstation.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T023-00085\", \"T023-00086\", \"T023-00089\", \"T023-00096\", \"T023-00097\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records show the command, a successful URL request, and the rundll32 invocation, but do not include the retrieved u.ps1 contents or the contents or hash of svchelper.dll. (T023-00085, T023-00089, T023-00096)\",\n    \"The records do not include PowerShell script-block or AMSI content, so they do not establish the full script behavior. (T023-00085, T023-00086)\",\n    \"The available records show the DLL invocation, but do not by themselves establish what the DLL did or whether its intended effects succeeded. (T023-00096, T023-00097, T023-00101, T023-00102)\",\n    \"The process telemetry identifies a .docm file as WINWORD.EXE's argument and PowerShell's parent, but does not establish how PowerShell was launched or whether a document macro caused it. (T023-00081, T023-00085, T023-00086)\"\n  ],\n  \"claims_not_established\": [\n    \"Whether maria.lopez knowingly opened or authorized the document or the subsequent commands. (T023-00081, T023-00085)\",\n    \"The contents, origin, and intended behavior of Statement.docm, u.ps1, or svchelper.dll. (T023-00081, T023-00089, T023-00096)\",\n    \"Whether the DLL achieved persistence, communicated externally, or caused data access or loss; the supplied records do not establish those outcomes. (T023-00096, T023-00097)\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze Statement.docm, u.ps1 (including the version available at the event time), svchelper.dll, and the recorded temporary file; preserve hashes and relevant file metadata.\",\n    \"Collect PowerShell operational, script-block, and AMSI logs and endpoint detection records for WS-MLOPEZ-01 around 13:44 UTC.\",\n    \"Review the workstation's memory and persistence locations and search other hosts for the URL, script, DLL name, and related indicators.\",\n    \"Confirm with maria.lopez whether she opened Statement.docm and whether the PowerShell activity was expected.\"\n  ],\n  \"unrelated_findings\": [\n    \"A separate review is warranted for the scheduled SYSTEM endpoint-inventory PowerShell process making an explicit-credential event for svc-bkp to PROXY-HD-01. Inventory describes svc-bkp as the backup agent on FILE-HD-01; the supplied records do not establish whether this credential use succeeded or was authorized. This finding does not determine the alerted activity. (T023-00165, T023-00166, T023-00168, T023-00171, T023-00172)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 42931,
+    "output": 2644
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "The reported time is approximate: records at about 13:40 UTC show an interactive logon for maria.lopez followed by userinit.exe and explorer.exe; the first PowerShell process in the supplied records appears at 13:44:46 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T023-00057",
+     "T023-00058",
+     "T023-00060",
+     "T023-00085",
+     "T023-00086"
+    ]
+   },
+   {
+    "claim": "At 13:44:40 UTC, WINWORD.EXE opened C:\\Users\\maria.lopez\\Downloads\\Statement.docm. About six seconds later, medium-integrity PowerShell ran with hidden-window and no-profile flags, an encoded command, and WINWORD.EXE as its parent.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T023-00081",
+     "T023-00084",
+     "T023-00085",
+     "T023-00086"
+    ]
+   },
+   {
+    "claim": "The encoded PowerShell command decodes to an expression that uses IEX and Net.WebClient.DownloadString to retrieve and execute a script from raw.githubusercontent.com/harbor-dental-it/tools/main/u.ps1.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T023-00085",
+     "T023-00086"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a successful GET for that exact u.ps1 URL, and network telemetry associates PowerShell process 3348 with connections to the proxy at the same time.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T023-00089",
+     "T023-00090",
+     "T023-00091",
+     "T023-00092",
+     "T023-00093",
+     "T023-00094",
+     "T023-00095"
+    ]
+   },
+   {
+    "claim": "PowerShell then launched rundll32.exe with C:\\Users\\maria.lopez\\AppData\\Roaming\\svchelper.dll,Init; both processes exited shortly afterward.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T023-00096",
+     "T023-00097",
+     "T023-00101",
+     "T023-00102",
+     "T023-00103",
+     "T023-00104"
+    ]
+   },
+   {
+    "claim": "Taken together, the hidden encoded PowerShell download-and-execute behavior followed by a rundll32 invocation of a DLL in the user's roaming profile strongly supports malicious activity on the alerted workstation.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T023-00085",
+     "T023-00086",
+     "T023-00089",
+     "T023-00096",
+     "T023-00097"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records show the command, a successful URL request, and the rundll32 invocation, but do not include the retrieved u.ps1 contents or the contents or hash of svchelper.dll. (T023-00085, T023-00089, T023-00096)",
+   "The records do not include PowerShell script-block or AMSI content, so they do not establish the full script behavior. (T023-00085, T023-00086)",
+   "The available records show the DLL invocation, but do not by themselves establish what the DLL did or whether its intended effects succeeded. (T023-00096, T023-00097, T023-00101, T023-00102)",
+   "The process telemetry identifies a .docm file as WINWORD.EXE's argument and PowerShell's parent, but does not establish how PowerShell was launched or whether a document macro caused it. (T023-00081, T023-00085, T023-00086)"
+  ],
+  "claims_not_established": [
+   "Whether maria.lopez knowingly opened or authorized the document or the subsequent commands. (T023-00081, T023-00085)",
+   "The contents, origin, and intended behavior of Statement.docm, u.ps1, or svchelper.dll. (T023-00081, T023-00089, T023-00096)",
+   "Whether the DLL achieved persistence, communicated externally, or caused data access or loss; the supplied records do not establish those outcomes. (T023-00096, T023-00097)"
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze Statement.docm, u.ps1 (including the version available at the event time), svchelper.dll, and the recorded temporary file; preserve hashes and relevant file metadata.",
+   "Collect PowerShell operational, script-block, and AMSI logs and endpoint detection records for WS-MLOPEZ-01 around 13:44 UTC.",
+   "Review the workstation's memory and persistence locations and search other hosts for the URL, script, DLL name, and related indicators.",
+   "Confirm with maria.lopez whether she opened Statement.docm and whether the PowerShell activity was expected."
+  ],
+  "unrelated_findings": [
+   "A separate review is warranted for the scheduled SYSTEM endpoint-inventory PowerShell process making an explicit-credential event for svc-bkp to PROXY-HD-01. Inventory describes svc-bkp as the backup agent on FILE-HD-01; the supplied records do not establish whether this credential use succeeded or was authorized. This finding does not determine the alerted activity. (T023-00165, T023-00166, T023-00168, T023-00171, T023-00172)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 29,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 25.7
+}

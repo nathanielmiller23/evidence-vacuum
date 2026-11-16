@@ -1,0 +1,89 @@
+{
+ "run_id": "A__T013__C3__20261115T043842Z",
+ "config": "A",
+ "scenario_id": "T013",
+ "condition": "C3",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 341,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 145080,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"WINWORD.EXE opened Downloads\\\\Statement.docm, then launched PowerShell as its child. The PowerShell command used -nop, -w hidden, and -enc; its decoded command downloads and executes a script from raw.githubusercontent.com.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T013-00071\",\n        \"T013-00075\",\n        \"T013-00076\"\n      ]\n    },\n    {\n      \"claim\": \"PowerShell retrieved the matching u.ps1 URL from raw.githubusercontent.com through the proxy; the inspected request returned status 200.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T013-00075\",\n        \"T013-00082\"\n      ]\n    },\n    {\n      \"claim\": \"PowerShell then started rundll32 with C:\\\\Users\\\\maria.lopez\\\\AppData\\\\Roaming\\\\svchelper.dll,Init. This sequence is strongly suspicious, although the records do not verify that the DLL loaded successfully.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T013-00086\",\n        \"T013-00087\"\n      ]\n    },\n    {\n      \"claim\": \"A network logon for maria.lopez to WS-MLOPEZ-01 came from WS-LPARK-01 shortly after the PowerShell activity. The record shows LogonType 3, not an interactive logon.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T013-00106\",\n        \"T013-00107\",\n        \"T013-00108\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied sensor coverage status reports winsec and Sysmon collection outages on WS-LPARK-01 from 13:30 to 14:10 UTC. The observed network logon is recorded on WS-MLOPEZ-01, but source-side activity on WS-LPARK-01 during the outage cannot be assessed from these records [T013-00106, T013-00107, T013-00108].\",\n    \"The provided records show the PowerShell command and proxy request, but not the fetched script's contents or a hash of that script [T013-00075, T013-00082].\",\n    \"The provided records show a rundll32 command referencing svchelper.dll, but do not include evidence verifying a successful DLL load or its behavior [T013-00086, T013-00087].\"\n  ],\n  \"claims_not_established\": [\n    \"The available records do not establish who initiated the WS-LPARK-01-to-WS-MLOPEZ-01 network logon or its purpose; the recorded logon is type 3, not evidence of an interactive session [T013-00106, T013-00107, T013-00108].\",\n    \"The records do not establish the contents or intent of u.ps1, whether svchelper.dll executed successfully, or what effects either may have had [T013-00075, T013-00082, T013-00086].\",\n    \"The records do not establish whether data was accessed, changed, or exfiltrated as a result of this activity.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze the exact u.ps1 content served at the recorded URL, including its repository history and provenance.\",\n    \"Preserve and analyze svchelper.dll and the related temporary file; obtain file hashes, creation metadata, and endpoint detection or image-load evidence.\",\n    \"Collect the missing WS-LPARK-01 winsec and Sysmon logs for the outage window if recoverable, and investigate the source and purpose of the network logon to WS-MLOPEZ-01.\",\n    \"Review endpoint security detections and available file, registry, and network telemetry on WS-MLOPEZ-01 for effects or follow-on activity.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 53423,
+    "output": 2399,
+    "reasoning": 1500
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "WINWORD.EXE opened Downloads\\Statement.docm, then launched PowerShell as its child. The PowerShell command used -nop, -w hidden, and -enc; its decoded command downloads and executes a script from raw.githubusercontent.com.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T013-00071",
+     "T013-00075",
+     "T013-00076"
+    ]
+   },
+   {
+    "claim": "PowerShell retrieved the matching u.ps1 URL from raw.githubusercontent.com through the proxy; the inspected request returned status 200.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T013-00075",
+     "T013-00082"
+    ]
+   },
+   {
+    "claim": "PowerShell then started rundll32 with C:\\Users\\maria.lopez\\AppData\\Roaming\\svchelper.dll,Init. This sequence is strongly suspicious, although the records do not verify that the DLL loaded successfully.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T013-00086",
+     "T013-00087"
+    ]
+   },
+   {
+    "claim": "A network logon for maria.lopez to WS-MLOPEZ-01 came from WS-LPARK-01 shortly after the PowerShell activity. The record shows LogonType 3, not an interactive logon.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T013-00106",
+     "T013-00107",
+     "T013-00108"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied sensor coverage status reports winsec and Sysmon collection outages on WS-LPARK-01 from 13:30 to 14:10 UTC. The observed network logon is recorded on WS-MLOPEZ-01, but source-side activity on WS-LPARK-01 during the outage cannot be assessed from these records [T013-00106, T013-00107, T013-00108].",
+   "The provided records show the PowerShell command and proxy request, but not the fetched script's contents or a hash of that script [T013-00075, T013-00082].",
+   "The provided records show a rundll32 command referencing svchelper.dll, but do not include evidence verifying a successful DLL load or its behavior [T013-00086, T013-00087]."
+  ],
+  "claims_not_established": [
+   "The available records do not establish who initiated the WS-LPARK-01-to-WS-MLOPEZ-01 network logon or its purpose; the recorded logon is type 3, not evidence of an interactive session [T013-00106, T013-00107, T013-00108].",
+   "The records do not establish the contents or intent of u.ps1, whether svchelper.dll executed successfully, or what effects either may have had [T013-00075, T013-00082, T013-00086].",
+   "The records do not establish whether data was accessed, changed, or exfiltrated as a result of this activity."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze the exact u.ps1 content served at the recorded URL, including its repository history and provenance.",
+   "Preserve and analyze svchelper.dll and the related temporary file; obtain file hashes, creation metadata, and endpoint detection or image-load evidence.",
+   "Collect the missing WS-LPARK-01 winsec and Sysmon logs for the outage window if recoverable, and investigate the source and purpose of the network logon to WS-MLOPEZ-01.",
+   "Review endpoint security detections and available file, registry, and network telemetry on WS-MLOPEZ-01 for effects or follow-on activity."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.2
+}

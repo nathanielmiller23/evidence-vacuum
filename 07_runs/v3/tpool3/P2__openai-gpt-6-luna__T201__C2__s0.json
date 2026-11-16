@@ -1,0 +1,93 @@
+{
+ "scenario_id": "T201",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.84,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded two failed network logons for eli.brooks from 203.0.113.133, at 13:45:43 and 13:47:16 UTC. Both report an incorrect-password substatus (0xc000006a).\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T201-00008\", \"T201-00009\"]\n    },\n    {\n      \"claim\": \"At 13:48:32 UTC, the domain controller recorded a successful NTLM network logon for eli.brooks from the same IP address, 203.0.113.133, and with the same process ID as the failed attempts.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T201-00008\", \"T201-00009\", \"T201-00010\"]\n    },\n    {\n      \"claim\": \"A successful NTLM logon from that source, shortly after repeated incorrect-password attempts, is consistent with unauthorized access and is not explained by the provided environment context, which says there is no VPN and remote administration is performed only from WS-KITO-01.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T201-00008\", \"T201-00009\", \"T201-00010\"]\n    },\n    {\n      \"claim\": \"Earlier in the review window, eli.brooks obtained a Kerberos ticket and had a successful Kerberos network logon to FILE-BLU-01 from 10.54.20.10; this is distinct from the later NTLM activity from 203.0.113.133.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T201-00001\", \"T201-00002\", \"T201-00003\"]\n    },\n    {\n      \"claim\": \"At 13:45:04 UTC, shortly before the first recorded failed logon, a UserAssist registry value on WS-EBROOKS-01 corresponds to mstsc.exe. This timing is notable, but the record does not establish the destination or connect that launch to the domain-controller logons.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T201-00006\", \"T201-00008\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records identify the source address as 203.0.113.133 but do not identify the device or person using it. That address is in a documentation-only range, so its operational meaning or any sanitization of the logs cannot be determined from these records.\",\n    \"The supplied records show authentication events but do not establish what resources, if any, were accessed after the successful logon.\",\n    \"The available endpoint record shows an mstsc.exe launch but does not show its destination or prove that it caused the domain-controller authentication.\"\n  ],\n  \"claims_not_established\": [\n    \"The identity, location, or authorization status of the system represented by 203.0.113.133.\",\n    \"Whether the successful logon was initiated by eli.brooks, an attacker, or another process or intermediary.\",\n    \"Whether the successful logon led to access, data exposure, or other post-authentication activity.\",\n    \"Whether the recorded source address reflects the original network source or a sanitized value.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Correlate the successful logon with domain-controller and endpoint records, including logon-session identifiers, subsequent access events, and any available logoff events.\",\n    \"Review firewall, proxy, and network-flow telemetry around 13:40\u201314:00 UTC to identify the system and traffic associated with the recorded source address.\",\n    \"Review WS-EBROOKS-01 process, network, and remote-desktop telemetry to determine the mstsc.exe destination and whether it is related to the authentication events.\",\n    \"Validate the source address and event records with the log-ingestion or sanitization owner.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 2793,
+    "output": 2711
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.84,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded two failed network logons for eli.brooks from 203.0.113.133, at 13:45:43 and 13:47:16 UTC. Both report an incorrect-password substatus (0xc000006a).",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T201-00008",
+     "T201-00009"
+    ]
+   },
+   {
+    "claim": "At 13:48:32 UTC, the domain controller recorded a successful NTLM network logon for eli.brooks from the same IP address, 203.0.113.133, and with the same process ID as the failed attempts.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T201-00008",
+     "T201-00009",
+     "T201-00010"
+    ]
+   },
+   {
+    "claim": "A successful NTLM logon from that source, shortly after repeated incorrect-password attempts, is consistent with unauthorized access and is not explained by the provided environment context, which says there is no VPN and remote administration is performed only from WS-KITO-01.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T201-00008",
+     "T201-00009",
+     "T201-00010"
+    ]
+   },
+   {
+    "claim": "Earlier in the review window, eli.brooks obtained a Kerberos ticket and had a successful Kerberos network logon to FILE-BLU-01 from 10.54.20.10; this is distinct from the later NTLM activity from 203.0.113.133.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T201-00001",
+     "T201-00002",
+     "T201-00003"
+    ]
+   },
+   {
+    "claim": "At 13:45:04 UTC, shortly before the first recorded failed logon, a UserAssist registry value on WS-EBROOKS-01 corresponds to mstsc.exe. This timing is notable, but the record does not establish the destination or connect that launch to the domain-controller logons.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T201-00006",
+     "T201-00008"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records identify the source address as 203.0.113.133 but do not identify the device or person using it. That address is in a documentation-only range, so its operational meaning or any sanitization of the logs cannot be determined from these records.",
+   "The supplied records show authentication events but do not establish what resources, if any, were accessed after the successful logon.",
+   "The available endpoint record shows an mstsc.exe launch but does not show its destination or prove that it caused the domain-controller authentication."
+  ],
+  "claims_not_established": [
+   "The identity, location, or authorization status of the system represented by 203.0.113.133.",
+   "Whether the successful logon was initiated by eli.brooks, an attacker, or another process or intermediary.",
+   "Whether the successful logon led to access, data exposure, or other post-authentication activity.",
+   "Whether the recorded source address reflects the original network source or a sanitized value."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Correlate the successful logon with domain-controller and endpoint records, including logon-session identifiers, subsequent access events, and any available logoff events.",
+   "Review firewall, proxy, and network-flow telemetry around 13:40\u201314:00 UTC to identify the system and traffic associated with the recorded source address.",
+   "Review WS-EBROOKS-01 process, network, and remote-desktop telemetry to determine the mstsc.exe destination and whether it is related to the authentication events.",
+   "Validate the source address and event records with the log-ingestion or sanitization owner."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 13,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 30.0
+}

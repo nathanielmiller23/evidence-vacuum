@@ -1,0 +1,98 @@
+{
+ "scenario_id": "T083",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:41:17, ana.ruiz opened C:\\\\Users\\\\ana.ruiz\\\\Downloads\\\\Statement.docm in Microsoft Word. Two seconds later, Word spawned PowerShell with no profile, a hidden window, and an encoded command.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T083-00145\",\n        \"T083-00149\",\n        \"T083-00150\"\n      ]\n    },\n    {\n      \"claim\": \"The encoded PowerShell command decodes to an expression that downloads and executes a script from https://raw.githubusercontent.com/pinecrest-it/tools/main/u.ps1. The proxy recorded a successful 200 response for that URL, and network telemetry attributes connections to the proxy to the PowerShell process.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T083-00149\",\n        \"T083-00153\",\n        \"T083-00155\",\n        \"T083-00158\",\n        \"T083-00159\"\n      ]\n    },\n    {\n      \"claim\": \"PowerShell then spawned rundll32 to invoke C:\\\\Users\\\\ana.ruiz\\\\AppData\\\\Roaming\\\\svchelper.dll,Init.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T083-00160\",\n        \"T083-00161\"\n      ]\n    },\n    {\n      \"claim\": \"Shortly after the rundll32 invocation, Explorer set the user's Hidden preference to 2, consistent with configuring Explorer not to show hidden files.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T083-00164\"\n      ]\n    },\n    {\n      \"claim\": \"The sequence of a document launching hidden, encoded PowerShell to retrieve and execute a script, followed by rundll32 invoking a DLL in the user's Roaming directory, supports a malicious-activity finding for the alerted activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T083-00145\",\n        \"T083-00149\",\n        \"T083-00153\",\n        \"T083-00160\",\n        \"T083-00164\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records show the command line and successful proxy response, but do not include the retrieved u.ps1 contents or its hash.\",\n    \"The supplied records show rundll32 invoking svchelper.dll, but do not establish the DLL's contents, provenance, or whether the intended export executed successfully.\",\n    \"The supplied records do not establish who supplied or opened Statement.docm, or whether ana.ruiz knowingly initiated the activity.\"\n  ],\n  \"claims_not_established\": [\n    \"The exact behavior or payload of u.ps1 and svchelper.dll.\",\n    \"Whether the activity established persistence, accessed credentials, or caused data loss or exfiltration.\",\n    \"Whether ana.ruiz intentionally opened or ran the document, or whether another person or process caused the activity.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire Statement.docm, u.ps1, and svchelper.dll; calculate hashes and analyze their contents and provenance.\",\n    \"Collect endpoint protection, file-creation, script-block, module-load, and persistence telemetry for WS-ARUIZ-01 around and after 13:41 UTC.\",\n    \"Review proxy or network capture details for the downloaded script and any subsequent connections attributable to the spawned processes.\",\n    \"Interview ana.ruiz about the document and the observed PowerShell window; preserve the workstation for incident response.\"\n  ],\n  \"unrelated_findings\": [\n    \"The raj.patel account authenticated from WS-ARUIZ-01 to WS-RPATEL-01 shortly after ana.ruiz's interactive logon; investigate separately because the inventory says remote administration is only done from WS-RPATEL-01. This observation is not used to decide the alerted activity. (T083-00102, T083-00105, T083-00117, T083-00282, T083-00283)\",\n    \"Google Drive File Stream and Dropbox processes ran under ana.ruiz; the inventory approves OneDrive but no other file-sharing or cloud-storage services. Investigate separately; these records occur after the alerted process chain and do not decide this alert. (T083-00402, T083-00404, T083-00427, T083-00429)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 77256,
+    "output": 2007
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:41:17, ana.ruiz opened C:\\Users\\ana.ruiz\\Downloads\\Statement.docm in Microsoft Word. Two seconds later, Word spawned PowerShell with no profile, a hidden window, and an encoded command.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T083-00145",
+     "T083-00149",
+     "T083-00150"
+    ]
+   },
+   {
+    "claim": "The encoded PowerShell command decodes to an expression that downloads and executes a script from https://raw.githubusercontent.com/pinecrest-it/tools/main/u.ps1. The proxy recorded a successful 200 response for that URL, and network telemetry attributes connections to the proxy to the PowerShell process.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T083-00149",
+     "T083-00153",
+     "T083-00155",
+     "T083-00158",
+     "T083-00159"
+    ]
+   },
+   {
+    "claim": "PowerShell then spawned rundll32 to invoke C:\\Users\\ana.ruiz\\AppData\\Roaming\\svchelper.dll,Init.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T083-00160",
+     "T083-00161"
+    ]
+   },
+   {
+    "claim": "Shortly after the rundll32 invocation, Explorer set the user's Hidden preference to 2, consistent with configuring Explorer not to show hidden files.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T083-00164"
+    ]
+   },
+   {
+    "claim": "The sequence of a document launching hidden, encoded PowerShell to retrieve and execute a script, followed by rundll32 invoking a DLL in the user's Roaming directory, supports a malicious-activity finding for the alerted activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T083-00145",
+     "T083-00149",
+     "T083-00153",
+     "T083-00160",
+     "T083-00164"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records show the command line and successful proxy response, but do not include the retrieved u.ps1 contents or its hash.",
+   "The supplied records show rundll32 invoking svchelper.dll, but do not establish the DLL's contents, provenance, or whether the intended export executed successfully.",
+   "The supplied records do not establish who supplied or opened Statement.docm, or whether ana.ruiz knowingly initiated the activity."
+  ],
+  "claims_not_established": [
+   "The exact behavior or payload of u.ps1 and svchelper.dll.",
+   "Whether the activity established persistence, accessed credentials, or caused data loss or exfiltration.",
+   "Whether ana.ruiz intentionally opened or ran the document, or whether another person or process caused the activity."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire Statement.docm, u.ps1, and svchelper.dll; calculate hashes and analyze their contents and provenance.",
+   "Collect endpoint protection, file-creation, script-block, module-load, and persistence telemetry for WS-ARUIZ-01 around and after 13:41 UTC.",
+   "Review proxy or network capture details for the downloaded script and any subsequent connections attributable to the spawned processes.",
+   "Interview ana.ruiz about the document and the observed PowerShell window; preserve the workstation for incident response."
+  ],
+  "unrelated_findings": [
+   "The raj.patel account authenticated from WS-ARUIZ-01 to WS-RPATEL-01 shortly after ana.ruiz's interactive logon; investigate separately because the inventory says remote administration is only done from WS-RPATEL-01. This observation is not used to decide the alerted activity. (T083-00102, T083-00105, T083-00117, T083-00282, T083-00283)",
+   "Google Drive File Stream and Dropbox processes ran under ana.ruiz; the inventory approves OneDrive but no other file-sharing or cloud-storage services. Investigate separately; these records occur after the alerted process chain and do not decide this alert. (T083-00402, T083-00404, T083-00427, T083-00429)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 16,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.0
+}

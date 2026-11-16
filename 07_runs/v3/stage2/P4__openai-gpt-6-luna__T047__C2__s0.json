@@ -1,0 +1,90 @@
+{
+ "scenario_id": "T047",
+ "condition": "C2",
+ "variant": "P4",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.98,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted activity is present: the domain controller recorded creation of the account sysmaint by sam.okafor at 13:43:55 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T047-00081\"]\n    },\n    {\n      \"claim\": \"One second later, the domain controller recorded sysmaint being added to the NWD Administrators group by sam.okafor.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T047-00082\"]\n    },\n    {\n      \"claim\": \"The account name and privilege level do not match the documented temporary-account process, which uses ext.<name> accounts in Freelancers and never grants administrator rights. No matching approved explanation for creating an administrator account is provided in the supplied context.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T047-00081\", \"T047-00082\"]\n    },\n    {\n      \"claim\": \"A successful type-10 logon for sam.okafor to WS-LMARTINS-01 was recorded from 203.0.113.250; the environment context says remote administration is only from WS-SOKAFOR-01 and there is no VPN.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T047-00063\", \"T047-00065\"]\n    },\n    {\n      \"claim\": \"The evidence does not establish that the unusual remote logon was the session that created the account: the logon ID on WS-LMARTINS-01 differs from the subject logon ID in the domain-controller account-management events.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T047-00065\", \"T047-00081\", \"T047-00082\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records show account creation and administrator-group addition, but do not provide a complete audit trail linking those domain-controller actions to a specific interactive session or originating process.\",\n    \"The evidence does not identify who controlled source address 203.0.113.250.\",\n    \"The supplied evidence does not include an approval ticket or change record for the sysmaint account.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether sysmaint was subsequently used to log on or perform actions.\",\n    \"Whether an unprovided authorization or exception existed for creating sysmaint and granting it administrator privileges.\",\n    \"Whether the remote logon from 203.0.113.250 directly caused the account-management events.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Verify the account request, approval, owner, intended purpose, and whether sysmaint should remain in Administrators; preserve the account and group-change audit trail.\",\n    \"Collect domain-controller logon and directory-service auditing sufficient to correlate the account-management events to an originating host and session.\",\n    \"Investigate the 203.0.113.250 logon, including source ownership and authentication records, and determine whether it was authorized.\",\n    \"Review subsequent authentication and activity for sysmaint and preserve relevant endpoint and domain-controller evidence.\"\n  ],\n  \"unrelated_findings\": [\n    \"A scheduled task named Microsoft\\\\Windows\\\\HealthCheck was created on WS-LMARTINS-01 by sam.okafor. Its action runs hidden PowerShell with an encoded command that appears to retrieve and execute a script from http://203.0.113.250/a.ps1. This is suspicious, but the supplied evidence does not establish that the task caused the sysmaint account changes; investigate separately. (T047-00083)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 28054,
+    "output": 1977
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.98,
+  "supporting_observations": [
+   {
+    "claim": "The alerted activity is present: the domain controller recorded creation of the account sysmaint by sam.okafor at 13:43:55 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00081"
+    ]
+   },
+   {
+    "claim": "One second later, the domain controller recorded sysmaint being added to the NWD Administrators group by sam.okafor.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00082"
+    ]
+   },
+   {
+    "claim": "The account name and privilege level do not match the documented temporary-account process, which uses ext.<name> accounts in Freelancers and never grants administrator rights. No matching approved explanation for creating an administrator account is provided in the supplied context.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T047-00081",
+     "T047-00082"
+    ]
+   },
+   {
+    "claim": "A successful type-10 logon for sam.okafor to WS-LMARTINS-01 was recorded from 203.0.113.250; the environment context says remote administration is only from WS-SOKAFOR-01 and there is no VPN.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00063",
+     "T047-00065"
+    ]
+   },
+   {
+    "claim": "The evidence does not establish that the unusual remote logon was the session that created the account: the logon ID on WS-LMARTINS-01 differs from the subject logon ID in the domain-controller account-management events.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T047-00065",
+     "T047-00081",
+     "T047-00082"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records show account creation and administrator-group addition, but do not provide a complete audit trail linking those domain-controller actions to a specific interactive session or originating process.",
+   "The evidence does not identify who controlled source address 203.0.113.250.",
+   "The supplied evidence does not include an approval ticket or change record for the sysmaint account."
+  ],
+  "claims_not_established": [
+   "Whether sysmaint was subsequently used to log on or perform actions.",
+   "Whether an unprovided authorization or exception existed for creating sysmaint and granting it administrator privileges.",
+   "Whether the remote logon from 203.0.113.250 directly caused the account-management events."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Verify the account request, approval, owner, intended purpose, and whether sysmaint should remain in Administrators; preserve the account and group-change audit trail.",
+   "Collect domain-controller logon and directory-service auditing sufficient to correlate the account-management events to an originating host and session.",
+   "Investigate the 203.0.113.250 logon, including source ownership and authentication records, and determine whether it was authorized.",
+   "Review subsequent authentication and activity for sysmaint and preserve relevant endpoint and domain-controller evidence."
+  ],
+  "unrelated_findings": [
+   "A scheduled task named Microsoft\\Windows\\HealthCheck was created on WS-LMARTINS-01 by sam.okafor. Its action runs hidden PowerShell with an encoded command that appears to retrieve and execute a script from http://203.0.113.250/a.ps1. This is suspicious, but the supplied evidence does not establish that the task caused the sysmaint account changes; investigate separately. (T047-00083)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 9,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 19.0
+}

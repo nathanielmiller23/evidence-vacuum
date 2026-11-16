@@ -1,0 +1,73 @@
+{
+ "scenario_id": "T140",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:47:10 UTC, FILE-COP-01 launched C:\\\\Program Files\\\\Ironvault\\\\agent.exe as COPPERLINE\\\\svc-backup with the command line targeting https://ingest.ironvault-cloud.com.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T140-00308\",\n        \"T140-00309\"\n      ]\n    },\n    {\n      \"claim\": \"The proxy recorded a successful CONNECT to ingest.ironvault-cloud.com with 640,000,000 client-to-server bytes; a corresponding connection record attributes approximately 640 MB of client data to the Ironvault process.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T140-00310\",\n        \"T140-00316\",\n        \"T140-00317\",\n        \"T140-00318\"\n      ]\n    },\n    {\n      \"claim\": \"The destination, executable path, service account, and transfer size align with the organization's listed approved Ironvault offsite backup agent, which uploads several hundred MB. The available evidence supports treating the alerted transfer as that backup activity rather than malicious exfiltration.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T140-00308\",\n        \"T140-00310\",\n        \"T140-00316\",\n        \"T140-00317\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and connection records show transfer volume and destination but do not establish the contents of the transferred data.\",\n    \"The records do not include a backup-job result or file-level audit confirming which data the Ironvault job uploaded.\"\n  ],\n  \"claims_not_established\": [\n    \"The exact files or data included in the transfer are not established.\",\n    \"The evidence does not independently confirm whether the Ironvault Nightly job was scheduled or manually initiated.\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [],\n  \"unrelated_findings\": [\n    \"At 14:04, an unlisted Meridian OpsAgent executable ran on FILE-COP-01 as SYSTEM; it then explicitly used svc-routes credentials against DC-COP-01. Investigate separately, particularly in light of the scheduled svc-routes password rotation and manual job update; this does not change the disposition of the Ironvault transfer. (T140-00415, T140-00416, T140-00418)\",\n    \"sara.ali initiated an RDP session to FILE-COP-01 and logged on interactively, although the provided practice says remote administration is only performed from WS-PBECKER-01. Review separately; this does not establish that the alerted transfer was malicious. (T140-00491, T140-00496, T140-00499, T140-00502)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 65910,
+    "output": 1739
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:47:10 UTC, FILE-COP-01 launched C:\\Program Files\\Ironvault\\agent.exe as COPPERLINE\\svc-backup with the command line targeting https://ingest.ironvault-cloud.com.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T140-00308",
+     "T140-00309"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a successful CONNECT to ingest.ironvault-cloud.com with 640,000,000 client-to-server bytes; a corresponding connection record attributes approximately 640 MB of client data to the Ironvault process.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T140-00310",
+     "T140-00316",
+     "T140-00317",
+     "T140-00318"
+    ]
+   },
+   {
+    "claim": "The destination, executable path, service account, and transfer size align with the organization's listed approved Ironvault offsite backup agent, which uploads several hundred MB. The available evidence supports treating the alerted transfer as that backup activity rather than malicious exfiltration.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T140-00308",
+     "T140-00310",
+     "T140-00316",
+     "T140-00317"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and connection records show transfer volume and destination but do not establish the contents of the transferred data.",
+   "The records do not include a backup-job result or file-level audit confirming which data the Ironvault job uploaded."
+  ],
+  "claims_not_established": [
+   "The exact files or data included in the transfer are not established.",
+   "The evidence does not independently confirm whether the Ironvault Nightly job was scheduled or manually initiated."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [],
+  "unrelated_findings": [
+   "At 14:04, an unlisted Meridian OpsAgent executable ran on FILE-COP-01 as SYSTEM; it then explicitly used svc-routes credentials against DC-COP-01. Investigate separately, particularly in light of the scheduled svc-routes password rotation and manual job update; this does not change the disposition of the Ironvault transfer. (T140-00415, T140-00416, T140-00418)",
+   "sara.ali initiated an RDP session to FILE-COP-01 and logged on interactively, although the provided practice says remote administration is only performed from WS-PBECKER-01. Review separately; this does not establish that the alerted transfer was malicious. (T140-00491, T140-00496, T140-00499, T140-00502)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 32.0
+}

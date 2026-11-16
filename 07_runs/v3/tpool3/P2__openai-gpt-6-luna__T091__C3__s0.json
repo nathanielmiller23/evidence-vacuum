@@ -1,0 +1,75 @@
+{
+ "scenario_id": "T091",
+ "condition": "C3",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.82,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded two failed network logons for tom.weber using NTLM from 203.0.113.17, with the failure substatus indicating an incorrect password.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T091-00006\",\n        \"T091-00007\"\n      ]\n    },\n    {\n      \"claim\": \"About one minute after the second failure, the domain controller recorded a successful network logon for tom.weber using Kerberos from the same IP address.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T091-00007\",\n        \"T091-00008\"\n      ]\n    },\n    {\n      \"claim\": \"The failed attempts followed by a successful logon from the same unrecognized source are suspicious, particularly given the stated absence of VPN and the restriction of remote administration to WS-RPATEL-01.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T091-00006\",\n        \"T091-00007\",\n        \"T091-00008\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"Proxy logs were not collected from 13:20 to 14:00 UTC because of an outage, so proxy activity during that interval cannot be corroborated from proxy records.\",\n    \"The supplied authentication records do not establish the identity or device behind source address 203.0.113.17.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the successful logon was made by tom.weber or by someone using his credentials.\",\n    \"What resource or service the successful logon accessed, or whether it led to further activity.\",\n    \"Whether the source address represents a remote endpoint, an intermediary, or another network attribution.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Identify the owner and network location associated with 203.0.113.17 at the time of the logons.\",\n    \"Review DC-PIN-01 and destination-host authentication and session records around 13:45\u201314:00 UTC to determine what the successful logon accessed.\",\n    \"Correlate the authentication events with endpoint, firewall, and available network-flow records to identify the originating device and any follow-on activity.\",\n    \"Confirm with tom.weber whether the logon was expected and whether he was using any authorized system or service at that time.\"\n  ],\n  \"unrelated_findings\": [\n    \"T091-00004 records a UserAssist entry for mstsc.exe on WS-TWEBER-01 before the alerted logons. The record alone does not establish a remote connection or link it to the authentication events; triage separately if warranted.\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 2831,
+    "output": 2532
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.82,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded two failed network logons for tom.weber using NTLM from 203.0.113.17, with the failure substatus indicating an incorrect password.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T091-00006",
+     "T091-00007"
+    ]
+   },
+   {
+    "claim": "About one minute after the second failure, the domain controller recorded a successful network logon for tom.weber using Kerberos from the same IP address.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T091-00007",
+     "T091-00008"
+    ]
+   },
+   {
+    "claim": "The failed attempts followed by a successful logon from the same unrecognized source are suspicious, particularly given the stated absence of VPN and the restriction of remote administration to WS-RPATEL-01.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T091-00006",
+     "T091-00007",
+     "T091-00008"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "Proxy logs were not collected from 13:20 to 14:00 UTC because of an outage, so proxy activity during that interval cannot be corroborated from proxy records.",
+   "The supplied authentication records do not establish the identity or device behind source address 203.0.113.17."
+  ],
+  "claims_not_established": [
+   "Whether the successful logon was made by tom.weber or by someone using his credentials.",
+   "What resource or service the successful logon accessed, or whether it led to further activity.",
+   "Whether the source address represents a remote endpoint, an intermediary, or another network attribution."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Identify the owner and network location associated with 203.0.113.17 at the time of the logons.",
+   "Review DC-PIN-01 and destination-host authentication and session records around 13:45\u201314:00 UTC to determine what the successful logon accessed.",
+   "Correlate the authentication events with endpoint, firewall, and available network-flow records to identify the originating device and any follow-on activity.",
+   "Confirm with tom.weber whether the logon was expected and whether he was using any authorized system or service at that time."
+  ],
+  "unrelated_findings": [
+   "T091-00004 records a UserAssist entry for mstsc.exe on WS-TWEBER-01 before the alerted logons. The record alone does not establish a remote connection or link it to the authentication events; triage separately if warranted."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 7,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 24.3
+}

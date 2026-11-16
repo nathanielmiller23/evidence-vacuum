@@ -1,0 +1,77 @@
+{
+ "scenario_id": "T020",
+ "condition": "C2",
+ "variant": "P4",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.79,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:46 UTC, FILE-HD-01 ran CobaltVault's cvagent.exe as HARBOR-DENTAL\\\\svc-bkp with the Nightly job targeting ingest.cobaltvault.net.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T020-00278\", \"T020-00279\"]\n    },\n    {\n      \"claim\": \"The proxy recorded a successful connection to ingest.cobaltvault.net and approximately 640 MB of client-to-proxy bytes on that tunnel, consistent in destination, tool, and scale with the documented backup service.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T020-00281\", \"T020-00285\", \"T020-00286\", \"T020-00287\", \"T020-00288\"]\n    },\n    {\n      \"claim\": \"Just before the backup process started, the domain controller recorded a service-ticket event for svc-bkp from public IP 23.129.64.210; FILE-HD-01 then logged svc-bkp in as a service, and the agent ran under that logon. Given the documented absence of VPN and the internal service host, this is suspiciously correlated with the alerted transfer and supports possible unauthorized use of the backup account.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T020-00264\", \"T020-00265\", \"T020-00278\", \"T020-00279\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show the process, destination, and transfer volume, but not which files or data were uploaded; the proxy tunnel byte count alone cannot establish payload contents (T020-00281, T020-00285, T020-00286).\",\n    \"The evidence does not independently establish why the svc-bkp ticket request was recorded from the public IP or whether that source address is accurate (T020-00264).\"\n  ],\n  \"claims_not_established\": [\n    \"The logs do not establish that the uploaded data was stolen or outside the expected backup set (T020-00278, T020-00285, T020-00286).\",\n    \"The logs do not establish who controlled 23.129.64.210 or whether the svc-bkp authentication was authorized (T020-00264, T020-00265).\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Validate the svc-bkp Kerberos ticket event against domain-controller, network perimeter, and routing logs to establish the source and whether the request was expected (T020-00264).\",\n    \"Obtain CobaltVault job manifests and server-side receipt details for the Nightly upload to identify the uploaded files and confirm whether the run was expected (T020-00278, T020-00285, T020-00286).\",\n    \"Verify the cvagent.exe signature, hash, service configuration, and execution history on FILE-HD-01 (T020-00278, T020-00279).\"\n  ],\n  \"unrelated_findings\": [\n    \"A separate RDP session from help-desk workstation WS-LPARK-01 to FILE-HD-01 began at 13:56 UTC and logged in as lucy.park. This occurred after the alerted transfer and is outside the evidence linking svc-bkp to that transfer; investigate separately, especially given the documented remote-administration practice (T020-00342, T020-00344, T020-00349).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 76200,
+    "output": 3109
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.79,
+  "supporting_observations": [
+   {
+    "claim": "At 13:46 UTC, FILE-HD-01 ran CobaltVault's cvagent.exe as HARBOR-DENTAL\\svc-bkp with the Nightly job targeting ingest.cobaltvault.net.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00278",
+     "T020-00279"
+    ]
+   },
+   {
+    "claim": "The proxy recorded a successful connection to ingest.cobaltvault.net and approximately 640 MB of client-to-proxy bytes on that tunnel, consistent in destination, tool, and scale with the documented backup service.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T020-00281",
+     "T020-00285",
+     "T020-00286",
+     "T020-00287",
+     "T020-00288"
+    ]
+   },
+   {
+    "claim": "Just before the backup process started, the domain controller recorded a service-ticket event for svc-bkp from public IP 23.129.64.210; FILE-HD-01 then logged svc-bkp in as a service, and the agent ran under that logon. Given the documented absence of VPN and the internal service host, this is suspiciously correlated with the alerted transfer and supports possible unauthorized use of the backup account.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T020-00264",
+     "T020-00265",
+     "T020-00278",
+     "T020-00279"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show the process, destination, and transfer volume, but not which files or data were uploaded; the proxy tunnel byte count alone cannot establish payload contents (T020-00281, T020-00285, T020-00286).",
+   "The evidence does not independently establish why the svc-bkp ticket request was recorded from the public IP or whether that source address is accurate (T020-00264)."
+  ],
+  "claims_not_established": [
+   "The logs do not establish that the uploaded data was stolen or outside the expected backup set (T020-00278, T020-00285, T020-00286).",
+   "The logs do not establish who controlled 23.129.64.210 or whether the svc-bkp authentication was authorized (T020-00264, T020-00265)."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Validate the svc-bkp Kerberos ticket event against domain-controller, network perimeter, and routing logs to establish the source and whether the request was expected (T020-00264).",
+   "Obtain CobaltVault job manifests and server-side receipt details for the Nightly upload to identify the uploaded files and confirm whether the run was expected (T020-00278, T020-00285, T020-00286).",
+   "Verify the cvagent.exe signature, hash, service configuration, and execution history on FILE-HD-01 (T020-00278, T020-00279)."
+  ],
+  "unrelated_findings": [
+   "A separate RDP session from help-desk workstation WS-LPARK-01 to FILE-HD-01 began at 13:56 UTC and logged in as lucy.park. This occurred after the alerted transfer and is outside the evidence linking svc-bkp to that transfer; investigate separately, especially given the documented remote-administration practice (T020-00342, T020-00344, T020-00349)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 30.9
+}

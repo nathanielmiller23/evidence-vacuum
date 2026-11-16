@@ -1,0 +1,77 @@
+{
+ "scenario_id": "T250",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.82,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The alerted-volume transfer is strongly consistent with the approved backup activity: FILE-SUN-01 ran the Arcvault agent as svc-store with a Nightly job targeting ingest.arcvault-backup.com, and proxy telemetry records about 640 MB sent through the proxy to that approved endpoint.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T250-00286\", \"T250-00287\", \"T250-00295\", \"T250-00297\", \"T250-00298\"]\n    },\n    {\n      \"claim\": \"Shortly before the agent ran, the domain controller recorded a service-ticket request for svc-store to FILE-SUN-01$ from 45.79.19.196; the available evidence does not explain this external source.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T250-00273\"]\n    },\n    {\n      \"claim\": \"FILE-SUN-01 then logged a local service logon for svc-store, and the Arcvault process ran under that account. The records do not establish whether this activity was caused by the external-source ticket request or by the normal scheduled service.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T250-00274\", \"T250-00286\", \"T250-00287\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The proxy and Zeek records show a large transfer through the explicit proxy, but do not provide the transferred content or independently verify the remote recipient beyond the logged hostname.\",\n    \"The logs do not establish the origin or legitimacy of the 45.79.19.196 service-ticket request, or whether it is causally related to the local svc-store service activity.\",\n    \"The supplied records do not include the backup job schedule or configuration needed to confirm that this specific run was expected at this time.\"\n  ],\n  \"claims_not_established\": [\n    \"That the transfer contained stolen or otherwise unauthorized data.\",\n    \"That the 45.79.19.196 request was malicious or led to the Arcvault run.\",\n    \"That the specific Nightly job run was authorized and scheduled for this time.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Verify the svc-store ticket request's source and authentication context using domain-controller/KDC, network perimeter, and relevant firewall logs for 45.79.19.196.\",\n    \"Confirm the Arcvault service configuration, job schedule, and run history for FILE-SUN-01 around 13:46\u201313:48 UTC.\",\n    \"Review Arcvault audit records for the transfer time, destination, uploaded objects, and whether the volume matches routine backups.\"\n  ],\n  \"unrelated_findings\": [\n    \"FILE-SUN-01 made a connection attempt to WS-MFISCHER-01 on port 9997 that ended with a reset; its relevance to the alerted transfer is not established. (T250-00320, T250-00322)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 87016,
+    "output": 2322
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.82,
+  "supporting_observations": [
+   {
+    "claim": "The alerted-volume transfer is strongly consistent with the approved backup activity: FILE-SUN-01 ran the Arcvault agent as svc-store with a Nightly job targeting ingest.arcvault-backup.com, and proxy telemetry records about 640 MB sent through the proxy to that approved endpoint.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T250-00286",
+     "T250-00287",
+     "T250-00295",
+     "T250-00297",
+     "T250-00298"
+    ]
+   },
+   {
+    "claim": "Shortly before the agent ran, the domain controller recorded a service-ticket request for svc-store to FILE-SUN-01$ from 45.79.19.196; the available evidence does not explain this external source.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T250-00273"
+    ]
+   },
+   {
+    "claim": "FILE-SUN-01 then logged a local service logon for svc-store, and the Arcvault process ran under that account. The records do not establish whether this activity was caused by the external-source ticket request or by the normal scheduled service.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T250-00274",
+     "T250-00286",
+     "T250-00287"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The proxy and Zeek records show a large transfer through the explicit proxy, but do not provide the transferred content or independently verify the remote recipient beyond the logged hostname.",
+   "The logs do not establish the origin or legitimacy of the 45.79.19.196 service-ticket request, or whether it is causally related to the local svc-store service activity.",
+   "The supplied records do not include the backup job schedule or configuration needed to confirm that this specific run was expected at this time."
+  ],
+  "claims_not_established": [
+   "That the transfer contained stolen or otherwise unauthorized data.",
+   "That the 45.79.19.196 request was malicious or led to the Arcvault run.",
+   "That the specific Nightly job run was authorized and scheduled for this time."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Verify the svc-store ticket request's source and authentication context using domain-controller/KDC, network perimeter, and relevant firewall logs for 45.79.19.196.",
+   "Confirm the Arcvault service configuration, job schedule, and run history for FILE-SUN-01 around 13:46\u201313:48 UTC.",
+   "Review Arcvault audit records for the transfer time, destination, uploaded objects, and whether the volume matches routine backups."
+  ],
+  "unrelated_findings": [
+   "FILE-SUN-01 made a connection attempt to WS-MFISCHER-01 on port 9997 that ended with a reset; its relevance to the alerted transfer is not established. (T250-00320, T250-00322)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 9,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 23.4
+}

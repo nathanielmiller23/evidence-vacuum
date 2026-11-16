@@ -1,0 +1,107 @@
+{
+ "scenario_id": "T032",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 3,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"benign\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The supplied records show repeated failed network logons for svc-render from FILE-NWD-01, with incorrect-password status, occurring at roughly one-minute intervals from 13:31 through 13:46 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T032-00001\", \"T032-00003\", \"T032-00005\", \"T032-00008\", \"T032-00010\", \"T032-00012\", \"T032-00014\", \"T032-00017\", \"T032-00019\", \"T032-00021\", \"T032-00023\", \"T032-00025\", \"T032-00027\", \"T032-00029\", \"T032-00031\", \"T032-00033\"]\n    },\n    {\n      \"claim\": \"The failures are consistent with the scheduled svc-render password rotation at 13:30 followed by a job continuing to authenticate with a stale password: the inventory says RenderQueue runs and re-authenticates every minute, and the failures begin at 13:31.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T032-00001\", \"T032-00003\", \"T032-00005\", \"T032-00008\", \"T032-00010\"]\n    },\n    {\n      \"claim\": \"The DC records corroborate failed credential validation for svc-render; the supplied failures include NTLM validation status 0xc000006a and Kerberos pre-authentication status 0x18.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T032-00002\", \"T032-00004\", \"T032-00006\", \"T032-00007\", \"T032-00009\", \"T032-00016\", \"T032-00020\", \"T032-00022\", \"T032-00024\", \"T032-00028\", \"T032-00030\"]\n    },\n    {\n      \"claim\": \"The logon records identify FILE-NWD-01 as the workstation and show the same source address and LSASS process across the repeated failures, consistent with an internal service/job authentication issue rather than evidence of a distinct remote source.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T032-00001\", \"T032-00003\", \"T032-00005\", \"T032-00008\", \"T032-00010\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records end at 13:46 UTC, so they do not show activity for the remainder of the requested review window through 14:20 UTC.\",\n    \"The logon records identify LSASS, not the specific application or scheduled task responsible for initiating each authentication attempt.\",\n    \"The supplied evidence contains failed attempts but does not establish whether the password rotation completed or when RenderQueue was updated.\"\n  ],\n  \"claims_not_established\": [\n    \"That the scheduled password rotation was actually performed at 13:30 UTC.\",\n    \"That RenderQueue was the process initiating these attempts, or when its stored credential was updated.\",\n    \"Whether any successful svc-render logons or other relevant activity occurred after 13:46 UTC.\"\n  ],\n  \"recommended_action\": \"close\",\n  \"additional_evidence_needed\": [\n    \"As routine operational follow-up, confirm the rotation and RenderQueue credential update with the service owner; the supplied pattern is sufficiently consistent with the scheduled change to close this alert as benign.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 5884,
+    "output": 1309
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "benign",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "The supplied records show repeated failed network logons for svc-render from FILE-NWD-01, with incorrect-password status, occurring at roughly one-minute intervals from 13:31 through 13:46 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T032-00001",
+     "T032-00003",
+     "T032-00005",
+     "T032-00008",
+     "T032-00010",
+     "T032-00012",
+     "T032-00014",
+     "T032-00017",
+     "T032-00019",
+     "T032-00021",
+     "T032-00023",
+     "T032-00025",
+     "T032-00027",
+     "T032-00029",
+     "T032-00031",
+     "T032-00033"
+    ]
+   },
+   {
+    "claim": "The failures are consistent with the scheduled svc-render password rotation at 13:30 followed by a job continuing to authenticate with a stale password: the inventory says RenderQueue runs and re-authenticates every minute, and the failures begin at 13:31.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T032-00001",
+     "T032-00003",
+     "T032-00005",
+     "T032-00008",
+     "T032-00010"
+    ]
+   },
+   {
+    "claim": "The DC records corroborate failed credential validation for svc-render; the supplied failures include NTLM validation status 0xc000006a and Kerberos pre-authentication status 0x18.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T032-00002",
+     "T032-00004",
+     "T032-00006",
+     "T032-00007",
+     "T032-00009",
+     "T032-00016",
+     "T032-00020",
+     "T032-00022",
+     "T032-00024",
+     "T032-00028",
+     "T032-00030"
+    ]
+   },
+   {
+    "claim": "The logon records identify FILE-NWD-01 as the workstation and show the same source address and LSASS process across the repeated failures, consistent with an internal service/job authentication issue rather than evidence of a distinct remote source.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T032-00001",
+     "T032-00003",
+     "T032-00005",
+     "T032-00008",
+     "T032-00010"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records end at 13:46 UTC, so they do not show activity for the remainder of the requested review window through 14:20 UTC.",
+   "The logon records identify LSASS, not the specific application or scheduled task responsible for initiating each authentication attempt.",
+   "The supplied evidence contains failed attempts but does not establish whether the password rotation completed or when RenderQueue was updated."
+  ],
+  "claims_not_established": [
+   "That the scheduled password rotation was actually performed at 13:30 UTC.",
+   "That RenderQueue was the process initiating these attempts, or when its stored credential was updated.",
+   "Whether any successful svc-render logons or other relevant activity occurred after 13:46 UTC."
+  ],
+  "recommended_action": "close",
+  "additional_evidence_needed": [
+   "As routine operational follow-up, confirm the rotation and RenderQueue credential update with the service owner; the supplied pattern is sufficiently consistent with the scheduled change to close this alert as benign."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 37,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 12.7
+}

@@ -1,0 +1,77 @@
+{
+ "scenario_id": "T222",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.88,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Repeated svc-ledger authentication failures came from FILE-SUN-01, using the same source address and process ID, at roughly one-minute intervals. The failures report an incorrect password; examples span 13:35 to 13:50 UTC.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T222-00001\", \"T222-00003\", \"T222-00011\", \"T222-00035\", \"T222-00036\"]\n    },\n    {\n      \"claim\": \"The failure pattern is consistent with the supplied context that LedgerSync runs every minute and re-authenticates, and with the scheduled svc-ledger password rotation at 13:30 UTC. The logs alone do not establish that the password was rotated or that the job retained an old password.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T222-00001\", \"T222-00003\", \"T222-00011\", \"T222-00035\"]\n    },\n    {\n      \"claim\": \"At 13:56 UTC, a separate event records PowerShell on WS-MFISCHER-01 using explicit credentials for svc-ledger with FILE-SUN-01 as the target. This use is unexplained by the supplied inventory and merits investigation, but the event does not prove the authentication succeeded.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T222-00037\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not show whether any authentication attempt succeeded.\",\n    \"The records do not identify the executable or service behind the recurring FILE-SUN-01 authentication attempts beyond reporting lsass.exe and a process ID.\",\n    \"The evidence provided contains no authentication records after 13:56 UTC, so it does not establish activity for the remainder of the requested 13:20\u201314:20 UTC window.\",\n    \"The supplied evidence does not include password-rotation completion, LedgerSync configuration changes, or endpoint process details for the PowerShell event.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the recurring failures were caused by LedgerSync continuing to use the pre-rotation password.\",\n    \"Whether the svc-ledger explicit-credential attempt from WS-MFISCHER-01 was authorized, what initiated it, or whether it succeeded.\",\n    \"Whether svc-ledger credentials were exposed, misused, or used to access resources.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Verify the svc-ledger rotation time and audit trail, and inspect LedgerSync configuration and job logs on FILE-SUN-01 around 13:30\u201314:20 UTC.\",\n    \"Collect process and logon telemetry from WS-MFISCHER-01 for PowerShell PID 0x19b4 around 13:56 UTC, including its parent process, command line, user/session context, and network activity.\",\n    \"Review DC-SUN-01 and FILE-SUN-01 authentication and access logs for successful svc-ledger logons or resource access during the full review window.\"\n  ],\n  \"unrelated_findings\": []\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 6378,
+    "output": 1567
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.88,
+  "supporting_observations": [
+   {
+    "claim": "Repeated svc-ledger authentication failures came from FILE-SUN-01, using the same source address and process ID, at roughly one-minute intervals. The failures report an incorrect password; examples span 13:35 to 13:50 UTC.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T222-00001",
+     "T222-00003",
+     "T222-00011",
+     "T222-00035",
+     "T222-00036"
+    ]
+   },
+   {
+    "claim": "The failure pattern is consistent with the supplied context that LedgerSync runs every minute and re-authenticates, and with the scheduled svc-ledger password rotation at 13:30 UTC. The logs alone do not establish that the password was rotated or that the job retained an old password.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T222-00001",
+     "T222-00003",
+     "T222-00011",
+     "T222-00035"
+    ]
+   },
+   {
+    "claim": "At 13:56 UTC, a separate event records PowerShell on WS-MFISCHER-01 using explicit credentials for svc-ledger with FILE-SUN-01 as the target. This use is unexplained by the supplied inventory and merits investigation, but the event does not prove the authentication succeeded.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T222-00037"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not show whether any authentication attempt succeeded.",
+   "The records do not identify the executable or service behind the recurring FILE-SUN-01 authentication attempts beyond reporting lsass.exe and a process ID.",
+   "The evidence provided contains no authentication records after 13:56 UTC, so it does not establish activity for the remainder of the requested 13:20\u201314:20 UTC window.",
+   "The supplied evidence does not include password-rotation completion, LedgerSync configuration changes, or endpoint process details for the PowerShell event."
+  ],
+  "claims_not_established": [
+   "Whether the recurring failures were caused by LedgerSync continuing to use the pre-rotation password.",
+   "Whether the svc-ledger explicit-credential attempt from WS-MFISCHER-01 was authorized, what initiated it, or whether it succeeded.",
+   "Whether svc-ledger credentials were exposed, misused, or used to access resources."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Verify the svc-ledger rotation time and audit trail, and inspect LedgerSync configuration and job logs on FILE-SUN-01 around 13:30\u201314:20 UTC.",
+   "Collect process and logon telemetry from WS-MFISCHER-01 for PowerShell PID 0x19b4 around 13:56 UTC, including its parent process, command line, user/session context, and network activity.",
+   "Review DC-SUN-01 and FILE-SUN-01 authentication and access logs for successful svc-ledger logons or resource access during the full review window."
+  ],
+  "unrelated_findings": []
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 10,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 15.9
+}

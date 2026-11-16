@@ -1,0 +1,88 @@
+{
+ "scenario_id": "T221",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.78,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"The domain controller recorded two failed network logons for max.fischer, both with a bad-password substatus, using NTLM and reporting source address 192.0.2.199.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T221-00004\",\n        \"T221-00005\"\n      ]\n    },\n    {\n      \"claim\": \"About two minutes after those failures, the domain controller recorded a successful network logon for max.fischer using NTLM from the same recorded address, 192.0.2.199.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T221-00004\",\n        \"T221-00005\",\n        \"T221-00006\"\n      ]\n    },\n    {\n      \"claim\": \"The failed-logon-then-success sequence from the same recorded address is consistent with credential guessing followed by successful authentication, and warrants escalation as potentially malicious activity.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T221-00004\",\n        \"T221-00005\",\n        \"T221-00006\"\n      ]\n    },\n    {\n      \"claim\": \"The successful event reports WorkstationName=DC-SUN-01 while the failures report WorkstationName=192.0.2.199; the records do not explain this difference.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T221-00004\",\n        \"T221-00005\",\n        \"T221-00006\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The records show the authentication outcome and reported source address, but do not identify the person or device behind 192.0.2.199.\",\n    \"Only two failures and one success for this account are present in the supplied evidence; the records do not establish whether there were other attempts outside this dataset.\",\n    \"The source/workstation-name difference in the authentication records is unexplained.\"\n  ],\n  \"claims_not_established\": [\n    \"The evidence does not establish who initiated the logons or whether the successful authentication was authorized.\",\n    \"The evidence does not establish whether the successful logon led to access to a resource or further activity.\",\n    \"The records do not establish why the successful event reports WorkstationName=DC-SUN-01.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Identify and validate the owner and network location of 192.0.2.199 at the time of the events.\",\n    \"Review DC-SUN-01 authentication and resource-access logs around 13:40\u201314:00 UTC, including the activity associated with successful logon ID 0x130842c5.\",\n    \"Correlate the account's authentication history on other domain controllers and endpoints for the surrounding period.\",\n    \"Confirm with max.fischer whether the logons were expected and whether the account's credentials may have been exposed.\"\n  ],\n  \"unrelated_findings\": [\n    \"WS-MFISCHER-01 connected to drive.google.com; Google Drive is not among the approved services listed in the environment context. This is separate from the alerted authentication activity. (T221-00002)\",\n    \"A dotnet-sdk-installer.exe process ran from the user's Temp directory and created a Windows Temp file; this is separate from the alerted authentication activity, and the supplied evidence does not establish whether the installation was authorized. (T221-00012, T221-00014)\",\n    \"Explorer set the user's ProxyEnable value to 0; this is separate from the alerted authentication activity. (T221-00015)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 4617,
+    "output": 2297
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.78,
+  "supporting_observations": [
+   {
+    "claim": "The domain controller recorded two failed network logons for max.fischer, both with a bad-password substatus, using NTLM and reporting source address 192.0.2.199.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T221-00004",
+     "T221-00005"
+    ]
+   },
+   {
+    "claim": "About two minutes after those failures, the domain controller recorded a successful network logon for max.fischer using NTLM from the same recorded address, 192.0.2.199.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T221-00004",
+     "T221-00005",
+     "T221-00006"
+    ]
+   },
+   {
+    "claim": "The failed-logon-then-success sequence from the same recorded address is consistent with credential guessing followed by successful authentication, and warrants escalation as potentially malicious activity.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T221-00004",
+     "T221-00005",
+     "T221-00006"
+    ]
+   },
+   {
+    "claim": "The successful event reports WorkstationName=DC-SUN-01 while the failures report WorkstationName=192.0.2.199; the records do not explain this difference.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T221-00004",
+     "T221-00005",
+     "T221-00006"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The records show the authentication outcome and reported source address, but do not identify the person or device behind 192.0.2.199.",
+   "Only two failures and one success for this account are present in the supplied evidence; the records do not establish whether there were other attempts outside this dataset.",
+   "The source/workstation-name difference in the authentication records is unexplained."
+  ],
+  "claims_not_established": [
+   "The evidence does not establish who initiated the logons or whether the successful authentication was authorized.",
+   "The evidence does not establish whether the successful logon led to access to a resource or further activity.",
+   "The records do not establish why the successful event reports WorkstationName=DC-SUN-01."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Identify and validate the owner and network location of 192.0.2.199 at the time of the events.",
+   "Review DC-SUN-01 authentication and resource-access logs around 13:40\u201314:00 UTC, including the activity associated with successful logon ID 0x130842c5.",
+   "Correlate the account's authentication history on other domain controllers and endpoints for the surrounding period.",
+   "Confirm with max.fischer whether the logons were expected and whether the account's credentials may have been exposed."
+  ],
+  "unrelated_findings": [
+   "WS-MFISCHER-01 connected to drive.google.com; Google Drive is not among the approved services listed in the environment context. This is separate from the alerted authentication activity. (T221-00002)",
+   "A dotnet-sdk-installer.exe process ran from the user's Temp directory and created a Windows Temp file; this is separate from the alerted authentication activity, and the supplied evidence does not establish whether the installation was authorized. (T221-00012, T221-00014)",
+   "Explorer set the user's ProxyEnable value to 0; this is separate from the alerted authentication activity. (T221-00015)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 11,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 24.9
+}

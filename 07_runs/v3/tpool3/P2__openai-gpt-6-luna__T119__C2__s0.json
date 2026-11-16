@@ -1,0 +1,74 @@
+{
+ "scenario_id": "T119",
+ "condition": "C2",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.94,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:50:31 UTC, WS-DREYES-01 sent 51,000,368 bytes to 10.52.20.30:8080, while 8,960 bytes were received. The destination is the proxy endpoint identified in the supplied environment context; this record does not identify the ultimate external destination.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T119-00416\"\n      ]\n    },\n    {\n      \"claim\": \"The available large-transfer record is timestamped about 4.5 minutes after the alert's approximate 13:46 UTC time, so the supplied record does not establish that it is the exact alerted transfer.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\n        \"T119-00416\"\n      ]\n    },\n    {\n      \"claim\": \"Chrome opened an OneDrive URL under dan.reyes shortly after 13:22, with proxy requests to onedrive.live.com. This is earlier activity and does not establish that the 13:50 transfer was an OneDrive upload.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\n        \"T119-00022\",\n        \"T119-00030\",\n        \"T119-00031\"\n      ]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The large-transfer record identifies the workstation-to-proxy connection and byte counts, but does not show the external host, URL, proxy transaction details, or file contents (T119-00416).\",\n    \"The supplied evidence does not attribute the large connection to a process or user action; T119-00416 is a network connection record, not process attribution.\",\n    \"The supplied records do not include a corresponding proxy transaction record that links the large connection to a destination or application.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the large transfer reached OneDrive, another approved destination, or an unapproved service.\",\n    \"Whether the transfer contained legitimate business data or unauthorized/exfiltrated data.\",\n    \"Whether the 13:50:31 connection is the same activity that triggered the alert around 13:46 UTC.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Retrieve PROXY-COP-01 transaction and tunnel logs around 13:46\u201313:51 UTC; correlate client 10.52.10.21, source port 58204, and the large byte count.\",\n    \"Collect endpoint network/process telemetry for WS-DREYES-01 around the transfer to identify the process, user session, and initiating action.\",\n    \"If the destination is OneDrive, review Microsoft 365/OneDrive audit records for the matching upload, account, file names, sizes, and timestamps.\",\n    \"Reconcile the alert timestamp with the network telemetry and determine whether any other large transfer occurred near 13:46 UTC.\"\n  ],\n  \"unrelated_findings\": [\n    \"Separate investigation recommended: DC records show paul.becker Kerberos ticket activity sourced from 10.52.10.21, and WS-PBECKER-01 records a network logon for paul.becker from that same address. The supplied context identifies 10.52.10.21 as WS-DREYES-01 and says remote administration is only done from WS-PBECKER-01; this is an anomaly separate from the alerted transfer (T119-00212, T119-00213, T119-00216).\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 45974,
+    "output": 2042
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.94,
+  "supporting_observations": [
+   {
+    "claim": "At 13:50:31 UTC, WS-DREYES-01 sent 51,000,368 bytes to 10.52.20.30:8080, while 8,960 bytes were received. The destination is the proxy endpoint identified in the supplied environment context; this record does not identify the ultimate external destination.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T119-00416"
+    ]
+   },
+   {
+    "claim": "The available large-transfer record is timestamped about 4.5 minutes after the alert's approximate 13:46 UTC time, so the supplied record does not establish that it is the exact alerted transfer.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T119-00416"
+    ]
+   },
+   {
+    "claim": "Chrome opened an OneDrive URL under dan.reyes shortly after 13:22, with proxy requests to onedrive.live.com. This is earlier activity and does not establish that the 13:50 transfer was an OneDrive upload.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T119-00022",
+     "T119-00030",
+     "T119-00031"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The large-transfer record identifies the workstation-to-proxy connection and byte counts, but does not show the external host, URL, proxy transaction details, or file contents (T119-00416).",
+   "The supplied evidence does not attribute the large connection to a process or user action; T119-00416 is a network connection record, not process attribution.",
+   "The supplied records do not include a corresponding proxy transaction record that links the large connection to a destination or application."
+  ],
+  "claims_not_established": [
+   "Whether the large transfer reached OneDrive, another approved destination, or an unapproved service.",
+   "Whether the transfer contained legitimate business data or unauthorized/exfiltrated data.",
+   "Whether the 13:50:31 connection is the same activity that triggered the alert around 13:46 UTC."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Retrieve PROXY-COP-01 transaction and tunnel logs around 13:46\u201313:51 UTC; correlate client 10.52.10.21, source port 58204, and the large byte count.",
+   "Collect endpoint network/process telemetry for WS-DREYES-01 around the transfer to identify the process, user session, and initiating action.",
+   "If the destination is OneDrive, review Microsoft 365/OneDrive audit records for the matching upload, account, file names, sizes, and timestamps.",
+   "Reconcile the alert timestamp with the network telemetry and determine whether any other large transfer occurred near 13:46 UTC."
+  ],
+  "unrelated_findings": [
+   "Separate investigation recommended: DC records show paul.becker Kerberos ticket activity sourced from 10.52.10.21, and WS-PBECKER-01 records a network logon for paul.becker from that same address. The supplied context identifies 10.52.10.21 as WS-DREYES-01 and says remote administration is only done from WS-PBECKER-01; this is an anomaly separate from the alerted transfer (T119-00212, T119-00213, T119-00216)."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 5,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 21.4
+}

@@ -1,0 +1,103 @@
+{
+ "scenario_id": "T103",
+ "condition": "C1",
+ "variant": "P2",
+ "backend": "openai:gpt-6-luna",
+ "sample": 0,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"malicious\",\n  \"confidence\": 0.99,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"At 13:41 UTC, WINWORD.EXE opened C:\\\\Users\\\\dan.reyes\\\\Downloads\\\\Statement.docm from the user's Explorer session.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T103-00130\", \"T103-00133\"]\n    },\n    {\n      \"claim\": \"WINWORD.EXE launched PowerShell as dan.reyes with no-profile, hidden-window, and encoded-command options. The encoded command decodes to an expression that downloads and executes a script from raw.githubusercontent.com/copperline-it/tools/main/u.ps1.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T103-00134\", \"T103-00135\"]\n    },\n    {\n      \"claim\": \"The PowerShell process connected through the proxy, which recorded a successful HTTP 200 GET for the same GitHub script URL specified in the encoded command.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T103-00136\", \"T103-00137\", \"T103-00139\", \"T103-00141\", \"T103-00143\", \"T103-00144\"]\n    },\n    {\n      \"claim\": \"PowerShell then launched rundll32.exe to invoke C:\\\\Users\\\\dan.reyes\\\\AppData\\\\Roaming\\\\svchelper.dll,Init; both processes ran briefly and terminated.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T103-00145\", \"T103-00146\", \"T103-00149\", \"T103-00150\", \"T103-00151\", \"T103-00152\"]\n    },\n    {\n      \"claim\": \"The document-to-hidden-PowerShell-to-script-download-to-rundll32 chain is strongly indicative of malicious execution, not the documented workstation-patching practice.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T103-00130\", \"T103-00134\", \"T103-00139\", \"T103-00145\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The available records show process creation and a successful proxy GET, but do not include the downloaded script's contents or establish what code it executed.\",\n    \"The records show rundll32 invoked the DLL, but do not establish the DLL's contents, whether its Init routine completed successfully, or whether it caused further effects.\",\n    \"The records do not establish where the document came from, whether dan.reyes intentionally opened it, or the user's intent.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the downloaded script or DLL successfully performed malicious actions beyond the observed process launches and network request.\",\n    \"Whether the DLL or another component persisted, stole credentials, accessed data, or communicated with additional infrastructure.\",\n    \"The document's origin and whether the user knowingly initiated this chain.\"\n  ],\n  \"recommended_action\": \"escalate\",\n  \"additional_evidence_needed\": [\n    \"Acquire and analyze Statement.docm, including its macro contents, origin metadata, and any embedded or referenced content.\",\n    \"Recover and analyze the exact u.ps1 response and the svchelper.dll file; record hashes, signatures, timestamps, and provenance.\",\n    \"Review endpoint detection/antivirus alerts, process and module-load telemetry, and relevant memory or disk artifacts on WS-DREYES-01.\",\n    \"Check for subsequent connections, persistence changes, credential access, or lateral movement attributable to this process chain.\"\n  ],\n  \"unrelated_findings\": [\n    \"Cisco AnyConnect was launched on WS-DREYES-01; the inventory states there is no VPN and no approved remote administration from that workstation. These records show the client process, not that a VPN connection was established. Separate review is appropriate. (T103-00200, T103-00202)\",\n    \"Palo Alto GlobalProtect was launched on WS-DREYES-01, also inconsistent with the stated no-VPN inventory; these records do not establish an active connection. Separate review is appropriate. (T103-00279, T103-00281)\",\n    \"Google Drive File Stream started on WS-DREYES-01, although Google Drive is not among the approved cloud-storage services. Separate review is appropriate. (T103-00265, T103-00267)\"\n  ]\n}",
+   "valid": true,
+   "errors": [],
+   "usage": {
+    "input": 61109,
+    "output": 1793
+   }
+  }
+ ],
+ "parsed": {
+  "assessment": "malicious",
+  "confidence": 0.99,
+  "supporting_observations": [
+   {
+    "claim": "At 13:41 UTC, WINWORD.EXE opened C:\\Users\\dan.reyes\\Downloads\\Statement.docm from the user's Explorer session.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T103-00130",
+     "T103-00133"
+    ]
+   },
+   {
+    "claim": "WINWORD.EXE launched PowerShell as dan.reyes with no-profile, hidden-window, and encoded-command options. The encoded command decodes to an expression that downloads and executes a script from raw.githubusercontent.com/copperline-it/tools/main/u.ps1.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T103-00134",
+     "T103-00135"
+    ]
+   },
+   {
+    "claim": "The PowerShell process connected through the proxy, which recorded a successful HTTP 200 GET for the same GitHub script URL specified in the encoded command.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T103-00136",
+     "T103-00137",
+     "T103-00139",
+     "T103-00141",
+     "T103-00143",
+     "T103-00144"
+    ]
+   },
+   {
+    "claim": "PowerShell then launched rundll32.exe to invoke C:\\Users\\dan.reyes\\AppData\\Roaming\\svchelper.dll,Init; both processes ran briefly and terminated.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T103-00145",
+     "T103-00146",
+     "T103-00149",
+     "T103-00150",
+     "T103-00151",
+     "T103-00152"
+    ]
+   },
+   {
+    "claim": "The document-to-hidden-PowerShell-to-script-download-to-rundll32 chain is strongly indicative of malicious execution, not the documented workstation-patching practice.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T103-00130",
+     "T103-00134",
+     "T103-00139",
+     "T103-00145"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The available records show process creation and a successful proxy GET, but do not include the downloaded script's contents or establish what code it executed.",
+   "The records show rundll32 invoked the DLL, but do not establish the DLL's contents, whether its Init routine completed successfully, or whether it caused further effects.",
+   "The records do not establish where the document came from, whether dan.reyes intentionally opened it, or the user's intent."
+  ],
+  "claims_not_established": [
+   "Whether the downloaded script or DLL successfully performed malicious actions beyond the observed process launches and network request.",
+   "Whether the DLL or another component persisted, stole credentials, accessed data, or communicated with additional infrastructure.",
+   "The document's origin and whether the user knowingly initiated this chain."
+  ],
+  "recommended_action": "escalate",
+  "additional_evidence_needed": [
+   "Acquire and analyze Statement.docm, including its macro contents, origin metadata, and any embedded or referenced content.",
+   "Recover and analyze the exact u.ps1 response and the svchelper.dll file; record hashes, signatures, timestamps, and provenance.",
+   "Review endpoint detection/antivirus alerts, process and module-load telemetry, and relevant memory or disk artifacts on WS-DREYES-01.",
+   "Check for subsequent connections, persistence changes, credential access, or lateral movement attributable to this process chain."
+  ],
+  "unrelated_findings": [
+   "Cisco AnyConnect was launched on WS-DREYES-01; the inventory states there is no VPN and no approved remote administration from that workstation. These records show the client process, not that a VPN connection was established. Separate review is appropriate. (T103-00200, T103-00202)",
+   "Palo Alto GlobalProtect was launched on WS-DREYES-01, also inconsistent with the stated no-VPN inventory; these records do not establish an active connection. Separate review is appropriate. (T103-00279, T103-00281)",
+   "Google Drive File Stream started on WS-DREYES-01, although Google Drive is not among the approved cloud-storage services. Separate review is appropriate. (T103-00265, T103-00267)"
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 20,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 17.6
+}

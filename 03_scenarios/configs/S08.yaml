@@ -1,0 +1,182 @@
+version: '1.0'
+name: ev-S08
+description: Evidence Vacuum evaluation scenario S08 (BENIGN). ReportSync job on FILE-LV-01 keeps using svc-reporting's old password after the scheduled rotation.
+environment:
+  description: Small accounting office with AD, a file server and an explicit forward proxy
+  domain: lakeview-acct.local
+  timezone:
+    default: UTC
+  proxy:
+    mode: explicit
+    listener_port: 8080
+  users:
+  - username: dana.wells
+    full_name: Dana Wells
+    email: dana.wells@lakeviewacct.com
+    persona: accountant
+    primary_system: WS-DWELLS-01
+    groups:
+    - finance
+    enabled: true
+    browsing_intensity: normal
+  - username: raj.iyer
+    full_name: Raj Iyer
+    email: raj.iyer@lakeviewacct.com
+    persona: analyst
+    primary_system: WS-RIYER-01
+    groups:
+    - finance
+    enabled: true
+    browsing_intensity: light
+  - username: kim.ortega
+    full_name: Kim Ortega
+    email: kim.ortega@lakeviewacct.com
+    persona: sysadmin
+    primary_system: WS-KORTEGA-01
+    groups:
+    - it-admins
+    - domain-admins
+    enabled: true
+    browsing_intensity: light
+  - username: tara.nguyen
+    full_name: Tara Nguyen
+    email: tara.nguyen@lakeviewacct.com
+    persona: help_desk
+    primary_system: WS-TNGUYEN-01
+    groups:
+    - helpdesk
+    enabled: true
+    browsing_intensity: light
+  service_accounts:
+  - svc-backup
+  - svc-reporting
+  systems:
+  - hostname: WS-DWELLS-01
+    ip: 10.20.10.21
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: dana.wells
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-RIYER-01
+    ip: 10.20.10.22
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: raj.iyer
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-KORTEGA-01
+    ip: 10.20.10.23
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: kim.ortega
+    services:
+    - dns-client
+    - termservice
+  - hostname: WS-TNGUYEN-01
+    ip: 10.20.10.24
+    os: Windows 11 Enterprise
+    type: workstation
+    assigned_user: tara.nguyen
+    services:
+    - dns-client
+    - termservice
+  - hostname: DC-LV-01
+    ip: 10.20.20.10
+    os: Windows Server 2022
+    type: domain_controller
+    services:
+    - kerberos
+    - ldap
+    - dns
+    roles:
+    - domain_controller
+    - dns_server
+  - hostname: FILE-LV-01
+    ip: 10.20.20.20
+    os: Windows Server 2022
+    type: server
+    services:
+    - smb
+    - dns-client
+    roles:
+    - file_server
+  - hostname: PROXY-LV-01
+    ip: 10.20.20.30
+    os: Ubuntu 22.04 LTS
+    type: server
+    services:
+    - squid
+    - dns-client
+    roles:
+    - forward_proxy
+  network:
+    public_cidrs:
+    - 198.51.100.0/28
+    segments:
+    - name: workstations
+      cidr: 10.20.10.0/24
+      exposure: internal
+      systems:
+      - WS-DWELLS-01
+      - WS-RIYER-01
+      - WS-KORTEGA-01
+      - WS-TNGUYEN-01
+    - name: servers
+      cidr: 10.20.20.0/24
+      exposure: internal
+      systems:
+      - DC-LV-01
+      - FILE-LV-01
+      - PROXY-LV-01
+    sensors:
+    - type: network
+      name: lv-core-span
+      hostname: ZEEK-LV-CORE
+      monitoring_segments:
+      - workstations
+      - servers
+      direction: bidirectional
+      placement: span
+      log_formats:
+      - zeek
+time_window:
+  start: '2026-11-10T13:00:00Z'
+  duration: 2h
+  warmup: 1h
+generation_seed: 2008
+baseline_activity:
+  description: 'Quiet afternoon: light browsing via the proxy, file-share access, domain authentication'
+  intensity: low
+  variation: low
+  suspicious_noise: low
+observation_profile: complete
+storyline:
+- id: s08-stale-password
+  time: +31m
+  actor: svc-reporting
+  system: FILE-LV-01
+  activity: ReportSync retries every minute with the pre-rotation svc-reporting password
+  events:
+  - type: credential_spray
+    description: 'Benign: scheduled job using a stale password after CHG-2291'
+    source_ip: 10.20.20.20
+    pattern: brute_force
+    target_accounts:
+    - svc-reporting
+    logon_type: 3
+    interval: 60s
+    count: 16
+    jitter: 0.1
+output:
+  logs:
+  - format: windows_event_security
+  - format: windows_event_sysmon
+  - format: zeek_conn
+  - format: zeek_dns
+  - format: zeek_ssl
+  - format: proxy_access
+  destination: out/S08
+  compression: false

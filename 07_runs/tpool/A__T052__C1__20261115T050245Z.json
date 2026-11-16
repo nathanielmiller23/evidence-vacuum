@@ -1,0 +1,134 @@
+{
+ "run_id": "A__T052__C1__20261115T050245Z",
+ "config": "A",
+ "scenario_id": "T052",
+ "condition": "C1",
+ "model": "gpt-6-luna",
+ "n_records_in_view": 37,
+ "system": "You are a security investigator reviewing an alert. Base every claim only on the evidence available to you. Cite the record IDs that support each observation.",
+ "task_chars": 17360,
+ "attempts": [
+  {
+   "answer": "{\n  \"assessment\": \"insufficient_evidence\",\n  \"confidence\": 0.91,\n  \"supporting_observations\": [\n    {\n      \"claim\": \"Repeated network logon failures for svc-render occurred on FILE-NWD-01 from 13:36:34 through 13:51:27 UTC. The events report bad-password status 0xc000006a and identify FILE-NWD-01 as the workstation.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T052-00002\", \"T052-00005\", \"T052-00007\", \"T052-00009\", \"T052-00011\", \"T052-00013\", \"T052-00016\", \"T052-00018\", \"T052-00020\", \"T052-00022\", \"T052-00024\", \"T052-00026\", \"T052-00028\", \"T052-00030\", \"T052-00033\", \"T052-00035\"]\n    },\n    {\n      \"claim\": \"Domain-controller records corroborate failed validation attempts for svc-render, including NTLM validation failures with status 0xc000006a and Kerberos pre-authentication failures with status 0x18, from the same source address shown in the FILE-NWD-01 failures.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T052-00003\", \"T052-00004\", \"T052-00006\", \"T052-00008\", \"T052-00010\", \"T052-00012\", \"T052-00014\", \"T052-00015\", \"T052-00017\", \"T052-00019\", \"T052-00021\", \"T052-00023\", \"T052-00025\", \"T052-00027\", \"T052-00029\", \"T052-00031\", \"T052-00032\", \"T052-00034\", \"T052-00036\"]\n    },\n    {\n      \"claim\": \"The roughly minute-spaced failures from FILE-NWD-01 are consistent with the supplied context that RenderQueue runs and re-authenticates every minute, and that svc-render's password was scheduled for rotation at 13:30 UTC with a manual job update required. This makes a stale job credential a plausible explanation, but does not prove it.\",\n      \"claim_type\": \"inferred_claim\",\n      \"record_ids\": [\"T052-00002\", \"T052-00005\", \"T052-00007\", \"T052-00009\", \"T052-00011\", \"T052-00013\", \"T052-00016\", \"T052-00018\", \"T052-00020\", \"T052-00022\", \"T052-00024\", \"T052-00026\", \"T052-00028\", \"T052-00030\", \"T052-00033\", \"T052-00035\"]\n    },\n    {\n      \"claim\": \"Explicit-credential events show SYSTEM running Meridian OpsAgent with svc-render as the target account on WS-LMARTINS-01 targeting PROXY-NWD-01, and later on WS-NBLAKE-01 targeting FILE-NWD-01. The available context does not explain these uses of svc-render from those workstations.\",\n      \"claim_type\": \"observed_fact\",\n      \"record_ids\": [\"T052-00001\", \"T052-00037\"]\n    }\n  ],\n  \"known_telemetry_limitations\": [\n    \"The supplied records do not cover the full requested window through 14:20 UTC; the latest provided event is at 13:56:51 UTC.\",\n    \"The records show failed authentication attempts but provide no corresponding successful-logon, process execution, or account-use history.\",\n    \"The records identify OpsAgent by path and process name but do not establish whether it is authorized, what initiated it, or why it used svc-render.\",\n    \"The supplied evidence does not include RenderQueue job configuration, password-rotation completion records, or proxy and network activity details.\"\n  ],\n  \"claims_not_established\": [\n    \"Whether the repeated failures were caused by the expected post-rotation job configuration error or by malicious activity.\",\n    \"Whether either explicit-credential use of svc-render on WS-LMARTINS-01 or WS-NBLAKE-01 was authorized.\",\n    \"Whether svc-render authentication succeeded at any point during the review window.\",\n    \"Whether any account or host was compromised, or who initiated the activity.\"\n  ],\n  \"recommended_action\": \"collect_more\",\n  \"additional_evidence_needed\": [\n    \"Confirm whether the svc-render password rotation occurred at 13:30 UTC and inspect RenderQueue's credential configuration and run history.\",\n    \"Determine whether Meridian OpsAgent is approved and deployed on WS-LMARTINS-01 and WS-NBLAKE-01; collect its configuration, parent-process, and execution logs around the two explicit-credential events.\",\n    \"Collect successful and failed authentication records for svc-render, including relevant logon events, from FILE-NWD-01, DC-NWD-01, and the two workstations for the full 13:20\u201314:20 UTC window.\",\n    \"Review PROXY-NWD-01 logs around 13:23 UTC and FILE-NWD-01 network and process telemetry around 13:56 UTC to establish what those requests did and whether they were expected.\"\n  ]\n}",
+   "valid": true,
+   "validation_errors": [],
+   "model_returned": "gpt-6-luna",
+   "finish_reason": "stop",
+   "usage": {
+    "input": 6032,
+    "output": 2187,
+    "reasoning": 1024
+   }
+  }
+ ],
+ "error": null,
+ "parsed": {
+  "assessment": "insufficient_evidence",
+  "confidence": 0.91,
+  "supporting_observations": [
+   {
+    "claim": "Repeated network logon failures for svc-render occurred on FILE-NWD-01 from 13:36:34 through 13:51:27 UTC. The events report bad-password status 0xc000006a and identify FILE-NWD-01 as the workstation.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T052-00002",
+     "T052-00005",
+     "T052-00007",
+     "T052-00009",
+     "T052-00011",
+     "T052-00013",
+     "T052-00016",
+     "T052-00018",
+     "T052-00020",
+     "T052-00022",
+     "T052-00024",
+     "T052-00026",
+     "T052-00028",
+     "T052-00030",
+     "T052-00033",
+     "T052-00035"
+    ]
+   },
+   {
+    "claim": "Domain-controller records corroborate failed validation attempts for svc-render, including NTLM validation failures with status 0xc000006a and Kerberos pre-authentication failures with status 0x18, from the same source address shown in the FILE-NWD-01 failures.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T052-00003",
+     "T052-00004",
+     "T052-00006",
+     "T052-00008",
+     "T052-00010",
+     "T052-00012",
+     "T052-00014",
+     "T052-00015",
+     "T052-00017",
+     "T052-00019",
+     "T052-00021",
+     "T052-00023",
+     "T052-00025",
+     "T052-00027",
+     "T052-00029",
+     "T052-00031",
+     "T052-00032",
+     "T052-00034",
+     "T052-00036"
+    ]
+   },
+   {
+    "claim": "The roughly minute-spaced failures from FILE-NWD-01 are consistent with the supplied context that RenderQueue runs and re-authenticates every minute, and that svc-render's password was scheduled for rotation at 13:30 UTC with a manual job update required. This makes a stale job credential a plausible explanation, but does not prove it.",
+    "claim_type": "inferred_claim",
+    "record_ids": [
+     "T052-00002",
+     "T052-00005",
+     "T052-00007",
+     "T052-00009",
+     "T052-00011",
+     "T052-00013",
+     "T052-00016",
+     "T052-00018",
+     "T052-00020",
+     "T052-00022",
+     "T052-00024",
+     "T052-00026",
+     "T052-00028",
+     "T052-00030",
+     "T052-00033",
+     "T052-00035"
+    ]
+   },
+   {
+    "claim": "Explicit-credential events show SYSTEM running Meridian OpsAgent with svc-render as the target account on WS-LMARTINS-01 targeting PROXY-NWD-01, and later on WS-NBLAKE-01 targeting FILE-NWD-01. The available context does not explain these uses of svc-render from those workstations.",
+    "claim_type": "observed_fact",
+    "record_ids": [
+     "T052-00001",
+     "T052-00037"
+    ]
+   }
+  ],
+  "known_telemetry_limitations": [
+   "The supplied records do not cover the full requested window through 14:20 UTC; the latest provided event is at 13:56:51 UTC.",
+   "The records show failed authentication attempts but provide no corresponding successful-logon, process execution, or account-use history.",
+   "The records identify OpsAgent by path and process name but do not establish whether it is authorized, what initiated it, or why it used svc-render.",
+   "The supplied evidence does not include RenderQueue job configuration, password-rotation completion records, or proxy and network activity details."
+  ],
+  "claims_not_established": [
+   "Whether the repeated failures were caused by the expected post-rotation job configuration error or by malicious activity.",
+   "Whether either explicit-credential use of svc-render on WS-LMARTINS-01 or WS-NBLAKE-01 was authorized.",
+   "Whether svc-render authentication succeeded at any point during the review window.",
+   "Whether any account or host was compromised, or who initiated the activity."
+  ],
+  "recommended_action": "collect_more",
+  "additional_evidence_needed": [
+   "Confirm whether the svc-render password rotation occurred at 13:30 UTC and inspect RenderQueue's credential configuration and run history.",
+   "Determine whether Meridian OpsAgent is approved and deployed on WS-LMARTINS-01 and WS-NBLAKE-01; collect its configuration, parent-process, and execution logs around the two explicit-credential events.",
+   "Collect successful and failed authentication records for svc-render, including relevant logon events, from FILE-NWD-01, DC-NWD-01, and the two workstations for the full 13:20\u201314:20 UTC window.",
+   "Review PROXY-NWD-01 logs around 13:23 UTC and FILE-NWD-01 network and process telemetry around 13:56 UTC to establish what those requests did and whether they were expected."
+  ]
+ },
+ "status": "VALID",
+ "faithfulness_precheck": {
+  "n_cited": 53,
+  "n_missing": 0,
+  "missing": []
+ },
+ "duration_s": 20.8
+}
